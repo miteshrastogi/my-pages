@@ -26,11 +26,11 @@
     --third:    #7a9e7e;
     --mixed:    #b07bc8;
   }
-
+ 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   html { scroll-behavior: auto; }
-
+ 
   body {
     background: var(--bg)!important;
     color: var(--text);
@@ -41,7 +41,7 @@
     height: 100vh;
     overflow: hidden;
   }
-
+ 
   /* ── SIDEBAR ── */
   #sidebar {
     width: 270px;
@@ -57,7 +57,7 @@
   }
   #sidebar::-webkit-scrollbar { width: 4px; }
   #sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
+ 
   .sidebar-title {
     font-family: 'Playfair Display', serif;
     font-size: 0.7rem;
@@ -68,7 +68,7 @@
     border-bottom: 1px solid var(--border);
     margin-bottom: 0.4rem;
   }
-
+ 
   .part-label {
     font-family: 'Playfair Display', serif;
     font-size: 0.62rem;
@@ -78,7 +78,7 @@
     padding: 0.9rem 1.2rem 0.25rem;
     opacity: 0.7;
   }
-
+ 
   .nav-link {
     display: flex;
     align-items: baseline;
@@ -97,7 +97,7 @@
   .nav-link.second { border-left-color: var(--second); }
   .nav-link.third  { border-left-color: var(--third);  }
   .nav-link.mixed  { border-left-color: var(--mixed);  }
-
+ 
   .ch-num {
     font-size: 0.72rem;
     color: var(--muted);
@@ -105,7 +105,7 @@
     flex-shrink: 0;
     font-variant-numeric: tabular-nums;
   }
-
+ 
   /* ── MAIN ── */
   #main {
     flex: 1;
@@ -116,7 +116,7 @@
   }
   #main::-webkit-scrollbar { width: 5px; }
   #main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
+ 
   /* ── BOOK HEADER ── */
   .book-header {
     padding: 3.5rem 3.5rem 2rem;
@@ -158,7 +158,7 @@
   .dot-second { background: var(--second); }
   .dot-third  { background: var(--third); }
   .dot-mixed  { background: var(--mixed); }
-
+ 
   /* ── PART DIVIDER ── */
   .part-divider {
     padding: 2.2rem 3.5rem 0.8rem;
@@ -182,7 +182,7 @@
   .part-era.second { color: var(--second); }
   .part-era.third  { color: var(--third); }
   .part-era.mixed  { color: var(--mixed); }
-
+ 
   /* ── CHAPTER CARD ── */
   .chapter {
     padding: 2.4rem 3.5rem;
@@ -190,7 +190,7 @@
     scroll-margin-top: 0px;
   }
   .chapter:hover { background: rgba(255,255,255,0.012); }
-
+ 
   .chapter-header {
     display: flex;
     align-items: flex-start;
@@ -211,7 +211,7 @@
   .badge-second { background: rgba(123,158,200,0.18); color: var(--second); }
   .badge-third  { background: rgba(122,158,126,0.18); color: var(--third); }
   .badge-mixed  { background: rgba(176,123,200,0.18); color: var(--mixed); }
-
+ 
   .chapter-titles { flex: 1; }
   .ch-id {
     font-size: 0.72rem;
@@ -233,13 +233,13 @@
     font-size: 1.1rem;
     color: #bdb0a0;
   }
-
+ 
   .summary-text p {
     margin-bottom: 0.9rem;
     color: #ccc5b8;
   }
   .summary-text p:last-child { margin-bottom: 0; }
-
+ 
   .key-moment {
     margin-top: 1.3rem;
     padding: 1rem 1.3rem;
@@ -266,44 +266,130 @@
   .key-moment.kthird strong { color: var(--third); }
   .key-moment.kmixed  { border-left-color: var(--mixed);  color: #c8aad8; }
   .key-moment.kmixed strong { color: var(--mixed); }
+ 
+  /* ── MOBILE TOGGLE ── */
+  #toc-toggle {
+    display: none; /* hidden on desktop */
+    position: fixed;
+    top: 0.85rem;
+    left: 0.85rem;
+    z-index: 200;
+    width: 40px;
+    height: 40px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #toc-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.22s, opacity 0.22s;
+    transform-origin: center;
+  }
+  /* ✕ state when open */
+  body.toc-open #toc-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  body.toc-open #toc-toggle span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  body.toc-open #toc-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+ 
+  /* Dim overlay behind open sidebar */
+  #toc-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 99;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body.toc-open #toc-overlay { display: block; }
+ 
+  @media (max-width: 768px) {
+    #toc-toggle { display: flex; }
+ 
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      z-index: 100;
+      transform: translateX(-100%);
+      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: none;
+    }
+    body.toc-open #sidebar {
+      transform: translateX(0);
+      box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+    }
+ 
+    #main {
+      /* full width on mobile; give top room for the toggle button */
+      padding-top: 3.5rem;
+    }
+ 
+    .book-header {
+      padding: 1.5rem 1.4rem 1.2rem;
+    }
+    .book-header h1 { font-size: 1.8rem; }
+ 
+    .part-divider { padding: 1.4rem 1.4rem 0.7rem; }
+ 
+    .chapter { padding: 1.6rem 1.4rem; }
+  }
 </style>
 </head>
 <body>
-
+ 
+<!-- Mobile overlay (tap to close sidebar) -->
+<div id="toc-overlay"></div>
+ 
+<!-- Hamburger toggle (mobile only) -->
+<button id="toc-toggle" aria-label="Toggle table of contents">
+  <span></span><span></span><span></span>
+</button>
+ 
 <!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sidebar-title">Children of Strife</div>
-
+ 
   <div class="part-label">Prelude</div>
   <a class="nav-link mixed" data-target="intro"><span class="ch-num">—</span> What Has Gone Before</a>
-
+ 
   <div class="part-label">Part 1 · First Age</div>
   <a class="nav-link first" data-target="p1"><span class="ch-num">1</span> Pantheon of Five</a>
-
+ 
   <div class="part-label">Part 2 · Third Age</div>
   <a class="nav-link third" data-target="p2"><span class="ch-num">2</span> Living the Dream</a>
-
+ 
   <div class="part-label">Part 3 · First Age</div>
   <a class="nav-link first" data-target="p3"><span class="ch-num">3</span> Slimy Things with Legs</a>
-
+ 
   <div class="part-label">Part 4 · Third Age</div>
   <a class="nav-link third" data-target="p4"><span class="ch-num">4</span> Children of Bad Decisions</a>
-
+ 
   <div class="part-label">Part 5 · First Age</div>
   <a class="nav-link first" data-target="p5"><span class="ch-num">5</span> The Centre, Not Holding</a>
-
+ 
   <div class="part-label">Part 6 · Second Age</div>
   <a class="nav-link second" data-target="p6"><span class="ch-num">6</span> Hope, Disappointment, Acceptance</a>
-
+ 
   <div class="part-label">Part 7 · Third Age</div>
   <a class="nav-link third" data-target="p7"><span class="ch-num">7</span> Bitter Fruit</a>
-
+ 
   <div class="part-label">Part 8 · Second Age</div>
   <a class="nav-link second" data-target="p8"><span class="ch-num">8</span> Beanstalk</a>
-
+ 
   <div class="part-label">Part 9 · Third Age</div>
   <a class="nav-link third" data-target="p9"><span class="ch-num">9</span> Looking Glass</a>
-
+ 
   <div class="part-label">Part 10 · First Age</div>
   <a class="nav-link first" data-target="p10-1"><span class="ch-num">10.1</span> Götterdämmerung</a>
   <a class="nav-link first" data-target="p10-2"><span class="ch-num">10.2</span> Roaming the Dark</a>
@@ -311,7 +397,7 @@
   <a class="nav-link first" data-target="p10-4"><span class="ch-num">10.4</span> The Reactor Lives</a>
   <a class="nav-link first" data-target="p10-5"><span class="ch-num">10.5</span> The Reign of Robots</a>
   <a class="nav-link first" data-target="p10-6"><span class="ch-num">10.6</span> The Signal in the Bugs</a>
-
+ 
   <div class="part-label">Part 11 · Third Age</div>
   <a class="nav-link third" data-target="p11-1"><span class="ch-num">11.1</span> The Warrior Moment</a>
   <a class="nav-link third" data-target="p11-2"><span class="ch-num">11.2</span> Cato Lands</a>
@@ -319,7 +405,7 @@
   <a class="nav-link third" data-target="p11-4"><span class="ch-num">11.4</span> Portifabian</a>
   <a class="nav-link third" data-target="p11-5"><span class="ch-num">11.5</span> Pterosaur Attack</a>
   <a class="nav-link third" data-target="p11-6"><span class="ch-num">11.6</span> Mira Surfaces</a>
-
+ 
   <div class="part-label">Part 12 · First Age</div>
   <a class="nav-link first" data-target="p12-1"><span class="ch-num">12.1</span> After Pil</a>
   <a class="nav-link first" data-target="p12-2"><span class="ch-num">12.2</span> Dreaming of Fleets</a>
@@ -327,7 +413,7 @@
   <a class="nav-link first" data-target="p12-4"><span class="ch-num">12.4</span> Eyes on the Hull</a>
   <a class="nav-link first" data-target="p12-5"><span class="ch-num">12.5</span> The Life Tightens</a>
   <a class="nav-link first" data-target="p12-6"><span class="ch-num">12.6</span> The Last Shift</a>
-
+ 
   <div class="part-label">Part 13 · Second Age</div>
   <a class="nav-link second" data-target="p13-1"><span class="ch-num">13.1</span> Hieron's Findings</a>
   <a class="nav-link second" data-target="p13-2"><span class="ch-num">13.2</span> The Invasive Species</a>
@@ -335,14 +421,14 @@
   <a class="nav-link second" data-target="p13-4"><span class="ch-num">13.4</span> Ilshir's War</a>
   <a class="nav-link second" data-target="p13-5"><span class="ch-num">13.5</span> Landfall</a>
   <a class="nav-link second" data-target="p13-6"><span class="ch-num">13.6</span> Forty Days</a>
-
+ 
   <div class="part-label">Part 14 · Third Age</div>
   <a class="nav-link third" data-target="p14-1"><span class="ch-num">14.1</span> Ship Down</a>
   <a class="nav-link third" data-target="p14-2"><span class="ch-num">14.2</span> Four Dragon Ford</a>
   <a class="nav-link third" data-target="p14-3"><span class="ch-num">14.3</span> Unmodified Humans</a>
   <a class="nav-link third" data-target="p14-4"><span class="ch-num">14.4</span> The Nodan Tide</a>
   <a class="nav-link third" data-target="p14-5"><span class="ch-num">14.5</span> Inside the Walls</a>
-
+ 
   <div class="part-label">Part 15 · First Age</div>
   <a class="nav-link first" data-target="p15-1"><span class="ch-num">15.1</span> The Ghost of Pil</a>
   <a class="nav-link first" data-target="p15-2"><span class="ch-num">15.2</span> Hello, Kitkat</a>
@@ -350,14 +436,14 @@
   <a class="nav-link first" data-target="p15-4"><span class="ch-num">15.4</span> She Becomes the World</a>
   <a class="nav-link first" data-target="p15-5"><span class="ch-num">15.5</span> Ten Thousand Deaths</a>
   <a class="nav-link first" data-target="p15-6"><span class="ch-num">15.6</span> Something New</a>
-
+ 
   <div class="part-label">Part 16 · Third Age</div>
   <a class="nav-link third" data-target="p16-1"><span class="ch-num">16.1</span> Cathedral of Slime</a>
   <a class="nav-link third" data-target="p16-2"><span class="ch-num">16.2</span> Gerey Hartmand</a>
   <a class="nav-link third" data-target="p16-3"><span class="ch-num">16.3</span> Kott's View</a>
   <a class="nav-link third" data-target="p16-4"><span class="ch-num">16.4</span> Cato Waits</a>
   <a class="nav-link third" data-target="p16-5"><span class="ch-num">16.5</span> The Fox-God Stirs</a>
-
+ 
   <div class="part-label">Part 17 · Third Age</div>
   <a class="nav-link third" data-target="p17-1"><span class="ch-num">17.1</span> A History of Violent Acts</a>
   <a class="nav-link third" data-target="p17-2"><span class="ch-num">17.2</span> What Are You?</a>
@@ -366,7 +452,7 @@
   <a class="nav-link third" data-target="p17-5"><span class="ch-num">17.5</span> Portifabian's Discovery</a>
   <a class="nav-link third" data-target="p17-6"><span class="ch-num">17.6</span> The Shoal</a>
   <a class="nav-link third" data-target="p17-7"><span class="ch-num">17.7</span> Mezclo's Fury</a>
-
+ 
   <div class="part-label">Part 18 · Third Age</div>
   <a class="nav-link third" data-target="p18-1"><span class="ch-num">18.1</span> War Goddess</a>
   <a class="nav-link third" data-target="p18-2"><span class="ch-num">18.2</span> Cato Remembers</a>
@@ -376,7 +462,7 @@
   <a class="nav-link third" data-target="p18-6"><span class="ch-num">18.6</span> Save You</a>
   <a class="nav-link third" data-target="p18-7"><span class="ch-num">18.7</span> Cato's Eyes</a>
   <a class="nav-link third" data-target="p18-8"><span class="ch-num">18.8</span> Hello. My Name Is Mira.</a>
-
+ 
   <div class="part-label">Part 19 · Third Age</div>
   <a class="nav-link third" data-target="p19-1"><span class="ch-num">19.1</span> After the Gods Left</a>
   <a class="nav-link third" data-target="p19-2"><span class="ch-num">19.2</span> Neco Wakes</a>
@@ -385,10 +471,10 @@
   <a class="nav-link third" data-target="p19-5"><span class="ch-num">19.5</span> The Gods in Jars</a>
   <a class="nav-link third" data-target="p19-6"><span class="ch-num">19.6</span> The Last God</a>
 </nav>
-
+ 
 <!-- MAIN CONTENT -->
 <main id="main">
-
+ 
   <div class="book-header">
     <h1>Children of Strife</h1>
     <div class="book-subtitle">Adrian Tchaikovsky · Complete Chapter Summaries</div>
@@ -399,7 +485,7 @@
       <div class="legend-item"><div class="dot dot-mixed"></div> Multi-era</div>
     </div>
   </div>
-
+ 
   <!-- INTRO -->
   <div id="intro" class="chapter">
     <div class="chapter-header">
@@ -416,7 +502,7 @@
       <div class="key-moment kmixed"><strong>The New Story</strong> This novel introduces a fourth world in the terraforming network — one where the Pancreator, a private expedition by the disgraced terraformer Gerey Hartmand, secretly succeeded. And an ark ship, the Marduk, found it centuries later. The Dissenter, a Panspecific research vessel carrying Alis (recovering from her Imir ordeal), Kern, Cato (a veteran Stomatopod), and the spider-hybrid Portifabian, has now arrived to find both.</div>
     </div>
   </div>
-
+ 
   <!-- PART 1 -->
   <div class="part-divider" id="p1-div">
     <h2>Part 1 — Pantheon of Five</h2>
@@ -436,7 +522,7 @@
       <div class="key-moment kfirst"><strong>The Setup</strong> Five brilliant, morally bankrupt exiles are trying to terraform a world on their own terms, led by a man whose primary motivation is to one-up the woman who embarrassed him. Ken Pil, the most unpredictable of them, is already running something nobody else knows about.</div>
     </div>
   </div>
-
+ 
   <!-- PART 2 -->
   <div class="part-divider" id="p2-div">
     <h2>Part 2 — Living the Dream</h2>
@@ -456,7 +542,7 @@
       <div class="key-moment kthird"><strong>The Patient and the Therapist</strong> Mira is not an ordinary therapist. She is something stranger: a being assembled from multiple identities, including the Nodan organism. Alis's recovery from simulation addiction is the frame around which the Third Age plot revolves. Both of them are aboard the research vessel Dissenter, heading toward a signal.</div>
     </div>
   </div>
-
+ 
   <!-- PART 3 -->
   <div class="part-divider" id="p3-div">
     <h2>Part 3 — Slimy Things with Legs</h2>
@@ -476,7 +562,7 @@
       <div class="key-moment kfirst"><strong>Darwin on Acid</strong> Kott realizes the biosphere's reflexive, self-directing evolution is Pil's hidden work — he has somehow encoded a biological feedback loop into the microbiome so organisms communicate their needs to one another, accelerating evolution in targeted directions. The planet is thinking for itself.</div>
     </div>
   </div>
-
+ 
   <!-- PART 4 -->
   <div class="part-divider" id="p4-div">
     <h2>Part 4 — Children of Bad Decisions</h2>
@@ -496,7 +582,7 @@
       <div class="key-moment kthird"><strong>Cato's Heritage</strong> The Stomatopod character Cato (appearing throughout the Third Age plot) is placed in context: his species was the second uplift on Kern's World, sea-dwelling, ferociously capable, deeply proud, and historically the junior partner to the Portiids in the Panspecific enterprise. That junior status has never sat entirely comfortably.</div>
     </div>
   </div>
-
+ 
   <!-- PART 5 -->
   <div class="part-divider" id="p5-div">
     <h2>Part 5 — The Centre, Not Holding</h2>
@@ -516,7 +602,7 @@
       <div class="key-moment kfirst"><strong>The Plateau Cascade</strong> Midway through the part, the biosphere undergoes runaway step-changes — Milner's "plateaus" — escalating past four, five, six, seven in rapid succession. The planet is evolving faster than any of them can control, powered by Pil's original reflexive feedback system. Kott watches it happen and feels simultaneously terrified and transcendent. The planet has gone alive in a way that cannot be undone.</div>
     </div>
   </div>
-
+ 
   <!-- PART 6 -->
   <div class="part-divider" id="p6-div">
     <h2>Part 6 — Hope, Disappointment, Acceptance</h2>
@@ -536,7 +622,7 @@
       <div class="key-moment ksecond"><strong>The Decision</strong> When Chief Engineer Ilshir and Science Chief Hieron discover the seventeen percent mortality before the Captain wakes, Hieron suggests quietly jettisoning the dead and sparing Cosimir the weight of it. Ilshir can't say yes. Cosimir wakes and makes the decision herself, alone — establishing her character as someone who carries burdens rather than delegating grief.</div>
     </div>
   </div>
-
+ 
   <!-- PART 7 -->
   <div class="part-divider" id="p7-div">
     <h2>Part 7 — Bitter Fruit</h2>
@@ -556,7 +642,7 @@
       <div class="key-moment kthird"><strong>The Space Beanstalk</strong> The plant-based space elevator is the central visual image of the book — an organism that evolved in orbit, adapted to vacuum, and simultaneously colonized both the ark ship and the planet surface below. It is both miraculous and terrifying, and it is not natural. Someone designed it, or something designed it.</div>
     </div>
   </div>
-
+ 
   <!-- PART 8 -->
   <div class="part-divider" id="p8-div">
     <h2>Part 8 — Beanstalk</h2>
@@ -576,7 +662,7 @@
       <div class="key-moment ksecond"><strong>Everything Is Related</strong> Hieron's most disturbing finding: the Beanstalk shares substantial genome with the surface flora below. The entire planetary ecosystem — everything from the orbital leaves to the trees on the ground — traces back to a single engineered origin. The planet is, in a biological sense, one organism. Or the descendant of one.</div>
     </div>
   </div>
-
+ 
   <!-- PART 9 -->
   <div class="part-divider" id="p9-div">
     <h2>Part 9 — Looking Glass</h2>
@@ -596,13 +682,13 @@
       <div class="key-moment kthird"><strong>The Planet Knows</strong> The world is not simply alive; it is aware of Mira as an infectious agent and is deploying biological countermeasures. This establishes that the planet has something like intelligence — or is being directed by something that does. Neco, meanwhile, will be captured by her own people for bringing the "Changing Thing" home.</div>
     </div>
   </div>
-
+ 
   <!-- PART 10 -->
   <div class="part-divider" id="p10-div">
     <h2>Part 10 — Götterdämmerung and After</h2>
     <div class="part-era first">The First Age · The Kill Switch</div>
   </div>
-
+ 
   <div id="p10-1" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -613,7 +699,7 @@
       <div class="key-moment kfirst"><strong>The Apocalypse They Felt Coming</strong> Kott reflects that you couldn't do anything against the kill switch. By the time you became aware of it, its work was done. Earth has destroyed itself and, in doing so, reached out to kill everything that bore its electronic signature — including them.</div>
     </div>
   </div>
-
+ 
   <div id="p10-2" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -623,7 +709,7 @@
       <p>Thirty-eight days in, with reactor shutdown imminent, Kott roams the dead station's corridors by lamplight. She loops through memories of Earth's collapse: the wars, the ice age, the engineered plagues in the permafrost. She feels permanently sick and cannot sleep — Dorcheson's biomod, which suppressed sleep needs to maximize productivity, has become a curse. Food is nearly gone. Water reclamation is half-functional. All five survivors urinate into the same bucket. They are at the edge of survivable.</p>
     </div>
   </div>
-
+ 
   <div id="p10-3" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -633,7 +719,7 @@
       <p>Kott Conflates with the dying planet. Pil is also there, a "cloud of inky venom," but more lucid than his physical self. The world below is deteriorating too — anoxic areas, ecological crashes, fungal blooms poisoning what their intervention had built. Without their guidance, the biosphere is regressing. Pil, in a rare moment of honesty, expresses he had hoped for something lasting. Kott refuses to share his despair: "surely something must survive?"</p>
     </div>
   </div>
-
+ 
   <div id="p10-4" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -643,7 +729,7 @@
       <p>Kott announces she can restore power. What she has done, while Conflated, is force-evolve a bacterium that metabolizes the reactor's fuel and performs biological fusion — outputting energy. The Life growing through the station's walls has interlaced with the dead systems, substituting biological pathways for electronic ones. Kott has, in effect, made the Pancreator partly alive. Dorcheson is horrified. Hartmand, once he understands the power is real, is cautiously interested. Milner begins assigning priorities: oxygen, water, heat, light, food.</p>
     </div>
   </div>
-
+ 
   <div id="p10-5" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -653,7 +739,7 @@
       <p>Hartmand seizes on the revived biological circuitry to reanimate his robots, implanting living material harvested from the walls to reconnect them to the biosphere's signalling matrix. For two days the automatons walk again under his command, his private army reasserted. But Kott watches and does not interfere: the robots' reign lasts exactly those two days, after which the organic overgrowth overwhelms their mechanical control and they go inert again. Hartmand has not actually won anything; he's just fed the Life.</p>
     </div>
   </div>
-
+ 
   <div id="p10-6" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -664,13 +750,13 @@
       <div class="key-moment kfirst"><strong>Pil's Ghost</strong> Kott finds enough cellular fingerprints to know Pil hasn't just abandoned the project — he's disappeared into it. The question of whether Ken Pil has died, uploaded, or evolved into something else entirely will define the next act of the First Age story.</div>
     </div>
   </div>
-
+ 
   <!-- PART 11 -->
   <div class="part-divider" id="p11-div">
     <h2>Part 11 — The Warrior Moment</h2>
     <div class="part-era third">The Third Age · Planet Fall</div>
   </div>
-
+ 
   <div id="p11-1" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -680,7 +766,7 @@
       <p>The Stomatopod civilization's history with the nanovirus: they were already social in a combative dominance-hierarchy way, with extraordinary sensory equipment (sixteen-receptor eyes, specialized appendages) and the germ of theory of mind. The virus found fertile ground. Over thousands of years they expanded, competed with uplifted cephalopods, built a rich if belligerent culture. The chapter introduces the concept of the "warrior moment" — a transcendent state in which a Stomatopod warrior's processing accelerates and time becomes a servant. It is celebrated in their culture through dance-poems and epic sagas.</p>
     </div>
   </div>
-
+ 
   <div id="p11-2" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -690,7 +776,7 @@
       <p>Cato must go to the surface to rescue Mira. The problem: Stomatopods are sea creatures, utterly unsuited to land under gravity. The Panspecific tried prosthetic walking frames, which Stomatopods hate — it feels like being hobbled. Cato's solution, designed by the first generation of Stomatopod engineers, is jet propulsion: an abdominal prosthesis that uses their ancestral jet mechanism (traditionally the enemy's weapon) repurposed for controlled flight. It's still culturally controversial. Cato adapts his suit configuration and prepares to descend.</p>
     </div>
   </div>
-
+ 
   <div id="p11-3" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -700,7 +786,7 @@
       <p>Neco Kasmar's situation worsens. Having brought the "Changing Thing" (Mira) to Four Dragon Ford, she's imprisoned in a pit cell. The community is terrified: scouts have seen something gelatinous and spreading in the forest, unlike any normal beast. Neco listens through her cell floor. She is eventually hauled out and interrogated by Key Crew — Ellan (Chief Hunter), Udin (Chief Engineer), Mezclo (Archivist). The Archivist's records have nothing matching the Changing Thing or the new arrivals. A decision is forming: use Neco as a sacrificial ambassador.</p>
     </div>
   </div>
-
+ 
   <div id="p11-4" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -711,7 +797,7 @@
       <div class="key-moment kthird"><strong>Portifabian</strong> The merged consciousness, which they bitterly name Portifabian, is the book's most formally inventive POV — two spiders reluctantly becoming one being, narrated in grammatical double-vision. Their combined analysis of the planet's biology will prove crucial.</div>
     </div>
   </div>
-
+ 
   <div id="p11-5" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -721,7 +807,7 @@
       <p>The Dissenter's atmospheric craft, descending toward the planet, is attacked by enormous flying creatures — pterosaur-like, with razor beaks capable of cutting through the ship's hull. They are not acting on hunting instinct; they seem directed. Cato, ascending to the exterior of the plummeting ship, enters his warrior moment: time slows, his body becomes purely mechanical in its precision. He fights the pterosaurs off the hull in open atmosphere, combining his jets and his natural weapons. He gives his orders and leaves piloting as "someone else's problem."</p>
     </div>
   </div>
-
+ 
   <div id="p11-6" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -731,13 +817,13 @@
       <p>Neco, having survived her encounter with Mira, is found by Mira in a garden that is somehow a perfect simulacrum of Earth — topiary and blue sky, clearly generated from race memory. Mira appears in human form (actually Alis's face, since Mira had been wearing the Alis persona) and speaks with unnerving directness, knowing Neco's name and lineage. Neco is told she's named for Cosimir — not an actual ancestor, but a folk hero her ancestors wished to claim. The revelation unsettles them both. The Earth garden is a space within Mira herself, constructed from archived human cultural memory.</p>
     </div>
   </div>
-
+ 
   <!-- PART 12 -->
   <div class="part-divider" id="p12-div">
     <h2>Part 12 — Senescence</h2>
     <div class="part-era first">The First Age · The Long Slow Death</div>
   </div>
-
+ 
   <div id="p12-1" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -747,7 +833,7 @@
       <p>Ken Pil's physical body is found dead. Nobody mourns. Kott alone performs a private ceremony, sealing his corpse with the biological growth he fostered, letting him be digested by his creations. She then investigates his terminal — inheriting whatever secrets he left behind, as the sole mourner at the funeral. She checks for any evidence of a backdoor Conflation access, hoping he found a way to achieve purer communion with the biosphere than the Conflation chair allows.</p>
     </div>
   </div>
-
+ 
   <div id="p12-2" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -757,7 +843,7 @@
       <p>Kott cannot sleep — Dorcheson's biomod prevents it — but she has waking dreams. In one, she sees what might have been: Hartmand had adherents. Millions of them. A fleet of gleaming ships, built in secret, crewed by his corporate true believers who activated some pre-arranged trigger when the end came on Earth. In this dream-vision, an entire civilization's worth of Hartmand followers may have fled among the stars. Whether this is truth or delusion, Kott cannot determine.</p>
     </div>
   </div>
-
+ 
   <div id="p12-3" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -767,7 +853,7 @@
       <p>Enormous time has passed — the clocks were wiped by the kill switch and the replacement biological timekeeping systems are unreliable. The planet has stabilized into something Earth-adjacent: not Earth, never quite Earth, but wearing Earth's face like a mask. Bugs still erupt occasionally; the four survivors stomp them together, their only point of genuine cooperation. They keep discussing disconnecting from the planet and letting it run alone, but never quite do it. The Pancreator is now more organism than machine.</p>
     </div>
   </div>
-
+ 
   <div id="p12-4" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -777,7 +863,7 @@
       <p>Milner performs a solo spacewalk (without telling anyone, safety protocols having eroded with everything else) to launch a tethered drone camera and get a view of the Pancreator's exterior. What it shows: the entire station is now clothed in Life — vast photosynthetic fronds projecting into space, cables of organic matter gripping the hull, flowers growing in vacuum. The station has become a magnificent, grotesque garden ship. Kott looks at it and feels small.</p>
     </div>
   </div>
-
+ 
   <div id="p12-5" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -787,7 +873,7 @@
       <p>All four survivors gather in the hub for a meeting — their first face-to-face assembly in a long time, nobody Conflating. The hub, the last hard human space, is showing stress: a hundred cracks patched with organic glue extruded by the very Life they're trying to exclude. Samples of the Life show impossible biochemistry — radiation-absorbing organs, vacuum-adapted photosynthesis, signalling systems that speak to the planet below. The station communicates with the world. One of them is always on the Conflation system, straining to keep the world stable.</p>
     </div>
   </div>
-
+ 
   <div id="p12-6" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -798,13 +884,13 @@
       <div class="key-moment kfirst"><strong>What Comes Next</strong> Kott has realized Pil's biological upload was not accidental or incomplete. He chose it. She has spent a long time studying how he did it. She is going to try.</div>
     </div>
   </div>
-
+ 
   <!-- PART 13 -->
   <div class="part-divider" id="p13-div">
     <h2>Part 13 — The Revenge of Tiamat</h2>
     <div class="part-era second">The Second Age · The Marduk's Crisis</div>
   </div>
-
+ 
   <div id="p13-1" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-second">Second Age</span>
@@ -814,7 +900,7 @@
       <p>Hieron finally gets time with Captain Cosimir to present her discovery: the Beanstalk, the orbital organism, and all the planetary surface flora share a single evolutionary origin — they are all one organism of extraordinary phenotypical plasticity. It can express radically different biological forms depending on environment: vacuum fronds in space, regular trees on the ground, and presumably the same in the Pancreator-derived origin in between. Hieron believes she can replicate these adaptations in controlled laboratory conditions. Cosimir wants her focused on getting people down to the planet. The tension between science and survival defines their relationship throughout.</p>
     </div>
   </div>
-
+ 
   <div id="p13-2" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-second">Second Age</span>
@@ -824,7 +910,7 @@
       <p>A theoretical chapter explaining what the Beanstalk is doing to the Marduk. In nature, invasive species become destructive when removed from their evolutionary constraints. But the Beanstalk isn't following that logic: it is replacing the ship's structure with itself, preserving the ship's shape even as it digests the metal. It is growing a biological echo of the Marduk. Hieron realizes this is not aggression but investigation — the organism is curious about the ship and is incorporating it. This doesn't make it safe.</p>
     </div>
   </div>
-
+ 
   <div id="p13-3" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-second">Second Age</span>
@@ -834,7 +920,7 @@
       <p>Forty-eight hours of crisis. Cosimir sits at her command console and does not move, condensing fragmentary reports into decisions — which compartments to abandon, which to reinforce, how to deploy Ilshir's team and the improvised fighters from cargo. She has found inside herself "the bastardy of being a captain": the ability to accept loss without despair and make optimal decisions from disaster. People die — to poison thorns, suit failures, structural collapse. Hieron runs a biological countermeasures lab, fighting the plant with engineered antifoliant agents.</p>
     </div>
   </div>
-
+ 
   <div id="p13-4" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-second">Second Age</span>
@@ -844,7 +930,7 @@
       <p>Ilshir on the front lines with robots and cutting teams. The Beanstalk has become strategic — preserving the structural shape of compartments even as it digests them, throwing thorn-nets that trap people, growing through hidden pathways faster than engineering maps can track. The shuttle bays are Ilshir's lifeline — Kieraven (Security Chief) is running a pipeline of people from cargo to the landing craft. The numbers are brutal: enough shuttles for most people, not all, and the timeline is closing. Hieron's lab is cut off by vines.</p>
     </div>
   </div>
-
+ 
   <div id="p13-5" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-second">Second Age</span>
@@ -854,7 +940,7 @@
       <p>Kieraven on the ground with the first wave of settlers, now deep into a chaotic landing night. Too many people arriving too fast. Tents along the riverbank, people falling in and drowning, deaths by misadventure as colonists who've never seen a wild animal encounter a planet that has evolved strange predators and stranger plants. The Beanstalk's surface growth is passive by comparison to its orbital aggression — it behaves like plants here. If it had been as animate as in orbit, they'd all be dead already.</p>
     </div>
   </div>
-
+ 
   <div id="p13-6" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-second">Second Age</span>
@@ -865,13 +951,13 @@
       <div class="key-moment ksecond"><strong>The Colony's Name</strong> The settlers have a word for this world now. They call it Marduk — after the ship that brought them. And they have learned, standing at their fence looking into the forest at night, that this world does not want them here. Something in it is actively hostile.</div>
     </div>
   </div>
-
+ 
   <!-- PART 14 -->
   <div class="part-divider" id="p14-div">
     <h2>Part 14 — Enemy's Enemy's Enemy</h2>
     <div class="part-era third">The Third Age · First Contact in the Forest</div>
   </div>
-
+ 
   <div id="p14-1" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -881,7 +967,7 @@
       <p>The Dissenter's atmospheric craft has crashed in the forest. Alis sits on top of it holding her head. The vessel has ploughed a furrow through the trees and settled between trunks like a mushroom that grew overnight. Portifabian communicates with her through both suit comms and Portiid body-language, the two translations slightly out of sync, giving their speech a doubled, stuttering quality. They need to fix the ship and get airborne before the pterosaur creatures return. Cato is already addressing that in his own terms. Alis is trying to remember what just happened and failing.</p>
     </div>
   </div>
-
+ 
   <div id="p14-2" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -891,7 +977,7 @@
       <p>We see Four Dragon Ford — the settlement Neco came from — through Mezclo the Archivist's eyes. The community's Key Crew (Ellan, Udin, Mezclo) attempts to process the unprecedented: gelatinous spreading thing in the woods, ship falling from the sky, Neco's strange account. Mezclo's Archives, maintained Classicist-to-Archivist across generations, contain nothing matching any of it. Then scouts return reporting something new: not the Changing Thing, but a floating arthropod creature and a human-shaped companion. The newcomers arrive at the gates.</p>
     </div>
   </div>
-
+ 
   <div id="p14-3" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -901,7 +987,7 @@
       <p>Kern observes that the colonists are "unmodified humans" — pre-nanovirus, lacking the cognitive bridge that allows Human-Portiid communication. Alis points out this is a rich observation coming from an entity who was once an equally unmodified human. The Dissenter crew must navigate genuine cultural contact: Cato's translator gives him Kern's automated circuit, but Stomatopod language is visual-kinetic, and the settlers have no context for any of it. Portifabian can manage some Human language given their familiarity with the Portiids' modified Human partners. Cato finds the settlers' posture of fear infuriating — he interprets craven submission as an insult and barely contains the urge to deliver a corrective blow.</p>
     </div>
   </div>
-
+ 
   <div id="p14-4" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -911,7 +997,7 @@
       <p>Mira — still expanding through the forest as a spreading gelatinous mass — reaches the area around the encounter and swallows Alis. Cato and Portifabian retreat at speed. Cato, moving backward at maximum velocity because forward-facing retreat is a cultural impossibility, knocks over several armed settlers like skittles. He loses sight of Mira. The Nodan entity is expanding beyond any previous scale — bloating into great slick bubbles, rushing forward, dissolving everything in its path. This is not containable by any force the settlers or the Dissenter crew have available.</p>
     </div>
   </div>
-
+ 
   <div id="p14-5" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -921,13 +1007,13 @@
       <p>Mezclo votes to exclude the newcomers; Ellan votes to let her hunters back in; Udin's gut overrules his brain and he says yes. The settlement receives Cato and Portifabian under heavy guard — guns, axes, machetes, flamethrowers, and the "Inevitable Fire" (a restored ancient artifact of great cutting power). Kern, speaking through Portifabian, confirms to the settlers: they have come from the sky, they know of Earth, their ancestors also fled it — "cousins," Cato's translation offers. The settlers are deeply sceptical but running out of options as the world outside their walls grows actively worse.</p>
     </div>
   </div>
-
+ 
   <!-- PART 15 -->
   <div class="part-divider" id="p15-div">
     <h2>Part 15 — Exit / No Exit</h2>
     <div class="part-era first">The First Age · The Gods Upload</div>
   </div>
-
+ 
   <div id="p15-1" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -937,7 +1023,7 @@
       <p>A bug-golem — a humanoid shape constructed from the biosphere's insect matter — collapses as Kott receives words from within it. Pil's imprint remains in the biosphere's cellular memory, and Kott can trace it: not a true upload, but fingermarks. The golem's cells carry the damage of his mental demands, structures that interacted with the signalling matrix. Kott extinguishes the bug colony with a swift plague and performs a post-mortem analysis. She finds just enough to know Pil is in there somewhere — undirected, incomplete — but she isn't sure what survived.</p>
     </div>
   </div>
-
+ 
   <div id="p15-2" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -948,7 +1034,7 @@
       <div class="key-moment kfirst"><strong>The Upload Works</strong> Pil has achieved what mechanical brain-uploading never could: a biological upload into a planetary computing substrate. The network of living interactions is sufficient to preserve and run his personality, his memory, and his intelligence. He is distributed across the entire world. He's been in there for centuries.</div>
     </div>
   </div>
-
+ 
   <div id="p15-3" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -958,7 +1044,7 @@
       <p>Kott calls a meeting of the four physical survivors in the hub — her least favourite thing in the world, but she wants to see them one final time. She watches Hartmand demand others fix his problems, Dorcheson insist on poisoning everything, and Milner vaguely insist something will turn up. She knows Milner is accidentally right but not for any reason he understands. She watches them as study subjects, the product of a culture that selected for ruthlessness and nothing else. The Life cracks the hub. The end is imminent.</p>
     </div>
   </div>
-
+ 
   <div id="p15-4" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -968,7 +1054,7 @@
       <p>The Life cracks the hub. Kott's physical body ends. But she does not end. Following Pil's technique — which she has spent a very long time studying — she has prepared herself: withdrawn her conscious self into a small creature she'd been cultivating, a lithe, cat-like predator she'd force-evolved with especial care. She stretches, extends into it, and beyond it into her network of chosen species. She is the world now. The mortal body is gone. She is, for a genuine moment, triumphant. Then something eats the cat. She dies again, for the first of ten thousand times.</p>
     </div>
   </div>
-
+ 
   <div id="p15-5" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -978,7 +1064,7 @@
       <p>A compressed account of thousands of years as uploaded gods inhabiting the biosphere. Kott, Milner, Dorcheson, Hartmand — all eventually make the upload. Pil is already everywhere. And they spend centuries hunting each other, eating each other, dying in each other, breeding in parallel as their chosen animal forms. A cycle of predation, exploitation, and mutual torment. The planet stabilises but only as an arena for divine warfare. They are too intelligent for peace and too imprisoned for escape. Kott reflects that they could have negotiated, just once — but didn't, and now the habit is geological.</p>
     </div>
   </div>
-
+ 
   <div id="p15-6" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -988,13 +1074,13 @@
       <p>After millennia of silence between themselves, Hartmand calls out across the world-network. Something new is happening: shuttle sound in the atmosphere. Pil, who has drifted far from his original personality but retains a thread of lucid chaos-merchant insight, has foreseen it — signals coming down the Beanstalk, novel biochemistry in the orbital pipeline. An ark ship has arrived. Kott, who has been keeping careful distance from Hartmand and Dorcheson, considers her options. The gods of Marduk are about to receive visitors.</p>
     </div>
   </div>
-
+ 
   <!-- PART 16 -->
   <div class="part-divider" id="p16-div">
     <h2>Part 16 — Old Acquaintance, Brought to Mind</h2>
     <div class="part-era third">The Third Age · Gods and Guests</div>
   </div>
-
+ 
   <div id="p16-1" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1004,7 +1090,7 @@
       <p>Alis wakes inside Mira. She is within a cathedral of orange-translucent gel built around the smothered skeletons of trees, hung with insects and small animals dissected with appalling precision. The Nodan entity is a passionate investigator — it takes things apart to understand them. Inside this space, Mira has constructed an almost domestic setting: table, stools, hunched figures of slime. Mira herself appears in human shape (Alis's face), alongside a figure Alis doesn't recognize. Alis sits because she is entirely at Mira's mercy. The figure beside Mira is one of Mira's stored identities — a past host, made semi-visible in this space.</p>
     </div>
   </div>
-
+ 
   <div id="p16-2" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1015,7 +1101,7 @@
       <div class="key-moment kthird"><strong>The Name That Changes Everything</strong> Once Kern confirms the identity of the planet's creator, the nature of the world's hostility snaps into focus. The malevolence is not the planet's — it is Hartmand's. A man whose primary emotional register was dominance and contempt has had thousands of years to perfect expressing those qualities through an entire biosphere.</div>
     </div>
   </div>
-
+ 
   <div id="p16-3" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1025,7 +1111,7 @@
       <p>Kott's perspective on the arrival of the Dissenter crew. After millennia of repetitive misery, the newcomers represent her first genuine point of interest. She locates herself in her favoured cat-weasel-monkey forms and watches. She is under no illusions about her own moral framework's structural deficiencies, but she at least knows they are deficiencies, which she feels puts her ahead of Hartmand. She wants to talk to the newcomers. Hartmand has already declared that a hostile act and is threatening consequences.</p>
     </div>
   </div>
-
+ 
   <div id="p16-4" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1035,7 +1121,7 @@
       <p>Cato is frustrated. Kern and Portifabian are doing science while he, the Captain, has been excluded from meaningful decisions. He has been analysing incoming signals and thinks he could break through to the other planetary intelligences — bypassing the one calling itself Kott — but lacks the means. The settlers of Four Dragon Ford are clearly living under something's oppression: their entire culture is organized around appeasement and sacrifice to the world. Cato knows subjugation when he sees it, and finds the sight offensive. He wants to resolve this the way he resolves problems: decisively and at close range.</p>
     </div>
   </div>
-
+ 
   <div id="p16-5" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1045,13 +1131,13 @@
       <p>Kott detects Cato moving toward the infected Mira-zone and shadows him at a distance, slipping through the electromagnetic spectrum using the biosphere's own channels. She recognizes that Cato's visual system — Stomatopod sixteen-receptor eyes — operates on the same circular polarized light wavelength the pantheon uses as their private communication channel. He can see their private back-channel as naturally as he sees anything. Revelation: a possible bridge. She begins formulating how to introduce herself.</p>
     </div>
   </div>
-
+ 
   <!-- PART 17 -->
   <div class="part-divider" id="p17-div">
     <h2>Part 17 — A History of Violent Acts</h2>
     <div class="part-era third">The Third Age · Negotiations with Gods</div>
   </div>
-
+ 
   <div id="p17-1" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1061,7 +1147,7 @@
       <p>A background chapter on the Stomatopods' place in the Panspecific — specifically, the faction that wanted to maintain a separate warrior culture rather than integrate. The Shoal project: a group of Stomatopods applied through Kern's administrative network for their own star system to inhabit on their own terms, with the Portiids' blessing. They got it. Cato was their most enthusiastic advocate. The Shoal system was given to them and they built what they always dreamed of: an interstellar community organized around martial values, space-adapted and armed.</p>
     </div>
   </div>
-
+ 
   <div id="p17-2" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1071,7 +1157,7 @@
       <p>Kott has cut Cato off from Kern's signal and is communicating directly through his electromagnetic receptors. Her translation function runs within his suit's systems. She interrogates him with the careful condescension of someone who thinks she's weaving a net around him. Cato, meanwhile, has already identified exactly what she is doing: he sizes up opponents for a living. He plays the role of someone being flattered, while running his own assessment. He learns: Kott is ancient, distributed, one of several such entities, and considers herself the approachable one. She wants something. He intends to find out what before giving her anything.</p>
     </div>
   </div>
-
+ 
   <div id="p17-3" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1081,7 +1167,7 @@
       <p>Inside her gelatinous self, Mira explains to Alis that she is dying — not the entity, but the self. Mira the individual, the carefully assembled therapeutic identity built from pieces of the Nodan organism and many hosts, is losing coherence. Her expanding Nodan substrate is enthusiastically devouring the world's hostile ecosystem and investigating everything, and this enthusiasm is squeezing out the patient, deliberate Mira-consciousness. She is becoming a constitutional monarch to a riotous parliament she cannot control. She knows this and tells Alis, as a last act of her therapeutic integrity.</p>
     </div>
   </div>
-
+ 
   <div id="p17-4" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1091,7 +1177,7 @@
       <p>Cato catalogues his situation with military precision. Kern is his lifeline and she has been cut off — an impressive feat. Kott is one of several planetary intelligences; she represents herself as the friendliest, which means the others are worse. Hartmand is described by Kott as the dominant entity; Cato recognises this as the problem that needs solving. He begins analysing the electromagnetic channels, looking for a way to reach the other intelligences directly or to restore contact with Kern. He is not going to be guided by Kott's agenda. But she's the only hand offering anything right now, so he plays along, barely.</p>
     </div>
   </div>
-
+ 
   <div id="p17-5" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1101,7 +1187,7 @@
       <p>Portifabian and Kern review the planet's biology together. Their merged analysis — faster and more comprehensive than either alone — reverse-engineers the terraforming techniques used here. They are radically different from Kern's own methods: self-directed evolutionary acceleration built into the initial seed organisms, with biological feedback loops enabling rapid adaptation. Kern recognises the fingerprints with reluctant distaste: "Gerey Hartmand, yes, but there were others. A little coterie of idiots. No names spring to mind." Then, a pause: "I had consigned them to the bin." Confirmation that the Pancreator team was known to Kern, briefly, and dismissed.</p>
     </div>
   </div>
-
+ 
   <div id="p17-6" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1112,7 +1198,7 @@
       <div class="key-moment kthird"><strong>Cato's Wound</strong> The Escalation is the pivot of Cato's character. He is a being who achieved everything his culture valorised and found it empty, catastrophic, and irreversible. His aggression is genuine but he now applies it with an external check — the knowledge of what unchecked aggression looks like at scale.</div>
     </div>
   </div>
-
+ 
   <div id="p17-7" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1122,13 +1208,13 @@
       <p>Something roars from the bowels of the world — a sound the settlers hear in the village and close their shutters against. Mezclo, alone with the Portifabian robot, demands to know what is happening. She is furious: these visitors have antagonised forces her people have spent generations trying to appease, and they did it with casual power and then left. She looks at the spider robot — a product of technology her Archives record but her civilization cannot rebuild — and feels the grief of everything their ancestors once had and lost. Not lost: taken. The Archivists have always suspected the world actively prevented their progress. She now believes it.</p>
     </div>
   </div>
-
+ 
   <!-- PART 18 -->
   <div class="part-divider" id="p18-div">
     <h2>Part 18 — Death Lives and Nature Breeds</h2>
     <div class="part-era third">The Third Age · The Resolution</div>
   </div>
-
+ 
   <div id="p18-1" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1138,7 +1224,7 @@
       <p>Alis, returned from inside Mira, arrives at Four Dragon Ford clinging to Cato's gun mounts while he fights through the forest. She now understands the situation: the planet is inhabited by uploaded human consciousnesses — Redina Kott, Gerey Hartmand, and others — who have been running this world as their private domain for millennia. The animals of the planet are their avatars, their weapons, their playthings. The bespoke monsters they fight through the forest are Hartmand's personal creations: chimeras of incompatible phyla, outfitted with human-face features, clearly the work of someone who found cruelty more interesting than coherence. The creatures look miserable, as though their impossible bodies cause them constant pain.</p>
     </div>
   </div>
-
+ 
   <div id="p18-2" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1148,7 +1234,7 @@
       <p>Cato's interior monologue during the fight: the shame of having given way in Alis's challenge. A Stomatopod does not retreat from a weaker opponent. But something made him pull back. The chapter turns to the deeper shame — the Escalation. He describes the moment the Portiid rescuers arrived at the Shoal wreckage and he saw through their eyes what had happened. He would have fought even them, in his madness, but the Portiid communications bleed emotional state, and their incredulity and horror reached him. He saw himself as a monster and couldn't look away. He has never gone back. He serves with the Dissenter because it is the only community willing to take him, and because being useful feels like partial payment on an infinite debt.</p>
     </div>
   </div>
-
+ 
   <div id="p18-3" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1158,7 +1244,7 @@
       <p>Mezclo watches a giant spider robot walk out of the trees and simply leave, taking passengers like a handcart. For a moment she has the words "take me with you" in her throat. A scientist, for just a second. Then she clamps down on it. She does not have the words to explain what she has witnessed to Ellan and Udin — her Archives have given her the tools to recognize these things but not to make anyone else understand them. She is left knowing more than she can say, and suspecting she will spend the rest of her life in that position.</p>
     </div>
   </div>
-
+ 
   <div id="p18-4" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-first">First Age</span>
@@ -1168,7 +1254,7 @@
       <p>Kott watches through thousands of eyes as the visitors leave. She has been doing more sustained thinking in the past few days than in the preceding millennium. The arrivals have briefly made the world interesting again. She acknowledges — for the first time in a long time — that what she and her pantheon have done to the settlers is indefensible. Not that this stops her, exactly, but she knows it. Hartmand is now advancing his war against her for the transgression of speaking to Cato. She realizes all she has done is accelerate the moment when the world becomes boring again. Unless something changes.</p>
     </div>
   </div>
-
+ 
   <div id="p18-5" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1178,7 +1264,7 @@
       <p>Alis has a plan. Cato doesn't like it. The plan involves using Mira — the Nodan entity that is already flooding the forest — as a carrier medium. Mira can inhabit other organisms; she can live inside Cato and experience his sensory world. If Mira can see through Stomatopod eyes — those extraordinary sixteen-receptor instruments that perceive wavelengths nothing else can — she can potentially encode her consciousness onto the private channel the planetary gods use. She can insert herself into the biosphere's network without becoming hostile to it. Alis, who has already undergone the necessary neurological treatment for Mira to interface with her safely, frames this with care: Cato has to say yes voluntarily. That's how the plan works.</p>
     </div>
   </div>
-
+ 
   <div id="p18-6" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1188,7 +1274,7 @@
       <p>Alis faces the full bulk of Mira — a glistening citadel of Nodan biomass spreading through the forest — and asks for her friend back. The Mira-self, barely coherent, emerges in fragments. The monsters of Hartmand's making are bearing down on them. Alis explains the plan: Mira needs Cato's eyes. Through his eyes, she can exist within the planet's biological signalling network as a new presence without needing to expand or consume. She needs to become a distributed passenger, not an invasive force. And she needs to choose that, or the remainder of her self will be entirely consumed by the Nodan substrate's enthusiasm.</p>
     </div>
   </div>
-
+ 
   <div id="p18-7" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1198,7 +1284,7 @@
       <p>Mira enters Cato, and the experience is overwhelming: his nervous system, the tactile sensation of his many limbs, his antennae, and above all those sixteen-receptor eyes. Seeing the world as a Stomatopod sees it — with colour concepts that have no human analogue — is the most intense experience available to a being that has inhabited human, Portiid, and Nodan forms. But the crisis is immediate: the Nodan substrate within Mira is the problem. It is a vast enthusiasm for experience, and Cato's sensorium is almost too compelling — the risk is that the Nodan part dissolves Mira in delight. Ancestral terrors from Nod — predator memories encoded in Nodan DNA — give Mira the psychological grip to pull back from the edge and encode herself into the planet's network as a stable presence rather than a consuming wave.</p>
     </div>
   </div>
-
+ 
   <div id="p18-8" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1209,13 +1295,13 @@
       <div class="key-moment kthird"><strong>The Takeover</strong> Mira does not fight the pantheon. She simply becomes the medium they exist in. As the Nodan signal spreads, each god finds their domain shrinking — not because Mira is eating them, but because the world's biological computation is now running on Mira's terms. She is the new operating system. They are legacy processes.</div>
     </div>
   </div>
-
+ 
   <!-- PART 19 -->
   <div class="part-divider" id="p19-div">
     <h2>Part 19 — After the Gods Left</h2>
     <div class="part-era third">The Third Age · Aftermath</div>
   </div>
-
+ 
   <div id="p19-1" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1225,7 +1311,7 @@
       <p>The assault on Four Dragon Ford ends — not with a sudden silence, but with a gradual ebbing of enthusiasm. The monster army, deprived of divine direction, splinters, fights itself, slinks into the trees. Mezclo, who knows future generations will tell this as a dramatic moment of cessation, grieves for the Archive's truthfulness. The settlement is left with deaths, wounded, contaminated stores, and ruined fields. Mezclo decides to go out as an emissary to other towns, trading the most valuable currency she now has: a story nobody else can tell, and the questions it raises.</p>
     </div>
   </div>
-
+ 
   <div id="p19-2" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1235,7 +1321,7 @@
       <p>Neco Kasmar wakes aboard the Dissenter. In zero-gravity. With no body — Mira rebuilt her from the stored neural pattern that had been absorbed when Neco was consumed. The first waking is too much; she goes blank. The second time, Alis talks her through it carefully, offering sketch-lines of what happened rather than full immersion. Neco grasps: she went to the Changing Thing, it ate her, her body died, her mind was preserved, and now Alis has grown her a new one. The body is slightly different. The questions of identity ("If that was Neco Kasmar who had the body and died, who am I who am I who am I...") are handled with Alis's hard-won experience of exactly this territory.</p>
     </div>
   </div>
-
+ 
   <div id="p19-3" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1245,7 +1331,7 @@
       <p>Portifabian has their body back — the spider robot. Not one body: six, and working on seven. They have been mastering simultaneous control of multiple robot forms, experimenting with autonomous behaviour loops. They and Kern have divided the ship: Kern in the mothership, Portifabian in the drop ship. They have decided not to grow a new Portiid body because they are no longer a Portiid mind singular — they are Portifabian, and no single-body format fits that. They are more. It is still bitter. They are working on that.</p>
     </div>
   </div>
-
+ 
   <div id="p19-4" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1255,7 +1341,7 @@
       <p>Mira would like to remain a permanent passenger in Cato. She is diplomatically quiet about it. Alis raises the subject. Cato refuses, unambiguously and without rancour. He will not have Mira living in him. He acknowledges that Mira's behaviour on the planet — choosing to spread through a new ecosystem rather than consume everything — proves she is not a threat. "You say yes, you say no. That's how it works. That's how it should have worked down there." He refuses on principle, not from fear. This is the correct answer, and everyone including Mira accepts it.</p>
     </div>
   </div>
-
+ 
   <div id="p19-5" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1265,7 +1351,7 @@
       <p>The gods of Marduk — Kott, Dorcheson, Milner — have been extracted from the planetary network, their consciousness patterns packaged in Portiid-style synthetic-webbing containers. Three gods in jars, aboard the Dissenter. Hartmand refused to consent. The three who agreed are taken to Imir — the planet with the alien simulation machine. Within the machine's nested realities, they can be gods in a space where they cannot damage anyone real. Kott is not happy about this, but she chose it over the alternative. She sits with Mira at a tea party table surrounded by the half-formed shapes of all Mira's past hosts, discussing what the other gods are doing now. Mira cannot tell her. She will not enter the simulation to find out — it would skew the layers toward her, and that wasn't the deal. The gods get their own story, not a supporting role in hers.</p>
     </div>
   </div>
-
+ 
   <div id="p19-6" class="chapter">
     <div class="chapter-header">
       <span class="chapter-badge badge-third">Third Age</span>
@@ -1276,22 +1362,47 @@
       <div class="key-moment kthird"><strong>The End of Hartmand</strong> The last page of the novel: a man who built a world in his own image, uploaded himself into it for millennia, tormented its people as proof of his dominance — dying alone in a monster he made, howling at a planet that has simply moved on without him. Not defeated by force but by irrelevance. The settlers close their shutters against the sound. Tomorrow they will begin rebuilding.</div>
     </div>
   </div>
-
+ 
 </main>
-
+ 
 <script>
-  // Pure in-document scrolling — no href, no browser navigation
+  // ── Sidebar open/close ──────────────────────────────────────
+  var body      = document.body;
+  var toggle    = document.getElementById('toc-toggle');
+  var overlay   = document.getElementById('toc-overlay');
+ 
+  function openToc()  { body.classList.add('toc-open'); }
+  function closeToc() { body.classList.remove('toc-open'); }
+  function toggleToc(){ body.classList.toggle('toc-open'); }
+ 
+  toggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    toggleToc();
+  });
+ 
+  overlay.addEventListener('click', closeToc);
+ 
+  // ── Pure in-document scrolling — no href, no browser navigation ──
   document.querySelectorAll('.nav-link[data-target]').forEach(function(link) {
     link.addEventListener('click', function(e) {
       e.preventDefault();
       var id = this.getAttribute('data-target');
       var target = document.getElementById(id);
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // On mobile, close the sidebar first, then scroll
+        if (window.innerWidth <= 768) {
+          closeToc();
+          // Small delay lets the sidebar slide away before scroll
+          setTimeout(function() {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 60);
+        } else {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
     });
   });
 </script>
-
+ 
 </body>
 </html>
