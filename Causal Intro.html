@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html style="background:#0e0e0f!important">
+<head>
+<meta charset="UTF-8">
+<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>The Unified Causal Thinking Guide</title>
+<style>
+html,body{background:#0e0e0f!important;color:#e0ddd4;margin:0;padding:0;font-size:15px;-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;background:none}
+em{font-style:italic}
+
+/* ── Sidebar ── */
+#sidebar{position:fixed;top:0;left:-280px;width:260px;height:100vh;background:#0d0f1a;border-right:1px solid #222638;z-index:100;transition:left .28s ease;overflow-y:auto;display:flex;flex-direction:column}
+#sidebar.open{left:0}
+.sb-head{padding:20px 16px 14px;border-bottom:1px solid #222638;flex-shrink:0}
+.sb-title{color:#d4a86e;font-family:Georgia,serif;font-size:15px;margin-bottom:3px}
+.sb-sub{color:#7a7888;font-family:monospace;font-size:10px;letter-spacing:.08em}
+.sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
+.nav-ch{display:block;width:100%;text-align:left;padding:9px 12px;margin-bottom:3px;border-radius:6px;font-family:monospace;font-size:10.5px;color:#7a7888;border:1px solid transparent;transition:all .2s;background:none}
+.nav-ch:hover,.nav-ch:active{background:#161a28;color:#d4a86e;border-color:#d4a86e33}
+.nav-ch span{display:block;font-size:9px;opacity:.6;margin-top:2px}
+
+/* ── Overlay ── */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90}
+#overlay.vis{display:block}
+
+/* ── Hamburger ── */
+#hbg{position:fixed;top:12px;left:12px;z-index:110;width:38px;height:38px;background:#161a28;border:1px solid #222638;border-radius:7px;color:#d4a86e;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+#hbg:hover{background:#1e2336}
+
+/* ── Main ── */
+#main{padding:58px 20px 60px;max-width:820px;margin:0 auto}
+
+/* ── Chapter sections ── */
+.chapter{margin-bottom:80px}
+.ch-anchor{display:block;position:relative;top:-70px;visibility:hidden}
+.ch-kicker{color:#7a7888;font-family:monospace;font-size:10px;margin-bottom:7px;letter-spacing:.12em}
+.ch-title{color:#d4a86e;font-family:Georgia,serif;font-size:24px;margin:0 0 7px}
+.ch-sub{color:#7a7888;font-family:monospace;font-size:10.5px;margin-bottom:12px}
+.ch-quote{padding:13px 17px;background:#161a28;border-left:3px solid #d4a86e;border-radius:5px;color:#e0ddd4;font-family:Georgia,serif;font-size:13.5px;line-height:1.75;font-style:italic}
+.ch-quote small{display:block;color:#7a7888;font-family:monospace;font-size:10px;font-style:normal;margin-top:7px;line-height:1.5}
+.ch-header{margin-bottom:42px;border-bottom:1px solid #222638;padding-bottom:28px}
+
+/* ── Section ── */
+.section{margin-bottom:42px}
+.sec-hdr{display:flex;align-items:center;gap:11px;margin-bottom:18px;flex-wrap:nowrap}
+.sec-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:11px;flex-shrink:0}
+.sec-line{flex:1;height:1px}
+.sec-ttl{font-family:Georgia,serif;font-size:15px;white-space:nowrap}
+
+/* ── Card ── */
+.card{background:#161a28;border:1px solid #222638;border-radius:10px;padding:17px 20px;margin-bottom:12px}
+.label{font-family:monospace;font-size:10.5px;margin-bottom:10px;letter-spacing:.06em}
+
+/* ── Source tags ── */
+.tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.stag{display:inline-block;border-radius:4px;padding:2px 8px;font-family:monospace;font-size:8px;border:1px solid}
+
+/* ── Tab buttons ── */
+.tab-btns{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.tab-btns.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.tab-btns.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.tab-btns.col{flex-direction:column}
+.tbtn{padding:9px 10px;background:#10131e;border:1px solid #222638;border-radius:6px;color:#7a7888;font-family:monospace;font-size:9.5px;line-height:1.45;transition:all .2s;text-align:left}
+.tbtn.active,.tbtn[data-active="1"]{background:var(--ac)!important;border-color:var(--ac)!important;color:var(--c)!important}
+.tab-panel{background:#10131e;border-radius:8px;padding:15px 17px;border:1px solid #1e2336}
+
+/* ── Info rows ── */
+.row-left{padding:11px 14px;border-radius:5px;border-left:3px solid;margin-bottom:8px;background:#10131e}
+.row-top{padding:13px 15px;border-radius:7px;border-top:2px solid;background:#10131e}
+.info-lbl{font-family:monospace;font-size:9px;margin-bottom:3px}
+.info-txt{font-family:monospace;font-size:10.5px;line-height:1.6;color:#7a7888}
+.two-col{display:flex;gap:10px;flex-wrap:wrap}
+.two-col>*{flex:1;min-width:190px}
+
+/* ── Bridge ── */
+.bridge{background:#161a28;border:1px solid #d4a86e33;border-radius:10px;padding:20px 24px;margin-bottom:36px}
+.bridge-lbl{color:#d4a86e;font-family:monospace;font-size:10px;margin-bottom:8px;letter-spacing:.1em}
+.bridge-txt{color:#e0ddd4;font-size:12.5px;line-height:1.75}
+
+/* ── Footer ── */
+.ch-foot{text-align:center;border-top:1px solid #222638;padding-top:18px}
+.ch-foot p{color:#7a7888;font-family:monospace;font-size:9px;line-height:1.6;margin:0}
+
+/* ── SVG container ── */
+.svg-wrap{width:100%;overflow-x:auto}
+.svg-wrap svg{max-width:100%}
+
+/* ── Code ── */
+code{background:#10131e;border-radius:4px;padding:2px 8px;font-family:monospace;font-size:10px;color:#d4a86e}
+
+/* ── Divider ── */
+hr.ch-div{border:none;border-top:2px solid #222638;margin:50px 0}
+
+/* ── Formula box ── */
+.formula{padding:14px 16px;background:#10131e;border-radius:8px;margin-bottom:12px;text-align:center;font-family:Georgia,serif;font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- ═══ OVERLAY ═══ -->
+<div id="overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<nav id="sidebar">
+  <div class="sb-head">
+    <div class="sb-title">Causal Thinking Guide</div>
+    <div class="sb-sub">PEARL · GALLEA · 10 CHAPTERS</div>
+  </div>
+  <div class="sb-nav">
+    <button class="nav-ch" data-target="ch01">Ch 1 — Why Causality Matters<span>The question statistics refused to ask</span></button>
+    <button class="nav-ch" data-target="ch02">Ch 2 — The Lost Century<span>How stats banned causation</span></button>
+    <button class="nav-ch" data-target="ch03">Ch 3 — Language of Cause & Effect<span>Diagrams, junctions, fundamental problem</span></button>
+    <button class="nav-ch" data-target="ch04">Ch 4 — Confounders, Colliders & Bias<span>do-operator meets diagnostic eye</span></button>
+    <button class="nav-ch" data-target="ch05">Ch 5 — Causal Mindset in Action<span>Framework meets the smoking debate</span></button>
+    <button class="nav-ch" data-target="ch06">Ch 6 — When Intuition Fails<span>Paradoxes & Goodhart's Law</span></button>
+    <button class="nav-ch" data-target="ch07">Ch 7 — Experiments to Equations<span>RCTs, quasi-experiments, do-calculus</span></button>
+    <button class="nav-ch" data-target="ch08">Ch 8 — Counterfactuals & Mediation<span>The highest rung</span></button>
+    <button class="nav-ch" data-target="ch09">Ch 9 — Big Data, AI & the Future<span>Why more data is not enough</span></button>
+    <button class="nav-ch" data-target="ch10">Ch 10 — The Manifesto<span>Complete toolkit for the real world</span></button>
+  </div>
+</nav>
+
+<!-- ═══ HAMBURGER ═══ -->
+<button id="hbg" onclick="toggleSidebar()">☰</button>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+
+<!-- ▓▓▓ CHAPTER 1 ▓▓▓ -->
+<div class="chapter">
+  <div id="ch01" class="ch-anchor"></div>
+  <div class="ch-header">
+    <div class="ch-kicker">THE UNIFIED CAUSAL THINKING GUIDE · CHAPTER 1 OF 10</div>
+    <h1 class="ch-title">Why Causality Matters</h1>
+    <div class="ch-sub">The Question That Statistics Refused to Ask</div>
+    <div class="tags">
+      <span class="stag" style="color:#7ab0d8;background:#7ab0d818;border-color:#7ab0d844">Pearl · Intro & Ch.1</span>
+      <span class="stag" style="color:#d4b878;background:#d4b87818;border-color:#d4b87844">Gallea · Ch.1</span>
+    </div>
+    <div class="ch-quote">"You cannot answer a question that you cannot ask, and you cannot ask a question you have no words for." — Pearl
+      <small>Both authors open with the same conviction: across science, policy, business, and personal life, the most important questions are causal — and for most of modern history, we lacked the tools to answer them.</small>
+    </div>
+  </div>
+
+  <!-- S1 -->
+  <div class="section">
+    <div class="sec-hdr">
+      <div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">1</div>
+      <div class="sec-line" style="background:#d4a86e30"></div>
+      <div class="sec-ttl" style="color:#d4a86e">The Case for Causal Thinking</div>
+      <div class="sec-line" style="background:#d4a86e30"></div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="label" style="color:#d4a86e">◆ TWO AUTHORS, ONE DIAGNOSIS</div>
+      <div class="two-col">
+        <div class="row-top" style="border-color:#7ab0d8">
+          <div class="info-lbl" style="color:#7ab0d8">PEARL'S DIAGNOSIS (THEORETICAL)</div>
+          <div class="info-txt">Science has always asked "why" — but statistics, its main tool, spent a century banning causal language. The result: a gap between what scientists wanted to know and what their methods could tell them. Data alone cannot tell us what causes what.</div>
+        </div>
+        <div class="row-top" style="border-color:#d4b878">
+          <div class="info-lbl" style="color:#d4b878">GALLEA'S DIAGNOSIS (PRACTICAL)</div>
+          <div class="info-txt">People make billion-dollar decisions based on opinions and correlations, not causal evidence. Did Trump's policies or COVID reduce immigration? Did your marketing campaign or the weather boost sales? Without causal tools, we cannot know — and wrong attribution leads to wrong decisions.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label" style="color:#d47878">◆ THE COST OF IGNORING CAUSALITY</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+        <div class="row-left" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">HEALTH</div><div class="info-txt">Misinformation about drug efficacy — wasted money, delayed treatment. Premature claims about COVID cures.</div></div>
+        <div class="row-left" style="border-color:#7ab0d8"><div class="info-lbl" style="color:#7ab0d8">POLICY</div><div class="info-txt">Trump claimed his policies caused lowest immigration — but it was January 2021, mid-COVID. Wrong attribution → wrong future policies.</div></div>
+        <div class="row-left" style="border-color:#d4b878"><div class="info-lbl" style="color:#d4b878">BUSINESS</div><div class="info-txt">Streaming service changes homepage → subscriptions fall. But competitor launched + sunny month. Did the team cause the fall, or prevent worse?</div></div>
+        <div class="row-left" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">ENVIRONMENT</div><div class="info-txt">Replace petrol car with electric → drive more, stop walking → net emissions may increase. Rebound effects hide in causal chains.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: Ladder -->
+  <div class="section">
+    <div class="sec-hdr">
+      <div class="sec-num" style="border:1.5px solid #a87ad4;background:#a87ad418;color:#a87ad4">2</div>
+      <div class="sec-line" style="background:#a87ad430"></div>
+      <div class="sec-ttl" style="color:#a87ad4">The Ladder of Causation</div>
+      <div class="sec-line" style="background:#a87ad430"></div>
+    </div>
+    <div class="card" style="border-color:#a87ad444">
+      <div class="label" style="color:#a87ad4">◆ PEARL'S CENTRAL FRAMEWORK — THREE LEVELS OF CAUSAL REASONING</div>
+      <div class="info-txt" style="margin-bottom:16px">Pearl organizes all causal questions into three rungs. Each rung requires strictly more powerful reasoning than the one below. Gallea's entire book operates within this same hierarchy — his 5-step framework, RCTs, and quasi-experiments are all tools for climbing from rung 1 to rungs 2 and 3.</div>
+      <!-- Ladder interactive -->
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+        <div style="flex-shrink:0">
+          <svg width="110" height="218" viewBox="0 0 110 218">
+            <line x1="20" y1="10" x2="20" y2="208" stroke="#222638" stroke-width="3"/>
+            <line x1="90" y1="10" x2="90" y2="208" stroke="#222638" stroke-width="3"/>
+            <g id="ldr-0" class="ldr-rung" style="cursor:pointer" onclick="setLadder(0)">
+              <rect x="8" y="18" width="94" height="48" rx="5" fill="#161a28" stroke="#a87ad4" stroke-width="1.5" id="lr0rect"/>
+              <circle cx="32" cy="42" r="12" fill="#a87ad425" stroke="#a87ad4" stroke-width="1"/>
+              <text x="32" y="46" text-anchor="middle" fill="#a87ad4" font-size="11" font-family="monospace" font-weight="bold">3</text>
+              <text x="66" y="38" text-anchor="middle" fill="#a87ad4" font-size="9" font-family="monospace">IMAGINING</text>
+              <text x="66" y="52" text-anchor="middle" fill="#7a7888" font-size="8" font-family="monospace">Counterfactuals</text>
+            </g>
+            <g id="ldr-1" class="ldr-rung" style="cursor:pointer" onclick="setLadder(1)">
+              <rect x="8" y="82" width="94" height="48" rx="5" fill="#161a28" stroke="#222638" stroke-width="1" id="lr1rect"/>
+              <circle cx="32" cy="106" r="12" fill="#7ab0d825" stroke="#7ab0d8" stroke-width="1"/>
+              <text x="32" y="110" text-anchor="middle" fill="#7ab0d8" font-size="11" font-family="monospace" font-weight="bold">2</text>
+              <text x="66" y="102" text-anchor="middle" fill="#7ab0d8" font-size="9" font-family="monospace">DOING</text>
+              <text x="66" y="116" text-anchor="middle" fill="#7a7888" font-size="8" font-family="monospace">Intervention</text>
+            </g>
+            <g id="ldr-2" class="ldr-rung" style="cursor:pointer" onclick="setLadder(2)">
+              <rect x="8" y="146" width="94" height="48" rx="5" fill="#161a28" stroke="#222638" stroke-width="1" id="lr2rect"/>
+              <circle cx="32" cy="170" r="12" fill="#78d4a825" stroke="#78d4a8" stroke-width="1"/>
+              <text x="32" y="174" text-anchor="middle" fill="#78d4a8" font-size="11" font-family="monospace" font-weight="bold">1</text>
+              <text x="66" y="166" text-anchor="middle" fill="#78d4a8" font-size="9" font-family="monospace">SEEING</text>
+              <text x="66" y="180" text-anchor="middle" fill="#7a7888" font-size="8" font-family="monospace">Association</text>
+            </g>
+          </svg>
+        </div>
+        <div id="ladder-panel" style="flex:1;min-width:240px;background:#161a28;border-radius:10px;padding:16px 18px;border:1px solid #a87ad444"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 -->
+  <div class="section">
+    <div class="sec-hdr">
+      <div class="sec-num" style="border:1.5px solid #78d4a8;background:#78d4a818;color:#78d4a8">3</div>
+      <div class="sec-line" style="background:#78d4a830"></div>
+      <div class="sec-ttl" style="color:#78d4a8">Dumb Data vs. Biased Minds</div>
+      <div class="sec-line" style="background:#78d4a830"></div>
+    </div>
+    <div class="card">
+      <div class="label" style="color:#78d4a8">◆ THE DILEMMA BOTH AUTHORS IDENTIFY</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">Pearl and Gallea converge on the same paradox. Data has no sense of causality — it merely records numbers. But our minds are riddled with biases that distort causal judgment. The solution: a formal framework that combines domain knowledge with data, each compensating for the other's weakness.</div>
+      <div class="two-col" style="margin-bottom:12px">
+        <div class="row-top" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">DATA IS "DUMB" (PEARL)</div><div class="info-txt">The causal model is not in the data — it is brought to the data by the researcher. No amount of data can tell you whether X causes Y or Y causes X. A model encoding your assumptions about the world's mechanisms is indispensable.</div></div>
+        <div class="row-top" style="border-color:#d4b878"><div class="info-lbl" style="color:#d4b878">WE ARE BIASED (GALLEA)</div><div class="info-txt">Confirmation bias: we seek evidence confirming beliefs. Availability bias: loud voices distort perceived frequencies. Apophenia: we see patterns in pure noise. Africa has more sun but fewer solar panels — domain knowledge reveals hidden confounders (heat, income).</div></div>
+      </div>
+      <div class="row-left" style="border-color:#78d4a8"><span style="color:#78d4a8;font-family:monospace;font-size:10px">THE SHARED SOLUTION: </span><span class="info-txt">Pearl calls it the "Causal Inference Engine" — a model (your assumptions) plus data (your observations) feeding into a formal reasoning system. Gallea calls it the "Causal Mindset" — a disciplined habit of asking the right questions before trusting data.</span></div>
+    </div>
+  </div>
+
+  <!-- S4 -->
+  <div class="section">
+    <div class="sec-hdr">
+      <div class="sec-num" style="border:1.5px solid #7ab0d8;background:#7ab0d818;color:#7ab0d8">4</div>
+      <div class="sec-line" style="background:#7ab0d830"></div>
+      <div class="sec-ttl" style="color:#7ab0d8">What Is Causal Inference?</div>
+      <div class="sec-line" style="background:#7ab0d830"></div>
+    </div>
+    <div class="card">
+      <div class="label" style="color:#7ab0d8">◆ TWO COMPLEMENTARY DEFINITIONS</div>
+      <div class="two-col" style="margin-bottom:12px">
+        <div class="row-left" style="border-color:#7ab0d8"><div class="info-lbl" style="color:#7ab0d8">PEARL'S DEFINITION</div><div class="info-txt">A mathematical framework with three pillars: causal diagrams (DAGs), the do-operator, and counterfactual logic. Together they answer: What would happen if we intervened? What would have happened otherwise? Who is responsible for an outcome?</div></div>
+        <div class="row-left" style="border-color:#d4b878"><div class="info-lbl" style="color:#d4b878">GALLEA'S DEFINITION</div><div class="info-txt">The scientific field providing tools to: (1) assess causality from past events (backward-looking), and (2) predict outcomes of future choices (forward-looking) — using data + domain knowledge + rigorous methods. Two roles: forensic detective and fortune teller.</div></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <div style="flex:1;min-width:140px;padding:10px 12px;background:#10131e;border-radius:6px;border-top:2px solid #7ab0d8"><div class="info-lbl" style="color:#7ab0d8">BACKWARD</div><div class="info-txt" style="font-style:italic">"Did the marketing campaign work?"</div></div>
+        <div style="flex:1;min-width:140px;padding:10px 12px;background:#10131e;border-radius:6px;border-top:2px solid #78d4a8"><div class="info-lbl" style="color:#78d4a8">FORWARD</div><div class="info-txt" style="font-style:italic">"What happens if we change the price?"</div></div>
+        <div style="flex:1;min-width:140px;padding:10px 12px;background:#10131e;border-radius:6px;border-top:2px solid #a87ad4"><div class="info-lbl" style="color:#a87ad4">COUNTERFACTUAL</div><div class="info-txt" style="font-style:italic">"Would the patient have survived otherwise?"</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5 -->
+  <div class="section">
+    <div class="sec-hdr">
+      <div class="sec-num" style="border:1.5px solid #d47878;background:#d4787818;color:#d47878">5</div>
+      <div class="sec-line" style="background:#d4787830"></div>
+      <div class="sec-ttl" style="color:#d47878">The Firing Squad — One Story, Three Questions</div>
+      <div class="sec-line" style="background:#d4787830"></div>
+    </div>
+    <div class="card">
+      <div class="label" style="color:#d47878">◆ PEARL'S CANONICAL EXAMPLE MEETS GALLEA'S CASE-STUDY METHOD</div>
+      <div class="info-txt" style="margin-bottom:14px">A prisoner is executed by two soldiers on a captain's command, who acts on a court order. Either soldier's shot is sufficient to kill. The same diagram generates three progressively harder questions — one for each rung.</div>
+      <div class="row-left" style="border-color:#78d4a8;margin-bottom:8px"><div style="display:flex;gap:12px"><div style="min-width:90px;flex-shrink:0"><div class="info-lbl" style="color:#78d4a8">RUNG 1</div><div class="info-txt">Observation</div></div><div><div style="color:#e0ddd4;font-family:Georgia,serif;font-size:12px;font-style:italic;margin-bottom:3px">"If Soldier A fired, what is the probability the prisoner is dead?"</div><div class="info-txt">Very high — but Soldier B also fired. This is mere correlation.</div></div></div></div>
+      <div class="row-left" style="border-color:#7ab0d8;margin-bottom:8px"><div style="display:flex;gap:12px"><div style="min-width:90px;flex-shrink:0"><div class="info-lbl" style="color:#7ab0d8">RUNG 2</div><div class="info-txt">Intervention</div></div><div><div style="color:#e0ddd4;font-family:Georgia,serif;font-size:12px;font-style:italic;margin-bottom:3px">"What if Soldier A had decided NOT to fire?"</div><div class="info-txt">The prisoner still dies — because Soldier B fired. Intervention analysis reveals redundancy.</div></div></div></div>
+      <div class="row-left" style="border-color:#a87ad4;margin-bottom:12px"><div style="display:flex;gap:12px"><div style="min-width:90px;flex-shrink:0"><div class="info-lbl" style="color:#a87ad4">RUNG 3</div><div class="info-txt">Counterfactual</div></div><div><div style="color:#e0ddd4;font-family:Georgia,serif;font-size:12px;font-style:italic;margin-bottom:3px">"Was Soldier A's shot a necessary cause of death?"</div><div class="info-txt">No — the prisoner would have died anyway from B. But it WAS a sufficient cause. Legal reasoning needs this distinction.</div></div></div></div>
+      <div class="row-left" style="border-color:#d4b878"><span style="color:#d4b878;font-family:monospace;font-size:10px">GALLEA'S PARALLEL: </span><span class="info-txt">His case studies follow the same diagnostic logic — asking whether an observed correlation could have alternative explanations. The cold shower question is a rung-2 question that most people answer with rung-1 evidence.</span></div>
+    </div>
+  </div>
+
+  <!-- S6 -->
+  <div class="section">
+    <div class="sec-hdr">
+      <div class="sec-num" style="border:1.5px solid #78d4c8;background:#78d4c818;color:#78d4c8">6</div>
+      <div class="sec-line" style="background:#78d4c830"></div>
+      <div class="sec-ttl" style="color:#78d4c8">Why This Matters Now</div>
+      <div class="sec-line" style="background:#78d4c830"></div>
+    </div>
+    <div class="card">
+      <div class="label" style="color:#78d4c8">◆ THE CAUSAL REVOLUTION'S PROMISE</div>
+      <div class="row-left" style="border-color:#78d4a8;margin-bottom:7px"><div style="display:flex;gap:12px"><div style="min-width:110px;flex-shrink:0;color:#78d4a8;font-family:Georgia,serif;font-size:12px;font-weight:bold">Drug Development</div><div class="info-txt">Move beyond 'correlates with survival' to 'causes survival, via this mechanism, in this population.'</div></div></div>
+      <div class="row-left" style="border-color:#a87ad4;margin-bottom:7px"><div style="display:flex;gap:12px"><div style="min-width:110px;flex-shrink:0;color:#a87ad4;font-family:Georgia,serif;font-size:12px;font-weight:bold">AI & ML</div><div class="info-txt">Build systems that explain decisions, learn from interventions, and reason about counterfactuals — not just predict from patterns.</div></div></div>
+      <div class="row-left" style="border-color:#d4b878;margin-bottom:7px"><div style="display:flex;gap:12px"><div style="min-width:110px;flex-shrink:0;color:#d4b878;font-family:Georgia,serif;font-size:12px;font-weight:bold">Business & Policy</div><div class="info-txt">Gallea's core promise: stop making billion-dollar decisions from correlations. Build the habit of asking 'would this outcome have happened anyway?'</div></div></div>
+      <div class="row-left" style="border-color:#d4a86e"><div style="display:flex;gap:12px"><div style="min-width:110px;flex-shrink:0;color:#d4a86e;font-family:Georgia,serif;font-size:12px;font-weight:bold">Legal & Ethical</div><div class="info-txt">Pearl's formalism assigns probability estimates to whether a defendant's action was a necessary or sufficient cause of harm.</div></div></div>
+    </div>
+  </div>
+
+  <div class="bridge"><div class="bridge-lbl">BRIDGE TO CHAPTER 2</div><div class="bridge-txt">We now know <em>what</em> causal thinking is and <em>why</em> it matters. But how did science spend a century banning its own most important question? Chapter 2 tells the story of statistics' causal prohibition — and the rebels who defied it.</div></div>
+  <div class="ch-foot"><p>Unified Summary · Chapter 1 · Combining <em>The Book of Why</em> (Pearl & Mackenzie, 2018) and <em>The Causal Mindset Handbook</em> (Gallea)</p></div>
+</div>
+
+<hr class="ch-div">
+
+<!-- ▓▓▓ CHAPTER 2 ▓▓▓ -->
+<div class="chapter">
+  <div id="ch02" class="ch-anchor"></div>
+  <div class="ch-header">
+    <div class="ch-kicker">THE UNIFIED CAUSAL THINKING GUIDE · CHAPTER 2 OF 10</div>
+    <h1 class="ch-title">The Lost Century</h1>
+    <div class="ch-sub">How Statistics Banned Causation — And the Rebels Who Fought Back</div>
+    <div class="tags">
+      <span class="stag" style="color:#7ab0d8;background:#7ab0d818;border-color:#7ab0d844">Pearl · Ch.2</span>
+      <span class="stag" style="color:#d4b878;background:#d4b87818;border-color:#d4b87844">Gallea · Ch.2</span>
+    </div>
+    <div class="ch-quote">"When you prohibit speech, you prohibit thought. Statistics remained in the Prohibition era, falsely believing that answers to all scientific questions reside in the data." — Pearl</div>
+  </div>
+
+  <!-- S1 -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d47878;background:#d4787818;color:#d47878">1</div><div class="sec-line" style="background:#d4787830"></div><div class="sec-ttl" style="color:#d47878">Statistics' Causal Prohibition</div><div class="sec-line" style="background:#d4787830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d47878">◆ HOW SCIENCE BANNED ITS OWN MOST IMPORTANT QUESTION</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">Modern statistics was born from causal questions — Galton and Pearson wanted to understand heredity. But when their tools failed, rather than admit the limitation, they declared causal language itself unscientific.</div>
+      <div class="two-col">
+        <div class="row-top" style="border-color:#d4a86e"><div class="info-lbl" style="color:#d4a86e">THE ORTHODOXY</div><div class="info-txt">"Correlation is not causation" — students chanted it but were given no tools to go further. Statistics textbooks: no index entry for "cause." Scientists learned to think "due to" but write "associated with."</div></div>
+        <div class="row-top" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">THE COST</div><div class="info-txt">Decades of science hobbled by self-imposed blindness. The smoking debate dragged 15 years while millions died — partly because formal causal tools didn't exist. Tools for policy, medicine, and social science couldn't answer "why."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: Timeline -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">2</div><div class="sec-line" style="background:#d4a86e30"></div><div class="sec-ttl" style="color:#d4a86e">A Century of Suppression & Rescue</div><div class="sec-line" style="background:#d4a86e30"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4a86e">◆ FROM GALTON TO GALLEA — THE FULL ARC</div>
+      <div class="info-txt" style="margin-bottom:16px">The story of causal inference spans both books — Pearl's historical account and Gallea's position as a practitioner-translator of the modern revolution.</div>
+      <div style="position:relative;padding-left:22px">
+        <div style="position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:#222638"></div>
+        <div id="timeline-rows"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3: Wright's Path Diagrams -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4a8;background:#78d4a818;color:#78d4a8">3</div><div class="sec-line" style="background:#78d4a830"></div><div class="sec-ttl" style="color:#78d4a8">Sewall Wright's Path Diagrams</div><div class="sec-line" style="background:#78d4a830"></div></div>
+    <div class="card" style="border-color:#78d4a844">
+      <div class="label" style="color:#78d4a8">◆ THE INVENTION THAT LAUNCHED — AND WAS SUPPRESSED</div>
+      <div class="info-txt" style="margin-bottom:13px">Wright's question: guinea pigs born a day later weigh 5.66 grams more. How much is from longer gestation vs. fewer litter-mates? Correlation alone cannot say.</div>
+      <div class="svg-wrap">
+        <svg width="480" height="160" viewBox="0 0 480 160" style="max-width:100%">
+          <defs><marker id="warr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#78d4a8"/></marker></defs>
+          <circle cx="80" cy="30" r="28" fill="#161a28" stroke="#78d4a8" stroke-width="1.5"/>
+          <text x="80" y="26" text-anchor="middle" fill="#78d4a8" font-size="9" font-family="Georgia, serif" font-weight="bold">Gestation</text>
+          <text x="80" y="40" text-anchor="middle" fill="#7a7888" font-size="8" font-family="monospace">Period</text>
+          <circle cx="80" cy="130" r="28" fill="#161a28" stroke="#7ab0d8" stroke-width="1.5"/>
+          <text x="80" y="126" text-anchor="middle" fill="#7ab0d8" font-size="9" font-family="Georgia, serif" font-weight="bold">Litter</text>
+          <text x="80" y="140" text-anchor="middle" fill="#7a7888" font-size="8" font-family="monospace">Size</text>
+          <circle cx="320" cy="80" r="28" fill="#161a28" stroke="#d4a86e" stroke-width="1.5"/>
+          <text x="320" y="76" text-anchor="middle" fill="#d4a86e" font-size="9" font-family="Georgia, serif" font-weight="bold">Birth</text>
+          <text x="320" y="90" text-anchor="middle" fill="#7a7888" font-size="8" font-family="monospace">Weight</text>
+          <line x1="108" y1="35" x2="290" y2="72" stroke="#78d4a8" stroke-width="1.5" marker-end="url(#warr)"/>
+          <line x1="108" y1="125" x2="290" y2="88" stroke="#78d4a8" stroke-width="1.5" marker-end="url(#warr)"/>
+          <line x1="80" y1="58" x2="80" y2="100" stroke="#7a7888" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="60" y="82" fill="#7a7888" font-size="8" font-family="monospace">corr.</text>
+          <text x="180" y="42" fill="#78d4a8" font-size="9" font-family="monospace">3.34 g/day</text>
+          <text x="180" y="120" fill="#7ab0d8" font-size="9" font-family="monospace">litter effect</text>
+          <text x="360" y="55" fill="#7a7888" font-size="9" font-family="monospace">Naive: 5.66 g/day</text>
+          <text x="360" y="72" fill="#78d4a8" font-size="9" font-family="monospace">Causal: 3.34 g/day</text>
+          <text x="360" y="89" fill="#7a7888" font-size="8" font-family="monospace">Δ = 2.32 g confounding</text>
+        </svg>
+      </div>
+      <div class="row-left" style="border-color:#78d4a8;margin-top:12px"><span style="color:#78d4a8;font-family:monospace;font-size:10px">TWO LESSONS: </span><span class="info-txt">(1) Causal analysis quantifies real-world processes — true growth rate (3.34 g/day) differs hugely from naive correlation (5.66 g/day). (2) The entire diagram structure matters: omitted arrows carry as much information as included ones.</span></div>
+      <div class="row-left" style="border-color:#d4b878;margin-top:8px"><span style="color:#d4b878;font-family:monospace;font-size:10px">GALLEA'S CONNECTION: </span><span class="info-txt">Every DAG Gallea asks you to draw is Wright's invention. When Gallea says "drawing a causal graph is usually the first step" — he is teaching something that was considered scientifically forbidden for most of the 20th century.</span></div>
+    </div>
+  </div>
+
+  <!-- S4: Debate -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #a87ad4;background:#a87ad418;color:#a87ad4">4</div><div class="sec-line" style="background:#a87ad430"></div><div class="sec-ttl" style="color:#a87ad4">Wright vs. the Establishment</div><div class="sec-line" style="background:#a87ad430"></div></div>
+    <div class="card">
+      <div class="label" style="color:#a87ad4">◆ THE BATTLE THAT SET BACK CAUSALITY BY 50 YEARS</div>
+      <div class="tab-btns" id="debate-btns"></div>
+      <div class="tab-panel" id="debate-panel"></div>
+    </div>
+  </div>
+
+  <!-- S5 -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4b878;background:#d4b87818;color:#d4b878">5</div><div class="sec-line" style="background:#d4b87830"></div><div class="sec-ttl" style="color:#d4b878">Prediction vs. Causation</div><div class="sec-line" style="background:#d4b87830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4b878">◆ GALLEA'S PRACTICAL COMPLEMENT: WORDS SHAPE DECISIONS</div>
+      <div class="two-col" style="margin-bottom:12px">
+        <div class="row-top" style="border-color:#7ab0d8"><div class="info-lbl" style="color:#7ab0d8">PREDICTION (RUNG 1)</div><div class="info-txt">"What will happen?" — Uses correlations and patterns. ML excels here. Umbrella-carriers correlate with rain — but distributing umbrellas won't change the weather.</div></div>
+        <div class="row-top" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">CAUSATION (RUNG 2+)</div><div class="info-txt">"What will happen if I do X?" — Requires understanding mechanisms. If I give this drug, will the patient improve? Needs a causal model — not just historical patterns.</div></div>
+      </div>
+      <div class="row-left" style="border-color:#a87ad4;margin-bottom:7px"><div style="display:flex;gap:10px"><div style="color:#a87ad4;font-family:monospace;font-size:10px;min-width:130px;flex-shrink:0">ML + Causal Inference</div><div class="info-txt">ML discovers patterns in massive datasets (candidate confounders, heterogeneous effects), then CI methods test whether they're causal.</div></div></div>
+      <div class="row-left" style="border-color:#78d4c8;margin-bottom:7px"><div style="display:flex;gap:10px"><div style="color:#78d4c8;font-family:monospace;font-size:10px;min-width:130px;flex-shrink:0">Causal AI Frontier</div><div class="info-txt">LLMs as causal brainstorming partners — surfacing potential confounders from domain knowledge at scale.</div></div></div>
+      <div class="row-left" style="border-color:#d4b878"><div style="display:flex;gap:10px"><div style="color:#d4b878;font-family:monospace;font-size:10px;min-width:130px;flex-shrink:0">Heterogeneous Effects</div><div class="info-txt">ML identifies subgroups where treatment works differently — then causal methods validate whether differences are real or spurious.</div></div></div>
+    </div>
+  </div>
+
+  <div class="bridge"><div class="bridge-lbl">BRIDGE TO CHAPTER 3</div><div class="bridge-txt">Wright gave science its first bridge between correlation and causation. Chapter 3 introduces the formal language that finally made causal reasoning rigorous — and confronts the philosophical reason that proving causation is so fundamentally hard.</div></div>
+  <div class="ch-foot"><p>Unified Summary · Chapter 2 · Combining <em>The Book of Why</em> (Pearl & Mackenzie, 2018) and <em>The Causal Mindset Handbook</em> (Gallea)</p></div>
+</div>
+
+<hr class="ch-div">
+
+<!-- ▓▓▓ CHAPTER 3 ▓▓▓ -->
+<div class="chapter">
+  <div id="ch03" class="ch-anchor"></div>
+  <div class="ch-header">
+    <div class="ch-kicker">THE UNIFIED CAUSAL THINKING GUIDE · CHAPTER 3 OF 10</div>
+    <h1 class="ch-title">The Language of Cause & Effect</h1>
+    <div class="ch-sub">Diagrams, Junctions, and the Fundamental Problem</div>
+    <div class="tags">
+      <span class="stag" style="color:#7ab0d8;background:#7ab0d818;border-color:#7ab0d844">Pearl · Ch.3</span>
+      <span class="stag" style="color:#d4b878;background:#d4b87818;border-color:#d4b87844">Gallea · Ch.3</span>
+    </div>
+    <div class="ch-quote">"Bayesian networks were my personal route into causality — and ultimately the tool I had to transcend." — Pearl<small>Pearl provides the formal building blocks: Bayes's rule, three junction types, and the leap from probability to causality. Gallea reveals the deeper conceptual challenge: why proving causality is fundamentally impossible without the right assumptions — the "parallel worlds" problem.</small></div>
+  </div>
+
+  <!-- S1 -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #b088d4;background:#b088d418;color:#b088d4">1</div><div class="sec-line" style="background:#b088d430"></div><div class="sec-ttl" style="color:#b088d4">The Fundamental Problem of Causal Inference</div><div class="sec-line" style="background:#b088d430"></div></div>
+    <div class="card" style="border-color:#b088d444;margin-bottom:10px">
+      <div class="label" style="color:#b088d4">◆ WHY CAUSALITY CAN NEVER BE DIRECTLY OBSERVED</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">Gallea names the deepest challenge: to know that X caused Y, you'd need to observe the same individual both with and without X — simultaneously. This is physically impossible. You can only observe one world.</div>
+      <div class="two-col">
+        <div class="row-top" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">THE FUNDAMENTAL PROBLEM</div><div class="info-txt">Causal effect = (outcome with treatment) − (outcome without treatment). But you can only ever observe one of these. The counterfactual is unobservable. Every causal claim is therefore an inference, not a direct observation.</div></div>
+        <div class="row-top" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">THE SOLUTION</div><div class="info-txt">Assumptions + data + formal models. Either run an experiment (RCT), find natural experiments, or use observational data with a causal model specifying all assumptions. The assumptions must be transparent and defensible.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: Bayes -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">2</div><div class="sec-line" style="background:#d4a86e30"></div><div class="sec-ttl" style="color:#d4a86e">Bayes's Rule — The Foundation</div><div class="sec-line" style="background:#d4a86e30"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4a86e">◆ UPDATING BELIEFS WITH EVIDENCE</div>
+      <div class="formula" style="color:#d4a86e">P(Cause | Effect) = P(Effect | Cause) × P(Cause) / P(Effect)</div>
+      <div class="info-txt" style="margin-bottom:12px">Bayes's rule is the calculus of belief-updating: prior belief × likelihood of evidence → posterior belief. Pearl built his entire Bayesian network framework on this. It is the engine inside causal reasoning.</div>
+      <div class="row-left" style="border-color:#d4b878"><span style="color:#d4b878;font-family:monospace;font-size:10px">KEY INSIGHT: </span><span class="info-txt">The same data can be compatible with multiple causal structures. Bayes's rule helps us update our belief about which structure is correct — but it cannot, alone, determine causation. That requires additional causal assumptions.</span></div>
+    </div>
+  </div>
+
+  <!-- S3: BN to Causal -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">3</div><div class="sec-line" style="background:#d4a86e30"></div><div class="sec-ttl" style="color:#d4a86e">From Bayesian Networks to Causal Diagrams</div><div class="sec-line" style="background:#d4a86e30"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4a86e">◆ ONE CRUCIAL CHANGE IN INTERPRETATION</div>
+      <div class="two-col" style="margin-bottom:12px">
+        <div class="row-top" style="border-color:#7ab0d8"><div style="color:#7ab0d8;font-family:Georgia,serif;font-size:13px;margin-bottom:7px">Bayesian Network</div><div class="info-txt">Arrows = conditional probability relationships (no direction claim). P(Y | X) only — stuck on Rung 1. Cannot distinguish seeing from doing.</div></div>
+        <div class="row-top" style="border-color:#78d4a8"><div style="color:#78d4a8;font-family:Georgia,serif;font-size:13px;margin-bottom:7px">Causal Diagram (DAG)</div><div class="info-txt">Arrows = direct causal effect ("X listens to Y before choosing"). P(Y | do(X)) answers — Rungs 1, 2, and 3. Machinery from BN fully reusable.</div></div>
+      </div>
+      <div class="row-left" style="border-color:#d4a86e"><span style="color:#d4a86e;font-family:monospace;font-size:10px">PEARL'S APOSTASY: </span><span class="info-txt">He built Bayesian networks believing they were the key to AI. By the late 1980s he realized he was wrong and pivoted entirely to causality. His students found this "shocking." This intellectual honesty led to the Causal Revolution and the 2011 Turing Award.</span></div>
+    </div>
+  </div>
+
+  <!-- S4: Junctions -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4c8;background:#78d4c818;color:#78d4c8">4</div><div class="sec-line" style="background:#78d4c830"></div><div class="sec-ttl" style="color:#78d4c8">Three Junctions — Building Blocks of All Diagrams</div><div class="sec-line" style="background:#78d4c830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#78d4c8">◆ EVERY CAUSAL DIAGRAM IS MADE OF THESE THREE PATTERNS</div>
+      <div class="info-txt" style="margin-bottom:14px">Pearl shows that any DAG can be analyzed by examining its three-node junctions. Gallea identifies the same structures as mediators (chain), confounders (fork), and colliders. Click each to explore.</div>
+      <div class="tab-btns" id="junction-btns"></div>
+      <div class="tab-panel" id="junction-panel"></div>
+      <div class="row-left" style="border-color:#78d4c8;margin-top:12px"><span style="color:#78d4c8;font-family:monospace;font-size:10px">COLLIDERS ARE MOST COUNTERINTUITIVE: </span><span class="info-txt">They create associations where none existed. Controlling for a collider is one of the most common and dangerous errors in applied research — it introduces confounding rather than removing it.</span></div>
+    </div>
+  </div>
+
+  <!-- S5: Counterfactuals -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4b878;background:#d4b87818;color:#d4b878">5</div><div class="sec-line" style="background:#d4b87830"></div><div class="sec-ttl" style="color:#d4b878">Choosing the Right Counterfactual</div><div class="sec-line" style="background:#d4b87830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4b878">◆ GALLEA'S CASE STUDIES — WHY THE COMPARISON GROUP MATTERS</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">Once you understand the fundamental problem, you realize that every causal claim implicitly assumes a comparison to something that didn't happen. Gallea shows how choosing the wrong counterfactual can flip your conclusions entirely.</div>
+      <div class="row-left" style="border-color:#78d4c8;margin-bottom:8px"><div style="display:grid;grid-template-columns:1fr 2fr;gap:10px"><div><div style="color:#78d4c8;font-family:Georgia,serif;font-size:12px;margin-bottom:4px">E-Scooter Emissions</div><div class="info-txt" style="color:#d47878">Assumed scooters replace cars.</div></div><div class="info-txt">Research shows scooters actually replace walking & transit — which are lower-emission. Service likely INCREASED net emissions.</div></div></div>
+      <div class="row-left" style="border-color:#b088d4;margin-bottom:8px"><div style="display:grid;grid-template-columns:1fr 2fr;gap:10px"><div><div style="color:#b088d4;font-family:Georgia,serif;font-size:12px;margin-bottom:4px">Customer Loyalty Card</div><div class="info-txt" style="color:#d47878">Compare card vs. non-members.</div></div><div class="info-txt">Selection bias: frequent shoppers self-select into loyalty programs. Non-members are fundamentally different pre-program.</div></div></div>
+      <div class="row-left" style="border-color:#d4b878"><div style="display:grid;grid-template-columns:1fr 2fr;gap:10px"><div><div style="color:#d4b878;font-family:Georgia,serif;font-size:12px;margin-bottom:4px">GenAI Therapy</div><div class="info-txt" style="color:#d47878">Compare to: nothing, therapy, or web support?</div></div><div class="info-txt">Study used wait-list control → valid for 'can AI fill the gap?' but NOT for 'is AI better than therapy?'</div></div></div>
+    </div>
+  </div>
+
+  <!-- S6: Glossary -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4a8;background:#78d4a818;color:#78d4a8">6</div><div class="sec-line" style="background:#78d4a830"></div><div class="sec-ttl" style="color:#78d4a8">Core Vocabulary — Both Books United</div><div class="sec-line" style="background:#78d4a830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#78d4a8">◆ THE SHARED LANGUAGE YOU NOW POSSESS</div>
+      <div id="glossary-rows"></div>
+    </div>
+  </div>
+
+  <div class="bridge"><div class="bridge-lbl">BRIDGE TO CHAPTER 4</div><div class="bridge-txt">You now have the building blocks: three junction types, the fundamental problem, and the key vocabulary. Chapter 4 assembles them into a complete theory of confounding — Pearl's do-operator and back-door criterion meet Gallea's diagnostic questions for identifying bias in the wild.</div></div>
+  <div class="ch-foot"><p>Unified Summary · Ch.3 · <em>The Book of Why</em> (Pearl) + <em>The Causal Mindset</em> (Gallea)</p></div>
+</div>
+
+<hr class="ch-div">
+
+<!-- ▓▓▓ CHAPTER 4 ▓▓▓ -->
+<div class="chapter">
+  <div id="ch04" class="ch-anchor"></div>
+  <div class="ch-header">
+    <div class="ch-kicker">THE UNIFIED CAUSAL THINKING GUIDE · CHAPTER 4 OF 10</div>
+    <h1 class="ch-title">Confounders, Colliders & Diagnosing Bias</h1>
+    <div class="ch-sub">The do-Operator Meets the Diagnostic Eye</div>
+    <div class="tags">
+      <span class="stag" style="color:#7ab0d8;background:#7ab0d818;border-color:#7ab0d844">Pearl · Ch.4</span>
+      <span class="stag" style="color:#d4b878;background:#d4b87818;border-color:#d4b87844">Gallea · Ch.4</span>
+    </div>
+    <div class="ch-quote">"Confounding is not a statistical notion. It stands for the discrepancy between what we want to assess and what we actually do assess using statistical methods." — Pearl<small>Pearl provides the formal theory: the do-operator and back-door criterion. Gallea provides the practical diagnostic eye: three questions that expose confounders, reverse causation, and external validity threats in any real-world claim.</small></div>
+  </div>
+
+  <!-- S1 -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d47878;background:#d4787818;color:#d47878">1</div><div class="sec-line" style="background:#d4787830"></div><div class="sec-ttl" style="color:#d47878">Defining Confounding — Finally</div><div class="sec-line" style="background:#d4787830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d47878">◆ A CENTURY OF MISDEFINITION — CORRECTED</div>
+      <div class="row-left" style="border-color:#d47878;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#d47878;font-family:monospace;font-size:10px;min-width:160px;flex-shrink:0">Pre-1990s: 'Third variable'</div><div class="info-txt">Circular — requires knowing which variables are 'relevant'. No criterion.</div></div></div>
+      <div class="row-left" style="border-color:#d47878;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#d47878;font-family:monospace;font-size:10px;min-width:160px;flex-shrink:0">Epidemiology: three-part test</div><div class="info-txt">Incorrectly classifies colliders as confounders.</div></div></div>
+      <div class="row-left" style="border-color:#d4a86e;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#d4a86e;font-family:monospace;font-size:10px;min-width:160px;flex-shrink:0">Greenland & Robins (1986)</div><div class="info-txt">Conceptually correct but unoperationalizable without diagrams.</div></div></div>
+      <div class="row-left" style="border-color:#78d4a8"><div style="display:flex;gap:14px"><div style="color:#78d4a8;font-family:monospace;font-size:10px;min-width:160px;flex-shrink:0">Pearl: P(Y|X) ≠ P(Y|do(X))</div><div class="info-txt">Precise, operational, connected to causal diagrams. Confounding = observation ≠ intervention.</div></div></div>
+    </div>
+  </div>
+
+  <!-- S2: do-operator -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #7ab0d8;background:#7ab0d818;color:#7ab0d8">2</div><div class="sec-line" style="background:#7ab0d830"></div><div class="sec-ttl" style="color:#7ab0d8">The do-Operator</div><div class="sec-line" style="background:#7ab0d830"></div></div>
+    <div class="card" style="border-color:#7ab0d844">
+      <div class="label" style="color:#7ab0d8">◆ FORMALIZING THE GAP BETWEEN SEEING AND DOING</div>
+      <div class="info-txt" style="margin-bottom:14px">The do-operator surgically intervenes on a variable: sets X to a value while severing all incoming arrows. This is what a randomized experiment does physically — and what causal diagrams allow us to simulate mathematically.</div>
+      <div class="svg-wrap">
+        <svg width="520" height="100" viewBox="0 0 520 100" style="max-width:100%">
+          <rect x="10" y="10" width="220" height="80" rx="8" fill="#d4787810" stroke="#d47878" stroke-width="1.2"/>
+          <text x="120" y="32" text-anchor="middle" fill="#d47878" font-size="11" font-family="Georgia, serif" font-weight="bold">Observational P(Y | X)</text>
+          <text x="120" y="50" text-anchor="middle" fill="#7a7888" font-size="9" font-family="monospace">Z → X → Y</text>
+          <text x="120" y="64" text-anchor="middle" fill="#7a7888" font-size="9" font-family="monospace">Z → Y (backdoor open)</text>
+          <text x="120" y="82" text-anchor="middle" fill="#d4787899" font-size="8" font-family="monospace">Confounded — X reflects Z's influence</text>
+          <text x="260" y="55" text-anchor="middle" fill="#d4a86e" font-size="14" font-family="monospace">→</text>
+          <rect x="290" y="10" width="220" height="80" rx="8" fill="#78d4a810" stroke="#78d4a8" stroke-width="1.2"/>
+          <text x="400" y="32" text-anchor="middle" fill="#78d4a8" font-size="11" font-family="Georgia, serif" font-weight="bold">Interventional P(Y | do(X))</text>
+          <text x="400" y="50" text-anchor="middle" fill="#7a7888" font-size="9" font-family="monospace">Z   X → Y</text>
+          <text x="400" y="64" text-anchor="middle" fill="#7a7888" font-size="9" font-family="monospace">Z → Y (but Z ⊥ X now)</text>
+          <text x="400" y="82" text-anchor="middle" fill="#78d4a899" font-size="8" font-family="monospace">Deconfounded — X set by experimenter</text>
+        </svg>
+      </div>
+      <div class="row-left" style="border-color:#7ab0d8;margin-top:12px"><span style="color:#7ab0d8;font-family:monospace;font-size:10px">FORMAL DEFINITION: </span><span class="info-txt">X and Y are confounded if P(Y | X) ≠ P(Y | do(X)). Confounding exists whenever a back-door path from X to Y is open. Gallea's Ch.6 (RCT) works precisely because randomization is equivalent to applying the do-operator: it severs all back-door paths by design.</span></div>
+    </div>
+  </div>
+
+  <!-- S3: Back-door -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4a8;background:#78d4a818;color:#78d4a8">3</div><div class="sec-line" style="background:#78d4a830"></div><div class="sec-ttl" style="color:#78d4a8">The Back-Door Criterion</div><div class="sec-line" style="background:#78d4a830"></div></div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="label" style="color:#78d4a8">◆ DECONFOUNDING AS A PUZZLE GAME</div>
+      <div class="row-left" style="border-color:#d4a86e;margin-bottom:7px"><div style="display:flex;gap:12px"><code style="min-width:110px;flex-shrink:0;color:#d4a86e">Chain A→B→C</code><div class="info-txt">Control for B blocks the path. Don't control if you want total effect.</div></div></div>
+      <div class="row-left" style="border-color:#d4a86e;margin-bottom:7px"><div style="display:flex;gap:12px"><code style="min-width:110px;flex-shrink:0;color:#d4a86e">Fork A←B→C</code><div class="info-txt">Control for B blocks confounding. B is a confounder.</div></div></div>
+      <div class="row-left" style="border-color:#d4a86e;margin-bottom:7px"><div style="display:flex;gap:12px"><code style="min-width:110px;flex-shrink:0;color:#d4a86e">Collider A→B←C</code><div class="info-txt">DON'T control for B. Opens a spurious path.</div></div></div>
+      <div class="row-left" style="border-color:#d4a86e;margin-bottom:14px"><div style="display:flex;gap:12px"><code style="min-width:110px;flex-shrink:0;color:#d4a86e">Descendant</code><div class="info-txt">Controlling partially opens the collider. Treat like controlling for the collider itself.</div></div></div>
+      <div class="row-left" style="border-color:#d47878"><span style="color:#d47878;font-family:monospace;font-size:10px">THE "CONTROL FOR EVERYTHING" FALLACY: </span><span class="info-txt">Naively including all variables as controls is <em>wrong</em> and can introduce more bias than it removes. Any collider controlled for opens a spurious association.</span></div>
+    </div>
+    <div class="card">
+      <div class="label" style="color:#78d4a8">◆ FOUR DECONFOUNDING PUZZLES — WHERE INTUITION FAILS</div>
+      <div class="tab-btns grid2" id="backdoor-btns"></div>
+      <div class="tab-panel" id="backdoor-panel"></div>
+    </div>
+  </div>
+
+  <!-- S4: Gallea's 3 questions -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4b878;background:#d4b87818;color:#d4b878">4</div><div class="sec-line" style="background:#d4b87830"></div><div class="sec-ttl" style="color:#d4b878">Gallea's Three Diagnostic Questions</div><div class="sec-line" style="background:#d4b87830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4b878">◆ THE PRACTITIONER'S FORENSIC TOOLKIT</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">Where Pearl gives you the algorithm, Gallea gives you the mindset. Three questions to ask whenever you encounter a causal claim — the qualitative version of Pearl's formal criteria.</div>
+      <div id="diagnostic-rows"></div>
+    </div>
+  </div>
+
+  <!-- S5: Adjustment -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4c8;background:#78d4c818;color:#78d4c8">5</div><div class="sec-line" style="background:#78d4c830"></div><div class="sec-ttl" style="color:#78d4c8">The Adjustment Formula</div><div class="sec-line" style="background:#78d4c830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#78d4c8">◆ COMPUTING CAUSAL EFFECTS FROM OBSERVATIONAL DATA</div>
+      <div class="formula" style="color:#d4a86e">P(Y | do(X)) = Σ<sub>z</sub> P(Y | X, Z=z) × P(Z=z)</div>
+      <div class="info-txt" style="text-align:center;margin-bottom:14px">Compute the effect within each stratum of Z, then average across Z's distribution</div>
+      <div class="two-col">
+        <div class="row-left" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">WHEN IT WORKS</div><div class="info-txt">You have data on a sufficient set Z satisfying the back-door criterion. Works for any functional form (not just linear).</div></div>
+        <div class="row-left" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">WHEN IT FAILS</div><div class="info-txt">Required deconfounders are unobservable. Then front-door adjustment or instrumental variables may still work (Chapter 7).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6: Case Studies -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d478a8;background:#d478a818;color:#d478a8">6</div><div class="sec-line" style="background:#d478a830"></div><div class="sec-ttl" style="color:#d478a8">Case Studies — Gallea's Forensic Analysis</div><div class="sec-line" style="background:#d478a830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d478a8">◆ APPLYING BOTH FRAMEWORKS TO REAL CLAIMS</div>
+      <div class="row-left" style="border-color:#d4b878;margin-bottom:7px"><div style="color:#d4b878;font-family:Georgia,serif;font-size:12px;margin-bottom:5px">Chocolate & Nobel Laureates (NEJM)</div><div class="info-txt">GDP confounds both. Classic fork: Wealth → Chocolate and Wealth → Research funding. Pearl: control for GDP closes the back-door path.</div></div>
+      <div class="row-left" style="border-color:#7ab0d8;margin-bottom:7px"><div style="color:#7ab0d8;font-family:Georgia,serif;font-size:12px;margin-bottom:5px">Police & Crime</div><div class="info-txt">Reverse causation. Police deployed TO high-crime areas. Arrow goes Crime → Police, not Police → Crime. Pearl: the DAG disambiguates direction.</div></div>
+      <div class="row-left" style="border-color:#d47878;margin-bottom:7px"><div style="color:#d47878;font-family:Georgia,serif;font-size:12px;margin-bottom:5px">COVID Lockdowns & Deaths</div><div class="info-txt">Reverse causation + confounders. Lockdowns imposed WHERE deaths are rising. Comparing regions with/without lockdowns is confounded by severity. Need quasi-experimental methods (Ch.7).</div></div>
+      <div class="row-left" style="border-color:#78d4c8"><div style="color:#78d4c8;font-family:Georgia,serif;font-size:12px;margin-bottom:5px">Cold Swimming & Longevity</div><div class="info-txt">Selection bias. Healthy people self-select into cold swimming. The 'treatment group' is fundamentally different before treatment even begins. Conditioning on health status (collider descendant) could make it worse.</div></div>
+    </div>
+  </div>
+
+  <div class="bridge"><div class="bridge-lbl">BRIDGE TO CHAPTER 5</div><div class="bridge-txt">You now have the theory (Pearl's do-operator, back-door criterion) and the diagnostic eye (Gallea's three questions). Chapter 5 integrates everything into a complete actionable framework — Gallea's 5-step Causal Mindset — validated against Pearl's smoking-cancer case study.</div></div>
+  <div class="ch-foot"><p>Unified Summary · Ch.4 · <em>The Book of Why</em> (Pearl) + <em>The Causal Mindset</em> (Gallea)</p></div>
+</div>
+
+<hr class="ch-div">
+
+<!-- ▓▓▓ CHAPTER 5 ▓▓▓ -->
+<div class="chapter">
+  <div id="ch05" class="ch-anchor"></div>
+  <div class="ch-header">
+    <div class="ch-kicker">THE UNIFIED CAUSAL THINKING GUIDE · CHAPTER 5 OF 10</div>
+    <h1 class="ch-title">The Causal Mindset in Action</h1>
+    <div class="ch-sub">Gallea's Framework Meets the Smoke-Filled Debate</div>
+    <div class="tags">
+      <span class="stag" style="color:#d4b878;background:#d4b87818;border-color:#d4b87844">Gallea · Ch.5</span>
+      <span class="stag" style="color:#7ab0d8;background:#7ab0d818;border-color:#7ab0d844">Pearl · Ch.5</span>
+    </div>
+    <div class="ch-quote">"Millions of lives were lost because scientists did not have an adequate language for answering causal questions." — Pearl</div>
+  </div>
+
+  <!-- S1 -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">1</div><div class="sec-line" style="background:#d4a86e30"></div><div class="sec-ttl" style="color:#d4a86e">Gallea's 5-Step Causal Mindset Framework</div><div class="sec-line" style="background:#d4a86e30"></div></div>
+    <div class="card" style="border-color:#d4a86e44">
+      <div class="label" style="color:#d4a86e">◆ THE OPERATIONAL HEART OF THE CAUSAL MINDSET</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">Gallea distills the entire field into five diagnostic steps that anyone can apply — in a meeting, reading a news article, or evaluating a business claim. No statistics required. Each step maps directly to Pearl's formal framework.</div>
+      <div class="tab-btns" id="framework-btns" style="flex-wrap:wrap"></div>
+      <div class="tab-panel" id="framework-panel"></div>
+    </div>
+  </div>
+
+  <!-- S2 -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d47878;background:#d4787818;color:#d47878">2</div><div class="sec-line" style="background:#d4787830"></div><div class="sec-ttl" style="color:#d47878">Historical Validation: The Smoking-Cancer Debate</div><div class="sec-line" style="background:#d4787830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d47878">◆ PEARL'S CASE STUDY — WHERE GALLEA'S FRAMEWORK WAS NEEDED MOST</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">The smoking debate is Pearl's chosen case study because it shows, in maximum clarity, what happens when science lacks causal vocabulary. The evidence was overwhelming by the mid-1950s. But without formal tools, the debate dragged 15 years while millions smoked.</div>
+      <div class="two-col">
+        <div class="row-top" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">THE CATCH-22</div><div class="info-txt">RCT = impossible (can't assign people to smoke for decades). Observational data = dismissed as "only statistical" by Fisher and tobacco industry. Without formal causal tools, science was left arguing from data alone.</div></div>
+        <div class="row-top" style="border-color:#d4a86e"><div class="info-lbl" style="color:#d4a86e">THE IRONY</div><div class="info-txt">Fisher was right that correlation doesn't prove causation. But he was wrong that the hypothesis couldn't be confirmed. Cornfield showed that causal reasoning about confounders — not just more data — was the way forward.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3: Cornfield -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4a8;background:#78d4a818;color:#78d4a8">3</div><div class="sec-line" style="background:#78d4a830"></div><div class="sec-ttl" style="color:#78d4a8">Cornfield's Inequality</div><div class="sec-line" style="background:#78d4a830"></div></div>
+    <div class="card" style="border-color:#78d4a844">
+      <div class="label" style="color:#78d4a8">◆ SENSITIVITY ANALYSIS BEFORE ITS TIME</div>
+      <div class="info-txt" style="margin-bottom:14px">Jerome Cornfield fought Fisher on Fisher's own turf: mathematics. He showed that for a "smoking gene" to fully explain the 9× cancer risk, it would need to make smokers 9× more likely to carry the gene — biologically inconceivable. This is Gallea's Step 3 ("Direction of bias?") formalized as a mathematical bound.</div>
+      <div class="formula" style="color:#78d4a8">If observed risk ratio = 9, then any confounder must have a prevalence ratio ≥ 9</div>
+      <div class="info-txt" style="text-align:center;margin-bottom:14px">Cornfield's inequality: the confounder must be at least as strong as the observed association to fully explain it away</div>
+      <div class="row-left" style="border-color:#78d4a8"><span style="color:#78d4a8;font-family:monospace;font-size:10px">LEGACY: </span><span class="info-txt">Now called <em>sensitivity analysis</em> — instead of assuming no confounding, ask: how strong would a confounder have to be? If the required strength is implausible, the causal claim stands. This is now formalized with causal diagrams.</span></div>
+    </div>
+  </div>
+
+  <!-- S4: Hill -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #7ab0d8;background:#7ab0d818;color:#7ab0d8">4</div><div class="sec-line" style="background:#7ab0d830"></div><div class="sec-ttl" style="color:#7ab0d8">Hill's Nine Criteria</div><div class="sec-line" style="background:#7ab0d830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#7ab0d8">◆ SCIENCE'S FIRST INFORMAL CAUSAL FRAMEWORK</div>
+      <div class="info-txt" style="margin-bottom:12px">The 1964 Surgeon General's report used Bradford Hill's nine criteria to build the causal case without an RCT. These are the intellectual ancestors of Gallea's 5-step framework.</div>
+      <div class="tab-btns" id="hill-btns" style="flex-wrap:wrap;gap:5px"></div>
+      <div class="tab-panel" id="hill-panel" style="margin-top:10px"></div>
+      <div class="row-left" style="border-color:#d4b878;margin-top:10px"><span style="color:#d4b878;font-family:monospace;font-size:10px">GALLEA'S ADVANCE: </span><span class="info-txt">Hill's criteria are informal and require expert judgment. Gallea's 5-step framework operationalizes the same logic for non-experts, while Pearl's back-door criterion provides the formal algorithm that removes ambiguity entirely.</span></div>
+    </div>
+  </div>
+
+  <!-- S5: Tobacco Playbook -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d47878;background:#d4787818;color:#d47878">5</div><div class="sec-line" style="background:#d4787830"></div><div class="sec-ttl" style="color:#d47878">The Tobacco Playbook — Still in Use</div><div class="sec-line" style="background:#d4787830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d47878">◆ WHY THE CAUSAL MINDSET IS A DEFENSE AGAINST MANIPULATION</div>
+      <div class="row-left" style="border-color:#d47878;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#d47878;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">Fund legitimate skeptics</div><div class="info-txt">Pay scientists consulting fees. Let real expertise provide cover for manufactured doubt.</div></div></div>
+      <div class="row-left" style="border-color:#d47878;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#d47878;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">Manufacture uncertainty</div><div class="info-txt">Exploit genuine methodological gaps. Without causal tools, science couldn't respond effectively.</div></div></div>
+      <div class="row-left" style="border-color:#d4a86e;margin-bottom:12px"><div style="display:flex;gap:14px"><div style="color:#d4a86e;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">Exploit 'correlation ≠ causation'</div><div class="info-txt">The very mantra statisticians taught was weaponized against public health. The prohibition on causal language became the industry's best defense.</div></div></div>
+      <div class="row-left" style="border-color:#78d4c8"><span style="color:#78d4c8;font-family:monospace;font-size:10px">THE SHARED MESSAGE: </span><span class="info-txt">Pearl shows how the tobacco playbook exploited gaps in causal methodology. Gallea arms you with the framework to resist the same tactics when applied to climate change, AI hype, dietary fads, or pharmaceutical marketing today.</span></div>
+    </div>
+  </div>
+
+  <div class="bridge"><div class="bridge-lbl">BRIDGE TO CHAPTER 6</div><div class="bridge-txt">The framework is now in your hands. Chapter 6 stress-tests it against the most baffling puzzles in statistics — paradoxes where numbers reverse, correlations flip, and even experts are fooled. If the framework survives these, it survives anything.</div></div>
+  <div class="ch-foot"><p>Unified Summary · Chapter 5 · Combining <em>The Book of Why</em> (Pearl & Mackenzie, 2018) and <em>The Causal Mindset Handbook</em> (Gallea)</p></div>
+</div>
+
+<hr class="ch-div">
+
+<!-- ▓▓▓ CHAPTER 6 ▓▓▓ -->
+<div class="chapter">
+  <div id="ch06" class="ch-anchor"></div>
+  <div class="ch-header">
+    <div class="ch-kicker">THE UNIFIED CAUSAL THINKING GUIDE · CHAPTER 6 OF 10</div>
+    <h1 class="ch-title">When Intuition Fails</h1>
+    <div class="ch-sub">Paradoxes, Wrong Metrics, and Goodhart's Law</div>
+    <div class="tags">
+      <span class="stag" style="color:#7ab0d8;background:#7ab0d818;border-color:#7ab0d844">Pearl · Ch.6</span>
+      <span class="stag" style="color:#d4b878;background:#d4b87818;border-color:#d4b87844">Gallea · Ch.8</span>
+    </div>
+    <div class="ch-quote">"These paradoxes were canaries in the coal mine that should have alerted scientists to the fact that human intuition is grounded in causal, not statistical, logic." — Pearl</div>
+  </div>
+
+  <!-- S1 -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">1</div><div class="sec-line" style="background:#d4a86e30"></div><div class="sec-ttl" style="color:#d4a86e">Why Paradoxes Matter</div><div class="sec-line" style="background:#d4a86e30"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4a86e">◆ CLASHES BETWEEN STATISTICAL AND CAUSAL REASONING</div>
+      <div class="two-col">
+        <div class="row-left" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">WITHOUT CAUSAL DIAGRAMS</div><div class="info-txt">Each paradox is a brainteaser requiring ad hoc reasoning. Statisticians debate the "correct" analysis for decades. No unified explanation exists.</div></div>
+        <div class="row-left" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">WITH CAUSAL DIAGRAMS</div><div class="info-txt">Each paradox is a routine exercise. Draw the DAG. Identify colliders and confounders. Apply back-door criterion. The "paradox" dissolves immediately.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: Four Paradoxes -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #a87ad4;background:#a87ad418;color:#a87ad4">2</div><div class="sec-line" style="background:#a87ad430"></div><div class="sec-ttl" style="color:#a87ad4">Pearl's Four Paradoxes</div><div class="sec-line" style="background:#a87ad430"></div></div>
+    <div class="card" style="border-color:#a87ad444">
+      <div class="label" style="color:#a87ad4">◆ ONE DIAGRAM RESOLVES THEM ALL</div>
+      <div class="info-txt" style="margin-bottom:14px">Every paradox is a different flavor of the same story: confounders and colliders disrupting statistical analysis in ways only causal structure can explain.</div>
+      <div class="tab-btns grid2" id="paradox-btns"></div>
+      <div class="tab-panel" id="paradox-panel"></div>
+    </div>
+  </div>
+
+  <!-- S3: Gallea -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4b878;background:#d4b87818;color:#d4b878">3</div><div class="sec-line" style="background:#d4b87830"></div><div class="sec-ttl" style="color:#d4b878">Gallea's Twist: Wrong Question</div><div class="sec-line" style="background:#d4b87830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4b878">◆ EVEN PERFECT CAUSAL METHODS FAIL IF THE QUESTION IS WRONG</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">Gallea introduces a complementary failure mode that Pearl's paradoxes don't cover: what happens when the causal method is impeccable, but the outcome you're measuring doesn't capture what you actually care about?</div>
+      <div class="row-left" style="border-color:#d47878;margin-bottom:8px"><div class="info-lbl" style="color:#d47878">MISUNDERSTOOD PATHWAY (The 'How?' Problem)</div><div class="info-txt">You prove Drug X reduces blood pressure. But blood pressure was a proxy for heart attack risk. Drug X reduces BP via a pathway that doesn't reduce heart attacks. Right causal estimate, wrong outcome.</div></div>
+      <div class="row-left" style="border-color:#a87ad4;margin-bottom:8px"><div class="info-lbl" style="color:#a87ad4">MISLEADING PROXY (The Outcome Problem)</div><div class="info-txt">Training program increases test scores (proxy for skill). But participants learn to pass tests, not to apply skills on the job. Campbell's Law: measured metric is gamed.</div></div>
+      <div class="row-left" style="border-color:#d4a86e"><div class="info-lbl" style="color:#d4a86e">GOODHART'S LAW</div><div class="info-txt">'When a measure becomes a target, it ceases to be a good measure.' Police target arrest numbers → arrests increase but crime doesn't decrease. The metric is optimized, not the underlying goal.</div></div>
+    </div>
+  </div>
+
+  <!-- S4: Obligation -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4c8;background:#78d4c818;color:#78d4c8">4</div><div class="sec-line" style="background:#78d4c830"></div><div class="sec-ttl" style="color:#78d4c8">Obligation of Means vs. Results</div><div class="sec-line" style="background:#78d4c830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#78d4c8">◆ GALLEA'S PHILOSOPHICAL ANCHOR</div>
+      <div class="two-col" style="margin-bottom:12px">
+        <div class="row-top" style="border-color:#78d4c8"><div class="info-lbl" style="color:#78d4c8">OBLIGATION OF MEANS</div><div class="info-txt">Use the best available methods and reasoning process. A doctor isn't liable for a patient dying if they followed best medical practice. Focus on process quality.</div></div>
+        <div class="row-top" style="border-color:#d4b878"><div class="info-lbl" style="color:#d4b878">OBLIGATION OF RESULTS</div><div class="info-txt">Deliver the outcome regardless of method. A builder must deliver a functioning building. Outcome is everything; process is secondary.</div></div>
+      </div>
+      <div class="row-left" style="border-color:#d4a86e"><span style="color:#d4a86e;font-family:monospace;font-size:10px">THE CAUSAL THINKER'S STANCE: </span><span class="info-txt">In a world of uncertainty, we operate under an obligation of means. Use the best causal reasoning available, acknowledge uncertainty explicitly, and make decisions on the best evidence — but don't pretend to certainty you don't have.</span></div>
+    </div>
+  </div>
+
+  <div class="bridge"><div class="bridge-lbl">BRIDGE TO CHAPTER 7</div><div class="bridge-txt">We've seen how intuition fails and how wrong metrics can sabotage even correct causal methods. Chapter 7 introduces the rigorous tools that succeed where intuition doesn't: randomized experiments, quasi-experiments, and Pearl's most surprising discovery.</div></div>
+  <div class="ch-foot"><p>Unified Summary · Chapter 6 · Combining <em>The Book of Why</em> (Pearl & Mackenzie, 2018) and <em>The Causal Mindset Handbook</em> (Gallea)</p></div>
+</div>
+
+<hr class="ch-div">
+
+<!-- ▓▓▓ CHAPTER 7 ▓▓▓ -->
+<div class="chapter">
+  <div id="ch07" class="ch-anchor"></div>
+  <div class="ch-header">
+    <div class="ch-kicker">THE UNIFIED CAUSAL THINKING GUIDE · CHAPTER 7 OF 10</div>
+    <h1 class="ch-title">From Experiments to Equations</h1>
+    <div class="ch-sub">RCTs, Quasi-Experiments, and the Conquest of Mount Intervention</div>
+    <div class="tags">
+      <span class="stag" style="color:#d4b878;background:#d4b87818;border-color:#d4b87844">Gallea · Ch.6 & 7</span>
+      <span class="stag" style="color:#7ab0d8;background:#7ab0d818;border-color:#7ab0d844">Pearl · Ch.7</span>
+    </div>
+    <div class="ch-quote">"We finally make our bold ascent onto the second level of the Ladder of Causation — the level of intervention." — Pearl</div>
+  </div>
+
+  <!-- S1 -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4a8;background:#78d4a818;color:#78d4a8">1</div><div class="sec-line" style="background:#78d4a830"></div><div class="sec-ttl" style="color:#78d4a8">RCTs — Why Randomization Works</div><div class="sec-line" style="background:#78d4a830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#78d4a8">◆ PEARL'S FORMAL EXPLANATION OF THE GOLD STANDARD</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">Pearl explains what Gallea teaches: an RCT is the gold standard because randomization physically implements the do-operator — it severs all back-door paths by making treatment assignment independent of all confounders.</div>
+      <div class="two-col">
+        <div class="row-left" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">WHAT RANDOMIZATION DOES</div><div class="info-txt">Breaks the link between confounders and treatment. Both groups are statistically identical on average — observed and unobserved. The difference in outcomes IS the causal effect.</div></div>
+        <div class="row-left" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">WHERE RCTS FAIL</div><div class="info-txt">Unethical (can't assign people to smoke). Expensive and slow. Non-compliance — people don't follow assignment. External validity — lab conditions differ from real world.</div></div>
+      </div>
+      <div class="row-left" style="border-color:#d4b878;margin-top:8px"><span style="color:#d4b878;font-family:monospace;font-size:10px">GALLEA'S 7 PRINCIPLES FOR RCTS: </span><span class="info-txt">Random assignment, control group, blinding, intention-to-treat analysis, pre-registration, sufficient power, and transparent reporting. Each principle plugs a specific methodological hole.</span></div>
+    </div>
+  </div>
+
+  <!-- S2: Methods -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4a8;background:#78d4a818;color:#78d4a8">2</div><div class="sec-line" style="background:#78d4a830"></div><div class="sec-ttl" style="color:#78d4a8">Pearl's Three Deconfounding Routes</div><div class="sec-line" style="background:#78d4a830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#78d4a8">◆ WHEN RCTS ARE IMPOSSIBLE</div>
+      <div class="info-txt" style="margin-bottom:14px">Pearl provides three main routes to causal identification when experimental manipulation is not possible and some confounding variables are available. Gallea teaches the practical judgment for when to use each.</div>
+      <div class="tab-btns" id="method-btns"></div>
+      <div class="tab-panel" id="method-panel"></div>
+    </div>
+  </div>
+
+  <!-- S3: Quasi -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4b878;background:#d4b87818;color:#d4b878">3</div><div class="sec-line" style="background:#d4b87830"></div><div class="sec-ttl" style="color:#d4b878">Quasi-Experimental Methods</div><div class="sec-line" style="background:#d4b87830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4b878">◆ THREE METHODS FOR WHEN RCTS ARE IMPOSSIBLE</div>
+      <div class="row-left" style="border-color:#78d4c8;margin-bottom:10px"><div class="info-lbl" style="color:#78d4c8">DIFFERENCE-IN-DIFFERENCES (DiD)</div><div class="info-txt" style="margin-bottom:5px"><strong style="color:#d4a86e;font-size:9px">KEY ASSUMPTION:</strong> Parallel trends — treatment and control groups would have followed the same trajectory without intervention.</div><div class="info-txt"><strong style="color:#78d4a8;font-size:9px">EXAMPLE:</strong> Countries that received arms vs. those that didn't. If both were trending similarly pre-treatment, the post-treatment divergence is the causal effect.</div></div>
+      <div class="row-left" style="border-color:#a87ad4;margin-bottom:10px"><div class="info-lbl" style="color:#a87ad4">REGRESSION DISCONTINUITY (RDD)</div><div class="info-txt" style="margin-bottom:5px"><strong style="color:#d4a86e;font-size:9px">KEY ASSUMPTION:</strong> Around a threshold, units just above and just below are essentially randomly assigned.</div><div class="info-txt"><strong style="color:#78d4a8;font-size:9px">EXAMPLE:</strong> Spotify podcast promotion: shows just above/below a listener threshold. Those barely qualifying vs. barely missing are near-identical — making the threshold a 'natural experiment.'</div></div>
+      <div class="row-left" style="border-color:#7ab0d8;margin-bottom:12px"><div class="info-lbl" style="color:#7ab0d8">INSTRUMENTAL VARIABLES (IV)</div><div class="info-txt" style="margin-bottom:5px"><strong style="color:#d4a86e;font-size:9px">KEY ASSUMPTION:</strong> Exclusion restriction — the instrument affects outcome ONLY through treatment.</div><div class="info-txt"><strong style="color:#78d4a8;font-size:9px">EXAMPLE:</strong> Price as instrument for demand: weather shocks affect supply (price), which affects quantity demanded. Weather has no direct effect on demand — only through price.</div></div>
+      <div class="row-left" style="border-color:#d4b878"><span style="color:#d4b878;font-family:monospace;font-size:10px">GALLEA'S KEY INSIGHT: </span><span class="info-txt">Every quasi-experimental method makes an identifying assumption that cannot be tested from data alone. The causal mindset demands you state this assumption explicitly and defend it with domain knowledge — not hide it inside a regression.</span></div>
+    </div>
+  </div>
+
+  <!-- S4: Front-door -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4c8;background:#78d4c818;color:#78d4c8">4</div><div class="sec-line" style="background:#78d4c830"></div><div class="sec-ttl" style="color:#78d4c8">The Front-Door Adjustment — Pearl's Surprise</div><div class="sec-line" style="background:#78d4c830"></div></div>
+    <div class="card" style="border-color:#78d4c844">
+      <div class="label" style="color:#78d4c8">◆ A METHOD INVISIBLE TO CLASSICAL STATISTICS</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">The front-door adjustment was unknown before causal diagrams. It solves the smoking-cancer problem: even without observing the hypothetical "smoking gene," we can estimate the causal effect by routing through tar deposits — the mediator.</div>
+      <div class="two-col" style="margin-bottom:10px">
+        <div class="row-left" style="border-color:#78d4c8"><div class="info-lbl" style="color:#78d4c8">STEP 1: X→M</div><div class="info-txt">Estimate P(tar | do(smoking)). The smoking gene's path to tar goes through Cancer (a collider) — already blocked. No confounding. Simple observation works.</div></div>
+        <div class="row-left" style="border-color:#7ab0d8"><div class="info-lbl" style="color:#7ab0d8">STEP 2: M→Y</div><div class="info-txt">Estimate P(cancer | do(tar)). Back-door path exists via smoking gene. Block it by adjusting for smoking status. Standard back-door adjustment works.</div></div>
+      </div>
+      <div class="row-left" style="border-color:#d4a86e"><span style="color:#d4a86e;font-family:monospace;font-size:10px">COMBINE STEPS 1+2: </span><span class="info-txt">→ P(cancer | do(smoking)) — without ever measuring the smoking gene. This is what Pearl means by "mathematics does for us what ten years of debate could not."</span></div>
+    </div>
+  </div>
+
+  <!-- S5: do-calculus -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">5</div><div class="sec-line" style="background:#d4a86e30"></div><div class="sec-ttl" style="color:#d4a86e">The do-Calculus — Completeness</div><div class="sec-line" style="background:#d4a86e30"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4a86e">◆ IF A CAUSAL EFFECT CAN BE IDENTIFIED, THE DO-CALCULUS WILL FIND IT</div>
+      <div class="info-txt" style="margin-bottom:14px">Pearl's students proved that the do-calculus is <em>complete</em>. If there exists any way to identify a causal effect from a given diagram and dataset, the do-calculus will find it. If it can't, no method can — the effect is genuinely not identifiable from that data.</div>
+      <div class="row-left" style="border-color:#78d4a8;margin-bottom:7px"><div style="display:flex;gap:12px"><div style="color:#78d4a8;font-family:monospace;font-size:10px;min-width:120px;flex-shrink:0">Rule 1: Ignoring obs.</div><div class="info-txt">P(Y|do(X),Z) = P(Y|do(X)) when Z is irrelevant given do(X)</div></div></div>
+      <div class="row-left" style="border-color:#7ab0d8;margin-bottom:7px"><div style="display:flex;gap:12px"><div style="color:#7ab0d8;font-family:monospace;font-size:10px;min-width:120px;flex-shrink:0">Rule 2: Action/obs.</div><div class="info-txt">do(X) becomes observation when all back-door paths are blocked</div></div></div>
+      <div class="row-left" style="border-color:#a87ad4"><div style="display:flex;gap:12px"><div style="color:#a87ad4;font-family:monospace;font-size:10px;min-width:120px;flex-shrink:0">Rule 3: Deletion</div><div class="info-txt">do(X) can be removed when X has no causal effect on Y</div></div></div>
+    </div>
+  </div>
+
+  <div class="bridge"><div class="bridge-lbl">BRIDGE TO CHAPTER 8</div><div class="bridge-txt">We've conquered Rung 2 — the level of intervention. Chapter 8 climbs to the highest rung: counterfactuals. "What would have happened if we had done otherwise?" This is where causality meets morality, law, and the deepest questions about human cognition.</div></div>
+  <div class="ch-foot"><p>Unified Summary · Chapter 7 · Combining <em>The Book of Why</em> (Pearl & Mackenzie, 2018) and <em>The Causal Mindset Handbook</em> (Gallea)</p></div>
+</div>
+
+<hr class="ch-div">
+
+<!-- ▓▓▓ CHAPTER 8 ▓▓▓ -->
+<div class="chapter">
+  <div id="ch08" class="ch-anchor"></div>
+  <div class="ch-header">
+    <div class="ch-kicker">THE UNIFIED CAUSAL THINKING GUIDE · CHAPTER 8 OF 10</div>
+    <h1 class="ch-title">Counterfactuals & Mediation</h1>
+    <div class="ch-sub">Mining Worlds That Could Have Been — The Highest Rung</div>
+    <div class="tags">
+      <span class="stag" style="color:#7ab0d8;background:#7ab0d818;border-color:#7ab0d844">Pearl · Ch.8 & 9</span>
+    </div>
+    <div class="ch-quote">"Counterfactuals are the building blocks of moral reasoning, scientific thought, and meaningful human communication." — Pearl</div>
+  </div>
+
+  <!-- S1: SCM -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #a87ad4;background:#a87ad418;color:#a87ad4">1</div><div class="sec-line" style="background:#a87ad430"></div><div class="sec-ttl" style="color:#a87ad4">The SCM Algorithm — Three Steps to Any Counterfactual</div><div class="sec-line" style="background:#a87ad430"></div></div>
+    <div class="card" style="border-color:#a87ad444">
+      <div class="label" style="color:#a87ad4">◆ ABDUCTION → ACTION → PREDICTION</div>
+      <div class="info-txt" style="margin-bottom:14px">Pearl provides a mechanical procedure for answering any counterfactual question.</div>
+      <div class="row-left" style="border-color:#7ab0d8;margin-bottom:8px"><div style="display:flex;gap:14px"><div style="color:#7ab0d8;font-family:monospace;font-size:11px;min-width:100px;flex-shrink:0">1. ABDUCTION</div><div class="info-txt">Use observed evidence to pin down the 'noise' — the individual's specific characteristics. Given the patient was untreated and died, what does this tell us about their susceptibility?</div></div></div>
+      <div class="row-left" style="border-color:#d4a86e;margin-bottom:8px"><div style="display:flex;gap:14px"><div style="color:#d4a86e;font-family:monospace;font-size:11px;min-width:100px;flex-shrink:0">2. ACTION</div><div class="info-txt">Modify the model — set Treatment = 1, sever all incoming arrows to Treatment. This creates the counterfactual world.</div></div></div>
+      <div class="row-left" style="border-color:#78d4a8;margin-bottom:12px"><div style="display:flex;gap:14px"><div style="color:#78d4a8;font-family:monospace;font-size:11px;min-width:100px;flex-shrink:0">3. PREDICTION</div><div class="info-txt">Run the modified model with the pinned noise. In this counterfactual world, does the patient survive? The answer is a probability.</div></div></div>
+      <div class="row-left" style="border-color:#a87ad4"><span style="color:#a87ad4;font-family:monospace;font-size:10px">THE CRUCIAL ASYMMETRY: </span><span class="info-txt">Rung-2 questions are about populations. Rung-3 questions are about <em>individuals who have already taken a specific action</em> — you can never directly observe what would have happened otherwise. Only a model can answer them.</span></div>
+    </div>
+  </div>
+
+  <!-- S2: PN/PS -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4a8;background:#78d4a818;color:#78d4a8">2</div><div class="sec-line" style="background:#78d4a830"></div><div class="sec-ttl" style="color:#78d4a8">Necessity vs. Sufficiency — PN and PS</div><div class="sec-line" style="background:#78d4a830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#78d4a8">◆ THE LEGAL AND SCIENTIFIC LANGUAGE OF CAUSE</div>
+      <div class="two-col" style="margin-bottom:12px">
+        <div class="row-top" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">PN — PROBABILITY OF NECESSITY</div><div class="info-txt">"But for X, would Y have occurred?" The legal "but-for" test. If the defendant hadn't been negligent, would the harm still have happened? PN = 0 means the harm would have happened anyway (not liable under necessity standard).</div></div>
+        <div class="row-top" style="border-color:#7ab0d8"><div class="info-lbl" style="color:#7ab0d8">PS — PROBABILITY OF SUFFICIENCY</div><div class="info-txt">"Was X sufficient to cause Y?" Even if other causes existed, was this one enough? PS = 1 means X alone would have caused Y. Many courts use a "substantial factor" test to handle redundant-cause cases.</div></div>
+      </div>
+      <div class="row-left" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">THE FALLING PIANO — PEARL'S THOUGHT EXPERIMENT</div><div class="info-txt">A pedestrian is hit by both a car and a falling piano simultaneously — either alone would be fatal. PN = 0 (the piano would have killed them anyway — car not a "necessary" cause). PS = 1 (the car was sufficient to cause death). The right legal standard depends on which counterfactual question you're asking.</div></div>
+    </div>
+  </div>
+
+  <!-- S3: Climate -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4c8;background:#78d4c818;color:#78d4c8">3</div><div class="sec-line" style="background:#78d4c830"></div><div class="sec-ttl" style="color:#78d4c8">Climate Attribution — Counterfactuals in Practice</div><div class="sec-line" style="background:#78d4c830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#78d4c8">◆ FROM 'IMPOSSIBLE TO SAY' TO PRECISE PROBABILITY</div>
+      <div class="two-col" style="margin-bottom:10px">
+        <div class="row-top" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">OLD ANSWER</div><div class="info-txt">"You can never attribute a single weather event to climate change." Impossibility.</div></div>
+        <div class="row-top" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">NEW ANSWER (SCM)</div><div class="info-txt">"90% probability that climate change was a necessary cause of this heat wave." Precise and defensible.</div></div>
+      </div>
+      <div class="row-left" style="border-color:#78d4c8"><span style="color:#78d4c8;font-family:monospace;font-size:10px">METHOD: </span><span class="info-txt">Run two climate simulations — one with historical CO₂, one without. Probability of Necessity = P(heat wave | actual) − P(heat wave | counterfactual), normalized. This is counterfactual reasoning made operational at planetary scale.</span></div>
+    </div>
+  </div>
+
+  <!-- S4: Mediation -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #7ab0d8;background:#7ab0d818;color:#7ab0d8">4</div><div class="sec-line" style="background:#7ab0d830"></div><div class="sec-ttl" style="color:#7ab0d8">Mediation — Knowing HOW, Not Just THAT</div><div class="sec-line" style="background:#7ab0d830"></div></div>
+    <div class="card" style="border-color:#7ab0d844">
+      <div class="label" style="color:#7ab0d8">◆ LOOKING INSIDE THE BLACK BOX</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">RCTs tell us <em>that</em> a treatment works. Mediation analysis tells us <em>how</em> — through what mechanism. Aspirin prevents strokes, but is it through platelet aggregation or another path? The right policy depends on knowing the mechanism.</div>
+      <div class="tab-btns" id="effect-btns" style="justify-content:center"></div>
+      <div class="tab-panel" id="effect-panel"></div>
+    </div>
+  </div>
+
+  <!-- S5: Berkeley -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">5</div><div class="sec-line" style="background:#d4a86e30"></div><div class="sec-ttl" style="color:#d4a86e">Berkeley Admissions — Where Everything Connects</div><div class="sec-line" style="background:#d4a86e30"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4a86e">◆ SIMPSON'S PARADOX + MEDIATION + COUNTERFACTUALS</div>
+      <div class="info-txt" style="margin-bottom:12px">UC Berkeley 1973: aggregate data shows bias against women. Stratified by department, the bias reverses. This is simultaneously Simpson's Paradox (Ch.6), a mediation story, and a counterfactual question. Department choice is a <em>mediator</em> between gender and admission.</div>
+      <div class="row-left" style="border-color:#78d4a8;margin-bottom:8px"><div class="info-lbl" style="color:#78d4a8">DIRECT EFFECT (NDE)</div><div class="info-txt">Within each department, women were admitted equally or at higher rates. No direct discrimination.</div></div>
+      <div class="row-left" style="border-color:#7ab0d8;margin-bottom:8px"><div class="info-lbl" style="color:#7ab0d8">INDIRECT EFFECT (NIE)</div><div class="info-txt">Women applied to more competitive departments. This is the indirect path: Gender → Department Choice → Admission.</div></div>
+      <div class="row-left" style="border-color:#d4a86e"><div class="info-lbl" style="color:#d4a86e">THE POLICY QUESTION</div><div class="info-txt">Should Berkeley address why women choose harder departments (indirect path) or within-department bias (direct path)? Mediation analysis tells you which lever matters.</div></div>
+    </div>
+  </div>
+
+  <div class="bridge"><div class="bridge-lbl">BRIDGE TO CHAPTER 9</div><div class="bridge-txt">We've reached the summit of the Ladder. Chapter 9 asks: what does all this mean for the future? For Big Data, for AI, and for the biggest philosophical questions of all?</div></div>
+  <div class="ch-foot"><p>Unified Summary · Chapter 8 · Combining <em>The Book of Why</em> (Pearl & Mackenzie, 2018) and <em>The Causal Mindset Handbook</em> (Gallea)</p></div>
+</div>
+
+<hr class="ch-div">
+
+<!-- ▓▓▓ CHAPTER 9 ▓▓▓ -->
+<div class="chapter">
+  <div id="ch09" class="ch-anchor"></div>
+  <div class="ch-header">
+    <div class="ch-kicker">THE UNIFIED CAUSAL THINKING GUIDE · CHAPTER 9 OF 10</div>
+    <h1 class="ch-title">Big Data, AI & the Future</h1>
+    <div class="ch-sub">Why More Data Is Not Enough — And What Is</div>
+    <div class="tags">
+      <span class="stag" style="color:#7ab0d8;background:#7ab0d818;border-color:#7ab0d844">Pearl · Ch.10</span>
+      <span class="stag" style="color:#d4b878;background:#d4b87818;border-color:#d4b87844">Gallea · Ch.2 (AI)</span>
+    </div>
+    <div class="ch-quote">"All is pre-determined, yet permission is always granted." — Maimonides (1138–1204), Pearl's epigraph for his final chapter</div>
+  </div>
+
+  <!-- S1 -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #7ab0d8;background:#7ab0d818;color:#7ab0d8">1</div><div class="sec-line" style="background:#7ab0d830"></div><div class="sec-ttl" style="color:#7ab0d8">The Big Data Religion — And Its Limits</div><div class="sec-line" style="background:#7ab0d830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#7ab0d8">◆ DATA MINING IS THE FIRST STEP, NOT THE LAST</div>
+      <div class="two-col" style="margin-bottom:12px">
+        <div class="row-left" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">BIG DATA ALONE</div><div class="info-txt">Finds correlations and patterns. Discovers candidate genes, customer segments, risk factors. Essential first step. Cannot answer "does this gene cause cancer?" without a causal model specifying confounders and pathways.</div></div>
+        <div class="row-left" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">BIG DATA + CAUSAL MODEL</div><div class="info-txt">Unlocks transportability: transferring causal conclusions from one population to another. This is genuinely new — combining data from multiple imperfect studies to answer questions none could answer alone.</div></div>
+      </div>
+      <div class="row-left" style="border-color:#d4b878"><span style="color:#d4b878;font-family:monospace;font-size:10px">GALLEA'S PARALLEL: </span><span class="info-txt">Gallea warns that businesses invest billions in AI without asking whether it's actually working causally. FOMO-driven AI adoption without ROI measurement is the corporate version of the Big Data religion.</span></div>
+    </div>
+  </div>
+
+  <!-- S2: Transportability -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4c8;background:#78d4c818;color:#78d4c8">2</div><div class="sec-line" style="background:#78d4c830"></div><div class="sec-ttl" style="color:#78d4c8">Transportability — Pearl's Big Data Breakthrough</div><div class="sec-line" style="background:#78d4c830"></div></div>
+    <div class="card" style="border-color:#78d4c844">
+      <div class="label" style="color:#78d4c8">◆ WHEN CAN RESULTS FROM ONE STUDY APPLY ELSEWHERE?</div>
+      <div style="color:#e0ddd4;font-family:Georgia,serif;font-size:13px;line-height:1.8;margin-bottom:14px">Pearl's transportability theory answers: given a causal diagram showing differences between populations, can we still transfer the causal estimate?</div>
+      <div class="row-left" style="border-color:#78d4a8;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#78d4a8;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">Direct transportability</div><div class="info-txt">Causal structure is identical in both populations. Results transfer directly.</div></div></div>
+      <div class="row-left" style="border-color:#7ab0d8;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#7ab0d8;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">With adjustment</div><div class="info-txt">Populations differ on some variables, but if those variables are not on the causal pathway, we can adjust.</div></div></div>
+      <div class="row-left" style="border-color:#d47878"><div style="display:flex;gap:14px"><div style="color:#d47878;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">Non-transportable</div><div class="info-txt">Populations differ on variables that are ON the causal pathway. Results cannot transfer. Need a new study.</div></div></div>
+    </div>
+  </div>
+
+  <!-- S3: ML + CI -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4b878;background:#d4b87818;color:#d4b878">3</div><div class="sec-line" style="background:#d4b87830"></div><div class="sec-ttl" style="color:#d4b878">ML + Causal Inference — The Powerful Collaboration</div><div class="sec-line" style="background:#d4b87830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4b878">◆ GALLEA'S VISION FOR THE CAUSAL AI FRONTIER</div>
+      <div class="row-left" style="border-color:#7ab0d8;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#7ab0d8;font-family:monospace;font-size:10px;min-width:130px;flex-shrink:0">ML as Scout</div><div class="info-txt">ML discovers patterns, candidate confounders, heterogeneous subgroups in massive datasets. It is the explorer that maps the terrain.</div></div></div>
+      <div class="row-left" style="border-color:#78d4a8;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#78d4a8;font-family:monospace;font-size:10px;min-width:130px;flex-shrink:0">CI as Judge</div><div class="info-txt">Causal inference validates whether discovered patterns are causal or spurious. It is the arbiter that separates signal from noise.</div></div></div>
+      <div class="row-left" style="border-color:#a87ad4;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#a87ad4;font-family:monospace;font-size:10px;min-width:130px;flex-shrink:0">LLMs as Brainstormers</div><div class="info-txt">Gallea's Causal Mindset app: submit a claim, and an LLM surfaces potential confounders, reverse causation risks, and extrapolation concerns from domain knowledge.</div></div></div>
+      <div class="row-left" style="border-color:#d4b878"><div style="display:flex;gap:14px"><div style="color:#d4b878;font-family:monospace;font-size:10px;min-width:130px;flex-shrink:0">Heterogeneous Effects</div><div class="info-txt">ML identifies subgroups where treatment works differently — then causal methods validate whether those differences are real or artifacts of selection.</div></div></div>
+    </div>
+  </div>
+
+  <!-- S4: Five Questions -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #a87ad4;background:#a87ad418;color:#a87ad4">4</div><div class="sec-line" style="background:#a87ad430"></div><div class="sec-ttl" style="color:#a87ad4">Pearl's Five Questions About Thinking Machines</div><div class="sec-line" style="background:#a87ad430"></div></div>
+    <div class="card" style="border-color:#a87ad444">
+      <div class="label" style="color:#a87ad4">◆ THE BOOK'S PHILOSOPHICAL SUMMIT</div>
+      <div class="tab-btns col" id="fiveq-btns"></div>
+      <div class="tab-panel" id="fiveq-panel" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <!-- S5: Free Will -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">5</div><div class="sec-line" style="background:#d4a86e30"></div><div class="sec-ttl" style="color:#d4a86e">Free Will and the Agency Stack</div><div class="sec-line" style="background:#d4a86e30"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4a86e">◆ CAUSALITY AS THE KEY TO CONSCIOUSNESS</div>
+      <div style="margin-bottom:14px">
+        <div style="padding:13px 17px;background:#78d4c812;border:1px solid #78d4c844;border-radius:8px 8px 0 0"><div style="color:#78d4c8;font-family:Georgia,serif;font-size:13px;font-weight:bold;margin-bottom:4px">Layer 3: Memory</div><div class="info-txt">Records how intents correspond to events in the outside world</div></div>
+        <div style="padding:13px 17px;background:#7ab0d812;border:1px solid #7ab0d844;border-top:none"><div style="color:#7ab0d8;font-family:Georgia,serif;font-size:13px;font-weight:bold;margin-bottom:4px">Layer 2: Self-Model (Causal)</div><div class="info-txt">Blueprint of the machine's own major software components</div></div>
+        <div style="padding:13px 17px;background:#78d4a812;border:1px solid #78d4a844;border-top:none;border-radius:0 0 8px 8px"><div style="color:#78d4a8;font-family:Georgia,serif;font-size:13px;font-weight:bold;margin-bottom:4px">Layer 1: World Model (SCM)</div><div class="info-txt">Causal diagram of the environment — rungs 1, 2 & 3</div></div>
+      </div>
+      <div class="row-left" style="border-color:#d4a86e"><span style="color:#d4a86e;font-family:monospace;font-size:10px">PEARL'S RESOLUTION OF FREE WILL: </span><span class="info-txt">Compatibilism. The neural level is deterministic; the cognitive level features vivid sensation of choice. Both are valid descriptions at different levels — like physics being time-reversible while smoke never re-enters a chimney. Free will is a useful model, not an illusion.</span></div>
+    </div>
+  </div>
+
+  <div class="bridge"><div class="bridge-lbl">BRIDGE TO CHAPTER 10</div><div class="bridge-txt">From the philosophical heights, we return to Earth. The final chapter synthesizes everything into a manifesto for the causal thinker — what to do now, how to live with uncertainty, and why this knowledge changes everything.</div></div>
+  <div class="ch-foot"><p>Unified Summary · Chapter 9 · Combining <em>The Book of Why</em> (Pearl & Mackenzie, 2018) and <em>The Causal Mindset Handbook</em> (Gallea)</p></div>
+</div>
+
+<hr class="ch-div">
+
+<!-- ▓▓▓ CHAPTER 10 ▓▓▓ -->
+<div class="chapter">
+  <div id="ch10" class="ch-anchor"></div>
+  <div class="ch-header">
+    <div class="ch-kicker">THE UNIFIED CAUSAL THINKING GUIDE · CHAPTER 10 OF 10</div>
+    <h1 class="ch-title">The Causal Thinker's Manifesto</h1>
+    <div class="ch-sub">Embracing Uncertainty — A Complete Toolkit for the Real World</div>
+    <div class="tags">
+      <span class="stag" style="color:#d4b878;background:#d4b87818;border-color:#d4b87844">Gallea · Ch.9</span>
+      <span class="stag" style="color:#7ab0d8;background:#7ab0d818;border-color:#7ab0d844">Pearl · Synthesis</span>
+    </div>
+    <div class="ch-quote">"Causal inference is the humbling and much-needed art of dealing with uncertainty." — Gallea</div>
+  </div>
+
+  <!-- S1: Journey Map -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">1</div><div class="sec-line" style="background:#d4a86e30"></div><div class="sec-ttl" style="color:#d4a86e">The Full Journey — All 10 Chapters Connected</div><div class="sec-line" style="background:#d4a86e30"></div></div>
+    <div class="card" style="border-color:#d4a86e44">
+      <div class="label" style="color:#d4a86e">◆ CLICK ANY CHAPTER TO REVIEW ITS CORE INSIGHT</div>
+      <div class="tab-btns grid5" id="journey-btns" style="margin-bottom:12px"></div>
+      <div class="tab-panel" id="journey-panel"></div>
+    </div>
+  </div>
+
+  <!-- S2: Two Reactions -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4c8;background:#78d4c818;color:#78d4c8">2</div><div class="sec-line" style="background:#78d4c830"></div><div class="sec-ttl" style="color:#78d4c8">Two Reactions — Both Are Valid</div><div class="sec-line" style="background:#78d4c830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#78d4c8">◆ THE PARADOX OF LEARNING CAUSAL THINKING</div>
+      <div class="two-col" style="margin-bottom:12px">
+        <div class="row-top" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">REACTION 1: EMPOWERED</div><div class="info-txt">"Now I can see through bad arguments! I can challenge claims, detect confounders, ask the right counterfactual questions. I have a superpower."</div></div>
+        <div class="row-top" style="border-color:#d47878"><div class="info-lbl" style="color:#d47878">REACTION 2: OVERWHELMED</div><div class="info-txt">"Now I can't trust anything! Every claim has confounders, every study has limitations. I was happier before, when 'studies show' was enough."</div></div>
+      </div>
+      <div class="row-left" style="border-color:#d4a86e"><div class="info-lbl" style="color:#d4a86e">GALLEA'S RESPONSE</div><div class="info-txt">Before learning causal inference, many people didn't realize they were making mistakes. They lived in a simpler world. But that oversimplification was costly. Understanding causality doesn't mean having all the answers — it means knowing how to deal with uncertainty. The discomfort of "I'm not sure" reveals you know enough to know what you don't know.</div></div>
+    </div>
+  </div>
+
+  <!-- S3: Evidence Spectrum -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4b878;background:#d4b87818;color:#d4b878">3</div><div class="sec-line" style="background:#d4b87830"></div><div class="sec-ttl" style="color:#d4b878">Causal Evidence Is a Spectrum</div><div class="sec-line" style="background:#d4b87830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#d4b878">◆ FROM ANECDOTE TO CONVERGENT RCTS — NOT A BINARY</div>
+      <div class="row-left" style="border-color:#d47878;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#d47878;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">Weakest: Anecdote</div><div class="info-txt">'Took pill, had best sleep ever.' N=1, no comparison, could be coincidence, placebo, or a calmer evening.</div></div></div>
+      <div class="row-left" style="border-color:#d47878;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#d47878;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">Weak: Observational</div><div class="info-txt">People who take the pill sleep better — but self-selection: insomniacs take the pill AND have more motivation to improve sleep habits.</div></div></div>
+      <div class="row-left" style="border-color:#d4b878;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#d4b878;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">Moderate: Quasi-exp.</div><div class="info-txt">DiD, RDD, or IV study with explicit identifying assumption. Depends on assumption quality.</div></div></div>
+      <div class="row-left" style="border-color:#78d4a8;margin-bottom:7px"><div style="display:flex;gap:14px"><div style="color:#78d4a8;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">Strong: Single RCT</div><div class="info-txt">Randomized, double-blind, placebo-controlled. Internally valid but may not generalize.</div></div></div>
+      <div class="row-left" style="border-color:#78d4a8;margin-bottom:12px"><div style="display:flex;gap:14px"><div style="color:#78d4a8;font-family:monospace;font-size:10px;min-width:140px;flex-shrink:0">Strongest: Multiple RCTs</div><div class="info-txt">Independent RCTs in different populations, contexts, and labs all pointing the same direction.</div></div></div>
+      <div class="row-left" style="border-color:#d4b878"><span style="color:#d4b878;font-family:monospace;font-size:10px">KEY REALIZATION: </span><span class="info-txt">Most real-world decisions fall in the middle of this spectrum. Perfect evidence is rare. The causal mindset helps you assess where on the spectrum you are — and make the best decision given that position.</span></div>
+    </div>
+  </div>
+
+  <!-- S4: Skepticism -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #a87ad4;background:#a87ad418;color:#a87ad4">4</div><div class="sec-line" style="background:#a87ad430"></div><div class="sec-ttl" style="color:#a87ad4">Healthy Skepticism vs. Destructive Nihilism</div><div class="sec-line" style="background:#a87ad430"></div></div>
+    <div class="card">
+      <div class="label" style="color:#a87ad4">◆ THE RISK — AND THE ANSWER</div>
+      <div class="two-col" style="margin-bottom:12px">
+        <div style="padding:13px 15px;background:#10131e;border-radius:7px;border:1px solid #d4787833"><div class="info-lbl" style="color:#d47878">BEFORE THESE BOOKS</div><div class="info-txt">Correlation feels like causation. Headlines taken at face value. "Studies show" is sufficient authority. Simple explanations go unchallenged.</div></div>
+        <div style="padding:13px 15px;background:#10131e;border-radius:7px;border:1px solid #78d4a833"><div class="info-lbl" style="color:#78d4a8">AFTER THESE BOOKS</div><div class="info-txt">Every "because" triggers a question. Counterfactuals are instinctive. You assess evidence strength automatically. You challenge studies without dismissing science.</div></div>
+      </div>
+      <div class="row-left" style="border-color:#78d4a8"><div class="info-lbl" style="color:#78d4a8">GALLEA'S DEFENSE</div><div class="info-txt">Teaching people to question evidence is like teaching people to read. The argument that it risks "anti-science skepticism" sounds like the medieval church preventing literacy to maintain authority. Scientific evidence remains the best tool we have. Scrutiny strengthens it.</div></div>
+    </div>
+  </div>
+
+  <!-- S5: Six Commitments -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #d4a86e;background:#d4a86e18;color:#d4a86e">5</div><div class="sec-line" style="background:#d4a86e30"></div><div class="sec-ttl" style="color:#d4a86e">Six Commitments for the Causal Thinker</div><div class="sec-line" style="background:#d4a86e30"></div></div>
+    <div class="card" style="border-color:#d4a86e44">
+      <div class="label" style="color:#d4a86e">◆ YOUR MANIFESTO — FROM BOTH AUTHORS</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="row-top" style="border-color:#78d4c8"><div style="color:#78d4c8;font-family:Georgia,serif;font-size:12px;font-weight:bold;margin-bottom:5px">1. Question every "because"</div><div class="info-txt">Apply Gallea's 5-step framework instinctively. Every causal claim implies a counterfactual — challenge it.</div></div>
+        <div class="row-top" style="border-color:#78d4a8"><div style="color:#78d4a8;font-family:Georgia,serif;font-size:12px;font-weight:bold;margin-bottom:5px">2. Draw the diagram</div><div class="info-txt">Pearl's first commandment. Make your assumptions explicit as a DAG. The act of drawing reveals what you know and what you're guessing.</div></div>
+        <div class="row-top" style="border-color:#a87ad4"><div style="color:#a87ad4;font-family:Georgia,serif;font-size:12px;font-weight:bold;margin-bottom:5px">3. Calibrate your language</div><div class="info-txt">Use 'it seems', 'there is a high risk', 'it tends to.' Being explicit about uncertainty is not weakness — it shows you know enough to know what you don't.</div></div>
+        <div class="row-top" style="border-color:#7ab0d8"><div style="color:#7ab0d8;font-family:Georgia,serif;font-size:12px;font-weight:bold;margin-bottom:5px">4. Distinguish prediction from causation</div><div class="info-txt">ML predicts beautifully. Causation requires a different toolkit. Don't confuse them — the stakes are too high.</div></div>
+        <div class="row-top" style="border-color:#d4b878"><div style="color:#d4b878;font-family:Georgia,serif;font-size:12px;font-weight:bold;margin-bottom:5px">5. Demand mechanism, not just effect</div><div class="info-txt">Pearl's mediation analysis: knowing THAT is not enough. Knowing HOW determines the right intervention.</div></div>
+        <div class="row-top" style="border-color:#d4a86e"><div style="color:#d4a86e;font-family:Georgia,serif;font-size:12px;font-weight:bold;margin-bottom:5px">6. Embrace uncertainty as strength</div><div class="info-txt">Gallea: 'more knowledge means more humility, not more certainty.' The discomfort of nuance is the hallmark of genuine understanding.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6: Complete Toolkit -->
+  <div class="section">
+    <div class="sec-hdr"><div class="sec-num" style="border:1.5px solid #78d4c8;background:#78d4c818;color:#78d4c8">6</div><div class="sec-line" style="background:#78d4c830"></div><div class="sec-ttl" style="color:#78d4c8">The Complete Toolkit — Final Reference</div><div class="sec-line" style="background:#78d4c830"></div></div>
+    <div class="card">
+      <div class="label" style="color:#78d4c8">◆ EVERYTHING YOU'VE LEARNED — ONE VIEW</div>
+      <div id="toolkit-rows"></div>
+    </div>
+  </div>
+
+  <!-- Closing -->
+  <div style="background:#161a28;border:1px solid #d4a86e;border-radius:10px;padding:24px 28px;margin-bottom:40px;text-align:center">
+    <div style="color:#d4a86e;font-family:Georgia,serif;font-size:18px;margin-bottom:14px">The End — And the Beginning</div>
+    <div style="color:#e0ddd4;font-size:13.5px;line-height:1.8;max-width:580px;margin:0 auto">Pearl gave us the formal language to ask and answer causal questions. Gallea gave us the practical framework to use that language every day. Together, they offer something neither could alone: the ability to see through the noise, ask the right questions, and make better decisions in a world that will always be uncertain.</div>
+    <div style="margin-top:20px;padding:14px 18px;background:#10131e;border-radius:8px">
+      <div style="color:#d4a86e;font-family:Georgia,serif;font-size:14px;font-style:italic;line-height:1.7">"You cannot answer a question that you cannot ask, and you cannot ask a question you have no words for."</div>
+      <div style="color:#7a7888;font-family:monospace;font-size:10px;margin-top:8px">Now you have the words. Use them well.</div>
+    </div>
+  </div>
+
+  <div class="ch-foot"><p>Unified Summary · Chapter 10 · Combining <em>The Book of Why</em> (Pearl & Mackenzie, 2018) and <em>The Causal Mindset Handbook</em> (Gallea)</p></div>
+</div>
+
+</div><!-- end #main -->
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════════════════
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  const o=document.getElementById('overlay');
+  if(s.classList.contains('open')){closeSidebar();}
+  else{s.classList.add('open');o.classList.add('vis');}
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('vis');
+}
+
+// ═══════════════════════════════════════════════════════════
+// IN-DOCUMENT SCROLLING — no href navigation
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('click',function(e){
+  const btn=e.target.closest('[data-target]');
+  if(!btn)return;
+  e.preventDefault();
+  const id=btn.getAttribute('data-target');
+  const el=document.getElementById(id);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}
+  closeSidebar();
+});
+
+// ═══════════════════════════════════════════════════════════
+// TAB SYSTEM
+// ═══════════════════════════════════════════════════════════
+function setupTabs(btnId,panelId,items,renderFn,defaultIdx){
+  defaultIdx=defaultIdx||0;
+  const btnContainer=document.getElementById(btnId);
+  const panelEl=document.getElementById(panelId);
+  if(!btnContainer||!panelEl)return;
+  items.forEach(function(item,i){
+    const btn=document.createElement('button');
+    btn.className='tbtn'+(i===defaultIdx?' active':'');
+    btn.style.setProperty('--ac',item.color+'33');
+    btn.style.setProperty('--c',item.color);
+    btn.innerHTML=item.btnHTML||item.name||('Option '+(i+1));
+    btn.addEventListener('click',function(){
+      btnContainer.querySelectorAll('.tbtn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      panelEl.innerHTML=renderFn(item,i);
+    });
+    btnContainer.appendChild(btn);
+  });
+  panelEl.innerHTML=renderFn(items[defaultIdx],defaultIdx);
+}
+
+// ═══════════════════════════════════════════════════════════
+// COLORS
+// ═══════════════════════════════════════════════════════════
+var C={
+  gold:'#d4a86e',blue:'#7ab0d8',green:'#78d4a8',
+  purple:'#a87ad4',red:'#d47878',teal:'#78d4c8',
+  amber:'#d4b878',muted:'#7a7888',text:'#e0ddd4',
+  bg:'#0a0c14',surface:'#10131e'
+};
+
+// ═══════════════════════════════════════════════════════════
+// CH01 — LADDER
+// ═══════════════════════════════════════════════════════════
+var ladderData=[
+  {n:3,tag:'IMAGINING',verb:'Counterfactuals',q:'What would have happened?',color:C.purple,
+   sym:'P(Yₓ | X=x\', Y=y\')',who:'Only humans (and future AI)',
+   ex:'Would this patient have survived with a different drug?',
+   gallea:'Gallea\'s \'parallel worlds\' — the key thought experiment. You\'d need two identical universes to observe the same person with AND without treatment.'},
+  {n:2,tag:'DOING',verb:'Intervention',q:'What if I do this?',color:C.blue,
+   sym:'P(Y | do(X))',who:'Humans + a few tool-using animals',
+   ex:'What happens to survival if I give everyone this drug?',
+   gallea:'Gallea\'s Ch.6–7: RCTs and quasi-experiments live here — they approximate what Pearl formalizes as the do-operator.'},
+  {n:1,tag:'SEEING',verb:'Association',q:'What does seeing X tell me?',color:C.green,
+   sym:'P(Y | X)',who:'All animals + all current ML',
+   ex:'What is the correlation between this drug and survival?',
+   gallea:'Gallea warns: this is where most business, policy, and personal decisions still live — mistaking correlation for causation.'},
+];
+function setLadder(idx){
+  var d=ladderData[idx];
+  // update SVG highlights
+  [0,1,2].forEach(function(i){
+    var r=document.getElementById('lr'+i+'rect');
+    if(!r)return;
+    r.setAttribute('stroke',i===idx?ladderData[i].color:'#222638');
+    r.setAttribute('stroke-width',i===idx?'2':'1');
+    r.setAttribute('fill',i===idx?ladderData[i].color+'22':'#161a28');
+  });
+  document.getElementById('ladder-panel').innerHTML=
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">'+
+    '<div style="color:'+d.color+';font-family:Georgia,serif;font-size:15px">Rung '+d.n+': '+d.verb+'</div>'+
+    '<code style="background:#10131e;color:'+d.color+';padding:3px 10px;border-radius:4px;font-size:10px;font-family:monospace">'+d.sym+'</code></div>'+
+    '<div style="padding:10px 13px;background:#10131e;border-radius:6px;border-left:3px solid '+d.color+';margin-bottom:9px">'+
+    '<div style="color:'+C.gold+';font-family:monospace;font-size:9px;margin-bottom:3px">CHARACTERISTIC QUERY</div>'+
+    '<div style="color:'+C.text+';font-family:Georgia,serif;font-size:13px;font-style:italic">"'+d.q+'"</div></div>'+
+    '<div style="padding:8px 12px;background:#10131e;border-radius:5px;margin-bottom:8px">'+
+    '<span style="color:'+d.color+';font-family:monospace;font-size:10px">EXAMPLE: </span>'+
+    '<span style="color:'+C.muted+';font-family:monospace;font-size:10.5px">'+d.ex+'</span></div>'+
+    '<div style="padding:8px 12px;background:#10131e;border-radius:5px;border-left:3px solid '+C.amber+'">'+
+    '<span style="color:'+C.amber+';font-family:monospace;font-size:9px">GALLEA\'S BRIDGE: </span>'+
+    '<span style="color:'+C.muted+';font-family:monospace;font-size:10px;line-height:1.5">'+d.gallea+'</span></div>';
+}
+setLadder(0);
+
+// ═══════════════════════════════════════════════════════════
+// CH02 — TIMELINE
+// ═══════════════════════════════════════════════════════════
+var timelineData=[
+  {year:'1889',event:'Galton invents regression & correlation — born from causal questions about heredity',color:C.gold},
+  {year:'1900s',event:'Pearson declares: \'Causation is simply perfect correlation.\' Causal language banned.',color:C.red},
+  {year:'1920s',event:'Sewall Wright invents path diagrams — first formal causal notation. Suppressed by establishment.',color:C.green},
+  {year:'1921',event:'Niles attacks Wright. Pearson\'s orthodoxy prevails. Path analysis marginalized for 50 years.',color:C.red},
+  {year:'1935',event:'Fisher invents the RCT — but only as a physical procedure. No formal theory of why it works.',color:C.blue},
+  {year:'1950s',event:'Smoking debate: Fisher uses lack of causal tools to defend tobacco.',color:C.red},
+  {year:'1980s',event:'Pearl invents Bayesian networks. Discovers they can\'t distinguish seeing from doing.',color:C.purple},
+  {year:'1990s',event:'Pearl creates do-calculus, back-door criterion, causal diagrams. The Causal Revolution begins.',color:C.green},
+  {year:'2010s+',event:'Gallea bridges academia and practice: the Causal Mindset for business, policy, and everyday decisions.',color:C.amber},
+];
+var tlHtml='';
+timelineData.forEach(function(e){
+  tlHtml+='<div style="display:flex;gap:13px;margin-bottom:11px;position:relative">'+
+  '<div style="position:absolute;left:-16px;top:6px;width:9px;height:9px;border-radius:50%;background:'+e.color+';border:2px solid #0e0e0f"></div>'+
+  '<div style="min-width:46px;color:'+e.color+';font-family:monospace;font-size:10px;padding-top:1px">'+e.year+'</div>'+
+  '<div style="color:'+C.muted+';font-family:monospace;font-size:10.5px;line-height:1.5">'+e.event+'</div></div>';
+});
+document.getElementById('timeline-rows').innerHTML=tlHtml;
+
+// CH02 — DEBATE TABS
+var debateData=[
+  {name:'Sewall Wright (1920)',color:C.green,
+   stance:'Causal diagrams can decompose correlations into direct causal effects',
+   args:['Path coefficients quantify each causal channel separately',
+     'The diagram structure encodes assumptions — omitted arrows are as informative as included ones',
+     'Guinea pig birth weight: true growth rate = 3.34 g/day, not the naive 5.66 g/day'],
+   verdict:'Vindicated 70 years later as the foundation of modern causal inference'},
+  {name:'Henry Niles (1921)',color:C.red,
+   stance:'Statistics can never capture causation; Wright\'s method is philosophically unsound',
+   args:['Pearson\'s orthodoxy: \'causation is simply perfect correlation\'',
+     'Cannot know a priori which variables to include in the graph',
+     'Causal language has no place in science — only associations exist'],
+   verdict:'Reflects the century-long prohibition that stunted scientific progress'},
+];
+setupTabs('debate-btns','debate-panel',debateData,function(d){
+  var args=d.args.map(function(a){
+    return '<div style="display:flex;gap:10px;margin-bottom:6px"><span style="color:'+d.color+';font-family:monospace;font-size:11px;flex-shrink:0">→</span><span class="info-txt">'+a+'</span></div>';
+  }).join('');
+  return '<div style="color:'+d.color+';font-family:Georgia,serif;font-size:13px;margin-bottom:11px;font-style:italic">"'+d.stance+'"</div>'+args+
+    '<div style="padding:10px 13px;background:'+C.bg+';border-radius:5px;border-left:3px solid '+d.color+';margin-top:8px">'+
+    '<span style="color:'+d.color+';font-family:monospace;font-size:10px">HISTORICAL VERDICT: </span>'+
+    '<span style="color:'+C.text+';font-family:monospace;font-size:11px">'+d.verdict+'</span></div>';
+});
+
+// ═══════════════════════════════════════════════════════════
+// CH03 — JUNCTIONS
+// ═══════════════════════════════════════════════════════════
+var junctionData=[
+  {name:'Chain',sym:'A → B → C',color:C.green,
+   rule:'Controlling for B BLOCKS information flow. Used for mediation analysis.',
+   ex:'Fire → Smoke → Alarm. Knowing whether there\'s smoke blocks the chain from fire to alarm.',
+   causal:'If B is a mediator, don\'t control for it when estimating total effect of A on C.'},
+  {name:'Fork',sym:'A ← B → C',color:C.blue,
+   rule:'B is a common cause (confounder). Controlling for B BLOCKS the spurious association.',
+   ex:'Shoes ← Weather → Umbrella. Weather drives both shoe choice and umbrella. Control for weather to see they\'re unrelated.',
+   causal:'B is a confounder. You MUST control for it to get the true causal effect of A on C.'},
+  {name:'Collider',sym:'A → B ← C',color:C.purple,
+   rule:'A and C are independent. But controlling for B CREATES a spurious association between A and C!',
+   ex:'Talent → Hollywood ← Beauty. Among Hollywood stars, talent and beauty appear negatively correlated — only because both cause selection.',
+   causal:'Do NOT control for B — it will introduce bias where none existed. The most counterintuitive and dangerous pattern.'},
+];
+setupTabs('junction-btns','junction-panel',junctionData,function(d){
+  return '<div style="color:'+d.color+';font-family:Georgia,serif;font-size:15px;margin-bottom:12px">'+d.name+': '+d.sym+'</div>'+
+    ['INFORMATION FLOW RULE|'+d.rule+'|'+C.gold,'EXAMPLE|'+d.ex+'|'+d.color,'CAUSAL PRACTICE|'+d.causal+'|'+C.teal].map(function(s){
+      var p=s.split('|');
+      return '<div style="padding:9px 12px;background:'+C.bg+';border-radius:5px;border-left:3px solid '+p[2]+';margin-bottom:8px">'+
+        '<div style="color:'+p[2]+';font-family:monospace;font-size:9px;margin-bottom:3px">'+p[0]+'</div>'+
+        '<div class="info-txt">'+p[1]+'</div></div>';
+    }).join('');
+});
+
+// CH03 — GLOSSARY
+var glossaryData=[
+  {term:'DAG (Directed Acyclic Graph)',def:'A diagram where arrows represent causal direction. No cycles allowed. Pearl\'s formalization of Wright\'s path diagrams.',color:C.green},
+  {term:'Confounder (Fork)',def:'Common cause of both treatment and outcome. Creates a spurious association. Must be controlled for.',color:C.blue},
+  {term:'Mediator (Chain)',def:'Variable on the causal pathway between treatment and outcome. Control for it only if you want the direct effect.',color:C.gold},
+  {term:'Collider',def:'Variable caused by two others. Conditioning on it creates a spurious association where none existed. Do NOT control for it.',color:C.purple},
+  {term:'Counterfactual',def:'What would have happened in the parallel world where the treatment was different. The gold standard we can never directly observe.',color:'#b088d4'},
+  {term:'Treatment / Exposure',def:'The variable whose causal effect you want to measure. Not necessarily medical — could be a policy, ad campaign, or life choice.',color:C.teal},
+  {term:'Selection Bias',def:'When the sample you\'re studying is not representative. Often caused by conditioning on a collider (Berkson\'s paradox).',color:C.red},
+];
+var glossHtml='';
+glossaryData.forEach(function(g){
+  glossHtml+='<div style="display:flex;gap:15px;padding:10px 0;border-bottom:1px solid #22263830">'+
+    '<div style="color:'+g.color+';font-family:Georgia,serif;font-size:12px;min-width:155px;flex-shrink:0;font-weight:bold">'+g.term+'</div>'+
+    '<div class="info-txt">'+g.def+'</div></div>';
+});
+document.getElementById('glossary-rows').innerHTML=glossHtml;
+
+// ═══════════════════════════════════════════════════════════
+// CH04 — BACK-DOOR GAMES
+// ═══════════════════════════════════════════════════════════
+var backdoorData=[
+  {name:'Game 1: Control for Z?',color:C.green,setup:'X → Z → Y. Z is a mediator (chain).',
+   naive:'Control for Z to \'remove confounding\'',correct:'Do NOT control for Z — it\'s on the causal path. Controlling blocks the very effect you\'re measuring.'},
+  {name:'Game 2: Three confounders',color:C.blue,setup:'Z₁→X, Z₁→Y, Z₂→X, Z₂→Y, Z₃→X only.',
+   naive:'Control for all three to be safe',correct:'Control for Z₁ and Z₂ only. Z₃ affects X but NOT Y — not a confounder. Including unnecessary controls can reduce precision.'},
+  {name:'Game 3: Collider trap',color:C.purple,setup:'X → Z ← Y. Z is a collider.',
+   naive:'Control for Z because it\'s \'related to both\'',correct:'Do NOT control for Z — it\'s a collider. Controlling CREATES a spurious association between X and Y where none exists.'},
+  {name:'Game 4: Descendant',color:C.red,setup:'X → C ← Y, and C → D. Should you control for D?',
+   naive:'D seems harmless — it\'s just a descendant',correct:'Controlling for D partially opens the collider C. Treat descendants of colliders with the same caution as colliders themselves.'},
+];
+setupTabs('backdoor-btns','backdoor-panel',backdoorData,function(d){
+  return '<div style="color:'+d.color+';font-family:Georgia,serif;font-size:14px;margin-bottom:9px">'+d.name+'</div>'+
+    '<div style="padding:8px 12px;background:'+C.bg+';border-radius:5px;margin-bottom:9px;font-family:monospace;font-size:11px;color:'+C.muted+'"><span style="color:'+C.gold+'">Setup: </span>'+d.setup+'</div>'+
+    '<div style="display:flex;gap:9px;flex-wrap:wrap">'+
+    '<div style="flex:1;min-width:180px;padding:10px 12px;background:'+C.bg+';border-radius:5px;border-left:3px solid '+C.red+'"><div style="color:'+C.red+';font-family:monospace;font-size:9px;margin-bottom:4px">NAIVE ANSWER</div><div class="info-txt">'+d.naive+'</div></div>'+
+    '<div style="flex:1;min-width:180px;padding:10px 12px;background:'+C.bg+';border-radius:5px;border-left:3px solid '+C.green+'"><div style="color:'+C.green+';font-family:monospace;font-size:9px;margin-bottom:4px">CORRECT ANSWER</div><div class="info-txt">'+d.correct+'</div></div></div>';
+});
+
+// CH04 — DIAGNOSTIC QUESTIONS
+var diagnosticData=[
+  {q:'1. Is there something else?',what:'CONFOUNDERS',color:'#d478a8',
+   detail:'A confounder must affect BOTH the cause AND the outcome. Example: chocolate consumption correlates with Nobel laureates — GDP (national wealth) drives both. Class sizes correlate with outcomes — but family wealth determines both school choice and academic support.',
+   pearl:'Pearl\'s back-door criterion: a formal algorithm for identifying which \'something elses\' to control for.'},
+  {q:'2. Could it be the reverse?',what:'REVERSE CAUSATION',color:C.blue,
+   detail:'Police and crime: more police in high-crime areas makes it look like police cause crime. Cold swimming and longevity: healthy people self-select into cold swimming. Weapons and wars: countries at war buy more weapons, so weapons correlate with conflict.',
+   pearl:'Pearl\'s DAG makes direction explicit. If you can\'t determine the arrow\'s direction from domain knowledge, you may need instrumental variables (Chapter 7).'},
+  {q:'3. Can we extrapolate?',what:'EXTERNAL VALIDITY',color:C.green,
+   detail:'Results from one context may not transfer. Effects observed in a narrow range may reverse outside it. Measurement errors (classical vs. non-classical) can bias results even when the causal structure is correct.',
+   pearl:'Pearl\'s \'transportability\' theory (Chapter 9) formalizes when and how results can transfer between populations.'},
+];
+var diagHtml='';
+diagnosticData.forEach(function(d){
+  diagHtml+='<div style="background:'+C.surface+';border-radius:8px;padding:15px 17px;border-left:3px solid '+d.color+';margin-bottom:12px">'+
+    '<div style="display:flex;justify-content:space-between;margin-bottom:9px;flex-wrap:wrap;gap:7px">'+
+    '<div style="color:'+d.color+';font-family:Georgia,serif;font-size:14px">'+d.q+'</div>'+
+    '<div style="color:'+d.color+';font-family:monospace;font-size:10px;opacity:.7">'+d.what+'</div></div>'+
+    '<div class="info-txt" style="margin-bottom:9px">'+d.detail+'</div>'+
+    '<div style="padding:8px 12px;background:'+C.bg+';border-radius:5px;border-left:2px solid '+C.gold+'">'+
+    '<span style="color:'+C.gold+';font-family:monospace;font-size:10px">PEARL\'S FORMAL VERSION: </span>'+
+    '<span class="info-txt">'+d.pearl+'</span></div></div>';
+});
+document.getElementById('diagnostic-rows').innerHTML=diagHtml;
+
+// ═══════════════════════════════════════════════════════════
+// CH05 — FRAMEWORK STEPS
+// ═══════════════════════════════════════════════════════════
+var frameworkData=[
+  {name:'1. Proxy Counterfactual',color:C.teal,btnHTML:'1. Proxy<br>Counterfactual',
+   q:'What is the comparison?',
+   detail:'Every causal claim implies a comparison. \'X caused Y\' means \'Y would not have happened without X.\' Challenge: what is the counterfactual world? Is the comparison group valid? Tesla had more crashes — but also more cars. Absolute counts without denominators are meaningless.'},
+  {name:'2. Something Else?',color:C.green,btnHTML:'2. Something<br>Else?',
+   q:'Could a third variable explain this?',
+   detail:'The confounder question. Pearl\'s fork (A←Z→B). Is there a variable that causes both the treatment and the outcome? Police spending correlates with crime because city size drives both. Income confounds both pollution exposure and health. This is where domain knowledge is irreplaceable.'},
+  {name:'3. Direction of Bias',color:C.blue,btnHTML:'3. Direction<br>of Bias',
+   q:'Which way does the bias push?',
+   detail:'Once you\'ve identified a confounder, determine whether it amplifies or attenuates the observed effect. Income confounder in pollution study → amplification (makes pollution look worse). Measurement error → attenuation (undercounting makes effect look smaller). If biases push in opposite directions, the net direction may be unknowable.'},
+  {name:'4. Refine & Iterate',color:C.purple,btnHTML:'4. Refine &<br>Iterate',
+   q:'What data would resolve this?',
+   detail:'After identifying biases, ask: what additional data, controls, or study designs would help? This is where Gallea\'s framework connects to Pearl\'s formal methods — you might need an RCT (Ch.7), a quasi-experiment, or at minimum income data to stratify the analysis. Don\'t stop at \'it\'s biased\' — specify what would fix it.'},
+  {name:'5. Can We Extrapolate?',color:C.amber,btnHTML:'5. Can We<br>Extrapolate?',
+   q:'Does this apply in other contexts?',
+   detail:'Pearl calls this \'transportability.\' A vitamin effective for older adults may fail in children. COVID lockdowns in China ≠ lockdowns in Europe. Even a perfect causal estimate in one context may not transfer. Map the causal structure — if the differing links are on the causal pathway, extrapolation fails.'},
+];
+setupTabs('framework-btns','framework-panel',frameworkData,function(d){
+  return '<div style="color:'+d.color+';font-family:Georgia,serif;font-size:15px;margin-bottom:6px">'+d.name+'</div>'+
+    '<div style="color:'+C.text+';font-family:Georgia,serif;font-size:13px;font-style:italic;margin-bottom:12px">"'+d.q+'"</div>'+
+    '<div style="padding:12px 14px;background:'+C.bg+';border-radius:5px;border-left:3px solid '+d.color+'">'+
+    '<div class="info-txt">'+d.detail+'</div></div>';
+});
+
+// CH05 — HILL'S CRITERIA
+var hillData=[
+  {name:'1. Strength',color:C.blue,desc:'The stronger the association, the more likely it is causal. Smokers are 9–10× more likely to get lung cancer.'},
+  {name:'2. Consistency',color:C.blue,desc:'Same finding across different populations, times, and methods.'},
+  {name:'3. Specificity',color:C.blue,desc:'One cause linked to one effect (weakest criterion — many diseases have multiple causes).'},
+  {name:'4. Temporality',color:C.blue,desc:'Cause must precede effect. The only criterion all agree is necessary.'},
+  {name:'5. Gradient',color:C.blue,desc:'Dose-response: more smoking → more cancer. Linear or monotonic increase.'},
+  {name:'6. Plausibility',color:C.blue,desc:'A biological mechanism is known or can be hypothesized.'},
+  {name:'7. Coherence',color:C.blue,desc:'The finding doesn\'t conflict with known biology or natural history of the disease.'},
+  {name:'8. Experiment',color:C.blue,desc:'Animal experiments or removal of exposure reverses the effect.'},
+  {name:'9. Analogy',color:C.blue,desc:'Similar relationships are known for similar exposures.'},
+];
+setupTabs('hill-btns','hill-panel',hillData,function(d){
+  return '<div style="color:'+d.color+';font-family:Georgia,serif;font-size:14px;margin-bottom:8px">'+d.name+'</div>'+
+    '<div class="info-txt" style="font-size:12px;line-height:1.7">'+d.desc+'</div>';
+});
+
+// ═══════════════════════════════════════════════════════════
+// CH06 — PARADOXES
+// ═══════════════════════════════════════════════════════════
+var paradoxData=[
+  {name:'Simpson\'s Paradox',color:C.green,btnHTML:'Simpson\'s<br><span style="font-size:8px">Association reverses</span>',
+   mechanism:'Fork (confounder). Aggregating across a confounder reverses the direction of association.',
+   real:'Berkeley admissions: aggregate shows bias against women; by department shows bias toward women. Both correct — different questions.',
+   lesson:'The \'right\' aggregation depends on causal structure, not statistics. The diagram resolves it immediately.'},
+  {name:'Monty Hall',color:C.purple,btnHTML:'Monty Hall<br><span style="font-size:8px">Switching doubles odds</span>',
+   mechanism:'Collider. \'Door Opened\' is a collider between \'Your Door\' and \'Car Location\'. Conditioning on it creates information transfer.',
+   real:'In Let\'s Make a Deal: switch = 2/3 win. If Monty chose randomly: no benefit. Same setup, different causal structure → different answer.',
+   lesson:'Collider bias creates information where none existed. The diagram makes the \'magic\' mechanical.'},
+  {name:'Berkson\'s Paradox',color:C.blue,btnHTML:'Berkson\'s<br><span style="font-size:8px">Hospital selection</span>',
+   mechanism:'Collider. Hospitalization is caused by either disease. Conditioning on \'in hospital\' opens a spurious path.',
+   real:'Respiratory and heart disease are independent in population. Among hospital patients, they appear negatively correlated.',
+   lesson:'Sampling on a collider is one of the most dangerous and common errors. Selection bias IS collider bias.'},
+  {name:'Lord\'s Paradox',color:C.gold,btnHTML:'Lord\'s<br><span style="font-size:8px">Same data, opposite results</span>',
+   mechanism:'Whether to control for initial weight depends on whether it\'s a confounder or mediator. Only the causal diagram can tell.',
+   real:'Men and women enter college with different weights. One statistician controls for initial weight; the other doesn\'t. Opposite conclusions.',
+   lesson:'Same data + same regression + same variable = correct or incorrect depending on causal structure.'},
+];
+setupTabs('paradox-btns','paradox-panel',paradoxData,function(d){
+  return '<div style="color:'+d.color+';font-family:Georgia,serif;font-size:15px;margin-bottom:12px">'+d.name+'</div>'+
+    [['MECHANISM',d.mechanism,C.gold],['REAL EXAMPLE',d.real,C.blue],['LESSON',d.lesson,d.color]].map(function(r){
+      return '<div style="padding:10px 13px;background:'+C.bg+';border-radius:5px;border-left:3px solid '+r[2]+';margin-bottom:8px">'+
+        '<div style="color:'+r[2]+';font-family:monospace;font-size:9px;margin-bottom:3px">'+r[0]+'</div>'+
+        '<div class="info-txt">'+r[1]+'</div></div>';
+    }).join('');
+});
+
+// ═══════════════════════════════════════════════════════════
+// CH07 — METHODS
+// ═══════════════════════════════════════════════════════════
+var methodData=[
+  {name:'Back-Door Adjustment',color:C.green,
+   when:'Confounders are observed',
+   how:'Control for variables that block all back-door paths from X to Y.',
+   formula:'P(Y|do(X)) = Σ P(Y|X,Z) × P(Z)',
+   limit:'Fails if confounders are unobserved.',
+   gallea:'This is what RCTs do by design — randomization blocks all back-door paths automatically.'},
+  {name:'Front-Door Adjustment',color:C.teal,
+   when:'Confounders unobserved, but mediator is observed',
+   how:'Route through a mediator: estimate X→M (unconfounded), then M→Y (adjusting for X).',
+   formula:'P(Y|do(X)) = Σₘ P(M=m|X) × Σₓ P(Y|M=m,X=x) × P(X=x)',
+   limit:'Mediator must be observed and exclusive.',
+   gallea:'No direct counterpart in Gallea — this is Pearl\'s most surprising contribution, with no classical equivalent.'},
+  {name:'Instrumental Variables',color:C.purple,
+   when:'An \'instrument\' Z affects X but not Y directly',
+   how:'Use Z\'s effect on X and Z\'s effect on Y to extract X→Y causal effect. IV effect = (Z→Y)/(Z→X).',
+   formula:'Causal effect = Cov(Y,Z) / Cov(X,Z)',
+   limit:'Exclusion restriction (Z has no direct effect on Y) is often hard to defend.',
+   gallea:'Gallea Ch.7: DiD, RDD, and IVs — each making explicit the assumption that identifies the causal effect.'},
+];
+setupTabs('method-btns','method-panel',methodData,function(d){
+  return '<div style="color:'+d.color+';font-family:Georgia,serif;font-size:15px;margin-bottom:12px">'+d.name+'</div>'+
+    [['WHEN TO USE',d.when],['HOW IT WORKS',d.how],['LIMITATION',d.limit],['GALLEA\'S BRIDGE',d.gallea]].map(function(r){
+      return '<div style="padding:9px 12px;background:'+C.bg+';border-radius:5px;border-left:3px solid '+d.color+';margin-bottom:8px">'+
+        '<div style="color:'+d.color+';font-family:monospace;font-size:9px;margin-bottom:3px">'+r[0]+'</div>'+
+        '<div class="info-txt">'+r[1]+'</div></div>';
+    }).join('')+
+    '<div style="padding:8px 12px;background:'+C.bg+';border-radius:5px;text-align:center;margin-top:4px">'+
+    '<code style="color:'+d.color+';font-size:10px">'+d.formula+'</code></div>';
+});
+
+// ═══════════════════════════════════════════════════════════
+// CH08 — EFFECT CARDS
+// ═══════════════════════════════════════════════════════════
+var effectData=[
+  {name:'Natural Direct Effect (NDE)',color:C.green,abbr:'NDE',
+   def:'Effect of X on Y with mediator M held at its natural (baseline) value.',
+   plain:'Change X while preventing the mediator from responding. What is the direct effect?',
+   example:'Gender discrimination in wages: what would wages change to if we set gender to male but kept occupation frozen at its female value?',
+   uses:'Policy: can we eliminate direct discrimination without changing occupational patterns?'},
+  {name:'Natural Indirect Effect (NIE)',color:C.blue,abbr:'NIE',
+   def:'Effect of X on Y that operates purely through the mediator M.',
+   plain:'Keep X fixed, but let the mediator change as it would if X had changed.',
+   example:'How much of the gender wage gap comes from women choosing different (lower-paying) occupations? That is the indirect effect.',
+   uses:'Should we target occupational segregation or direct wage discrimination?'},
+  {name:'Total Effect (TE)',color:C.gold,abbr:'TE',
+   def:'The full causal effect: NDE + NIE.',
+   plain:'If we change X, by how much does Y change overall? An RCT measures this — but doesn\'t tell you WHY.',
+   example:'Total gender wage gap = direct discrimination + indirect effect through occupational segregation.',
+   uses:'Knowing TE without NDE/NIE is knowing THAT a drug works but not HOW.'},
+];
+setupTabs('effect-btns','effect-panel',effectData,function(d){
+  return '<div style="color:'+d.color+';font-family:Georgia,serif;font-size:14px;margin-bottom:12px">'+d.name+'</div>'+
+    [['DEFINITION',d.def],['PLAIN ENGLISH',d.plain],['EXAMPLE',d.example],['POLICY USE',d.uses]].map(function(r){
+      return '<div style="padding:9px 12px;background:'+C.bg+';border-radius:5px;border-left:3px solid '+d.color+';margin-bottom:8px">'+
+        '<div style="color:'+d.color+';font-family:monospace;font-size:9px;margin-bottom:3px">'+r[0]+'</div>'+
+        '<div class="info-txt">'+r[1]+'</div></div>';
+    }).join('');
+});
+
+// ═══════════════════════════════════════════════════════════
+// CH09 — FIVE QUESTIONS
+// ═══════════════════════════════════════════════════════════
+var fiveQData=[
+  {name:'1. Have we already made machines that think?',color:C.red,btnHTML:'1. Have we already made machines that think?',
+   answer:'No.',detail:'Current machines simulate thinking in narrow domains. They outperform humans where raw computation matters — but this is not thinking in any humanlike causal sense.'},
+  {name:'2. Can we make machines that think?',color:C.blue,btnHTML:'2. Can we make machines that think?',
+   answer:'Almost certainly yes.',detail:'The algorithms for causal and counterfactual reasoning already exist. They need to be implemented with the right causal architecture — not more data.'},
+  {name:'3. Will we make machines that think?',color:C.gold,btnHTML:'3. Will we make machines that think?',
+   answer:'Likely yes.',detail:'Historically, humans rarely refrain from doing what they\'re technologically capable of.'},
+  {name:'4. Should we make machines that think?',color:C.purple,btnHTML:'4. Should we make machines that think?',
+   answer:'Yes — if they can distinguish good from evil.',detail:'A moral machine is achievable through causal self-awareness. Rule-based approaches (Asimov\'s laws) always lead to contradiction.'},
+  {name:'5. Can they distinguish good from evil?',color:C.green,btnHTML:'5. Can they distinguish good from evil?',
+   answer:'Yes — this is what the whole book builds toward.',detail:'The first requirement of a moral machine is counterfactual self-reflection. Once we program self-awareness, empathy and fairness follow from the same principles.'},
+];
+setupTabs('fiveq-btns','fiveq-panel',fiveQData,function(d){
+  return '<div style="padding:10px 13px;background:'+C.bg+';border-radius:5px;border-left:3px solid '+d.color+';margin-bottom:10px">'+
+    '<div style="color:'+d.color+';font-family:monospace;font-size:12px;font-weight:bold">Pearl: '+d.answer+'</div></div>'+
+    '<div class="info-txt">'+d.detail+'</div>';
+});
+
+// ═══════════════════════════════════════════════════════════
+// CH10 — JOURNEY MAP
+// ═══════════════════════════════════════════════════════════
+var journeyData=[
+  {n:1,label:'Why It Matters',color:C.gold,insight:'Pearl: the Ladder of Causation. Gallea: the cost of causal ignorance in business, policy, and life.'},
+  {n:2,label:'The Lost Century',color:C.red,insight:'Statistics banned causation. Wright\'s diagrams suppressed. Prediction vs. causation distinction.'},
+  {n:3,label:'Language of Causation',color:C.blue,insight:'Three junctions. The Fundamental Problem. Bayesian networks → causal diagrams.'},
+  {n:4,label:'Confounders & Bias',color:C.green,insight:'The do-operator. Back-door criterion. Gallea\'s three diagnostic questions.'},
+  {n:5,label:'Framework in Action',color:C.amber,insight:'Gallea\'s 5-step CMF. The smoking debate. Cornfield\'s inequality. Hill\'s criteria.'},
+  {n:6,label:'When Intuition Fails',color:C.purple,insight:'Four paradoxes dissolved. Goodhart\'s Law. Right metrics vs. wrong questions.'},
+  {n:7,label:'Experiments→Equations',color:C.teal,insight:'RCTs. Quasi-experiments. Front-door adjustment. do-calculus completeness.'},
+  {n:8,label:'Counterfactuals',color:C.purple,insight:'SCM algorithm. PN vs PS. Mediation: NDE/NIE. Climate attribution.'},
+  {n:9,label:'AI & the Future',color:C.blue,insight:'Transportability. ML+CI collaboration. Pearl\'s five questions. Free will.'},
+  {n:10,label:'Manifesto',color:C.gold,insight:'Evidence spectrum. Embracing uncertainty. Six commitments. The complete toolkit.'},
+];
+var journeyBtnContainer=document.getElementById('journey-btns');
+var journeyPanel=document.getElementById('journey-panel');
+journeyData.forEach(function(d,i){
+  var btn=document.createElement('button');
+  btn.className='tbtn'+(i===9?' active':'');
+  btn.style.setProperty('--ac',d.color+'33');
+  btn.style.setProperty('--c',d.color);
+  btn.innerHTML='<div style="font-size:11px;margin-bottom:2px">'+d.n+'</div><span style="font-size:8px">'+d.label+'</span>';
+  btn.addEventListener('click',function(){
+    journeyBtnContainer.querySelectorAll('.tbtn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    journeyPanel.innerHTML='<div style="color:'+d.color+';font-family:Georgia,serif;font-size:14px;margin-bottom:8px">Chapter '+d.n+': '+d.label+'</div><div class="info-txt">'+d.insight+'</div>';
+  });
+  journeyBtnContainer.appendChild(btn);
+});
+// default
+var jDef=journeyData[9];
+journeyPanel.innerHTML='<div style="color:'+jDef.color+';font-family:Georgia,serif;font-size:14px;margin-bottom:8px">Chapter '+jDef.n+': '+jDef.label+'</div><div class="info-txt">'+jDef.insight+'</div>';
+
+// CH10 — TOOLKIT
+var toolkitData=[
+  {tool:'Ladder of Causation',from:'Pearl',use:'Classify any question: are you seeing (1), doing (2), or imagining (3)?',color:C.purple},
+  {tool:'Causal Diagrams (DAGs)',from:'Pearl + Wright',use:'Make assumptions explicit. Identify confounders, mediators, colliders.',color:C.green},
+  {tool:'do-operator',from:'Pearl',use:'Formalize intervention. Define confounding precisely.',color:C.blue},
+  {tool:'Back-door criterion',from:'Pearl',use:'Identify what to control for — and what NOT to.',color:C.green},
+  {tool:'5-Step CMF',from:'Gallea',use:'Real-time qualitative assessment of any causal claim.',color:C.amber},
+  {tool:'Sensitivity analysis',from:'Cornfield/Pearl',use:'How strong must a confounder be to explain away the effect?',color:C.gold},
+  {tool:'RCTs + 7 principles',from:'Gallea',use:'Gold standard experiments when feasible.',color:C.teal},
+  {tool:'DiD / RDD / IV',from:'Gallea + Pearl',use:'Quasi-experiments when RCTs are impossible.',color:C.purple},
+  {tool:'Front-door adjustment',from:'Pearl',use:'Route through mediator when confounders are unobserved.',color:C.teal},
+  {tool:'SCM + Counterfactuals',from:'Pearl',use:'Answer \'what would have happened?\' via Abduction → Action → Prediction.',color:C.purple},
+  {tool:'Mediation (NDE/NIE)',from:'Pearl',use:'Decompose HOW an effect operates — direct vs. indirect.',color:C.blue},
+  {tool:'Transportability',from:'Pearl',use:'Formally assess when results transfer between populations.',color:C.teal},
+];
+var tkHtml='';
+toolkitData.forEach(function(t){
+  tkHtml+='<div style="display:flex;gap:9px;padding:8px 12px;background:'+C.surface+';border-radius:5px;border-left:3px solid '+t.color+';margin-bottom:6px">'+
+    '<div style="color:'+t.color+';font-family:monospace;font-size:10px;min-width:120px;flex-shrink:0">'+t.tool+'</div>'+
+    '<div style="color:'+C.muted+';font-family:monospace;font-size:8.5px;min-width:55px;flex-shrink:0">['+t.from+']</div>'+
+    '<div class="info-txt" style="font-size:10px">'+t.use+'</div></div>';
+});
+document.getElementById('toolkit-rows').innerHTML=tkHtml;
+
+</script>
+</body>
+</html>
