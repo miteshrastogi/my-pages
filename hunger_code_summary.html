@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#0d0d0f!important;color-scheme:dark;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>The Hunger Code — Chapter Summaries</title>
+<style>
+  html, body {
+    background: #0d0d0f !important;
+    color: #e2ddd6 !important;
+    margin: 0;
+    padding: 0;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    min-height: 100vh;
+  }
+
+  * { box-sizing: border-box; }
+
+  /* ── Color palette ── */
+  :root {
+    --bg:        #0d0d0f;
+    --surface:   #141418;
+    --panel:     #1a1a20;
+    --border:    #2a2a35;
+    --accent:    #d4874a;
+    --accent2:   #8fc49a;
+    --accent3:   #7ba8c4;
+    --muted:     #7a7a8a;
+    --text:      #e2ddd6;
+    --text-dim:  #a09a94;
+    --sidebar-w: 300px;
+  }
+
+  /* ── OVERLAY ── */
+  #overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 200;
+    transition: opacity 0.3s;
+  }
+  #overlay.open { display: block; }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: var(--sidebar-w);
+    height: 100vh;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #sidebar.open { transform: translateX(0); }
+
+  .sidebar-header {
+    padding: 22px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .sidebar-header h2 {
+    margin: 0 0 2px;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .sidebar-header p {
+    margin: 0;
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+
+  #sidebar nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 0 20px;
+  }
+  #sidebar nav::-webkit-scrollbar { width: 4px; }
+  #sidebar nav::-webkit-scrollbar-track { background: transparent; }
+  #sidebar nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .part-label {
+    padding: 14px 20px 5px;
+    font-size: 0.63rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'Helvetica Neue', sans-serif;
+    font-weight: 600;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 8px 20px 8px 28px;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-family: 'Helvetica Neue', sans-serif;
+    line-height: 1.35;
+    border-left: 2px solid transparent;
+    transition: color 0.18s, border-color 0.18s, background 0.18s;
+    text-decoration: none;
+  }
+  .nav-link:hover {
+    color: var(--text);
+    background: rgba(255,255,255,0.04);
+    border-left-color: var(--accent);
+  }
+  .nav-link.intro { padding-left: 20px; }
+
+  /* ── HAMBURGER ── */
+  #hamburger {
+    position: fixed;
+    top: 16px; left: 16px;
+    z-index: 400;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    width: 40px; height: 40px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: background 0.18s;
+  }
+  #hamburger:hover { background: var(--panel); }
+  #hamburger span {
+    display: block;
+    width: 20px; height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.25s, opacity 0.25s;
+  }
+  #hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  #hamburger.open span:nth-child(2) { opacity: 0; }
+  #hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── MAIN CONTENT ── */
+  #main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 70px 28px 80px;
+  }
+
+  /* ── BOOK HEADER ── */
+  .book-header {
+    text-align: center;
+    padding: 40px 0 50px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 60px;
+  }
+  .book-header .byline {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'Helvetica Neue', sans-serif;
+    margin-bottom: 14px;
+  }
+  .book-header h1 {
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    line-height: 1.1;
+    color: var(--text);
+    margin: 0 0 10px;
+    font-weight: normal;
+    letter-spacing: -0.01em;
+  }
+  .book-header .subtitle {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    font-family: 'Helvetica Neue', sans-serif;
+    font-style: italic;
+  }
+  .book-header .meta {
+    margin-top: 20px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+
+  /* ── PART HEADER ── */
+  .part-section {
+    margin: 60px 0 10px;
+    padding: 28px 28px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+  }
+  .part-section .part-num {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'Helvetica Neue', sans-serif;
+    margin-bottom: 6px;
+  }
+  .part-section h2 {
+    font-size: 1.5rem;
+    margin: 0 0 10px;
+    color: var(--text);
+    font-weight: normal;
+  }
+  .part-section p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.65;
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+
+  /* ── CHAPTER CARD ── */
+  .chapter {
+    margin: 36px 0;
+    padding: 30px 30px 26px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.2s;
+  }
+  .chapter:hover { border-color: rgba(212,135,74,0.3); }
+
+  .chapter-num {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'Helvetica Neue', sans-serif;
+    margin-bottom: 6px;
+  }
+  .chapter h3 {
+    font-size: 1.25rem;
+    color: var(--text);
+    margin: 0 0 18px;
+    font-weight: normal;
+    line-height: 1.25;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 14px;
+  }
+
+  .chapter p {
+    margin: 0 0 14px;
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: var(--text-dim);
+  }
+  .chapter p:last-of-type { margin-bottom: 0; }
+
+  /* ── KEY TIPS ── */
+  .tips {
+    margin-top: 18px;
+    padding: 16px 18px;
+    background: rgba(143,196,154,0.07);
+    border: 1px solid rgba(143,196,154,0.18);
+    border-radius: 6px;
+  }
+  .tips-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-family: 'Helvetica Neue', sans-serif;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .tips ul {
+    margin: 0;
+    padding-left: 18px;
+    list-style: none;
+  }
+  .tips ul li {
+    font-size: 0.83rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 6px;
+    font-family: 'Helvetica Neue', sans-serif;
+    padding-left: 4px;
+    position: relative;
+  }
+  .tips ul li::before {
+    content: '›';
+    position: absolute;
+    left: -14px;
+    color: var(--accent2);
+  }
+
+  /* ── GOLDEN RULES ── */
+  .golden-rule {
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: rgba(212,135,74,0.07);
+    border: 1px solid rgba(212,135,74,0.22);
+    border-radius: 6px;
+  }
+  .golden-rule .gr-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'Helvetica Neue', sans-serif;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .golden-rule p {
+    margin: 0 !important;
+    font-size: 0.84rem;
+    color: var(--text-dim);
+    font-family: 'Helvetica Neue', sans-serif;
+    line-height: 1.55;
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 52px 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px 0 20px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'Helvetica Neue', sans-serif;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  @media (max-width: 540px) {
+    #main { padding: 60px 16px 60px; }
+    .chapter { padding: 22px 18px 18px; }
+    .part-section { padding: 20px 18px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Overlay -->
+<div id="overlay"></div>
+
+<!-- Hamburger -->
+<button id="hamburger" aria-label="Toggle navigation">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- Sidebar -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <h2>The Hunger Code</h2>
+    <p>Jason Fung, MD — Chapter Guide</p>
+  </div>
+  <nav>
+    <div class="part-label">Introduction</div>
+    <a class="nav-link intro" data-target="intro">Book Overview</a>
+
+    <div class="part-label">Part 1 · Homeostatic Hunger</div>
+    <a class="nav-link" data-target="ch1">Ch 1 · Debunking the Calorie Delusion</a>
+    <a class="nav-link" data-target="ch2">Ch 2 · The Body Fat Thermostat</a>
+    <a class="nav-link" data-target="ch3">Ch 3 · Eating a Low-Insulin Diet</a>
+    <a class="nav-link" data-target="ch4">Ch 4 · How Hormones Sustain Hunger</a>
+    <a class="nav-link" data-target="ch5">Ch 5 · Managing Hunger, Not Calories</a>
+
+    <div class="part-label">Part 2 · Hedonic Hunger</div>
+    <a class="nav-link" data-target="ch6">Ch 6 · Getting Hooked on UPFs</a>
+    <a class="nav-link" data-target="ch7">Ch 7 · Understanding Food Addiction</a>
+    <a class="nav-link" data-target="ch8">Ch 8 · Managing Emotional Eating</a>
+
+    <div class="part-label">Part 3 · Conditioned Hunger</div>
+    <a class="nav-link" data-target="ch9">Ch 9 · The Obesogenic Environment</a>
+    <a class="nav-link" data-target="ch10">Ch 10 · Eating as a Habit</a>
+
+    <div class="part-label">Part 4 · Managing Hunger</div>
+    <a class="nav-link" data-target="ch11">Ch 11 · Making Weight Loss Automatic</a>
+    <a class="nav-link" data-target="ch12">Ch 12 · Mindset &amp; Habits</a>
+    <a class="nav-link" data-target="ch13">Ch 13 · The Golden Rules in Action</a>
+  </nav>
+</aside>
+
+<!-- Main -->
+<div id="main">
+
+  <!-- Book Header -->
+  <header class="book-header" id="intro">
+    <div class="byline">Jason Fung, MD</div>
+    <h1>The Hunger Code</h1>
+    <div class="subtitle">Resetting Your Body's Fat Thermostat in the Age of Ultra-Processed Food</div>
+    <div class="meta">264 pages · Chapter-by-chapter key points summary</div>
+  </header>
+
+  <!-- Overview -->
+  <div class="chapter">
+    <div class="chapter-num">Overview</div>
+    <h3>The Book's Core Argument</h3>
+    <p>
+      <em>The Hunger Code</em> is Dr. Jason Fung's sequel to <em>The Obesity Code</em>, building on that book's hormonal framework to tackle the deeper question: why are we so hungry in the first place? Fung argues that the conventional calorie-restriction model fails not because of bad willpower, but because it never addresses the root cause — hunger itself.
+    </p>
+    <p>
+      The book identifies <strong>three distinct types of hunger</strong> that drive overeating: <em>homeostatic hunger</em> (physiological, regulated by hormones like insulin and leptin), <em>hedonic hunger</em> (pleasure-seeking behavior, driven by ultra-processed foods and food addiction), and <em>conditioned hunger</em> (learned behaviors shaped by our environment, culture, and habits). Each part of the book diagnoses one type and proposes targeted solutions, culminating in three "Golden Rules" for sustainable weight loss.
+    </p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ── PART 1 ── -->
+  <div class="part-section" id="part1">
+    <div class="part-num">Part One</div>
+    <h2>Homeostatic Hunger</h2>
+    <p>The physiological machinery of hunger: why the body has a "fat thermostat," how hormones — not calories — control it, and what foods lower insulin to let weight normalize automatically.</p>
+  </div>
+
+  <!-- Chapter 1 -->
+  <div class="chapter" id="ch1">
+    <div class="chapter-num">Chapter 1</div>
+    <h3>Debunking the Calorie Delusion</h3>
+    <p>
+      Fung opens with a bracing statistical reality: standard calorie-restriction diets have a 97.3% failure rate for people who are overweight, and a staggering 99.63% failure rate when accounting for relapse. Decades of landmark trials — the Women's Health Initiative, the Look AHEAD study — confirm it: eating less and moving more does not produce lasting weight loss.
+    </p>
+    <p>
+      The reason, Fung argues, is that obesity is not primarily a caloric imbalance but a <strong>hormonal one</strong>. Food contains two things: energy (calories) and information — instructions to the body in the form of hormonal signals. The hormone insulin acts as a "warehouse manager," telling the body whether to store or burn those calories. If insulin stays high, the body stores fat regardless of how little you eat; it compensates by burning fewer calories instead (metabolic slowdown). Eating less, in the face of high insulin, simply produces lethargy, not fat loss.
+    </p>
+    <p>
+      Using his "three whys" framework, Fung drills down from "why do we gain weight?" (we eat too many calories) → "why do we eat too many calories?" (we're hungry) → "why are we hungry?" (the real, multifactorial answer). He introduces the book's organizing principle: three types of hunger — homeostatic, hedonic, and conditioned — each with different causes and treatments.
+    </p>
+    <div class="tips">
+      <div class="tips-label">Key Tips from this Chapter</div>
+      <ul>
+        <li>Don't count calories — they measure energy but not the hormonal instructions food delivers.</li>
+        <li>Understand that the same number of calories from cookies vs. eggs produces entirely different hormonal responses.</li>
+        <li>Exercise for its extensive health benefits, but not as your primary weight-loss strategy — metabolic compensation negates extra calories burned.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Chapter 2 -->
+  <div class="chapter" id="ch2">
+    <div class="chapter-num">Chapter 2</div>
+    <h3>Regulating the Body Fat Thermostat</h3>
+    <p>
+      The body maintains a "body set weight" — a defended target for stored fat — through the same homeostatic principle that governs body temperature, blood pH, and hydration. Classic overfeeding experiments (Dr. Ethan Sims at Vermont State Prison; Dr. George Bray's self-experimentation) showed that lean people who are force-fed gain weight but effortlessly return to baseline once normal eating resumes. Their "fat thermostat" is set low. Overweight people, by contrast, struggle to lose weight because their thermostat is set high and actively fights to restore it.
+    </p>
+    <p>
+      Dr. Rudolph Leibel's 1995 study confirmed this: gaining 10% body weight increases metabolic rate by 16%; losing 10% decreases it by 15%. The body resists change in both directions. This explains why calorie restriction alone almost always fails long term — without resetting the thermostat itself, hunger rises or metabolism falls to restore the higher set point.
+    </p>
+    <p>
+      What controls the thermostat? <strong>Neurohormonal systems</strong> — primarily insulin (turns it up) and leptin (tries to turn it down, but is frequently overwhelmed). To lose weight sustainably, the thermostat must be adjusted downward, which means managing hormones rather than calories directly.
+    </p>
+    <div class="tips">
+      <div class="tips-label">Key Insight</div>
+      <ul>
+        <li>Obesity is a disorder of the body set weight being too high — not simply a result of eating too much.</li>
+        <li>Adjusting hormones (especially insulin) is what resets the thermostat; adjusting calories is only an indirect, weaker lever.</li>
+        <li>Different foods provoke different hormonal responses — making some foods genuinely more fattening than others at identical calorie counts.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Chapter 3 -->
+  <div class="chapter" id="ch3">
+    <div class="chapter-num">Chapter 3</div>
+    <h3>Eating a Low-Insulin Diet</h3>
+    <p>
+      The 1977 U.S. Dietary Guidelines told Americans to eat less fat and more carbohydrates. The result: the glycemic load of the average American diet spiked by 22%, insulin levels rose, and obesity rates followed almost perfectly. But "low carbohydrate" is not the only — or even the main — lever for lowering insulin. How quickly carbohydrates are digested and absorbed is equally important.
+    </p>
+    <p>
+      Fung walks through the mechanics of digestion: refining removes fiber, bran, and cell walls that slow absorption, effectively "pre-digesting" carbs into rapidly digestible starch (RDS). Eating refined carbs (white bread, instant oats) causes a massive, fast glucose spike, a massive insulin spike, and subsequent reactive hypoglycemia — which triggers hunger again two hours later. Eating the same carbs in unrefined form (steel-cut oats, stone-ground bread, whole grains) produces a gentler glucose curve and much greater satiety.
+    </p>
+    <p>
+      He also covers the amylose vs. amylopectin distinction in rice (short-grain sticky rice = high GI ≈ 98; parboiled rice = low GI ≈ 38), the role of fiber in slowing digestion, resistant starch, beta-glucans in oats, and the food matrix — the physical structure of food that controls how nutrients are released. All of these factors influence how much insulin a food triggers.
+    </p>
+    <div class="tips">
+      <div class="tips-label">Key Tips from this Chapter</div>
+      <ul>
+        <li>Eat fewer refined (starchy) carbohydrates — they spike glucose and insulin fastest.</li>
+        <li>Choose foods with a low Glycemic Index and glycemic load; prefer slow-releasing carbs.</li>
+        <li>Keep carbs as natural and unprocessed as possible — stone-ground flour, whole oats, legumes, vegetables.</li>
+        <li>Prefer longer-grain, lower-amylopectin rice (basmati, parboiled) over sticky, short-grain varieties.</li>
+        <li>Eat fiber-rich foods: chia seeds, legumes, oats, vegetables — fiber dramatically slows glucose absorption.</li>
+        <li>Don't eat "naked carbs" alone — pair carbohydrates with protein, fat, and fiber to blunt the insulin response.</li>
+        <li>Eat food in the right order: vegetables and protein before carbohydrates at a meal.</li>
+        <li>Eat earlier in the day — the same food eaten in the morning produces a lower insulin response than the same food eaten at night.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Chapter 4 -->
+  <div class="chapter" id="ch4">
+    <div class="chapter-num">Chapter 4</div>
+    <h3>How Hormones Sustain Hunger</h3>
+    <p>
+      This chapter surveys the full constellation of hormones that govern the body fat thermostat — moving well beyond just insulin. Leptin (produced by fat cells, tells the brain "we're too fat") sounds like the obesity cure, but in people with significant weight gain it is already maxed out; the brain has become leptin-resistant. The hunger hormone ghrelin and baroreceptors in the stomach regulate the on/off switch for hunger, and their response can be exploited by eating bulky, fibrous, high-volume foods.
+    </p>
+    <p>
+      The incretin hormones GLP-1 and GIP (the natural versions of Ozempic's mechanism) slow gastric emptying, increase satiety, and — in their drug-amplified form — reduce daily caloric intake by ~1,000 calories in clinical trials. Crucially, Ozempic doesn't work by cutting calories directly; it works by cutting hunger. This, Fung argues, is the whole lesson of the book in miniature: control hunger, and calorie reduction follows automatically.
+    </p>
+    <p>
+      The sympathetic nervous system (adrenaline, noradrenaline) powerfully suppresses appetite. Sex hormones (estrogen, testosterone, progesterone) redistribute body fat and influence appetite at puberty, across the menstrual cycle, and at menopause. Sleep deprivation raises ghrelin by 22% — even one bad night doubles subjective hunger. Hypoglycemic hunger (reactive low blood sugar after refined carb spikes) is a direct, correctable cause of mid-morning and mid-afternoon hunger attacks.
+    </p>
+    <div class="tips">
+      <div class="tips-label">Key Tips from this Chapter</div>
+      <ul>
+        <li>Eat bulky, heavy, high-fiber foods (leafy greens, berries, beans, broccoli, cauliflower) to activate baroreceptors and extend satiety.</li>
+        <li>Prioritize sleep — 8 hours; go to bed earlier to avoid late-night snacking in the high-risk hunger window.</li>
+        <li>Use moderate competitive exercise to temporarily suppress appetite (exercise-induced anorexia).</li>
+        <li>Avoid highly refined carbs at breakfast — reactive hypoglycemia is a primary driver of mid-morning hunger.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Chapter 5 -->
+  <div class="chapter" id="ch5">
+    <div class="chapter-num">Chapter 5</div>
+    <h3>Managing Hunger, Not Calories</h3>
+    <p>
+      Studies show up to a <strong>sevenfold difference</strong> in satiety produced by different foods at identical calorie counts. 500 calories of soda does not reduce hunger; 500 calories of a hamburger patty does. The implication is radical: what you eat determines how much you'll want to eat next.
+    </p>
+    <p>
+      Natural dietary fat is deeply satiating — it triggers robust releases of peptide YY, cholecystokinin, GLP-1, and GIP. Olive oil alone roughly doubles GLP-1 vs. a carb-rich diet of the same caloric content. The decades-long fat phobia that emerged from the 1977 dietary guidelines was not grounded in science; subsequent mega-studies (the PURE study, 2017) confirmed that low-fat diets are associated with more, not less, cardiovascular disease.
+    </p>
+    <p>
+      Dietary protein is also highly satiating — it increases thermogenesis, raises GLP-1 and peptide YY more than any other macronutrient, and demonstrably reduces subsequent caloric intake. A high-protein breakfast (eggs, meat, dairy) reduces total-day eating substantially vs. a refined-carb breakfast of equal calories. The "low-fat" foods marketed since the 1980s stripped out protein and fat and replaced them with refined carbs and sugar — the worst possible combination for satiety and weight control.
+    </p>
+    <div class="tips">
+      <div class="tips-label">Key Tips from this Chapter</div>
+      <ul>
+        <li>Don't fear natural fats (olive oil, butter, dairy, avocado, fatty fish, nuts, coconut oil) — they are deeply satiating and hormonally beneficial.</li>
+        <li>Avoid "low fat" and "fat free" labeled products — they are almost always UPFs laden with sugar and additives.</li>
+        <li>Eat adequate protein at every meal, especially breakfast — eggs, meat, fish, and dairy prompt robust satiety hormones.</li>
+        <li>Drink water, black coffee, and unsweetened tea; eliminate liquid calories (juices, sodas, sports drinks).</li>
+        <li>Eat whole, minimally processed foods — the intact food matrix slows digestion and prolongs satiety.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ── PART 2 ── -->
+  <div class="part-section" id="part2">
+    <div class="part-num">Part Two</div>
+    <h2>Hedonic Hunger</h2>
+    <p>Eating driven not by metabolic need but by pleasure, reward, and emotion. Ultra-processed foods deliberately engineer this hunger; food addiction is its extreme form; emotional eating is its psychological engine.</p>
+  </div>
+
+  <!-- Chapter 6 -->
+  <div class="chapter" id="ch6">
+    <div class="chapter-num">Chapter 6</div>
+    <h3>Getting Hooked on Ultra-Processed Foods</h3>
+    <p>
+      Brazilian epidemiologist Dr. Carlos Monteiro noticed in 2013 that even as Brazilians bought less raw sugar, oil, and salt, they were gaining weight — because they were replacing home-cooked meals with packaged, ultra-processed products. He developed the NOVA classification system, which categorizes foods in four groups from minimally processed (Group 1: whole fruits, vegetables, meat) through ultra-processed (Group 4: breakfast cereals, packaged breads, chips, sodas). Today, UPFs account for over 70% of the Standard American Diet.
+    </p>
+    <p>
+      UPFs are engineered to be the precise opposite of satiating foods: low in protein, devoid of fiber, high in rapidly digestible refined carbs, loaded with added sugars and industrial seed oils, extremely low in bulk and weight, and designed to dissolve in the mouth ("vanishing caloric density") so satiety receptors are never fully activated. A landmark 2019 NIH study found that participants randomly assigned to a UPF diet ate 500 more calories per day, gained 3 pounds in two weeks, and showed elevated insulin — all without any change in instructions about how much to eat.
+    </p>
+    <p>
+      The rise of UPFs was accelerated by the 1977 dietary guidelines (eat less fat → replace with refined carbs → UPFs become "health foods"), by the enormous profitability of branded, trademarked processed products, and by agricultural subsidies that make the cheapest raw ingredients — corn, soy, wheat — the building blocks of the worst foods.
+    </p>
+    <div class="golden-rule">
+      <div class="gr-label">Golden Rule #1</div>
+      <p>Avoid ultra-processed foods. Always prefer natural or minimally processed foods and freshly prepared dishes. If the food has a label with ingredients you don't recognize, don't buy it.</p>
+    </div>
+    <div class="tips">
+      <div class="tips-label">Practical Markers of UPFs</div>
+      <ul>
+        <li>Anti-caking agents, artificial colors/flavors, emulsifiers, modified starches, hydrogenated oils, hydrolyzed proteins, maltodextrin, high-fructose corn syrup.</li>
+        <li>Industrial seed oils (canola, corn, soy, sunflower, safflower) — a food containing these has an 80%+ chance of being a UPF.</li>
+        <li>Factory white bread, packaged cereals, cookies, chips, frozen meals, reconstituted meats, sugary drinks, and most store-bought bakery products.</li>
+        <li>Shop the perimeter of the supermarket; avoid foods with long ingredient lists.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Chapter 7 -->
+  <div class="chapter" id="ch7">
+    <div class="chapter-num">Chapter 7</div>
+    <h3>Understanding Food Addiction</h3>
+    <p>
+      The Yale Food Addiction Scale estimates that approximately 14% of adults and 12% of children experience clinically significant food addiction — a rate comparable to alcohol (14%) and tobacco (18%). Among people with obesity, the rate rises to 18–25%. Food addiction is not a metaphor; functional MRI studies show that the brain's reward-pathway activation patterns in "food addicts" are not fundamentally different from those seen with drugs of abuse.
+    </p>
+    <p>
+      Three factors determine whether a substance becomes addictive: <strong>supernormal stimulation</strong> (UPFs can deliver far more concentrated sweetness, saltiness, and umami than natural foods allow), <strong>neurotransmitter spike</strong> (fast absorption via pre-digested, low-fiber UPFs spikes dopamine the same way rapid-delivery drugs do), and <strong>availability</strong> (UPFs are cheaper, more accessible, more marketed, and more socially acceptable than any other addictive substance). Natural foods cannot produce a supernormal stimulus; UPFs are specifically engineered to do so.
+    </p>
+    <p>
+      Big Tobacco companies (R.J. Reynolds, Philip Morris) purchased major food brands in the 1980s and applied their addiction playbook: market to children, fund biased science, and lobby for favorable regulations. The most addictive foods combine refined carbs with fat (pizza, ice cream, chips, cookies, cheeseburgers) — fMRI shows a "supra-additive" dopamine effect from this combination vs. either alone. The least addictive foods are natural, unprocessed, and low glycemic (cucumbers, broccoli, salmon, beans, brown rice, apples).
+    </p>
+    <div class="tips">
+      <div class="tips-label">Key Tips from this Chapter</div>
+      <ul>
+        <li>Abstinence — not moderation — is the appropriate treatment for food addiction, just as with alcohol or drug addiction.</li>
+        <li>Fasting can eliminate food cravings by breaking the conditioned response to specific foods.</li>
+        <li>Avoid even artificial sweeteners — they activate reward pathways and may sustain cravings without delivering calories.</li>
+        <li>Seek cognitive behavioral therapy, peer support, or counseling — the same approaches used for other addictions are effective for food addiction.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Chapter 8 -->
+  <div class="chapter" id="ch8">
+    <div class="chapter-num">Chapter 8</div>
+    <h3>Managing Emotional Eating</h3>
+    <p>
+      Over 58% of patients seeking help from obesity medicine specialists report emotional eating. An estimated 38% of adults worldwide engage in it in any given month; nearly half do so weekly. Emotional eating — using food to soothe or suppress negative emotions (sadness, loneliness, boredom, anxiety) or enhance positive ones — is driven by the dopamine and serotonin release that food (especially UPFs) provides. High insulin amplifies dopamine release by 20–55%, creating a powerful but fleeting reward that drives repeated eating. Obesity and depression are mutually reinforcing: obese individuals have a 55% increased risk of depression; depressed individuals have a 58% chance of developing obesity.
+    </p>
+    <p>
+      Closely related is <strong>distracted eating</strong> — eating while watching TV, driving, or using devices. Satiety requires attention and memory; if you don't notice you're eating, you won't register fullness. Amnesia patients who have just eaten a full meal will consume nearly a second full meal if offered — they "forget" to be full. The antidote is mindful eating, supported by substantial clinical evidence: a 2019 meta-analysis found mindful eating produces an average weight loss that actually increases over time (4.2 kg at end of program → 9.2 kg at six-month follow-up), as the practice deepens and becomes habitual.
+    </p>
+    <p>
+      The vagus nerve connects the gut and the brain, and its activation through relaxation techniques (deep breathing, meditation, cold exposure, time in nature, yoga) directly calms stress-driven eating behavior. The chapter provides a step-by-step mindful eating protocol and a vagus nerve activation toolkit.
+    </p>
+    <div class="tips">
+      <div class="tips-label">Key Tips from this Chapter</div>
+      <ul>
+        <li>Eat only at a table in a designated place (kitchen, dining room) — no screens, no driving, no desk eating.</li>
+        <li>Enhance food memory by using bold seasoning, spices, chili, herbs, and umami ingredients — if you remember a meal, you stay full longer.</li>
+        <li>Cultivate a mindful eating practice: use a mantra ("hara hachi bu" — eat until 80% full), eat slowly, put down utensils between bites, reflect on why you're eating.</li>
+        <li>Keep a food journal — writing down what and why you ate is a powerful self-discovery tool.</li>
+        <li>Practice daily deep breathing, meditation, or spending time in nature to activate the parasympathetic nervous system and reduce stress eating.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ── PART 3 ── -->
+  <div class="part-section" id="part3">
+    <div class="part-num">Part Three</div>
+    <h2>Conditioned Hunger</h2>
+    <p>The social, environmental, and habitual architecture of eating. Where you live, who you know, what time it is — these external cues trigger hunger as reliably as Pavlov's bell triggered salivation in his dogs.</p>
+  </div>
+
+  <!-- Chapter 9 -->
+  <div class="chapter" id="ch9">
+    <div class="chapter-num">Chapter 9</div>
+    <h3>Living in an Obesogenic Environment</h3>
+    <p>
+      74% of Americans are currently overweight or obese (projected to exceed 80% by 2050). This is not primarily an individual failure of willpower — it is a systemic environmental failure. The strongest evidence comes from immigration data: immigrants arriving in the U.S. have an obesity rate of just 8%. After 15 years of living in America, that rate rises to 57% — matching the native-born population. The cause isn't genetics; it's assimilation into an obesogenic environment. Similarly, Japanese Americans born in the U.S. (Nisei) have nearly double the overweight/obesity rate of those born in Japan (Issei).
+    </p>
+    <p>
+      Social modeling is the transmission mechanism: we unconsciously eat the same amounts, at the same frequency, and the same foods as the people around us. If your best friend becomes obese, your own risk increases by 171%. The American food environment specifically encourages eating more, more often, more quickly, and more UPFs than virtually any other country. Government agricultural subsidies compound the problem: corn and soy growers receive $5+ billion per year, keeping the cheapest inputs of UPF manufacturing artificially inexpensive while fruits and vegetables receive minimal support.
+    </p>
+    <div class="tips">
+      <div class="tips-label">Key Tips from this Chapter</div>
+      <ul>
+        <li>Recognize that your environment shapes your weight more than your willpower does — change what you can about your micro-environment.</li>
+        <li>Avoid or remove food cues from controllable environments: car, TV room, desk, bedroom.</li>
+        <li>Stream TV to skip food commercials; use order-ahead apps for coffee to avoid seeing pastry displays.</li>
+        <li>Observe how social and cultural norms around you influence what, when, how much, and how fast you eat.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Chapter 10 -->
+  <div class="chapter" id="ch10">
+    <div class="chapter-num">Chapter 10</div>
+    <h3>Recognizing Eating as a Habit</h3>
+    <p>
+      Ghrelin (the hunger hormone) spikes three times a day — right before typical breakfast, lunch, and dinner times. This is not biology; it's conditioning. If you normally eat six times a day, ghrelin spikes six times a day. Hunger, in this sense, is Pavlov's bell: a neutral stimulus (the clock striking noon, sitting down to watch TV, getting in the car) that has been paired with eating so many times it now reliably triggers hunger. Fung calls this "conditioned hypereating."
+    </p>
+    <p>
+      Americans went from eating three times a day in the 1970s to nearly six times a day by 2004, and the average eating window expanded to nearly 15 hours. This continuous insulin stimulation prevents the body from ever entering a fat-burning fasted state. Key conditioned hunger cues include: clock time, plate fullness (we eat what's on the plate regardless of hunger), eating speed (fast eating undermines satiety signals, as fullness requires time to register), the expectation effect (a 140-calorie milkshake labeled "sensible" reduces ghrelin less than the same shake labeled "indulgent"), and social food cues (celebrations, vacations, eating out, eating while bored).
+    </p>
+    <p>
+      The antidote is extinction: repeatedly encountering the cue without eating, until the conditioned response fades. Fasting is the most effective method — after a few days of fasting, ghrelin drops ~25% below baseline, confirming that hunger is largely a conditioned expectation.
+    </p>
+    <div class="tips">
+      <div class="tips-label">Key Tips from this Chapter</div>
+      <ul>
+        <li>Don't eat all the time — give your body a chance to use stored calories.</li>
+        <li>Eat fewer courses per meal; skip appetizers if possible; use smaller plates and portions.</li>
+        <li>Eat slowly — fast eating spikes insulin, lowers satiety hormones, and increases next-meal intake.</li>
+        <li>Avoid the expectation effect — don't eat foods specifically labeled "diet," "sensible," or "healthy" (they tend to leave you hungrier).</li>
+        <li>When bored, get busy: call a friend, go for a walk, choose a hobby, go outside.</li>
+        <li>Manage celebration/vacation weight gain by fasting strictly for one week before or after.</li>
+        <li>Eat homemade food as much as possible — restaurant and takeout preparation is opaque and typically UPF-heavy.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ── PART 4 ── -->
+  <div class="part-section" id="part4">
+    <div class="part-num">Part Four</div>
+    <h2>How to Manage Hunger</h2>
+    <p>Practical systems for making weight loss automatic: structured eating, daily fasting, mindset reframing, habit engineering, and the social accountability that makes all of it stick.</p>
+  </div>
+
+  <!-- Chapter 11 -->
+  <div class="chapter" id="ch11">
+    <div class="chapter-num">Chapter 11</div>
+    <h3>Making Weight Loss Automatic</h3>
+    <p>
+      In the 1970s, Americans were not particularly health-conscious — they ate white bread, ice cream, and Oreo cookies, exercised little, and rarely counted anything. Yet obesity was rare. The reason: the default setting was <em>not eating</em>. People ate three times a day in specific places (kitchen, dining room, cafeteria) for a specific purpose. Snacking was an occasional treat, not a norm. The fasting window between dinner and breakfast was naturally 12–14 hours every day, allowing insulin to drop and fat to be burned nightly.
+    </p>
+    <p>
+      The human body exists in one of two metabolic states: <strong>the fed state</strong> (insulin high → storing calories as fat, cannot burn fat) or <strong>the fasted state</strong> (insulin low → burning stored fat, cannot store new fat). These states are mutually exclusive. You can only lose fat during the fasted state. If you eat across a 15-hour window and sleep 7 hours, you have essentially no fasted state — and no fat burning.
+    </p>
+    <p>
+      Fasting is the fastest, most efficient way to lower insulin. It also increases growth hormone (preserving lean muscle), raises sympathetic tone (reducing hunger), and suppresses ghrelin over days (making extended fasting progressively easier, not harder). The Adventist Health Study (50,000+ participants) found each additional daily meal was associated with increased body weight. Skipping a meal — particularly breakfast, which fits most social schedules — is a practical, no-willpower strategy for extending the fasted state.
+    </p>
+    <div class="golden-rule">
+      <div class="gr-label">Golden Rule #2</div>
+      <p>Don't eat all the time. Fast regularly. Build in a minimum of 12–14 hours of fasting every day. If trying to lose weight, extend this to 16–18 hours (skip breakfast or dinner), 24 hours, or longer — with appropriate medical supervision.</p>
+    </div>
+    <div class="tips">
+      <div class="tips-label">Key Tips from this Chapter</div>
+      <ul>
+        <li>Structure your eating day: breakfast, lunch, and dinner — no snacks.</li>
+        <li>Make "not eating" your default setting; it should require no willpower, just the right environment.</li>
+        <li>Hunger comes in waves and naturally recedes — ghrelin peaks and then drops 2 hours after a missed meal.</li>
+        <li>When skipping a meal, avoid compensating by eating more at the next meal.</li>
+        <li>At work: no food at meetings, no bowls of candy on desks, no celebratory cake in office spaces.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Chapter 12 -->
+  <div class="chapter" id="ch12">
+    <div class="chapter-num">Chapter 12</div>
+    <h3>Unlocking the Secrets of Success — Your Mindset and Your Habits</h3>
+    <p>
+      Knowledge alone does not produce behavior change. You can know that cookies are fattening and eat them anyway. Lasting weight loss requires a <strong>mindset shift</strong> that changes how food is perceived at an emotional level — followed by <strong>habit formation</strong> that makes the right behaviors automatic rather than willpower-dependent.
+    </p>
+    <p>
+      Fung uses his own experience as an example: reframing sugar as "poison" rather than "a pleasant treat I'm denying myself" eliminated the deprivation mindset and made avoidance effortless. The same technique applies to UPFs ("fake, chemical food, ultra-fattening") and to fasting ("my body is burning fat right now — burn, baby, burn"). Creating personal mantras and repeating them until the association becomes automatic is the mechanism. This is not positive thinking fluff — it directly mirrors the behavioral science of classical conditioning that creates the problem in the first place.
+    </p>
+    <p>
+      Habits require about 2–3 weeks to establish. The chapter provides a five-step framework for both breaking bad habits (identify → find the cue → find the motivation → replace with a healthy habit → make it stick) and creating new ones (identify the habit → create a cue → articulate the motivation → begin → reinforce with tracking and accountability). Social accountability — telling a partner, joining a group, working with a coach — dramatically increases success rates. Fung co-founded The Fasting Method community specifically for this purpose, noting that peer support normalizes fasting and creates social models for success the way Weight Watchers and Alcoholics Anonymous do for their respective communities.
+    </p>
+    <div class="golden-rule">
+      <div class="gr-label">Golden Rule #3</div>
+      <p>Commit to a health mindset and healthy social habits. Successful weight loss is not a diet; it is a permanent reprogramming of your relationship with food, hunger, and eating behavior — done in community.</p>
+    </div>
+    <div class="tips">
+      <div class="tips-label">Key Tips from this Chapter</div>
+      <ul>
+        <li>Reframe UPFs as chemical, fake, ultra-fattening non-food — not as a pleasure being denied.</li>
+        <li>Reframe fasting as "my body eating its own fat" — a positive, active process.</li>
+        <li>Keep new habits simple, specific, and actionable: "I fast for 16 hours every day except Saturday."</li>
+        <li>Find a weight-loss buddy or join a community — accountability is the multiplier that makes everything else work.</li>
+        <li>Observe naturally lean people: they eat slowly, stop when full, don't finish everything on the plate, and stay busy with active hobbies.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Chapter 13 -->
+  <div class="chapter" id="ch13">
+    <div class="chapter-num">Chapter 13</div>
+    <h3>Putting the Golden Rules of Weight Loss Into Action</h3>
+    <p>
+      The final chapter synthesizes the entire book into a practical framework, arguing that obesity is a multifactorial disease that requires a multifactorial solution. The standard "eat fewer calories" prescription is exposed as an intellectual failure: it treats a symptom (excess caloric intake) rather than any of the actual root causes (refined carbs, high glycemic index, no fiber, UPFs, food addiction, distracted eating, emotional eating, poor sleep, conditioned hunger cues, bad habits, social modeling, depression, chronic stress). Fung provides a comprehensive table mapping each root cause to its specific solution — and notes that conventional advice addresses every single one of them with the same useless response: "eat less."
+    </p>
+    <p>
+      Successful long-term weight management requires addressing all three levels simultaneously: <strong>knowledge</strong> (homeostatic hunger — what to eat, when to eat, how insulin responds), <strong>emotions</strong> (hedonic hunger — food addiction, emotional eating, mindfulness), and <strong>environment</strong> (conditioned hunger — social modeling, habits, micro-environment design). The three Golden Rules — avoid UPFs, fast daily, and commit to a health mindset with healthy habits — form the integrated system that addresses all three.
+    </p>
+    <p>
+      Fung closes with a reference to James Clear's <em>Atomic Habits</em>: "You do not rise to the level of your goals. You fall to the level of your systems." The goal of weight loss is meaningless. The system — built from the Golden Rules — is everything.
+    </p>
+    <div class="tips">
+      <div class="tips-label">The Three Golden Rules — Final Summary</div>
+      <ul>
+        <li><strong>Rule 1:</strong> Avoid ultra-processed foods. Eat real, minimally processed, whole foods your great-grandmother would recognize.</li>
+        <li><strong>Rule 2:</strong> Don't eat all the time. Fast every day for a minimum of 12–14 hours, extending as needed for weight loss.</li>
+        <li><strong>Rule 3:</strong> Commit to a health mindset and healthy social habits. Build community, accountability, and an environment that makes the right choice the easy choice.</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    Summary prepared for personal reference · <em>The Hunger Code</em> by Jason Fung, MD (2025)
+  </footer>
+
+</div><!-- /#main -->
+
+<script>
+(function(){
+  var hamburger = document.getElementById('hamburger');
+  var sidebar   = document.getElementById('sidebar');
+  var overlay   = document.getElementById('overlay');
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    overlay.classList.add('open');
+    hamburger.classList.add('open');
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+    hamburger.classList.remove('open');
+  }
+
+  hamburger.addEventListener('click', function(){
+    sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+  });
+  overlay.addEventListener('click', closeSidebar);
+
+  // Pure in-document scrolling via data-target
+  document.querySelectorAll('[data-target]').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      var id  = link.getAttribute('data-target');
+      var el  = document.getElementById(id);
+      if(el){
+        // close sidebar first on mobile
+        closeSidebar();
+        setTimeout(function(){
+          el.scrollIntoView({ behavior:'smooth', block:'start' });
+        }, 50);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
