@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#0e0e0f!important;color-scheme:dark!important">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e0e0f">
+<title>Plato at the Googleplex — Chapter Summaries</title>
+<style>
+  /* Three-layer dark-mode protection: kills any white flash on iOS Safari */
+  html, body { background:#0e0e0f !important; color:#e7e7ea !important; }
+  :root { color-scheme: dark !important; }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin:0; padding:0; height:100%; overflow:hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Top bar */
+  .topbar {
+    position: fixed; top:0; left:0; right:0; height:54px;
+    display:flex; align-items:center; gap:12px;
+    padding: 0 14px; padding-top: env(safe-area-inset-top);
+    height: calc(54px + env(safe-area-inset-top));
+    background: rgba(14,14,15,0.92);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid #1f1f22;
+    z-index: 50;
+  }
+  .hamburger {
+    width: 40px; height: 40px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;
+    background: transparent; border: none; cursor: pointer; padding: 0;
+    border-radius: 10px;
+  }
+  .hamburger:active { background:#1a1a1d; }
+  .hamburger span { display:block; width:20px; height:2px; background:#e7e7ea; border-radius:1px; transition: transform .25s ease, opacity .2s ease; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .topbar h1 {
+    font-size: 16px; font-weight: 600; margin:0; letter-spacing:.01em;
+    color:#f0f0f3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .topbar h1 em { font-style: italic; color:#a8a8af; font-weight:500; }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed; top:0; left:0; bottom:0;
+    width: min(82vw, 320px);
+    background: #131316;
+    border-right: 1px solid #25252a;
+    transform: translateX(-100%);
+    transition: transform .28s cubic-bezier(.32,.72,.27,1);
+    z-index: 60;
+    overflow-y: auto;
+    padding-top: calc(54px + env(safe-area-inset-top) + 8px);
+    padding-bottom: env(safe-area-inset-bottom);
+    -webkit-overflow-scrolling: touch;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar nav { padding: 8px 6px 24px; }
+  .sidebar a {
+    display:block; padding: 12px 18px;
+    color:#c8c8cf; text-decoration:none;
+    font-size: 15px; line-height:1.35;
+    border-radius: 10px; margin: 2px 6px;
+    cursor: pointer;
+  }
+  .sidebar a:active { background:#1f1f24; }
+  .sidebar a .gk { display:inline-block; width:22px; color:#7a7a82; font-style:italic; }
+  .sidebar .group-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
+    color:#65656d; padding: 14px 18px 6px; margin-top: 6px;
+  }
+
+  /* Overlay */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
+    z-index: 55;
+  }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+
+  /* Main scroll panel — pure in-document scrolling */
+  #main {
+    position: fixed; inset: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-top: calc(54px + env(safe-area-inset-top));
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .container { max-width: 760px; margin: 0 auto; padding: 22px 20px 80px; }
+
+  /* Header block */
+  .booktitle {
+    margin: 4px 0 6px; font-size: 28px; line-height:1.2; font-weight:700; letter-spacing:-.01em;
+    color:#f4f4f7;
+  }
+  .booktitle em { font-style: italic; color:#cfcfd5; font-weight:600; }
+  .subhead {
+    color:#8e8e96; font-size:14px; margin: 0 0 22px; line-height:1.45;
+  }
+
+  /* Chapter cards */
+  .chapter {
+    margin: 36px 0 0;
+    padding-top: 6px;
+    scroll-margin-top: calc(54px + env(safe-area-inset-top) + 12px);
+  }
+  .chapter h2 {
+    font-size: 22px; line-height:1.25; margin: 0 0 4px;
+    color:#f3f3f6; font-weight:700; letter-spacing:-.005em;
+  }
+  .chapter h2 .greek {
+    display:inline-block; margin-right:10px;
+    color:#9b8df0; font-style:italic; font-weight:600;
+  }
+  .chapter .kind {
+    font-size: 12px; text-transform: uppercase; letter-spacing: .14em;
+    color:#7a7a82; margin: 0 0 14px;
+  }
+  .chapter .kind.dialogue { color:#7fb3ff; }
+  .chapter .kind.essay { color:#9ca0aa; }
+
+  .chapter p {
+    margin: 0 0 14px; color:#dcdce0;
+  }
+
+  .chapter blockquote {
+    margin: 14px 0;
+    padding: 12px 16px;
+    border-left: 3px solid #4a4a55;
+    background: #18181c;
+    border-radius: 0 8px 8px 0;
+    color:#c8c8d0;
+    font-size: 15.5px;
+    line-height: 1.55;
+  }
+  .chapter blockquote.greek-frag {
+    border-left-color: #6c5fbf;
+    font-style: italic;
+  }
+  .chapter blockquote .src {
+    display:block; margin-top:8px;
+    font-size: 12.5px; color:#80808a; font-style: normal;
+  }
+
+  .chapter em.greek { color:#b9b3df; font-style: italic; }
+  .chapter strong { color:#f0f0f3; font-weight:600; }
+
+  hr.div { border:none; border-top:1px solid #25252a; margin: 32px 0 0; }
+
+  .toc-link {
+    display:inline-block; margin-top: 24px; padding: 10px 14px;
+    background:#1d1d22; color:#cfcfd5; border-radius:10px;
+    font-size:14px; cursor:pointer;
+  }
+  .toc-link:active { background:#27272d; }
+
+  footer.endnote {
+    margin: 56px 0 12px; padding: 18px;
+    background:#141417; border-radius: 12px;
+    color:#8a8a92; font-size: 13.5px; line-height:1.5;
+  }
+
+  /* Larger screens */
+  @media (min-width: 900px) {
+    body { font-size: 18px; }
+    .container { padding: 30px 36px 100px; }
+    .booktitle { font-size: 34px; }
+    .chapter h2 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <h1><em>Plato at the Googleplex</em> — Chapter Summaries</h1>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<aside class="sidebar" id="sidebar" aria-hidden="true">
+  <nav>
+    <div class="group-label">Front Matter</div>
+    <a data-target="prologue"><span class="gk"></span>Prologue</a>
+
+    <div class="group-label">Expository &amp; Dialogue Chapters</div>
+    <a data-target="ch-alpha"><span class="gk">α</span>Man Walks into a Seminar Room</a>
+    <a data-target="ch-beta"><span class="gk">β</span>Plato at the Googleplex</a>
+    <a data-target="ch-gamma"><span class="gk">γ</span>In the Shadow of the Acropolis</a>
+    <a data-target="ch-delta"><span class="gk">δ</span>Plato at the 92nd Street Y</a>
+    <a data-target="ch-epsilon"><span class="gk">ε</span>I Don&rsquo;t Know How to Love Him</a>
+    <a data-target="ch-stigma"><span class="gk">ς</span>xxxPlato</a>
+    <a data-target="ch-zeta"><span class="gk">ζ</span>Socrates Must Die</a>
+    <a data-target="ch-eta"><span class="gk">η</span>Plato on Cable News</a>
+    <a data-target="ch-theta"><span class="gk">θ</span>Let the Sunshine In</a>
+    <a data-target="ch-iota"><span class="gk">ι</span>Plato in the Magnet</a>
+
+    <div class="group-label">Appendices</div>
+    <a data-target="app-a"><span class="gk"></span>A. Socratic Sources</a>
+    <a data-target="app-b"><span class="gk"></span>B. Pericles&rsquo; Speeches</a>
+  </nav>
+</aside>
+
+<main id="main">
+  <div class="container">
+
+    <h1 class="booktitle"><em>Plato at the Googleplex</em></h1>
+    <p class="subhead">Rebecca Goldstein &middot; Pantheon, 2014 &middot; chapter-by-chapter summary</p>
+
+    <!-- ============ PROLOGUE ============ -->
+    <section class="chapter" id="prologue">
+      <h2>Prologue</h2>
+      <p class="kind essay">Author&rsquo;s framing</p>
+
+      <p>Goldstein opens by refusing the standard hagiography. Plato &ldquo;got about as much wrong as we would expect from a philosopher who lived 2,400 years ago,&rdquo; and were that not the case, philosophy itself would be useless &mdash; advancing our knowledge not at all. The book&rsquo;s argument is that Plato matters not because he was always right but because he is the figure who first <em>carved out the field of philosophy itself</em>, framing its core questions in something close to their definitive form: questions about language, politics, art, mathematics, religion, love, friendship, mind, identity, death, explanation, rationality, knowledge.</p>
+
+      <p>That achievement, she argues, was made possible by an inheritance she calls the <strong>Ethos of the Extraordinary</strong> &mdash; the distinctively Greek conviction that an ordinary, anonymous life does not matter, and that one must do something exceptional in order for one&rsquo;s existence to count. The Greeks approached the question of what makes a human life worth living in <em>human</em> terms, not via the gods. This approach produced both the great tragedians and the philosophers; Plato shared in the ethos but radically modified it: the kind of exertion that secures a worthwhile life is the exertion of <em>reason</em>. The unexamined life is not worth living because the examined life is the only one that can attain the godlike.</p>
+
+      <p>Goldstein also lays out the book&rsquo;s formal trick. Plato is the most elusive of major thinkers &mdash; he wrote dialogues, never treatises, so that his own voice never quite surfaces. Goldstein compares him to Shakespeare in his capacity to disappear behind his characters. To get nearer to him, she alternates expository chapters with anachronistic dialogues in which Plato himself is dropped into 21st-century America: Google headquarters, a 92nd Street Y panel, an advice column, a cable-news studio, a neuroscience lab. The conceit, she says, is the one preposterous premise of the science fiction she loved as a child &mdash; accept it and everything else makes sense.</p>
+
+      <p>The closing thought of the prologue is the book&rsquo;s thesis in miniature: philosophical progress is real but invisible, because <em>it is incorporated into our points of view</em>. &ldquo;What was tortuously secured by complex argument becomes widely shared intuition, so obvious that we forget its provenance. We don&rsquo;t see it, because we see with it.&rdquo;</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ ALPHA ============ -->
+    <section class="chapter" id="ch-alpha">
+      <h2><span class="greek">α</span>Man Walks into a Seminar Room</h2>
+      <p class="kind essay">Expository &mdash; the case against the &ldquo;philosophy doesn&rsquo;t progress&rdquo; jeer</p>
+
+      <p>The chapter begins with a thought-experiment of its own: drop Plato into a contemporary graduate seminar in philosophy. He would have no trouble at all. The techniques in use &mdash; constructing and deconstructing arguments, palpating intuitions for contradictions, hurling counterexamples at proposed generalizations, the wildly counterfactual thought-experiments (Twin Earth, the violinist) &mdash; are all moves Plato himself helped invent. He was, Goldstein notes, &ldquo;a master of composing elaborately counterfactual thought-experiments,&rdquo; and would dominate the table before the seminar was well under way.</p>
+
+      <p>This sets up the chapter&rsquo;s real target: the &ldquo;philosophy-jeerers,&rdquo; especially scientists who treat philosophy as a relic. Goldstein quotes the cosmologist Lawrence Krauss at length &mdash; &ldquo;those who can&rsquo;t do, teach, and those that can&rsquo;t teach, teach gym&rdquo; &mdash; as a representative case. Her response unfolds in several moves.</p>
+
+      <p>First, she shows that the philosophy-jeerer&rsquo;s own position is saturated with philosophy. Any claim that science alone makes progress relies on a criterion for distinguishing scientific from non-scientific claims (Popper&rsquo;s falsifiability &mdash; whose author was a philosopher). It also presupposes a stance, scientific realism vs. instrumentalism, that is itself a substantive philosophical claim. Niels Bohr was an instrumentalist; other physicists are realists; when they argue, they are not doing physics, they are doing philosophy of science.</p>
+
+      <p>She illustrates this with the joke about Jake and Mimi, who scrimp and save to buy an oceanfront villa, then have to buy out their neighbors and chop down their trees to clear the view; sitting at last on the veranda, Jake declares, &ldquo;there are some things that money just can&rsquo;t buy.&rdquo; Some philosophy-jeerers, Goldstein says, don&rsquo;t take into account all the philosophical cash they have to spend in order to arrive at their view.</p>
+
+      <p>Second, she takes seriously the deeper jeer: even granting that, doesn&rsquo;t the fact that Plato is still at the seminar table prove philosophy never progresses? No physicist treats Democritus as a current colleague; no biologist defers to Aristotle&rsquo;s taxonomy. Why is Plato different? The jeerer&rsquo;s answer: philosophy is just a cold-storage room where questions sit until the sciences are ready to take them over (the Ionian cosmologists become physics, etc.). Goldstein concedes there is something to this &mdash; many ancient philosophical questions <em>have</em> been transferred to the sciences &mdash; but argues that this story is incomplete in two crucial ways.</p>
+
+      <p>The chapter&rsquo;s most important positive argument is about <strong>mathematical Platonism</strong>. Take the question of whether numbers and mathematical objects really exist, in what sense, and how mathematicians can know about them. This is Plato&rsquo;s question, and it remains live among practicing mathematicians: she quotes G. H. Hardy, G&ouml;del, Frege, and Penrose all describing themselves in essentially Platonist terms. Mathematical Platonism is a question with no obvious empirical handle; science cannot inherit it. It belongs to philosophy and is still unresolved.</p>
+
+      <p>She closes by sketching a second category of irreducibly philosophical questions: <em>why is there something rather than nothing?</em> &mdash; a question Plato beat both Leibniz and Spinoza to &mdash; and questions about the relation between explanation and intelligibility. The point is that scientific progress doesn&rsquo;t make philosophy obsolete; it constantly raises new philosophical questions about its own foundations. Plato sits at the seminar table not because the field is stagnant but because the field he created is unusually self-renewing.</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ BETA ============ -->
+    <section class="chapter" id="ch-beta">
+      <h2><span class="greek">β</span>Plato at the Googleplex</h2>
+      <p class="kind dialogue">Dialogue &mdash; with Cheryl (a media escort) and Marcus (a Google software engineer)</p>
+
+      <p>The first of the anachronistic dialogues. The narrator, Rhonda, has drinks with her friend Cheryl, a San Francisco media escort, who recounts spending the day shepherding an unusual author named Plato around the Googleplex for an Authors@Google event. Cheryl&rsquo;s exasperated, sharp-eyed narration carries the chapter; Plato comes through her impressions before he speaks much himself. He is courteous, soft-spoken, makes &ldquo;serious eye contact,&rdquo; and has impeccable manners that make the relentless self-congratulation of the Googleplex feel slightly ridiculous.</p>
+
+      <p>Over free gourmet lunch in Yoscha&rsquo;s Caf&eacute;, Plato compares Google&rsquo;s feeding-on-demand to the <em>Prytaneum</em> &mdash; the ancient Athenian hearth where free meals were offered to those who had rendered extraordinary service to the city. This is the opening Goldstein needs: it lets Plato bring up his friend Socrates, condemned by his fellow Athenians, and lets the reader feel for the first time the man behind the marble fa&ccedil;ade. Cheryl notices &ldquo;the tightening of his jaw and from the way his voice, which is very soft to begin with, went even softer,&rdquo; how traumatic the trial still is.</p>
+
+      <p>Plato is eventually drawn into giving Cheryl the &ldquo;Colbert Report&rdquo; gist of the <em>Republic</em>, which he renders in five words: <em>The. Perfect. State. Defines. Justice.</em> When pushed, he gives the famous formulation:</p>
+
+      <blockquote>
+        Until a philosopher acquires political power, or someone who already has political power can be made into a philosopher, there can be no justice in the state.
+        <span class="src">paraphrase from <em>Republic</em> 610c, as Plato gives it to Cheryl</span>
+      </blockquote>
+
+      <p>Cheryl asks innocently how that worked out for him &mdash; and Plato narrates, in the chapter&rsquo;s longest sustained passage, the disastrous Syracuse expeditions: his friend Dion, the dead tyrant Dionysius I, and the unteachable son Dionysius II, whose &ldquo;ore of his soul was not of the gold required for true leadership.&rdquo; Plato tries to put his political theory into practice and ends in fiasco; the moral he extracts is one of the chapter&rsquo;s real philosophical hinges.</p>
+
+      <p>Marcus, the Google engineer, then enters the conversation with the technologist&rsquo;s confidence that ethics can be solved with the right system. He proposes that Google&rsquo;s real innovation is <strong>crowd-sourced ethics</strong>: aggregate enough preferences and you&rsquo;ll discover the right answer to any moral question. Plato &mdash; gently, ironically, devastatingly &mdash; runs Marcus through a Socratic interrogation. If we crowd-source our way to a moral answer, what makes it <em>right</em>? Are we discovering moral facts or just measuring opinion? And if it&rsquo;s the latter, what was Socrates condemned for, and why does it sting?</p>
+
+      <p>The chapter does several things at once: it introduces the device, it sets up the book&rsquo;s recurring confrontation between technocratic optimism and philosophical skepticism, and it shows Cheryl &mdash; the practical-minded media escort with no use for the examined life &mdash; quietly arriving at moral intuitions Plato &ldquo;never dreamed of, though once she states them he immediately gets the point.&rdquo; That asymmetry is the book&rsquo;s thesis enacted: progress in philosophy is real, even when it&rsquo;s invisible.</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ GAMMA ============ -->
+    <section class="chapter" id="ch-gamma">
+      <h2><span class="greek">γ</span>In the Shadow of the Acropolis</h2>
+      <p class="kind essay">Expository &mdash; the cultural matrix that produced philosophy</p>
+
+      <p>This is the book&rsquo;s most historical chapter, and arguably its most important. Goldstein&rsquo;s question: how did the Athens of the late fifth and early fourth centuries B.C.E. produce a Plato? Her answer is that fifth-century Athens elaborated and intensified the older Homeric <strong>Ethos of the Extraordinary</strong> in a particular way, and that philosophy was born out of that intensification &mdash; partly as expression, partly as critique.</p>
+
+      <p>She begins with Socrates as &ldquo;part of the urban scene&rdquo; &mdash; &ldquo;Yelp Ancient Athens would have highlighted him under Street Theater&rdquo; &mdash; performing daily in the agora beneath the rebuilt Acropolis. The Parthenon and its colossal Athena (cast from the bronze of Persian armor captured at Marathon) were not just monuments but ideological furniture. They told every citizen that he was already, by virtue of being Athenian, above average. Goldstein returns to a brutal observation she has quoted from Alexander Nehamas: the same Athens worked tens of thousands of slaves to death in the silver mines at Laurium. &ldquo;We don&rsquo;t admire the Greeks for their morality.&rdquo;</p>
+
+      <p>The Ethos of the Extraordinary is the cultural background. Goldstein traces its expression in Pindar&rsquo;s epinician odes, written for victors in the Panhellenic games:</p>
+
+      <blockquote class="greek-frag">
+        Creatures of a day! / What is someone? / What is no one? / Man: a shadow&rsquo;s dream. / But when god-given glory comes / A bright light shines upon us and our life is sweet.
+        <span class="src">Pindar, paraphrased in Goldstein&rsquo;s translation</span>
+      </blockquote>
+
+      <p>Pindar&rsquo;s ethos is one of <em>kleos</em> &mdash; glory, the only available form of immortality &mdash; pursued in strictly mortal terms. The gods are mostly to be avoided; their attention is dangerous (witness Prometheus, witness Io). What matters is the praise of one&rsquo;s fellow mortals. This, Goldstein argues, is what makes Greek philosophy possible: a culture preoccupied with what makes a human life worth living, but answering that question without recourse to the divine.</p>
+
+      <p>Athens then adds a political twist she calls <strong>participatory exceptionalism</strong>. Through democracy &mdash; voting in the ekklêsia, serving by lot on the Council of 500, sitting on juries of 500 &mdash; every citizen could feel himself sharing in the city&rsquo;s extraordinariness. Pericles articulates this in the Funeral Oration (&ldquo;our city as a whole is a lesson for Greece&rdquo;); Athens, by Pericles&rsquo;s account, is &ldquo;the only power now that is greater than her fame when it comes to the test.&rdquo;</p>
+
+      <p>Goldstein places this within Karl Jaspers&rsquo;s &ldquo;Axial Age&rdquo;: the rough period 800&ndash;200 B.C.E. in which Zoroastrianism, Hebraic monotheism, Confucianism, Taoism, Buddhism, and Greek philosophy all emerged independently as systematic responses to the question &mdash; <em>do I matter? does my brief life amount to anything?</em> The Greek answer was peculiar: not a covenant with a god, not the dissolution of the self, but the pursuit of the extraordinary in the human plane. Philosophy is then the radical Greek modification of that answer: the extraordinary life is the <em>examined</em> life. The shift is so quiet that it sounds, at first, like a continuation of the ethos. But it is the lever that moves it.</p>
+
+      <p>This is also where Plato&rsquo;s ambivalence toward Athens enters. The same democracy that created the conditions for philosophy also killed Socrates. The chapter closes with the suggestion &mdash; central to the rest of the book &mdash; that Plato&rsquo;s entire project is in some sense a quarrel with Athens about what its ethos really demands.</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ DELTA ============ -->
+    <section class="chapter" id="ch-delta">
+      <h2><span class="greek">δ</span>Plato at the 92nd Street Y</h2>
+      <p class="kind dialogue">Dialogue &mdash; panel on &ldquo;How to Raise an Exceptional Child&rdquo;</p>
+
+      <p>Plato joins three panelists at New York&rsquo;s 92nd Street Y for a discussion moderated by <em>New York Times</em> columnist Zach Burns. The other panelists are Mitzi Munitz, a Viennese ex-psychoanalyst with a million-copy bestseller called <em>Esteeming Your Child: How Even the Best-Intentioned Parents Violate, Mutilate and Desecrate Their Children</em>, and Sophie Zee, a Stanford law professor and author of <em>The Warrior Mother&rsquo;s Guide to Producing Off-the-Charts Children</em>. The two are barely-disguised composites of Alice Miller and Amy Chua. Burns introduces Plato simply as &ldquo;Plato, best-selling author of <em>The Republic</em>.&rdquo;</p>
+
+      <p>The chapter&rsquo;s engine is that the panel topic &mdash; raising exceptional children &mdash; is precisely the modern descendant of the Ethos of the Extraordinary that the previous chapter has just unpacked. The dialogue lets Goldstein dramatize the contemporary forms the ethos has taken and let Plato gently pry them open.</p>
+
+      <p>Munitz argues that the very desire to raise an exceptional child is a criminal act of brutality &mdash; a project the parent imposes on the child that destroys the child&rsquo;s autonomous personhood. She wants the title rewritten as &ldquo;How to Raise Your Child So That It Will Realize Its Own Personhood and Have the Strength to Resist the Criminal Authoritarianism of Others.&rdquo; Zee, by contrast, argues that genuine love for a child requires being willing to push, demand, and produce excellence; permissiveness is the real abuse.</p>
+
+      <p>Plato&rsquo;s contribution is to expose what both panelists share: the assumption that the exceptional child is a kind of <em>product</em>, and that a parent&rsquo;s job is to engineer (or refrain from engineering) it. He keeps redirecting them: the question is not <em>how</em> to produce excellence but <em>what excellence is</em>, and whether anyone can know it without first knowing what is good. He invokes <em>aretē</em> &mdash; not as &ldquo;achievement&rdquo; but as a flourishing of the soul that is constitutive of, not instrumental to, a worthwhile life.</p>
+
+      <p>Goldstein uses the panel to show how thoroughly contemporary American discourse on parenting is still trapped inside the Ethos of the Extraordinary in two warring forms &mdash; therapeutic (Munitz) and competitive (Zee) &mdash; both of which assume that the child&rsquo;s value is something to be produced or protected, never something to be inquired after. The dialogue ends without resolution; Plato&rsquo;s point is not to win but to dislodge the assumption both panelists rest on.</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ EPSILON ============ -->
+    <section class="chapter" id="ch-epsilon">
+      <h2><span class="greek">ε</span>I Don&rsquo;t Know How to Love Him</h2>
+      <p class="kind essay">Expository &mdash; the case of Alcibiades</p>
+
+      <p>The title is, of course, a wink at <em>Jesus Christ Superstar</em>. The chapter is a long meditation on Alcibiades &mdash; Socrates&rsquo;s most beautiful and most dangerous disciple &mdash; and on what his career reveals about both Athens and the limits of the Socratic project.</p>
+
+      <p>Goldstein opens with the two warnings inscribed at the Temple of Apollo at Delphi: <em>m&ecirc;den agan</em> (&ldquo;nothing in excess&rdquo;) and <em>gn&ocirc;thi seauton</em> (&ldquo;know yourself&rdquo;). These are not, she argues, descriptions of Greek temperament but warnings <em>against</em> Greek temperament. The Ethos of the Extraordinary makes hubris a constant temptation, and the Delphic injunctions are guardrails. Plato, in the <em>Philebus</em>, reads &ldquo;know yourself&rdquo; specifically as a warning against the self-deception of moral self-flattery: people delude themselves about their wealth and looks, but most of all about &ldquo;the state of their souls,&rdquo; thinking themselves wiser and more virtuous than they are.</p>
+
+      <p>Alcibiades is the unforgettable test case. Aristocratically beautiful, charismatic, brilliant, raised by Pericles, beloved by Socrates &mdash; and one of the most catastrophic political figures in Athenian history. Goldstein walks the reader through the Sicilian expedition, the mutilation of the herms, his defection to Sparta (where he advised Sparta on how to defeat Athens), his subsequent defection to Persia, his triumphal return to Athens in 407, and his eventual murder. Plutarch&rsquo;s portrait, which Goldstein quotes, captures the weird intimacy:</p>
+
+      <blockquote>
+        Athens loved, and hated, and longed to have him back.
+        <span class="src">Aristophanes, <em>The Frogs</em>, ll. 1425&ndash;1432, paraphrased</span>
+      </blockquote>
+
+      <p>The deeper point is that Alcibiades is the Ethos of the Extraordinary in its purest, most uncontainable form. He recognized no obligation to Athens, to Sparta, to anyone &mdash; only to his own self-magnification. &ldquo;Love of country is what I do not feel when I am wronged,&rdquo; he tells the Spartans. Goldstein notes that Nietzsche&rsquo;s <em>Thus Spake Zarathustra</em> could as easily have been called <em>Thus Spake Alcibiades</em>: &ldquo;I teach you the superman. Man is something that is to be surpassed.&rdquo; Alcibiades held that what he had done to surpass man was to <em>be Alcibiades</em>.</p>
+
+      <p>And here is the haunting question: Socrates loved him. Tried to teach him. Failed. The <em>Symposium</em>&rsquo;s closing scene &mdash; the drunken Alcibiades crashing the party, declaring his erotic obsession with the snub-nosed old man who alone has ever made him feel shame &mdash; is Goldstein&rsquo;s touchstone. Alcibiades represents the failure of the Socratic project on its most promising subject. If philosophy cannot save Alcibiades, what can it save? The chapter sets up the next one&rsquo;s question: what was Socrates actually trying to do, and why did Athens kill him for it?</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ STIGMA / xxxPLATO ============ -->
+    <section class="chapter" id="ch-stigma">
+      <h2><span class="greek">ς</span>xxxPlato</h2>
+      <p class="kind dialogue">Dialogue &mdash; advice column with Margo Howard</p>
+
+      <p>The lightest chapter in the book, and the one that targets the most popular misconception about Plato &mdash; the degraded modern notion of &ldquo;Platonic love&rdquo; as a passionless, hand-holding alternative to the real thing. Goldstein casts Plato as a guest consultant on Margo Howard&rsquo;s advice column, in the lineage of Margo&rsquo;s mother, Ann Landers, who used to phone Karl Menninger and Justice William O. Douglas for second opinions.</p>
+
+      <p>The conceit is set up by an introductory letter from Margo to Plato, written in the cheerful familiar register of her column (&ldquo;cupcake (or should I call you baklava?)&rdquo;) and recounting that, at a New Year&rsquo;s Eve party, Plato had announced that &ldquo;philosophy is really all about <em>eros</em>.&rdquo; The reader is then walked through several reader letters, each followed by Margo&rsquo;s answer and then by Plato&rsquo;s.</p>
+
+      <p>The cases are deliberately various: a man who has married specifically to suppress passion so he can devote himself to his theoretical research; a woman whose fianc&eacute; idealizes her so wildly that she fears the inevitable disillusionment; questions about jealousy, about open marriages, about whether erotic attraction is in any way a guide to character. In each case Plato draws on the <em>Phaedrus</em> and the <em>Symposium</em>, and the cumulative effect is to dismantle the &ldquo;Platonic love&rdquo; misreading.</p>
+
+      <p>For Plato, eros is not the enemy of reason; it is reason&rsquo;s vehicle. Eros begins as attraction to a beautiful body, but the nature of beauty itself draws the lover, if he follows it honestly, upward &mdash; from the body to the beautiful soul, from souls to beautiful institutions, from institutions to beautiful sciences, and finally to the form of the Beautiful itself. Erotic passion is good when it is doing this work; it is destructive (and Plato says so) when treated purely instrumentally, as one person using another for an effect.</p>
+
+      <p>The advice he gives MIND (the man who married to suppress passion) is characteristic: end the marriage. &ldquo;The friendship of a lover can bring divine things, but a relationship with one who does not love is diluted by instrumental thinking by means of which one person tries to use the other for his ends. All it pays are cheap, human dividends&rdquo; (<em>Phaedrus</em> 256e). The chapter is a comic delivery system for a serious thesis: that what we still call &ldquo;Platonic love&rdquo; would be unrecognizable to Plato, who thought of philosophy itself as an erotic pursuit.</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ ZETA ============ -->
+    <section class="chapter" id="ch-zeta">
+      <h2><span class="greek">ζ</span>Socrates Must Die</h2>
+      <p class="kind essay">Expository &mdash; the trial and death of Socrates</p>
+
+      <p>The chapter opens with a photograph of poison vials excavated from the vicinity of the ancient Athenian prison and a Simon &amp; Garfunkel epigraph: &ldquo;What a shame that he&rsquo;s dead, / But wasn&rsquo;t he a most peculiar man?&rdquo; That tonal mix &mdash; the documentary and the deflating &mdash; is the chapter&rsquo;s signature.</p>
+
+      <p>Goldstein paints Socrates from the inside: barefoot in the agora even during the plague years, indifferent to his wife Xanthippe&rsquo;s nagging, indifferent to comic playwrights&rsquo; mockery (Aristophanes&rsquo; <em>Clouds</em> hangs him in a basket), refusing payment for his teaching, with a net worth of five minae and three sons. He is a man impossible to fit into Athenian categories. He neither flatters the city nor flees it. When the Thirty Tyrants take over after Athens&rsquo;s defeat by Sparta and order him to participate in an arrest, he simply refuses and goes home; when democracy is restored, he goes back to the agora and asks the same questions.</p>
+
+      <p>Goldstein&rsquo;s argument about why Athens killed him is the chapter&rsquo;s spine. The charges &mdash; impiety and corrupting the youth &mdash; were not, she argues, manufactured pretexts. Socrates was guilty of both, in the sense the Athenians meant. He was trying to detach <em>aret&ecirc;</em> from the politics of Athenian exceptionalism. He was asking what made a life worth living independent of being an Athenian, independent of civic duty, independent of the city&rsquo;s gods. In a polis where the polis itself was the source of normativity, this was unintelligible &mdash; or, when intelligible, intolerable.</p>
+
+      <p>To convey what this felt like to ordinary Athenians, Goldstein offers a comparison: imagine, in our own culture, those who are at a loss to say how there can be virtue independent of God. The bafflement and the threat are similar in structure. Socrates&rsquo;s questioning was felt as a kind of dismantling of the moral world.</p>
+
+      <p>The chapter then walks carefully through the dialogues clustered around the trial &mdash; the <em>Theaetetus</em> (which ends, devastatingly, with Socrates breaking off the conversation to go answer Meletus&rsquo;s indictment), the <em>Euthyphro</em>, the <em>Apology</em>, the <em>Crito</em>, and the <em>Phaedo</em>. The <em>Euthyphro</em> gets sustained treatment because it contains what may be Socrates&rsquo;s most enduring philosophical bequest: the argument that morality cannot be grounded in the will of the gods. &ldquo;Is what is holy holy because the gods approve it, or do they approve it because it&rsquo;s holy?&rdquo; (10a). If the former, divine approval is arbitrary and confers no real moral weight; if the latter, the gods are merely recognizing a moral order that is independent of them and authoritative on its own. Either way, theism cannot be the foundation of ethics.</p>
+
+      <p>The trial itself, as rendered in Plato&rsquo;s <em>Apology</em>, is presented as Socrates&rsquo;s refusal of every available exit. He could have apologized; he could have proposed exile as his counter-penalty; he could have escaped from prison (Crito has the bribes ready). He does none of it. His insistence on accepting the city&rsquo;s judgment, even an unjust one, becomes the founding moment of philosophy as a vocation that takes itself more seriously than self-preservation. Plato is in his late twenties when this happens. The book&rsquo;s thesis is that everything he writes for the next half-century is an attempt to make sense of it.</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ ETA ============ -->
+    <section class="chapter" id="ch-eta">
+      <h2><span class="greek">η</span>Plato on Cable News</h2>
+      <p class="kind dialogue">Dialogue &mdash; with Roy McCoy, host of &ldquo;The No Bull Bin&rdquo;</p>
+
+      <p>The book&rsquo;s most cartoonishly funny chapter, and the one most closely resembling a bull-baiting. Plato is interviewed by Roy McCoy, an O&rsquo;Reilly-style cable host (&ldquo;I have two Peabodys,&rdquo; he announces; &ldquo;we don&rsquo;t call this the No Bull Bin for nothing&rdquo;). The format lets Goldstein stage the modern populist suspicion of philosophy in its purest form &mdash; the sense that academic thinking is intrinsically elitist, anti-American, and a waste of taxpayer money &mdash; and let Plato push back.</p>
+
+      <p>McCoy starts by accusing Plato of being insane, untrustworthy, and politically suspect (&ldquo;Maximum questions, minimum convictions&rdquo;). He divides higher education into two camps: humanities (worthless moralizing) and sciences (the real thing). Plato refuses the division: &ldquo;They must both be on the same&hellip;&rdquo; and goes on to articulate the cosmological vision he develops in the late dialogues (especially the <em>Timaeus</em>, the <em>Philebus</em>, the <em>Laws</em>, and the disputed <em>Epinomis</em>): the universe itself is intelligible because it is structured by reason, and our capacity to know it depends on the same logos that orders it. Mathematics is the language in which the cosmos speaks because the cosmos is, in a deep sense, mathematical.</p>
+
+      <p>This sets up the chapter&rsquo;s most charged exchange. McCoy is a theist who wants intelligence to be a property of a designer outside the universe, not of the universe itself: &ldquo;There&rsquo;s intelligence behind it, all right, but not in it. Got that? Behind, not in.&rdquo; Plato responds by pointing at the regularities of nature &mdash; the tides, the seasons, the orbits &mdash; and observing that science <em>presupposes</em> the intelligibility of the cosmos in order to do its work. Without that presupposition, science would be impossible. McCoy doesn&rsquo;t buy it: &ldquo;Splish, a, splash, b, splish, equals, splash c.&rdquo; Plato responds with a deadpan derivation of why the relevant mathematics for tidal behavior is &ldquo;the lunar gravity differential field at the earth&rsquo;s surface, the primary cause of the equipotential tidal bulges.&rdquo;</p>
+
+      <p>Underneath the comedy, the chapter is doing serious work on the relationship between reason, religion, and political authority. McCoy&rsquo;s position &mdash; that morality and meaning require a personal God who stands outside the universe and gives orders &mdash; is exactly the view the <em>Euthyphro</em> argument was constructed to refute. Plato&rsquo;s view &mdash; that the order of things is itself the source of normativity, knowable by reason &mdash; is older than Christianity but, in the American context where the dialogue takes place, sounds disturbingly modern. The dialogue ends with neither side persuaded, but with the reader having seen the structure of the disagreement laid bare.</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ THETA ============ -->
+    <section class="chapter" id="ch-theta">
+      <h2><span class="greek">θ</span>Let the Sunshine In</h2>
+      <p class="kind essay">Expository &mdash; Plato&rsquo;s epistemology and the Allegory of the Cave</p>
+
+      <p>The book&rsquo;s most philosophically demanding chapter, and the one that does the most to articulate what Plato actually thought knowledge was. Goldstein begins with the puzzle of Socrates&rsquo;s self-presentation. Socrates insists both that the unexamined life is not worth living (which seems to require that he knows something) and that he himself knows nothing. How can both be true?</p>
+
+      <p>Her answer turns on what the elenctic method actually achieves. The Socratic interrogation does not establish positive doctrine; it exposes contradictions in what its target already believes. The result is that the interlocutor has been brought, via his own commitments, to see that he does not know what he thought he knew. This is not a doctrine of skepticism &mdash; it is a doctrine about how knowledge has to be earned. You cannot inherit it from your culture. You cannot have it on the authority of the gods, or the city, or the poets. You have to be able to give an account of why what you believe is true, and your account must withstand interrogation.</p>
+
+      <p>Goldstein then introduces what she calls Plato&rsquo;s deepest division, between two epistemologies: the <strong>Epistemology of the Reasonable</strong> and the <strong>Epistemology of the Unreasonable</strong>. The Reasonable position holds that truth is what she calls &ldquo;an equal-access good&rdquo; &mdash; that techniques for getting at reality are available to anyone who masters them, that knowledge claims have to be defensible to other minds, that the singular ecstatic vision of the few cannot be the foundation for any shared inquiry. The Unreasonable position holds that some truths are accessible only through singular experience &mdash; the prophetic vision, the erotic transport, the mystical insight &mdash; and cannot be communicated in publicly defensible terms. Plato, she argues, is divided between them, and the <em>Phaedrus</em> is where the division is most exposed.</p>
+
+      <p>The bulk of the chapter is then a careful walk through the <strong>Allegory of the Cave</strong> from <em>Republic</em> Book VII. The prisoners chained from birth, watching shadows on the wall and taking them for reality; the one prisoner freed, dragged painfully up out of the cave, his eyes hurting in the sunlight, until he can finally look at the sun itself; his return to the cave to free the others, and their hostility, even murderous hostility, to what he has to tell them. Goldstein reads the allegory not as a metaphysical fairytale but as a precise account of how knowledge is acquired and why it is dangerous.</p>
+
+      <p>She lingers on Glaucon&rsquo;s line &ldquo;at least at first&rdquo; &mdash; the freed prisoner cannot see real things immediately, only by degrees. &ldquo;Recovery from ideology &mdash; deprogramming as we now call it &mdash; takes time.&rdquo; The cave is not just a metaphor for ignorance; it is a metaphor for being inside a system of belief that is constructed and self-confirming. Climbing out is hard precisely because everyone you know agrees with you. &ldquo;I say to you now, knowing full well that you will agree with me &hellip; only if you already agree with me.&rdquo;</p>
+
+      <p>The levels above the cave correspond to what Goldstein calls Plato&rsquo;s ontology of explanation. We ascend by abduction &mdash; inference to the best explanation. The shadows give way to the things themselves; the things themselves are explained by the forms; the forms in turn point upward to the form of the Good, which is what makes the entire structure intelligible at all. Goldstein quotes the famous formulation:</p>
+
+      <blockquote>
+        In the knowable realm the form of the good is the last thing to be seen, and it is reached only with difficulty. Once one has seen it, however, one must conclude that it is the cause of all that is correct and beautiful in anything &hellip; so that anyone who is to act sensibly in private or public must see it.
+        <span class="src"><em>Republic</em> 517b</span>
+      </blockquote>
+
+      <p>The chapter&rsquo;s closing argument is that this picture &mdash; reality as having structure that explanation can climb &mdash; is not as foreign to modern science as it sounds. Theoretical physics also climbs by abduction; it also posits unobservable structures (quantum fields) on grounds of explanatory necessity. The Platonist picture is not a relic. It is the implicit picture of how knowledge gets deeper.</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ IOTA ============ -->
+    <section class="chapter" id="ch-iota">
+      <h2><span class="greek">ι</span>Plato in the Magnet</h2>
+      <p class="kind dialogue">Dialogue &mdash; with Dr. David Shoket and his graduate student Agatha Fine</p>
+
+      <p>The book&rsquo;s closing dialogue and, in some ways, its most ambitious. Plato volunteers to have his brain scanned in an fMRI lab. Shoket is a celebrated neuroscientist with a booming laugh, an absolute conviction that mind is brain and brain is mind, and an essentially evangelical view that neuroscience is in the process of dispatching philosophy by reducing all its questions to questions about cortical activity. Agatha, the graduate student, is the foil &mdash; sympathetic to Shoket&rsquo;s science but increasingly persuaded that something is being missed.</p>
+
+      <p>Shoket&rsquo;s metaphors do most of the polemical work. Philosophy was a holding pattern until the data arrived; now it is obsolete. (&ldquo;Science is like a sewage treatment plant. Scientists take the philosophical bullshit and reprocess it into knowledge.&rdquo;) He explains confabulation through split-brain experiments &mdash; the left hemisphere happily inventing post-hoc explanations for behavior it had nothing to do with &mdash; and concludes that philosophy is itself a kind of confabulation, sophisticated story-telling that corresponds to nothing at the level of neurons.</p>
+
+      <p>Plato&rsquo;s response &mdash; the chapter&rsquo;s philosophical core &mdash; is to reach back to the <em>Phaedo</em>, where Socrates explains why he is sitting in a prison cell awaiting execution rather than fleeing to Megara as his friends have arranged. He plays the passage out at length:</p>
+
+      <blockquote>
+        The reason I am here, Dr. Shoket, sitting on a jail-cell bed, soon to die, is that my body is composed of bones and sinews&hellip; and since the bones move freely in their joints, the sinews by relaxing and contracting enable me to bend my limbs so that I can be in the position in which you find me. Would you feel that my explanation had done justice to your question, Dr. Shoket, when I never troubled to mention the real reasons, which are that since Athens has thought it better to condemn me, therefore I for my part have thought it better to sit here, and more right to stay and submit to whatever penalty she orders&hellip; Fancy being unable to distinguish between the cause of a thing and the condition without which it could not be a cause.
+        <span class="src"><em>Phaedo</em> 98c&ndash;99b, as Plato delivers it to Shoket</span>
+      </blockquote>
+
+      <p>Shoket&rsquo;s initial response &mdash; that of course Socrates was wrong; he just left out the brain &mdash; is exactly what the argument is targeting. Plato then, with disconcerting fluency in contemporary neuroscience (&ldquo;MOOCs,&rdquo; he explains), restates Socrates&rsquo;s decision in fully neurological terms: the default mode network, the anterior cingulate cortex, the dorsolateral and ventromedial prefrontal cortex, the right superior temporal sulcus, the resolution of conflict signals, the firing of motor neurons. And he asks: do you now have the explanation? Or have you described the conditions without which the action would not have happened, while still leaving out what made it the action it was &mdash; namely, what it <em>meant</em> to Socrates and what value he placed on it?</p>
+
+      <p>Agatha, increasingly drawn in, formulates the philosophical point. You cannot give up &ldquo;sense-making, story-starring selves and all that we know about them without shrinking our landscape of coherence.&rdquo; Just as chemists do not get to abolish what geologists know about rivers because rivers do not appear at the level of water molecules, neuroscientists do not get to abolish what we know about persons, reasons, and meanings because those do not appear at the level of synapses. Different levels of description support different testable law-like generalizations, and that is what makes them all scientific.</p>
+
+      <p>The dialogue ends with a small exchange about <strong>accountability</strong>. Shoket dismisses free will as inconsistent with neuroscience. Agatha proposes trading free will for accountability &mdash; the practice of giving and asking for reasons, of being prepared to defend what we say and do. &ldquo;I&rsquo;m demonstrating accountability right now by giving you an account of accountability. I&rsquo;m prepared to provide you with a reason for why we&rsquo;re always providing reasons.&rdquo;</p>
+
+      <p>The book closes on the image of Plato sliding into the magnet &mdash; literally placed inside the most advanced instrument of contemporary cognitive neuroscience &mdash; while the question he has posed (whether the brain scan can ever be the whole of the answer) remains exactly as open as when he first asked it 2,400 years ago.</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ APP A ============ -->
+    <section class="chapter" id="app-a">
+      <h2>Appendix A &mdash; Socratic Sources</h2>
+      <p class="kind essay">Reference</p>
+
+      <p>A short scholarly note on what we actually know about Socrates and how. Aristotle, in his <em>Poetics</em> (1447b), refers to <em>Sōkratikoi logoi</em> as an established literary genre &mdash; works composed after Socrates&rsquo;s death in 399 B.C.E. by various authors. Fragments survive from Antisthenes, Aeschines, Phaedo, and Euclides; there is anecdotal material on Aristippus. Of complete works we have only Plato and Xenophon.</p>
+
+      <p>Goldstein characterizes Xenophon &mdash; soldier, exile, gentleman farmer &mdash; as a more pedestrian witness, long preferred by classicists precisely because his lack of philosophical genius made him seem less likely to embellish. His <em>Apology</em> notably suggests that Socrates more or less wanted to be executed; old age and decline were the alternatives. His <em>Symposium</em> is a wisecracking dinner party in which Socrates jokes that his own most prized <em>aretē</em> is his art of pimping. The appendix sketches the ongoing scholarly question of how to triangulate the historical Socrates from these sources, and concludes that the figure is probably irretrievable in any pure form &mdash; what we have is &ldquo;Plato&rsquo;s Socrates,&rdquo; an irreducible compound.</p>
+    </section>
+
+    <hr class="div">
+
+    <!-- ============ APP B ============ -->
+    <section class="chapter" id="app-b">
+      <h2>Appendix B &mdash; The Two Speeches of Pericles</h2>
+      <p class="kind essay">Reference &mdash; from Thucydides&rsquo; <em>History of the Peloponnesian War</em>, Book 2</p>
+
+      <p>Goldstein reproduces and discusses two speeches Thucydides attributes to Pericles, both from Book 2 of the <em>History</em>, that together exemplify the ideology of Athenian exceptionalism the book has been examining. Thucydides himself, as Goldstein notes, is a careful and oddly impersonal historian who writes of Athenians in the third person despite being one; whether his Pericles is admired, criticized, or both remains a scholarly debate.</p>
+
+      <p>The first speech is the famous <strong>Funeral Oration</strong> after the first year of the war. Pericles enumerates the supposed virtues that make Athenians intrinsically superior &mdash; free yet law-abiding, generous, productive, tolerant, daring, just, modest. Crucially, this superiority is presented as <em>participatory</em>: every citizen shares in it merely by virtue of being a citizen, and the polis is in turn elevated by the inherent superiority of its citizens. This circular construction is what Goldstein has called &ldquo;participatory exceptionalism&rdquo; &mdash; the move that lets the Ethos of the Extraordinary be extended to an entire civic body.</p>
+
+      <p>The second speech is delivered after the plague has broken out in the besieged, overcrowded city, killing roughly a quarter of the population, including eventually Pericles himself. Its tone is darker, more defensive, more concerned with collective resolve in the face of catastrophe. Read together, the two speeches show the Athenian self-image at its peak and under its first serious strain. They are reproduced in the appendix as primary documents because the cultural matrix they describe &mdash; and the moral overreach implicit in it &mdash; is what produced both Alcibiades and Socrates, and what eventually killed Socrates by majority vote.</p>
+    </section>
+
+    <a class="toc-link" data-target="prologue">↑ Back to top</a>
+
+    <footer class="endnote">
+      <p style="margin:0">Page references and quoted passages follow Goldstein&rsquo;s in-text citations to Plato&rsquo;s dialogues by Stephanus number, and to Thucydides, Pindar, Plutarch, Aristophanes, and others as she cites them. Translations of dialogue passages are Goldstein&rsquo;s own renderings as they appear in the book.</p>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+  // Hamburger / sidebar / overlay
+  var hamburger = document.getElementById('hamburger');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  var main = document.getElementById('main');
+
+  function openMenu() {
+    sidebar.classList.add('open');
+    overlay.classList.add('show');
+    hamburger.classList.add('open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    sidebar.setAttribute('aria-hidden', 'false');
+  }
+  function closeMenu() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    sidebar.setAttribute('aria-hidden', 'true');
+  }
+  hamburger.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (sidebar.classList.contains('open')) closeMenu(); else openMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+
+  // Pure in-document scrolling — intercept every data-target click
+  // and call scrollIntoView() on the target inside #main. No href, no navigation.
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    while (t && t !== document.body) {
+      if (t.dataset && t.dataset.target) {
+        e.preventDefault();
+        var id = t.dataset.target;
+        var el = document.getElementById(id);
+        if (el) {
+          // Auto-close sidebar on nav-link tap
+          closeMenu();
+          // Allow the closing transition a beat before scrolling
+          setTimeout(function () {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 60);
+        }
+        return;
+      }
+      t = t.parentNode;
+    }
+  });
+</script>
+</body>
+</html>
