@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" style="background:#0e0e0f !important">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e0e0f" id="meta-theme-color">
+<title>Wasted Potential — Chapter Summaries</title>
+
+<!-- Layer 1 + 3: early defensive style block before any other CSS -->
+<style id="early-guard">
+  html:not([data-theme="light"]), html:not([data-theme="light"]) body {
+    background: #0e0e0f !important;
+    color: #e8e6df !important;
+  }
+  html[data-theme="light"], html[data-theme="light"] body {
+    background: #f5efe2 !important;
+    color: #1c1a14 !important;
+  }
+</style>
+
+<!-- Early theme restoration to prevent flash of wrong theme -->
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('causal-reader-theme');
+      if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.style.background = '#f5efe2';
+        var mtc = document.getElementById('meta-theme-color');
+        if (mtc) mtc.setAttribute('content', '#f5efe2');
+      }
+    } catch (e) { /* no-op */ }
+  })();
+</script>
+
+<style>
+  /* ============ RESET + BASE ============ */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+  body {
+    font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Times New Roman', serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============ THEME VARIABLES ============ */
+  :root {
+    --bg: #0e0e0f;
+    --bg-elev: #17171a;
+    --bg-panel: #1d1d21;
+    --text: #e8e6df;
+    --text-muted: #a3a098;
+    --text-dim: #706d66;
+    --accent: #c9a96a;
+    --accent-soft: #8a7446;
+    --border: #2a2a2e;
+    --border-soft: #232326;
+    --link: #d7b878;
+    --link-hover: #e8cc90;
+    --code-bg: #222226;
+    --shadow: 0 10px 40px rgba(0,0,0,0.6);
+    --tag-v: #7ab37a;   /* verbatim */
+    --tag-cp: #6fa8d0;  /* close paraphrase */
+    --tag-s: #c9a96a;   /* synthesis */
+    --tag-c: #d9846a;   /* corrected */
+    --tag-x: #b889c7;   /* canonical-external */
+  }
+  html[data-theme="light"] {
+    --bg: #f5efe2;
+    --bg-elev: #ede5d2;
+    --bg-panel: #e8dfc9;
+    --text: #1c1a14;
+    --text-muted: #5a5446;
+    --text-dim: #8a8170;
+    --accent: #7a5a1e;
+    --accent-soft: #a88a50;
+    --border: #c8bda2;
+    --border-soft: #d8ceb5;
+    --link: #7a5a1e;
+    --link-hover: #543d10;
+    --code-bg: #e2d9c0;
+    --shadow: 0 10px 40px rgba(60,45,15,0.18);
+    --tag-v: #3c7a3c;
+    --tag-cp: #2d6a96;
+    --tag-s: #7a5a1e;
+    --tag-c: #a44a2a;
+    --tag-x: #7a4a8a;
+  }
+
+  body {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* ============ LAYOUT ============ */
+  #app { display: flex; height: 100vh; width: 100vw; position: relative; }
+
+  #sidebar {
+    width: 300px;
+    background: var(--bg-elev);
+    border-right: 1px solid var(--border);
+    padding: 72px 0 32px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 40;
+    box-shadow: var(--shadow);
+  }
+  #sidebar.open { transform: translateX(0); }
+
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 30;
+  }
+  #overlay.show { opacity: 1; pointer-events: auto; }
+  html[data-theme="light"] #overlay { background: rgba(20,15,5,0.45); }
+
+  #main {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 72px 24px 120px 24px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+
+  /* ============ TOP-BAR CONTROLS ============ */
+  .topbtn {
+    position: fixed;
+    top: 14px;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 50;
+    font-size: 20px;
+    line-height: 1;
+    padding: 0;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+    -webkit-tap-highlight-color: transparent;
+    font-family: inherit;
+  }
+  .topbtn:hover { background: var(--bg-panel); }
+  .topbtn:active { transform: scale(0.94); }
+
+  #menu-toggle { left: 14px; }
+  #theme-toggle { right: 14px; }
+
+  .hamburger-lines {
+    width: 20px; height: 14px;
+    position: relative;
+  }
+  .hamburger-lines span {
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+  }
+  .hamburger-lines span:nth-child(1) { top: 0; }
+  .hamburger-lines span:nth-child(2) { top: 6px; }
+  .hamburger-lines span:nth-child(3) { top: 12px; }
+
+  #sidebar.open ~ #menu-toggle .hamburger-lines span:nth-child(1),
+  body.menu-open #menu-toggle .hamburger-lines span:nth-child(1) {
+    top: 6px; transform: rotate(45deg);
+  }
+  body.menu-open #menu-toggle .hamburger-lines span:nth-child(2) {
+    opacity: 0;
+  }
+  body.menu-open #menu-toggle .hamburger-lines span:nth-child(3) {
+    top: 6px; transform: rotate(-45deg);
+  }
+
+  /* ============ SIDEBAR CONTENTS ============ */
+  .side-title {
+    padding: 0 22px 8px 22px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+  }
+  .side-title:not(:first-child) { margin-top: 22px; }
+
+  .navlink {
+    display: block;
+    padding: 10px 22px;
+    color: var(--text);
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .navlink:hover { background: var(--bg-panel); border-left-color: var(--accent-soft); }
+  .navlink.active { background: var(--bg-panel); border-left-color: var(--accent); color: var(--accent); }
+  .navlink .n {
+    display: inline-block;
+    width: 22px;
+    color: var(--text-dim);
+    font-weight: 600;
+  }
+  .navlink.active .n { color: var(--accent); }
+
+  /* ============ MAIN CONTENT ============ */
+  article.page {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    line-height: 1.25;
+  }
+  h1 {
+    font-size: 32px;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.02em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 8px;
+    letter-spacing: 0;
+    font-style: italic;
+    font-family: Georgia, serif;
+  }
+  h2 {
+    font-size: 24px;
+    margin: 56px 0 16px 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-soft);
+  }
+  h2.no-rule { border-top: none; padding-top: 0; margin-top: 32px; }
+  h3 {
+    font-size: 18px;
+    margin: 32px 0 10px 0;
+    color: var(--accent);
+  }
+  h4 {
+    font-size: 15px;
+    margin: 20px 0 6px 0;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  p { margin: 0 0 16px 0; }
+  p + p { text-indent: 0; }
+
+  .lede {
+    font-size: 20px;
+    line-height: 1.55;
+    color: var(--text);
+    margin: 8px 0 24px 0;
+    font-style: italic;
+    border-left: 3px solid var(--accent);
+    padding-left: 18px;
+  }
+
+  .pg {
+    display: inline-block;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--bg-elev);
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border-soft);
+    vertical-align: baseline;
+    letter-spacing: 0.02em;
+    margin: 0 1px;
+    white-space: nowrap;
+  }
+
+  strong { color: var(--text); font-weight: 600; }
+  em { color: var(--text); }
+
+  .box {
+    background: var(--bg-elev);
+    border: 1px solid var(--border-soft);
+    border-left: 3px solid var(--accent-soft);
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .box h4 { margin-top: 0; color: var(--accent); }
+  .box p:last-child { margin-bottom: 0; }
+
+  .callout {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    padding: 14px 18px;
+    margin: 20px 0;
+    border-radius: 6px;
+    font-size: 15px;
+  }
+
+  .chapter-meta {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .chapter-meta span { display: inline-flex; align-items: center; gap: 6px; }
+  .chapter-meta .dot { color: var(--accent); }
+
+  .stat {
+    display: inline-block;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  ul, ol {
+    margin: 0 0 16px 0;
+    padding-left: 24px;
+  }
+  li { margin-bottom: 6px; line-height: 1.55; }
+
+  hr.divider {
+    border: none;
+    height: 1px;
+    background: var(--border-soft);
+    margin: 48px 0;
+  }
+
+  /* ============ SOURCE ATTRIBUTION LOG ============ */
+  .attr-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13px;
+    margin: 20px 0;
+  }
+  .attr-table th, .attr-table td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-soft);
+    vertical-align: top;
+  }
+  .attr-table th {
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border);
+  }
+  .attr-table tr:hover td { background: var(--bg-elev); }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  html[data-theme="light"] .tag { color: #fff; }
+  .tag.V  { background: var(--tag-v); }
+  .tag.CP { background: var(--tag-cp); }
+  .tag.S  { background: var(--tag-s); }
+  .tag.C  { background: var(--tag-c); }
+  .tag.X  { background: var(--tag-x); }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 12px 0 24px 0;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* ============ COVER ============ */
+  .cover {
+    text-align: center;
+    padding: 40px 0 60px 0;
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 40px;
+  }
+  .cover .booktitle {
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .cover .booksub {
+    font-size: 18px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 28px;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+  }
+  .cover .byline {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .cover .byline .authors { color: var(--accent); font-weight: 600; }
+  .tag-band {
+    display: inline-block;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent-soft);
+    padding: 4px 10px;
+    border-radius: 99px;
+    margin-bottom: 20px;
+  }
+
+  .note-flag {
+    background: var(--bg-elev);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 30px 0;
+    font-size: 15px;
+  }
+  .note-flag .pill {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  html[data-theme="light"] .note-flag .pill { color: #fff; }
+
+  .offset-table {
+    width: auto;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+  }
+  .offset-table th, .offset-table td {
+    padding: 4px 14px 4px 0;
+    text-align: left;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .offset-table th {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ============ EXPOSITORY EXHIBITS ============ */
+  .exhibit {
+    margin: 28px 0;
+    padding: 0;
+  }
+  .exhibit-caption {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    line-height: 1.5;
+    padding-left: 2px;
+  }
+  .exhibit-caption strong {
+    color: var(--text);
+    font-weight: 600;
+    margin-right: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 11px;
+  }
+
+  .expos-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.5;
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .expos-table th, .expos-table td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    vertical-align: top;
+  }
+  .expos-table thead th {
+    background: var(--bg-elev);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid var(--border);
+  }
+  .expos-table tbody th {
+    background: var(--bg-elev);
+    color: var(--accent);
+    font-weight: 600;
+    width: 28%;
+    font-size: 13px;
+    border-right: 1px solid var(--border-soft);
+  }
+  .expos-table tbody tr:last-child th,
+  .expos-table tbody tr:last-child td { border-bottom: none; }
+  .expos-table .num {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* Tier cells for categorical heat-comparison (Ch 7 spinach) */
+  .expos-table td.tier-high {
+    background: color-mix(in srgb, var(--tag-v) 22%, transparent);
+    color: var(--text);
+    font-weight: 600;
+  }
+  .expos-table td.tier-source {
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    color: var(--text);
+    font-weight: 500;
+  }
+  .expos-table td.tier-below {
+    background: color-mix(in srgb, var(--tag-c) 14%, transparent);
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* SVG chart containers and shared styles */
+  .exhibit-svg {
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .exhibit-svg .bar-main { fill: var(--accent); }
+  .exhibit-svg .bar-alt  { fill: var(--accent-soft); }
+  .exhibit-svg .bar-warn { fill: var(--tag-c); }
+  .exhibit-svg .bar-good { fill: var(--tag-v); }
+  .exhibit-svg .bar-neutral { fill: var(--text-dim); }
+  .exhibit-svg .axis-line { stroke: var(--border); stroke-width: 1; }
+  .exhibit-svg .threshold { stroke: var(--tag-cp); stroke-width: 1.5; stroke-dasharray: 4 3; fill: none; }
+  .exhibit-svg .threshold-strong { stroke: var(--tag-v); stroke-width: 1.5; stroke-dasharray: none; fill: none; }
+  .exhibit-svg .label-axis { fill: var(--text-muted); font-size: 11px; }
+  .exhibit-svg .label-value { fill: var(--text); font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .exhibit-svg .label-group { fill: var(--text); font-size: 12px; font-weight: 600; }
+  .exhibit-svg .label-threshold { fill: var(--text-muted); font-size: 10px; font-style: italic; }
+  .exhibit-svg .col-bg { fill: var(--bg-elev); }
+
+  /* Hierarchy visual (Ch 10) */
+  .hierarchy {
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .hierarchy-row {
+    display: grid;
+    grid-template-columns: 32px 1fr 80px;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    gap: 14px;
+  }
+  .hierarchy-row:last-child { border-bottom: none; }
+  .hierarchy-row .rank {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+  .hierarchy-row .name { color: var(--text); font-weight: 600; }
+  .hierarchy-row .name small {
+    display: block;
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 12px;
+    margin-top: 2px;
+    font-family: Georgia, serif;
+    font-style: italic;
+  }
+  .hierarchy-row .verdict {
+    text-align: right;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .hierarchy-row .verdict.good { color: var(--tag-v); }
+  .hierarchy-row .verdict.ok   { color: var(--accent); }
+  .hierarchy-row .verdict.bad  { color: var(--tag-c); }
+  .hierarchy-row.best { background: color-mix(in srgb, var(--tag-v) 8%, transparent); }
+  .hierarchy-row.worst { background: color-mix(in srgb, var(--tag-c) 8%, transparent); }
+
+  /* ============ MOBILE ============ */
+  @media (max-width: 720px) {
+    #sidebar { width: 280px; }
+    #main { padding: 64px 18px 100px 18px; }
+    body { font-size: 16px; }
+    h1 { font-size: 26px; }
+    h1 .subtitle { font-size: 16px; }
+    h2 { font-size: 21px; }
+    h3 { font-size: 16px; }
+    .cover .booktitle { font-size: 30px; }
+    .cover .booksub { font-size: 16px; }
+    .lede { font-size: 17px; }
+    .attr-table { font-size: 12px; }
+    .attr-table th, .attr-table td { padding: 6px 6px; }
+    .expos-table { font-size: 12.5px; }
+    .expos-table th, .expos-table td { padding: 8px 9px; }
+    .expos-table tbody th { width: 34%; font-size: 12px; }
+    .hierarchy { font-size: 12.5px; }
+    .hierarchy-row { grid-template-columns: 24px 1fr 64px; padding: 9px 10px; gap: 10px; }
+    .hierarchy-row .name small { font-size: 11.5px; }
+  }
+
+  /* Focus states */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  /* Print: favor readable light */
+  @media print {
+    #sidebar, #overlay, .topbtn { display: none !important; }
+    #main { overflow: visible; padding: 0; }
+    html, body { overflow: visible !important; background: #fff !important; color: #000 !important; }
+    .pg { background: none; border: none; color: #555; }
+  }
+</style>
+</head>
+<body>
+
+<div id="overlay"></div>
+
+<button id="menu-toggle" class="topbtn" aria-label="Open table of contents" aria-expanded="false">
+  <span class="hamburger-lines"><span></span><span></span><span></span></span>
+</button>
+
+<button id="theme-toggle" class="topbtn" aria-label="Toggle theme">
+  <span id="theme-icon">☾</span>
+</button>
+
+<div id="app">
+  <aside id="sidebar" aria-label="Table of contents">
+    <div class="side-title">Front matter</div>
+    <a class="navlink" data-target="cover"><span class="n">·</span>Cover &amp; note</a>
+    <a class="navlink" data-target="overview"><span class="n">·</span>Overview</a>
+
+    <div class="side-title">Chapters</div>
+    <a class="navlink" data-target="ch1"><span class="n">1</span>Sustainable &amp; Healthy Food Systems</a>
+    <a class="navlink" data-target="ch2"><span class="n">2</span>Navigating Food System Transformations</a>
+    <a class="navlink" data-target="ch3"><span class="n">3</span>A Globally Applicable Definition</a>
+    <a class="navlink" data-target="ch4"><span class="n">4</span>From Data to Action</a>
+    <a class="navlink" data-target="ch5"><span class="n">5</span>Protecting the Harvest</a>
+    <a class="navlink" data-target="ch6"><span class="n">6</span>Enhancing Value</a>
+    <a class="navlink" data-target="ch7"><span class="n">7</span>Keeping Food Safe &amp; Nutritious</a>
+    <a class="navlink" data-target="ch8"><span class="n">8</span>Unlocking Potential</a>
+    <a class="navlink" data-target="ch9"><span class="n">9</span>Navigating the Complexities</a>
+    <a class="navlink" data-target="ch10"><span class="n">10</span>The Way Forward</a>
+
+    <div class="side-title">End matter</div>
+    <a class="navlink" data-target="attribution"><span class="n">·</span>Source attribution log</a>
+    <a class="navlink" data-target="about"><span class="n">·</span>About this summary</a>
+  </aside>
+
+  <main id="main" role="main">
+    <article class="page">
+
+<!-- ============ COVER ============ -->
+<section id="cover">
+  <div class="cover">
+    <span class="tag-band">Chapter summaries for the uninitiated reader</span>
+    <div class="booktitle">Wasted Potential</div>
+    <div class="booksub">Tackling Food Loss and Waste Across Transforming Food Systems</div>
+    <div class="byline">
+      <span class="authors">Jocelyn Boiteau &amp; Prabhu Pingali</span> &nbsp;·&nbsp;
+      Tata-Cornell Institute &nbsp;·&nbsp; Springer 2026 &nbsp;·&nbsp; 203 pp.
+    </div>
+  </div>
+
+  <div class="note-flag">
+    <span class="pill">Filename note</span>
+    The uploaded PDF is titled <em>Waste_Land.pdf</em>, but the book it contains is <strong>“Wasted Potential: Tackling Food Loss and Waste Across Transforming Food Systems”</strong> by Jocelyn Boiteau &amp; Prabhu Pingali (Tata-Cornell Institute, Cornell University; open-access Springer volume in the Sustainable Development Goals Series, 2026). All summaries below reflect that book’s actual content. If this is a different “Waste Land” you meant to upload, please re-upload and I’ll rebuild.
+  </div>
+</section>
+
+<!-- ============ OVERVIEW ============ -->
+<section id="overview">
+  <h1 class="no-rule">Overview <span class="subtitle">What this book is really about</span></h1>
+
+  <p class="lede">Food loss and waste isn’t just a waste problem — it is a food-security problem, a nutrition problem, and a climate problem wearing one coat. This book is a ten-chapter argument for treating it as a systemic one.</p>
+
+  <p>The statistic most people know — <em>roughly a third of the food produced for humans is lost or wasted</em> — comes from a 2011 FAO report <span class="pg">p.31</span>, and a decade later UN agencies are still working out what that number actually means. The figure conflates farm-level losses, mid-chain spoilage, and consumer waste; it blurs edible with inedible; it treats a rotten tomato the same as a plate scraped into the bin. Boiteau and Pingali argue that until we stop muddling the definition, policies designed around it will keep missing.</p>
+
+  <p>Their solution is to look at the whole food system rather than the waste bin at the end. That means tracing <strong>food loss and waste (FLW)</strong> from the moment a crop is ready for harvest to the moment food is eaten or removed from the chain — and distinguishing two very different things that usually get lumped together: <strong>physical food loss and waste (pFLW)</strong>, a reduction in mass or volume, and <strong>food quality loss (FQL)</strong>, a drop in safety, nutrition, or other acceptability attributes <span class="pg">pp.22,37</span>.</p>
+
+  <p>The book is organised to walk you through that framework, then down the value chain:</p>
+
+  <ul>
+    <li><strong>Chapters 2–4</strong> build the foundation: how food systems transform with urbanisation and rising incomes, why the definition matters, and why the data we have is so uneven.</li>
+    <li><strong>Chapters 5–7</strong> track FLW along the value chain — farmgate (availability), post-farmgate (access), and food quality attributes (safety and nutrition).</li>
+    <li><strong>Chapters 8–10</strong> turn to action: identifying critical loss points and their drivers, evaluating interventions, and proposing a policy agenda.</li>
+  </ul>
+
+  <p>The focus is on <strong>low- and middle-income countries (LMICs)</strong>, where the stakes for food security are highest and where perishable, nutritious foods — fruits, vegetables, and animal-source foods — are most vulnerable as value chains lengthen <span class="pg">p.2</span>. The goal the authors want you to leave with is not “waste less” as a virtue, but <em>waste less in the service of safe, diverse, affordable diets that don’t wreck the planet getting to the plate</em>.</p>
+</section>
+
+<!-- ============ CHAPTER 1 ============ -->
+<section id="ch1">
+  <h1>1. Sustainable &amp; Healthy Food Systems <span class="subtitle">The role of food loss and waste reduction</span></h1>
+  <div class="chapter-meta">
+    <span><span class="dot">●</span> Chapter opener &amp; book roadmap</span>
+    <span><span class="dot">●</span> PDF pp. 19–29</span>
+    <span><span class="dot">●</span> Book pp. 1–11</span>
+  </div>
+
+  <p class="lede">Chapter 1 is the book in miniature. It lays out why FLW keeps returning to the global agenda, why it won’t be solved by any single discipline, and what the next nine chapters will argue.</p>
+
+  <h3>The long arc: from 1974 to SDG 12.3</h3>
+  <p>Food loss has been a UN concern since the <strong>1974 World Food Conference</strong>, when the emphasis was on postharvest storage and distribution to fight hunger <span class="pg">p.1</span>. The 2011 FAO study that produced the now-canonical <em>“one-third of food produced for human consumption is lost or wasted globally”</em> figure re-launched the field, this time with a sustainability frame. In 2015 the UN 2030 Agenda formalised the ambition as <strong>Sustainable Development Goal (SDG) Target 12.3</strong>: halve per-capita food waste at retail and consumer stages, and reduce food losses along production and supply chains, by 2030 <span class="pg">p.1</span>.</p>
+
+  <h3>Why it’s urgent now</h3>
+  <p>The pressure is demographic and climatic at once. By <strong>2050</strong>, the world is projected to reach nearly <span class="stat">10 billion people</span>, <strong>two-thirds of them urban</strong> <span class="pg">p.1</span>. Rising incomes shift demand toward perishable, nutrient-rich foods whose value chains are fragile; climate change compresses harvest windows and damages storage; elongating supply chains multiply the points where food can spoil. Reducing FLW is one of the few levers that could, in principle, expand food security without expanding the agricultural footprint.</p>
+
+  <h3>The double meaning of “wasted potential”</h3>
+  <p>The authors name the book around a pair of failures <span class="pg">preface</span>. First, there is the <strong>wasted potential for food</strong> — food produced to nourish people that never nourishes anyone. Second, there is the <strong>wasted potential for action</strong> — a decade of accumulated effort hamstrung by inconsistent definitions, incompatible measurements, and stakeholder viewpoints that talk past one another. You cannot fix the first without fixing the second.</p>
+
+  <h3>Approach: a food-systems lens, with LMICs at the centre</h3>
+  <p>The book rejects the Western-centric habit of narrowing FLW to a retail-and-consumer problem <span class="pg">p.2</span>. Instead it examines the full chain — from commercial maturity in the field to the moment food is eaten or diverted — and treats FLW as an <em>intermediate</em> goal, not an end in itself. The end is the integrated achievement of <strong>food security and nutrition, environmental sustainability, and socioeconomic welfare</strong>.</p>
+
+  <h3>The nine key takeaways, previewed</h3>
+  <p>Chapter 1 previews one headline finding per subsequent chapter <span class="pg">pp.3–10</span>. In plain English, the arc is:</p>
+  <ol>
+    <li>As populations urbanise and diets diversify, perishable nutritious foods are <em>most</em> at risk of FLW (Ch. 2).</li>
+    <li>Without a harmonised definition, FLW measurement and intervention are built on sand (Ch. 3).</li>
+    <li>UN agencies need a coordinated data value chain — indicators, collection guidelines, shared platforms (Ch. 4).</li>
+    <li>Reducing farmgate FLW of nutritious crops does double duty: it raises both availability and marketability (Ch. 5).</li>
+    <li>Post-farmgate value addition can reduce FLW or cause it, depending on how standards and packaging are designed (Ch. 6).</li>
+    <li>Food safety and nutrient-loss trade-offs must be navigated together (Ch. 7).</li>
+    <li>Critical loss points must be identified with a careful eye on environmental trade-offs (Ch. 8).</li>
+    <li>Private-sector adoption of inclusive, tech-plus-practice interventions is essential, and needs rigorous evaluation (Ch. 9).</li>
+    <li>A policy agenda must target both demand and supply to avoid unintended feedback loops (Ch. 10).</li>
+  </ol>
+
+  <div class="box">
+    <h4>The takeaway</h4>
+    <p>FLW reduction is not a moral crusade against waste; it is a means to healthier, more secure, more sustainable diets. Chapter 1 is asking you to hold that framing through the rest of the book — because the policy choices that follow only make sense from inside it.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 2 ============ -->
+<section id="ch2">
+  <h1>2. Navigating Food System Transformations <span class="subtitle">for healthy diets</span></h1>
+  <div class="chapter-meta">
+    <span><span class="dot">●</span> Foundational framework</span>
+    <span><span class="dot">●</span> PDF pp. 30–46</span>
+    <span><span class="dot">●</span> Book pp. 13–24</span>
+  </div>
+
+  <p class="lede">Before you can talk sensibly about food loss, you need a map of the terrain. Chapter 2 builds that map — and the map keeps changing as countries urbanise and incomes rise.</p>
+
+  <h3>What is a food system?</h3>
+  <p>The authors adopt the HLPE definition: a food system is the elements, activities, and outcomes that together produce, process, distribute, prepare, and consume food <span class="pg">p.13</span>. Three elements anchor the framework:</p>
+  <ul>
+    <li><strong>Food value chains</strong> — upstream inputs and production, midstream processing and trading, downstream retail and consumption <span class="pg">p.14</span>.</li>
+    <li><strong>Food environments</strong> — the natural or built spaces where consumers meet food: wild foraging, informal wet markets, formal supermarkets, online retailers.</li>
+    <li><strong>Consumer behaviour</strong> — how individuals and households acquire, store, prepare, consume, and allocate food.</li>
+  </ul>
+
+  <h3>Structural transformation changes everything</h3>
+  <p>As economies shift from agriculture-dominated to industrialised, rural workers migrate cityward and agriculture’s share of GDP falls <span class="pg">p.14</span>. Food systems transform in parallel: demand diversifies beyond staples, value chains lengthen to connect distant farms to growing cities, cold chains and processing emerge to handle perishables, and formal retail slowly displaces (but rarely erases) informal markets. Transformation typically starts in large cities, diffuses to medium and small ones, and reaches rural areas last.</p>
+
+  <h3>Urbanisation and the perishability problem</h3>
+  <p>Over half the world already lives in urban areas, projected to reach <span class="stat">68% by 2050</span> <span class="pg">p.15</span>. Urbanisation is accelerating fastest in lower-income and lower-middle-income countries — precisely where the supporting infrastructure (roads, electricity, cold storage) is thinnest. Rising incomes drive demand for fruits, vegetables, and animal-source foods (ASF), the very categories most vulnerable to spoilage. Household refrigeration is a striking case: nearly universal in the US and Europe, but only around <span class="stat">30% in India</span> and <span class="stat">17% in sub-Saharan Africa</span> <span class="pg">p.16</span>. No fridge means no buffer between market and meal, so purchasing patterns narrow and FLW risk concentrates in the value chain.</p>
+
+  <h3>The midstream matters more than you think</h3>
+  <p>When people imagine value chains, they tend to picture farmers and consumers. Chapter 2 shows that the <strong>“hidden middle”</strong> — wholesalers, logistics operators, processors, small and medium enterprises — is where transformation actually happens <span class="pg">p.17</span>. Small-scale processors emerge first with minimally processed, convenience products; eventually large-scale processors consolidate market share using economies of scale. Cold-chain coverage is wildly uneven: <strong>nearly 95% of perishable value chains in the US and Europe are supported by cold-chain infrastructure, versus under 25% of perishable fruits and vegetables in India</strong> <span class="pg">p.18</span>.</p>
+
+  <h3>The supply-demand gap for nutritious foods</h3>
+  <p>Even when supply exists, intake often doesn’t follow. A global review found that only <span class="stat">29% of Asian countries</span> meet recommended vegetable intake (despite 61% having adequate supply), and only <span class="stat">7% of African countries</span> meet it <span class="pg">p.20</span>. Chapter 2 makes the point that FLW reduction isn’t a substitute for increased production of perishables — it is a necessary companion to it.</p>
+
+  <h3>Three food system types</h3>
+  <p>The book uses a stylised traditional → transitional → modern typology <span class="pg">pp.22–24</span>. The three archetypes differ across almost every value-chain attribute that matters for FLW:</p>
+
+  <div class="exhibit">
+    <table class="expos-table">
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Traditional</th>
+          <th>Transitional</th>
+          <th>Modern</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Where it dominates</th>
+          <td>Remote regions only</td>
+          <td>Sub-Saharan Africa, South Asia</td>
+          <td>SE &amp; E Asia, Americas, Europe</td>
+        </tr>
+        <tr>
+          <th>Value chain length</th>
+          <td>Short, fragmented</td>
+          <td>Lengthening unevenly</td>
+          <td>Long, well-coordinated</td>
+        </tr>
+        <tr>
+          <th>Producer type</th>
+          <td>Smallholders, home &amp; local market</td>
+          <td>Smallholders + emerging mid/large</td>
+          <td>Commercial farms at scale</td>
+        </tr>
+        <tr>
+          <th>Retail</th>
+          <td>Informal only</td>
+          <td>Informal &amp; formal coexist</td>
+          <td>Formal retail dominant</td>
+        </tr>
+        <tr>
+          <th>Cold chain</th>
+          <td>Essentially absent</td>
+          <td>Partial, uneven</td>
+          <td>Developed, widespread</td>
+        </tr>
+        <tr>
+          <th>Household refrigeration</th>
+          <td>Rare</td>
+          <td>Rising but incomplete</td>
+          <td>Near-universal</td>
+        </tr>
+        <tr>
+          <th>Standards regime</th>
+          <td>Minimal; informal</td>
+          <td>Private standards emerging</td>
+          <td>Robust public + private</td>
+        </tr>
+        <tr>
+          <th>Where FLW concentrates</th>
+          <td>Farmgate, on-farm storage</td>
+          <td>Midstream, cold-chain gaps</td>
+          <td>Retail, household, cosmetic rejection</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="exhibit-caption"><strong>Exhibit 2.1</strong> Where FLW concentrates depends on which transformation stage a food system is in. Traditional systems lose food at the farm; modern systems lose it at retail and in the kitchen. Adapted from Reardon et al. 2021a and Marshall et al. 2021 <span class="pg">pp.22–24</span>.</p>
+  </div>
+
+  <h3>Trade and the globalised chain</h3>
+  <p>Trade can expand dietary diversity but also skew what’s available: durable, processed, shelf-stable foods move across borders more easily than perishables, so liberalisation often tilts imports toward <em>less</em> healthy options <span class="pg">p.21</span>. Exporters from LMICs must meet HIC food-quality standards, and border rejections become a significant category of FLW — food that is destroyed, diverted to lower-standard markets, or redirected to animal feed.</p>
+
+  <div class="box">
+    <h4>The takeaway</h4>
+    <p>Transformation doesn’t eliminate FLW; it <em>relocates</em> it. Traditional systems lose fresh produce at the farm to bad roads and no storage. Modern systems lose food at retail and home to cosmetic standards and consumer habits. The interventions needed therefore depend on where a country sits on the curve.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 3 ============ -->
+<section id="ch3">
+  <h1>3. A Globally Applicable Definition <span class="subtitle">A framework for food loss and waste</span></h1>
+  <div class="chapter-meta">
+    <span><span class="dot">●</span> Definitions &amp; conceptual framework</span>
+    <span><span class="dot">●</span> PDF pp. 47–67</span>
+    <span><span class="dot">●</span> Book pp. 31–48</span>
+  </div>
+
+  <p class="lede">If you remember one chapter, make it this one. The whole book’s argument rests on untangling what “food loss and waste” actually means — and the authors are uncommonly honest about how much of the existing discourse is comparing apples to oranges.</p>
+
+  <h3>The definitional mess, briefly</h3>
+  <p>FAO’s 2019 estimate was that <span class="stat">13.8%</span> of food produced in 2016 was lost from farm up to (but not including) retail. UNEP’s 2024 estimate was that <span class="stat">19%</span> of food reaching consumers is lost at retail, food service, or household. These two numbers use <em>different definitions</em> and <em>cannot be added together</em> — there is no clean farm-to-fork total <span class="pg">p.31</span>. Meanwhile terms like “food loss,” “food waste,” “surplus food,” “potential food loss,” and “preharvest loss” are used differently by different authorities, often interchangeably but without meaning the same thing.</p>
+
+  <h3>The definition the book adopts</h3>
+  <p>Boiteau and Pingali take their working definition from FAO’s 2014 Global Initiative on Food Loss and Waste Reduction <span class="pg">p.37</span>:</p>
+  <div class="callout">
+    <em>Food loss and waste is a reduction in the quantity or quality of the edible portion of food intended for human consumption when food is redirected to nonfood uses or when there is a decrease in nutritional value, food safety, or other quality aspect, from the time food is ready for harvest or slaughter to consumption.</em>
+  </div>
+  <p>That definition does a lot of work. It sets the <strong>starting boundary</strong> at commercial maturity (so preharvest production losses are out of scope). It sets the <strong>ending boundary</strong> at consumption or at diversion to nonfood use. It restricts scope to the <strong>edible portion</strong> of food <strong>intended for human consumption</strong> — excluding inedible parts and excluding crops grown for feed, seed, or industry.</p>
+
+  <h3>Two distinct phenomena, one umbrella term</h3>
+  <p>Inside that boundary the book insists on distinguishing two things that behave differently <span class="pg">pp.22,37</span>:</p>
+  <ul>
+    <li><strong>Physical food loss and waste (pFLW)</strong> — a measurable reduction in mass or volume.</li>
+    <li><strong>Food quality loss (FQL)</strong> — a drop in safety, nutrition, appearance, or other attributes that may or may not take food out of the chain.</li>
+  </ul>
+  <p>They are linked: FQL of a <em>limiting attribute</em> can trigger pFLW when the food is rejected, but plenty of FQL happens while food stays in the chain and is eaten anyway (think: a carrot that has lost vitamin C but still looks fine).</p>
+
+  <h3>Worked example: tomato vs. rice in India</h3>
+  <p>Chapter 3 applies the framework to two crops to show how uneven the numbers are within a single country <span class="pg">pp.39–40</span>. For a hypothetical 100 kg of edible food ready for harvest in India:</p>
+  <ul>
+    <li><strong>Fresh tomato</strong> — pFLW of ~3.2% at harvest and ~9.3% through postharvest and retail; plus an estimated ~7% at the consumer stage. Pedicels and sepals (the inedible stem parts) are removed at various points. Much of the inedible plant mass stays on the field.</li>
+    <li><strong>Rice</strong> — pFLW of ~2.1% at harvest and ~3.5% postharvest-to-retail; plus polishing of brown rice into white rice, which removes <span class="stat">~10% of the edible portion</span> (bran and germ) as pFLW; plus ~7% at consumer stage. Rice straw is harvested with the grain and later separated — its on-field vs off-field management has distinct environmental consequences.</li>
+  </ul>
+
+  <h3>Food acceptability: the Search-Experience-Credence framework</h3>
+  <p>Why does food ever get rejected? Chapter 3 uses the classic economics <strong>SEC framework</strong> to classify quality attributes by how observable they are <span class="pg">pp.43–44</span>. The framework distinguishes three tiers based on when an attribute can be verified:</p>
+
+  <div class="exhibit">
+    <table class="expos-table">
+      <thead>
+        <tr>
+          <th>Attribute type</th>
+          <th>Verifiable…</th>
+          <th>Examples</th>
+          <th>Why it matters for FLW</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Search</th>
+          <td>Before purchase</td>
+          <td>Colour, shape, size, firmness, visible damage</td>
+          <td>Easy to grade on; drives the bulk of cosmetic-rejection pFLW</td>
+        </tr>
+        <tr>
+          <th>Experience</th>
+          <td>At consumption</td>
+          <td>Taste, texture, smell, ease of preparation</td>
+          <td>Feedback loop to purchase behaviour; trust-sensitive</td>
+        </tr>
+        <tr>
+          <th>Credence</th>
+          <td>Never directly</td>
+          <td>Nutritional content, organic status, ethical sourcing, food safety</td>
+          <td>High information asymmetry; requires certification &amp; trust in institutions</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="exhibit-caption"><strong>Exhibit 3.1</strong> Attributes can also be <em>intrinsic</em> (changes in the food itself) or <em>extrinsic</em> (how it was produced, packaged, or marketed). Cosmetic standards are search attributes that don’t affect safety or nutrition but drive a large share of rejection-based pFLW. Nelson 1970, 1974; Darby &amp; Karni 1973 <span class="pg">pp.43–44</span>.</p>
+  </div>
+
+  <h3>Upcycled foods</h3>
+  <p>A newer concept introduced here: <strong>upcycled foods</strong> take ingredients that would otherwise never reach human consumption and turn them into new products for humans <span class="pg">p.45</span>. A 2020 task force (including ReFED, Harvard Law’s Food Law and Policy Clinic, and WWF) codified a five-part definition: ingredients that would otherwise have been wasted; value added; for human consumption; auditable supply chain; upcycled ingredients indicated on the label. The book treats upcycled-food pathways as complementary to pFLW prevention rather than a substitute for it.</p>
+
+  <div class="box">
+    <h4>The takeaway</h4>
+    <p>A harmonised definition is not a bureaucratic exercise — it is the thing that makes comparison, aggregation, target-setting, and policy evaluation possible. The authors don’t expect convergence tomorrow, but they argue we should stop pretending we have it.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 4 ============ -->
+<section id="ch4">
+  <h1>4. From Data to Action <span class="subtitle">Building evidence on food loss and waste</span></h1>
+  <div class="chapter-meta">
+    <span><span class="dot">●</span> Data infrastructure &amp; indicators</span>
+    <span><span class="dot">●</span> PDF pp. 68–89</span>
+    <span><span class="dot">●</span> Book pp. 53–69</span>
+  </div>
+
+  <p class="lede">A sharp chapter about an awkward truth: much of the global FLW evidence base is modelled, estimated, or extrapolated — and policymakers are often not told which.</p>
+
+  <h3>The data value chain</h3>
+  <p>Chapter 4 proposes treating FLW data the way we treat food itself: as moving through a value chain, from <em>prioritisation</em> (which indicators matter?) to <em>collection</em>, <em>curation</em> and <em>analysis</em>, and finally <em>translation and dissemination</em> into actionable policy <span class="pg">p.54</span>. A robust data ecosystem needs governments, international bodies, civil society, and the private sector all applying harmonised definitions and methods. Right now, the chain is broken in several places at once.</p>
+
+  <h3>The two indicators that don’t fit together</h3>
+  <p>SDG 12.3 is monitored by two separate indices, each maintained by a different UN custodian agency <span class="pg">pp.54–55</span>. Side-by-side, it becomes obvious why the two numbers can never be added together to produce a clean farm-to-fork total:</p>
+
+  <div class="exhibit">
+    <table class="expos-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Food Loss Index (FLI)</th>
+          <th>Food Waste Index (FWI)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Custodian agency</th>
+          <td>FAO</td>
+          <td>UNEP</td>
+        </tr>
+        <tr>
+          <th>Value-chain stages covered</th>
+          <td>Farm to retail (excl. retail)</td>
+          <td>Retail, food service, household</td>
+        </tr>
+        <tr>
+          <th>Unit &amp; method</th>
+          <td>Country-level weighted index; base year 2015 = 100; economic weights across 10 commodities / 5 food groups</td>
+          <td>Per-capita mass; includes edible + inedible portions</td>
+        </tr>
+        <tr>
+          <th>Global aggregate reported</th>
+          <td>13.8% of production (2016)</td>
+          <td>19% of food reaching consumers (UNEP 2024)</td>
+        </tr>
+        <tr>
+          <th>Primary-data reliance</th>
+          <td>Models heavily; ~7% officially reported in FBS</td>
+          <td>UNEP declined a global FWI over data-quality concerns</td>
+        </tr>
+        <tr>
+          <th>Commodity detail</th>
+          <td>Resolved by food group</td>
+          <td>Not resolved by commodity</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="exhibit-caption"><strong>Exhibit 4.1</strong> The FLI and FWI were designed by different custodians for different questions. Their scopes, units, and methods are incompatible — which is why the two can’t simply be summed into a farm-to-fork FLW figure, even though the UN system publishes both under SDG 12.3 <span class="pg">pp.54–55</span>.</p>
+  </div>
+
+  <h3>The primary-data drought</h3>
+  <p>Because actual measurement is expensive, both indices lean heavily on modelling. Only about <span class="stat">7% of loss data in FAO’s Food Balance Sheets are officially reported</span> — the rest is imputed <span class="pg">p.77</span>. UNEP declined to publish an FWI at all, judging that modelled estimates are not reliable enough to track change over time <span class="pg">p.55</span>. Primary data is especially scarce for perishable commodities, which is exactly where FLW is highest.</p>
+
+  <h3>The APHLIS problem</h3>
+  <p>The FAO FLW Database contains over 21,000 data points — but <span class="stat">65% of them come from a single source</span>, the African Postharvest Losses Information System (APHLIS), which covers only cereal grains in sub-Saharan Africa <span class="pg">p.32</span>. In low-income countries, APHLIS accounts for <span class="stat">~96%</span> of the data in the FAO database. The geographic and commodity bias is structural: what looks like a global dataset is really a cereals-in-Africa dataset with a lot of other places appended.</p>
+
+  <h3>Food quality loss is a blind spot</h3>
+  <p>SDG 12.3 doesn’t cover FQL at all, so global indicators for nutrient loss, safety degradation, or shelf-life have never been standardised <span class="pg">pp.56–57</span>. Grades and standards are used in practice, but without harmonised definitions they’re not comparable across contexts. Nutrient composition tables don’t capture bioavailability or matrix effects. Food price is a weak FQL proxy. The book argues that until FQL indicators are developed alongside pFLW ones, we’ll keep underestimating FLW’s real cost to diets.</p>
+
+  <h3>Date labels: a small fix with big potential</h3>
+  <p>The Codex Alimentarius distinguishes several label types — “Best Before,” “Use By,” “Date of Manufacture,” “Date of Packaging” — but the guidance is not enforceable <span class="pg">pp.56–57</span>. In the US, federal law only requires a “Use-By” date on infant formula; everything else is at manufacturer or state discretion, which produces real consumer confusion and measurable household waste. The UK, by contrast, treats “use by” as a legal safety threshold: it is illegal to sell food past its use-by date. Consistent date labelling is a cheap, high-leverage FLW intervention that most countries haven’t made.</p>
+
+  <h3>Translation: the last mile that usually breaks</h3>
+  <p>Even where good data exists, the translation into policy is often incomplete. The SDG 12 Hub displays outdated figures; reports don’t consistently flag which numbers are modelled; open-access platforms like the Food Waste Atlas have interface limits that make serious analysis difficult. The authors push for investment in user-friendly tools, better data interoperability, and clear guidance on when modelled estimates are sufficient versus when primary data must be gathered.</p>
+
+  <h3>The “headline statistic” problem</h3>
+  <p>The book spends a full box (Box 4.12, “Data Influencers: Oversized Statements with Undersized Discussions”) on a point worth surfacing <span class="pg">p.68</span>. The FAO 2011 one-third figure ran as the dominant narrative for nearly a decade. When UN News finally reported the updated split — 19% at retail/food service/household plus ~13% farm-to-retail — it did so without the caveats that both numbers use different definitions, cover different value-chain stages, and have uneven data quality underneath them. The book’s explicit argument: knowledge dissemination that sticks to headline figures without conveying limitations and assumptions produces policy misinterpretation. A user-facing version of the data value chain should close that loop, not widen it.</p>
+
+  <h3>A post-2030 horizon</h3>
+  <p>The conclusion makes a subtle but important point: the work of FAO and UNEP as custodian agencies for SDG 12.3 is explicitly scoped to 2030, but the data infrastructure the authors envision — standardised FQL indicators, broader UN inter-agency collaboration, better interoperability between platforms — is a project for the <em>post-2030</em> era <span class="pg">p.68</span>. Current investments should be designed with that horizon in mind rather than being sized to hit the immediate SDG milestone and then expiring.</p>
+
+  <div class="box">
+    <h4>The takeaway</h4>
+    <p>You can’t manage what you measure badly. Better data won’t come from any one breakthrough — it requires a common definition (Ch. 3), harmonised indicators (here), more primary collection, and honest communication of uncertainty to policymakers.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 5 ============ -->
+<section id="ch5">
+  <h1>5. Protecting the Harvest <span class="subtitle">Farmgate loss pathways linked to food availability</span></h1>
+  <div class="chapter-meta">
+    <span><span class="dot">●</span> Farmgate pFLW &amp; FQL</span>
+    <span><span class="dot">●</span> PDF pp. 90–110</span>
+    <span><span class="dot">●</span> Book pp. 75–89</span>
+  </div>
+
+  <p class="lede">The first empirical leg of the book: what happens in the field and at the slaughterhouse, and why so much nutritious food never makes it into the supply chain to begin with.</p>
+
+  <h3>The scale of farmgate loss</h3>
+  <p>Global pFLW of agricultural production intended for human consumption at the farmgate is estimated at roughly <span class="stat">8.3% at harvest</span> and an additional <span class="stat">7.0% at postharvest stages</span> <span class="pg">p.75</span>. But these headline numbers conceal a gap that matters: many FLW measurement frameworks (including the FLI) start at postharvest and skip the preharvest and harvest stages entirely. That means mature food left unharvested, and food discarded during harvest itself, is often invisible in the data.</p>
+
+  <h3>Supply doesn’t match diet recommendations — anywhere</h3>
+  <p>When the authors aligned regional food production against the <em>Healthy Diet Basket</em> recommendations, one pattern held everywhere: starchy staples and oils <em>exceed</em> dietary recommendations, while fruits, vegetables, and protein-rich foods <em>fall short</em> <span class="pg">p.77</span>. Every region produces too little nutritious perishable food to support balanced healthy diets — before any losses occur. FLW at the farmgate therefore subtracts from an already-inadequate supply of the foods we most need.</p>
+
+  <h3>Fruits &amp; vegetables: the physiology angle</h3>
+  <p>A fruit or vegetable is a living tissue, and that’s the whole story of FQL in this category <span class="pg">pp.79–80</span>. After reaching <em>commercial maturity</em>, produce respires (consumes stored energy, releases heat), may ripen via ethylene signalling, undergoes compositional changes, and eventually senesces. Stress factors accelerate the whole process. The book groups them into three buckets:</p>
+  <ul>
+    <li><strong>Environmental</strong> — temperature, humidity, air composition, light.</li>
+    <li><strong>Biological</strong> — pests, pathogens, microbes.</li>
+    <li><strong>Physical</strong> — surface injuries, bruising, cuts, impact damage.</li>
+  </ul>
+  <p>The book distinguishes <em>climacteric</em> fruits (apples, bananas, mangoes, tomatoes, avocados — can ripen after harvest) from <em>non-climacteric</em> ones (grapes, citrus, strawberries — cannot), because postharvest handling strategies differ sharply between the two. Cosmetic quality standards, which reject produce for size, shape, or colour deviations that don’t affect safety or nutrition, are flagged as a specifically avoidable driver of pFLW.</p>
+
+  <h3>Animal-source foods: diverse pathways, shared vulnerabilities</h3>
+  <p>Animal-source foods (ASF) are more heterogeneous than fruits and vegetables. Fish, dairy, eggs, poultry, beef, pork, and small-ruminant meat each have their own FLW pathway <span class="pg">p.85</span>.</p>
+
+  <h4>Fish and aquatic animals</h4>
+  <p>Around <strong>89% of total fish production is consumed directly by humans</strong> as of 2020, and aquaculture has driven virtually all recent growth <span class="pg">p.85</span>. Small-scale fisheries contribute roughly <span class="stat">40%</span> of the global annual catch. Key FLW hotspots are <em>at sea</em> (bycatch discards, onboard processing losses) and between catch and landing (stress, mortality, improper icing, rigor mortis timing). The most recent global analysis from the World Economic Forum didn’t even include at-sea processing, aquaculture, or small-scale fisheries in its estimates — an enormous data gap. A gender lens is also relevant: in Zambia, for example, women primarily fish from shorelines with baskets, while men use nets and handlines from canoes — different loss patterns, rarely separately measured <span class="pg">p.86</span>.</p>
+
+  <h4>Livestock</h4>
+  <p>Preslaughter stress — heat, overcrowding, transport, disease, rough handling — is the primary driver of livestock FLW <span class="pg">pp.87–88</span>. Heat stress alone can cause preslaughter mortality and degrade meat quality (colour, texture, water loss). Production-system types range from backyard to industrial, each with distinctive stress profiles; the book reproduces a global comparison showing that no single system dominates and each has its own trade-offs. Dairy and egg value chains have their own vulnerabilities: microbial spoilage of milk despite refrigeration, antibiotic residues causing rejections, heat-stressed hens laying thin-shelled eggs.</p>
+
+  <h3>Climate change as a driver, not just a consequence</h3>
+  <p>Chapter 5 makes a point the literature usually misses: climate change is treated as something FLW <em>contributes to</em> (emissions), but it is also something that <em>causes</em> FLW <span class="pg">pp.78–79</span>. Higher temperatures alter harvest timing, accelerate spoilage, stress animals, and overwhelm inadequate infrastructure. The book argues for much more evidence on climate as a driver, especially at the farm level where it is least studied.</p>
+
+  <div class="box">
+    <h4>The takeaway</h4>
+    <p>Farmgate FLW reduction is not a side issue — it’s the first and cheapest lever for closing the supply gap in nutritious foods. But the interventions needed (cold chain extensions, better harvest timing, looser cosmetic standards, better animal welfare, gender-sensitive measurement) are only available to value chain actors who have the resources and incentives to adopt them.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 6 ============ -->
+<section id="ch6">
+  <h1>6. Enhancing Value <span class="subtitle">Post-farmgate loss pathways linked to food access</span></h1>
+  <div class="chapter-meta">
+    <span><span class="dot">●</span> Post-farmgate value chains</span>
+    <span><span class="dot">●</span> PDF pp. 111–132</span>
+    <span><span class="dot">●</span> Book pp. 97–112</span>
+  </div>
+
+  <p class="lede">The middle of the chain is where food becomes <em>accessible</em> — or where it quietly disappears. Chapter 6 is a tour of processing, packaging, cold chains, trade, and the consumer kitchen.</p>
+
+  <h3>Value addition cuts both ways</h3>
+  <p>Post-farmgate activities — processing, packaging, distribution, marketing — grow faster than the on-farm value of food as economies develop <span class="pg">p.97</span>. When value addition improves safety and extends shelf life, it reduces FLW. When it relies on stringent cosmetic standards, limited supply, or fragile processing steps, it <em>creates</em> FLW. The chapter’s framing is that the same activities can go either way depending on design.</p>
+
+  <h3>The plastic paradox</h3>
+  <p>Plastic is now the dominant material in food packaging <span class="pg">p.98</span>. It protects food, extends shelf life, reduces distribution damage — and it is an environmental disaster. Only <span class="stat">~9% of plastic waste has ever been recycled</span>, and food and beverage packaging are among the most common single-use plastics in the environment. The authors frame this as a genuine paradox, not a false trade-off: in many cases plastic prevents FLW and FLW prevention has climate benefits that outweigh the packaging footprint, but in others the opposite is true. There is no clean answer without better data on both sides of the equation.</p>
+
+  <h3>Cold chains: indispensable and hard</h3>
+  <p>Cold chains are the backbone of perishable value chains. They slow respiration, reduce microbial growth, and enable both seasonal availability and cross-region trade <span class="pg">pp.99–100</span>. But implementation in transitional food systems runs into a long list of constraints: lack of refrigerated carriers, unreliable power, poor roads, lack of standardisation, improper handling, intermediary fragmentation, high capital and operating costs, and limited consumer demand willing to pay for the service. The result is that cold-chain coverage tracks closely with country income, and perishable value chains in LMICs carry far more pFLW than they would at higher income levels.</p>
+
+  <h3>Fresh vs. processed fruit and vegetable chains</h3>
+  <p>Fresh produce dominates global fruit and vegetable supply and is projected to remain dominant through 2029 <span class="pg">p.102</span>. Fresh chains require aggressive bulk packaging, temperature control, and handling discipline; mixing damaged produce with undamaged, overfilling containers, or failing to sort by ripeness causes cascading quality deterioration. Processed chains (dried, canned, frozen, minimally processed fresh-cut) extend availability but each method has distinctive FQL and pFLW vectors — ice-crystal formation in freezing, moisture ingress in drying and canning, loss of nutrients during heat processing.</p>
+
+  <h3>Informal vs. formal markets: a study in trade-offs</h3>
+  <p>A clean finding from the chapter: <strong>informal markets often sort produce into multiple quality grades and price them accordingly, which keeps lower-grade but edible produce in the food chain and reduces pFLW</strong> <span class="pg">p.103</span>. Formal markets tend to enforce tighter single-grade standards — better for brand consistency, worse for FLW. Recent efforts to sell cosmetically imperfect produce in modern retail are starting to push back, but consumer acceptance and retailer incentives are still evolving.</p>
+
+  <h3>Animal-source food value chains</h3>
+  <p>Post-farmgate chains for ASF face time-temperature-handling pressures that are sharper than for fruits and vegetables because microbial spoilage is simultaneously a quality and a safety problem <span class="pg">pp.107–108</span>. Dairy value chains hinge on the gap between milking, chilling, and processing. In Kenya, traders in both formal and informal chains have been documented transporting milk unrefrigerated — on foot, or in plastic containers under passenger-vehicle seats. Milk collection centres with chilling capacity shorten the window and dramatically reduce FLW, but establishing them requires coordination that many informal systems lack.</p>
+
+  <div class="box">
+    <h4>UHT milk — a case of trade-offs</h4>
+    <p>Ultra-high-temperature processing enables shelf-stable milk in aseptic packaging, eliminating the cold-chain requirement entirely <span class="pg">p.109</span>. Great for access in regions with weak electrification. But UHT can produce off-flavours consumers don’t prefer over pasteurised milk, and aseptic coextruded-film packaging is hard to recycle and usually ends in landfill. FLW reduction at one stage creates environmental costs at another.</p>
+  </div>
+
+  <h3>Trade: opportunity and exclusion</h3>
+  <p>Fresh nutrient-rich food makes up roughly <strong>half the total value of food and agricultural exports from LICs</strong> <span class="pg">p.109</span>. Trade can stabilise supply and diversify diets, but it also generates FLW in specific ways: food rejected at the border for failing to meet importer standards, food that deteriorates during transport, and exclusion of smaller producers who can’t afford certification. The EU’s RASFF system and the US OASIS system both publish rejection statistics: pathogens in poultry and fish, pesticide residues in fruits and vegetables, mycotoxins in nuts, heavy metals in fish. Reputational spillover is also real: an import refusal for one product from one country roughly doubles the chance of refusal for that product from neighbouring countries the following year <span class="pg">p.110</span>.</p>
+
+  <h3>Household FLW: the stubborn endpoint</h3>
+  <p>A striking finding: current data suggests <strong>household pFLW is similar across country income groups</strong> with no clear relationship to GDP <span class="pg">p.111</span>. Consumer-level waste is driven less by affluence and more by routines and habits: how people plan meals, shop, store, cook, and dispose of food. Past experience of scarcity, demographic factors, and information asymmetries (especially around date labels) all play roles. Household refrigeration reduces FLW when it’s available, and can change the economics of shopping by enabling larger purchases and fewer trips — but only where reliable electricity exists.</p>
+
+  <div class="box">
+    <h4>The takeaway</h4>
+    <p>Value addition is neutral technology. Whether it reduces or creates FLW depends on coordination across the chain, on whose standards dominate, and on whether the environmental trade-offs of packaging and cold chains are accounted for honestly. The chapter reads almost as a checklist for designing interventions that earn their keep.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 7 ============ -->
+<section id="ch7">
+  <h1>7. Keeping Food Safe &amp; Nutritious <span class="subtitle">The role of food quality loss</span></h1>
+  <div class="chapter-meta">
+    <span><span class="dot">●</span> Food safety &amp; nutrient loss pathways</span>
+    <span><span class="dot">●</span> PDF pp. 133–151</span>
+    <span><span class="dot">●</span> Book pp. 119–131</span>
+  </div>
+
+  <p class="lede">The chapter that takes FQL seriously. Food safety and nutrient loss aren’t secondary concerns — they are the mechanisms by which flawed food chains translate into illness and malnutrition.</p>
+
+  <h3>Three kinds of food hazards</h3>
+  <p>Foodborne hazards come in three forms <span class="pg">p.120</span>:</p>
+  <ul>
+    <li><strong>Biological</strong> — viruses, parasites, bacteria, fungi. By far the most common source of disease burden globally.</li>
+    <li><strong>Chemical</strong> — natural or artificial; includes toxic metals, pesticide residues, heat-formed chemicals, and toxins from biological sources (e.g. mycotoxins).</li>
+    <li><strong>Physical</strong> — visible sharp fragments, choking hazards, and invisible particulates like nanomaterials and radionuclides.</li>
+  </ul>
+  <p>Hazards can enter through food alone or through mixed pathways (water, soil, air, human-to-human, animal-to-human). Crucially, a hazard is not the same as a risk: a hazard has potential to harm, but actual risk depends on exposure, severity, and population susceptibility.</p>
+
+  <h3>The global disease burden</h3>
+  <p>The WHO’s Foodborne Disease Burden Epidemiology Reference Group (FERG) has identified 12 hazards as exclusively foodborne and 19 as transmissible via food among other routes <span class="pg">p.121</span>. The 2015 estimates produced two figures that should stop you in your tracks:</p>
+  <ul>
+    <li><span class="stat">98%</span> of the documented global health burden from foodborne disease (FBD) occurs in low- and middle-income countries.</li>
+    <li><span class="stat">97%</span> of that burden comes from biological hazards.</li>
+  </ul>
+  <p>Most FBD cases come from consuming fresh ASF and fresh fruits and vegetables. Processed foods carry fewer biological risks but more chemical ones. Li et al. (2019) estimated ASF alone accounts for about <span class="stat">35%</span> of the total global FBD burden. Updated WHO estimates were due in 2025.</p>
+
+  <h3>The inverted-U curve</h3>
+  <p>As food systems modernise, the FBD burden doesn’t decline linearly — it typically rises first and then falls <span class="pg">pp.122–123</span>. In early transformation, value chains lengthen and handle more perishable food but governance and infrastructure haven’t caught up; hazards multiply. In later stages, food-safety infrastructure and consumer awareness catch up, and FBD declines. The implication is that transitional food systems are the most dangerous, and that the solution isn’t to slow transformation but to accelerate the safety side of it.</p>
+
+  <h3>Diet transition and new risks</h3>
+  <p>As staple-heavy diets give way to fruit, vegetable, and ASF consumption, FBD source-attribution changes <span class="pg">p.123</span>. Vegetables contribute 60–80% of FBD caused by parasites in most regions. Beef contributes 40–55% of FBD caused by Shiga toxin-producing <em>E. coli</em>. Ready-to-eat foods deserve a special mention: in the US, restaurants accounted for <span class="stat">64% of FBD outbreaks</span> in 2017, with norovirus alone responsible for 35% of outbreaks and 46% of illnesses <span class="pg">p.124</span>.</p>
+
+  <h3>The plastic-packaging food-safety trade-off</h3>
+  <p>Chapter 7 returns to the plastic question from a different angle <span class="pg">p.125</span>. Packaging physically protects food from contamination, moisture, and damage — reducing FLW and FBD. But it can also introduce chemical hazards: a 2025 systematic mapping documented widespread human exposure to food-contact chemicals, many with inadequately tested toxicity. The book argues for policies that eliminate the use of hazardous chemicals migrating from packaging, rather than choosing between packaging and no packaging.</p>
+
+  <h3>Trust, asymmetry, and governance</h3>
+  <p>Food safety is largely a <em>credence</em> attribute — consumers can’t verify it before or often even after consumption. That makes trust the currency <span class="pg">p.124</span>. Consumers who perceive food as unsafe stop buying it, whether or not that perception is accurate. Governments and value chain actors together shape food-safety trust through transparent practices, consistent standards, and clear communication. In LMICs, food safety is typically best enforced in export value chains — a system that can improve overall practice through spillover but can also divert lower-quality product into unprotected domestic markets.</p>
+
+  <h3>Nutrient losses: the quiet other half</h3>
+  <p>Nutrients degrade or leach throughout the post-harvest chain even when food remains in the supply and is eaten <span class="pg">pp.126–128</span>. Vitamins are particularly fragile; minerals can leach. Key factors are time, temperature, handling, and environmental exposure (light, oxygen). Concrete examples from the chapter:</p>
+  <ul>
+    <li><strong>Rice polishing</strong> — removes the bran from brown rice to produce white rice. The bran contains essential minerals including iron and zinc, which are lost entirely. This is simultaneously pFLW (10% mass) and FQL (micronutrient density).</li>
+    <li><strong>Legumes</strong> — rich in protein, folate, and non-heme iron. Water-soluble micronutrients leach into cooking liquid; heating degrades others. Canned or frozen legumes can result in more leaching than home-cooked dried ones.</li>
+    <li><strong>Vegetables</strong> — heat processing (canning, blanching for freezing) accelerates vitamin degradation. But frozen-at-peak vegetables can retain more nutrients than “fresh” produce stored for long periods.</li>
+  </ul>
+
+  <h3>What nutrient loss looks like in practice: spinach</h3>
+  <p>The chapter uses a spinach comparison (Fig. 7.4) that makes the nutrient-loss conversation concrete <span class="pg">p.130</span>. The Codex Alimentarius Commission sets minimum nutrient reference value (NRV) thresholds for nutrition claims: a solid food must supply at least <strong>15% of the NRV per 100 g</strong> to claim being a “source of” a nutrient, and <strong>30%</strong> to claim being “high in” it. Raw spinach qualifies as “high in” iron, folate, and vitamin C. After commercial freezing or canning, the same spinach drops into the lower “source of” tier for iron and folate — and loses most of its vitamin C entirely. Same plant, same mass, different nutritional label tier, because the processing pathway matters.</p>
+
+  <div class="exhibit">
+    <table class="expos-table tier-grid">
+      <thead>
+        <tr>
+          <th>Nutrient</th>
+          <th>Raw</th>
+          <th>Frozen</th>
+          <th>Canned</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Iron</th>
+          <td class="tier-high">High in (≥30% NRV)</td>
+          <td class="tier-source">Source of (15–30%)</td>
+          <td class="tier-source">Source of (15–30%)</td>
+        </tr>
+        <tr>
+          <th>Folate</th>
+          <td class="tier-high">High in (≥30% NRV)</td>
+          <td class="tier-source">Source of (15–30%)</td>
+          <td class="tier-source">Source of (15–30%)</td>
+        </tr>
+        <tr>
+          <th>Vitamin C</th>
+          <td class="tier-high">High in (≥30% NRV)</td>
+          <td class="tier-below">Below claim threshold</td>
+          <td class="tier-below">Below claim threshold</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="exhibit-caption"><strong>Exhibit 7.1</strong> Codex nutrition-claim tier comparison for spinach. Raw spinach qualifies as “high in” all three nutrients. Commercial freezing and canning drop iron and folate one tier, and push vitamin C entirely below the threshold required to make even a “source of” claim. Qualitative reproduction of Fig. 7.4; underlying values drawn from USDA FoodData Central by the authors <span class="pg">p.130</span>.</p>
+  </div>
+
+  <h3>Timing of measurement changes the answer</h3>
+  <p>A methodologically important point from Box 7.5: Adkison et al. (2018) measured apricots fresh, immediately after canning, and after 3 months of canned storage <span class="pg">p.128</span>. Immediately after canning, beta-carotene and total phenols went <em>up</em> while ascorbic acid went down. Three months later, beta-carotene had declined back to fresh-apricot levels. Frozen apricots held higher beta-carotene and phenols than fresh at both time points. The lesson: nutrient-loss figures depend heavily on when the measurement is taken. Comparing canned-on-day-1 to frozen-on-day-90 to fresh-at-harvest is not one comparison but three.</p>
+
+  <h3>Other specifics worth knowing</h3>
+  <p>Several findings deepen the nutrient-loss picture:</p>
+  <ul>
+    <li><strong>Vitamin C as a proxy</strong> — because it degrades fastest, it is often used as an indicator of overall nutrient freshness, though the book cautions that other micronutrients don’t necessarily degrade on the same pathway <span class="pg">p.128</span>.</li>
+    <li><strong>Vitamin B12 in cooked meat</strong> — concentrations per edible portion are often similar to or <em>higher</em> than raw, because cooking reduces moisture and fat <span class="pg">p.128</span>. A reminder that “processing” does not equal “nutrient loss” in any uniform direction.</li>
+    <li><strong>Milk shelf life</strong> — flash-pasteurised refrigerated milk keeps 3–21 days depending on raw-milk quality; UHT milk 3–12 months at ambient temperature. Both retain essential micronutrients and amino acids well. Fermented dairy products, however, can lose B12 as the bacterial cultures consume it <span class="pg">p.128</span>.</li>
+    <li><strong>Fresh-cut produce</strong> — cutting is a form of mechanical injury; refrigerated fresh-cut fruits can lose both water-soluble and fat-soluble vitamins within 6–9 days, with light exposure accelerating some losses <span class="pg">p.129</span>.</li>
+  </ul>
+
+  <h3>Safety–nutrition trade-offs</h3>
+  <p>Interventions that improve safety can degrade nutrition, and vice versa. Pasteurisation eliminates pathogens but reduces some vitamin content. Fortification adds micronutrients but changes the food matrix. Cosmetic rejection removes perfectly nutritious produce. Policies need to balance, not optimise for one at the expense of the other — and that requires good enough data on both to make the trade-off visible.</p>
+
+  <h3>Safety over nutrition, diversity over measurement</h3>
+  <p>Two priorities from the close of the chapter deserve being held onto. First: <strong>food safety losses are a more immediate threat to food security than nutrient losses</strong> <span class="pg">p.131</span>. Contamination can cause acute illness and undernutrition simultaneously; slow nutrient degradation in a food that’s still eaten is a smaller and slower problem. When trade-offs exist, safety wins. Second: <strong>dietary diversity is the real answer to micronutrient adequacy</strong> <span class="pg">p.130</span>. Measuring nutrient loss at every stage of the chain for every nutrient is impractical, and a diverse diet buffers against loss at any single link better than any single intervention can. The book also warns — citing Sadler et al. 2021 — that nutrition messaging which emphasises the downsides of food processing risks being misread as “avoid processed foods,” pushing consumers toward unprocessed foods or home processing without food-safety training, which is exactly the wrong outcome.</p>
+
+  <div class="box">
+    <h4>The takeaway</h4>
+    <p>FQL is where FLW shows up as human health. You can’t evaluate any FLW intervention properly without understanding what it does to food safety and nutrient retention — the two are embedded in the value chain, not separable from it.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 8 ============ -->
+<section id="ch8">
+  <h1>8. Unlocking Potential <span class="subtitle">Identifying critical loss points and driving change</span></h1>
+  <div class="chapter-meta">
+    <span><span class="dot">●</span> Critical loss points &amp; drivers</span>
+    <span><span class="dot">●</span> PDF pp. 152–170</span>
+    <span><span class="dot">●</span> Book pp. 139–152</span>
+  </div>
+
+  <p class="lede">From mapping the terrain to choosing where to intervene. Chapter 8 is the book’s analytical pivot point, connecting the preceding detail to the policy agenda that follows.</p>
+
+  <h3>Three levels of causation</h3>
+  <p>FLW pathways don’t come from a single failure point. The book adopts a three-level framework <span class="pg">p.139</span>:</p>
+  <ul>
+    <li><strong>Micro-level</strong> — causes at the same stage, involving individual actors in a particular value chain (a dropped crate, a missed refrigeration window, a mis-sorted load).</li>
+    <li><strong>Meso-level</strong> — structural causes involving larger groups of actors (missing cold-chain infrastructure, absent grades and standards, fragmented midstream).</li>
+    <li><strong>Macro-level</strong> — systemic causes involving the broader food system, institutional or policy conditions, and the enabling environment (national regulation, trade agreements, climate patterns).</li>
+  </ul>
+  <p>Chapters 5–7 handled micro-level detail. Chapter 8’s contribution is to dig into meso and macro.</p>
+
+  <h3>What “critical loss points” actually means</h3>
+  <p>Critical loss points are the stages where pFLW is concentrated for a given commodity and food system type <span class="pg">p.140</span>. Identifying them is necessary for prioritising interventions, but it’s not sufficient: what matters is <em>why</em> loss concentrates there and who has incentive to fix it. The chapter warns against over-reliance on a single metric — converting pFLW to calories, macronutrients, or greenhouse-gas emissions can each produce a different ranking of which commodities and stages matter most. The top 10 pFLW hotspots change depending on whether you measure in million tonnes, grams per capita per day, embedded land use, or water use.</p>
+
+  <h3>Four macro drivers</h3>
+  <p>The chapter walks through four driver categories that shape where and why FLW happens <span class="pg">pp.143–148</span>:</p>
+  <ul>
+    <li><strong>Technology and practices</strong> — availability, affordability, knowledge, enabling environment. A review of 276 innovations found 56% were products/technologies but only 20% were practice-based — a mismatch given that practice change is often cheaper and more sustainable.</li>
+    <li><strong>Infrastructure organisation</strong> — roads, electrification, telecommunications, cold storage, wholesale markets. Different products have different binding constraints. Perishable fresh produce is killed by bad roads and missing cold chain; food processors are killed by unreliable or expensive electricity. “Seasonally stranded” processing facilities sit idle most of the year because supply is not smoothed by storage.</li>
+    <li><strong>Public and private regulations</strong> — food-safety standards, cosmetic standards, grades, labelling rules. Chapter 8 shows national food and nutrition legislation has proliferated sharply since the 1970s, especially around food safety and quality. Cosmetic regulations that enforce narrow appearance ranges can remove otherwise edible, nutritious food from the chain.</li>
+    <li><strong>Environmental changes</strong> — climate change is a driver of FLW, not only a consequence. Rising temperatures accelerate spoilage, altered rainfall disrupts transport, extreme weather events damage infrastructure. This is currently under-measured.</li>
+  </ul>
+
+  <h3>Power dynamics and consolidation</h3>
+  <p>As midstream value-chain actors consolidate into fewer, larger processors and retailers connecting many producers to many consumers, power shifts <span class="pg">p.147</span>. Dominant buyers can tighten quality specifications to the point where lower-grade produce has no market at all; they can shift supply-risk back to producers through volume and consistency requirements; they can reject entire loads for small percentage defects, leading producers to pre-emptively apply even stricter self-standards. The result: producers in modern systems often accept higher farmgate pFLW as the price of market access.</p>
+
+  <h3>Power shifts responsibility, not just product</h3>
+  <p>A concrete and somewhat grim example of how that power asymmetry plays out in practice: Devin and Richards (2018) studied Australian food retailers and found that corporate-social-responsibility rhetoric about food donation often works by <strong>redirecting rejected produce to food-rescue organisations <em>before</em> the retailer takes ownership of it</strong> <span class="pg">p.151</span>. The accounting sleight-of-hand means producers, not retailers, bear the financial loss of the rejection. The rejected product never enters the retailer’s FLW ledger. If you want to evaluate a CSR claim honestly, read where in the value chain the ownership transfer happens.</p>
+
+  <h3>Inclusion is not a side issue</h3>
+  <p>In sub-Saharan Africa and lower-income Asia, <strong>roughly 25% of rural employment is tied to midstream food value chains</strong> (Vos &amp; Cattaneo 2021) <span class="pg">p.151</span>. Women are disproportionately represented in those midstream roles — farm labour, post-harvest work, informal processing and retail — but face disproportionate barriers to the resources and information that would reduce FLW. The book argues for gender-sensitive value-chain mapping: identifying where women work in the chain, what FLW-relevant constraints they face, and designing interventions around those constraints rather than assuming interventions designed for an abstract “value chain actor” will reach them.</p>
+
+  <h3>The business case</h3>
+  <p>A notable data point: an analysis of <strong>1,000 business sites across 17 countries</strong> found that <strong>99% of processing and food-service/retail sites could achieve a positive return on investment from FLW reduction, with a median benefit-cost ratio of 14:1</strong> <span class="pg">p.150</span>. The biggest returns came from sites that hadn’t previously invested in FLW reduction — low-hanging fruit remains genuinely low-hanging. But the feedback loops are complex: UK interventions found that while both private and public sectors shared the costs of FLW reduction, the primary financial <em>benefits</em> went to individual households.</p>
+
+  <h3>The Prevention Paradox</h3>
+  <p>The business case can look healthy on paper and still fail the actual test. Messner et al. (2020) named something the book takes seriously: governments and food companies publicly commit to FLW <em>prevention</em> but their actions are concentrated on FLW <em>management</em> <span class="pg">p.150</span>. Common strategies — diverting surplus food to donation or rescue, educating consumers, aiming for “zero waste to landfill” — don’t actually address the root causes. Donating surplus doesn’t fix overproduction; consumer education over-indexes on individual responsibility and lets upstream actors off the hook; “zero waste to landfill” can still be met by nonfood diversion that doesn’t help food security. A policy agenda that looks green on paper can be, in practice, a sophisticated way of not preventing FLW.</p>
+
+  <h3>The global coverage gap</h3>
+  <p>As of 2021, only <strong>13 countries and regional blocs (covering about 55% of the global population)</strong> had committed to specific targets aligned with SDG 12.3 <span class="pg">p.149</span>. A systematic review found only eight countries with enacted anti-FLW laws (Germany, Norway, UK, US, Argentina, South Korea, Japan, China), and only five laws across four countries directly target FLW (France, Italy, Spain, China). Some jurisdictions rely on encouragement (tax incentives, liability disclaimers for food donation); others use penalties. Global targets don’t mean much if most of the world isn’t formally pursuing them.</p>
+
+  <h3>Who is actually measuring?</h3>
+  <p>The coverage gap is starker still when you look at measurement rather than commitment. As of 2021, only <strong>19 countries — representing about 12% of the global population — had measured pFLW across entire food value chains</strong> <span class="pg">p.151</span>. Among the 50 largest global food companies, 28 were measuring pFLW but only 19 publicly reported their data. Gille (2012) argues that risk-avoidance and competitive incentives keep much of that data hidden. Upstream drivers are reasonably well understood; downstream drivers — retail, food service, household — are the less mapped half of the chain.</p>
+
+  <h3>The environmental-impact asymmetry</h3>
+  <p>A small table from Guo et al. (2020) that Ch. 8 highlights, worth committing to memory <span class="pg">p.151</span>: in 2017, <strong>fruits and vegetables accounted for nearly half of total FLW mass but only 16.8% of FLW-associated greenhouse-gas emissions</strong>. <strong>Bovine meat represented only 0.7% of total FLW mass but 16.3% of FLW-associated emissions.</strong> The mass-based and emissions-based pictures of “where to focus” point at completely different commodities. The metric the book endorses for comparing across commodities is <em>emission intensity</em> — emissions per unit produced — which normalises these distortions.</p>
+
+  <div class="exhibit">
+    <svg class="exhibit-svg" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Asymmetry between mass and greenhouse gas contribution of FLW for fruits and vegetables versus bovine meat in 2017">
+
+      <!-- Axis line at bottom -->
+      <line class="axis-line" x1="200" y1="265" x2="650" y2="265"/>
+
+      <!-- Axis ticks (0 to 50%, step 10) -->
+      <g class="label-axis" text-anchor="middle">
+        <line class="axis-line" x1="200" y1="265" x2="200" y2="269"/>
+        <text x="200" y="283">0%</text>
+        <line class="axis-line" x1="290" y1="265" x2="290" y2="269"/>
+        <text x="290" y="283">10%</text>
+        <line class="axis-line" x1="380" y1="265" x2="380" y2="269"/>
+        <text x="380" y="283">20%</text>
+        <line class="axis-line" x1="470" y1="265" x2="470" y2="269"/>
+        <text x="470" y="283">30%</text>
+        <line class="axis-line" x1="560" y1="265" x2="560" y2="269"/>
+        <text x="560" y="283">40%</text>
+        <line class="axis-line" x1="650" y1="265" x2="650" y2="269"/>
+        <text x="650" y="283">50%</text>
+      </g>
+
+      <!-- Row 1: Fruits & vegetables -->
+      <text class="label-group" x="190" y="56" text-anchor="end">Fruits &amp; vegetables</text>
+
+      <text class="label-axis" x="190" y="84" text-anchor="end">Share of FLW mass</text>
+      <rect class="bar-alt" x="200" y="70" width="450" height="24"/>
+      <text class="label-value" x="640" y="87" text-anchor="end" fill="#ffffff">~50%</text>
+
+      <text class="label-axis" x="190" y="124" text-anchor="end">Share of FLW emissions</text>
+      <rect class="bar-warn" x="200" y="110" width="151.2" height="24"/>
+      <text class="label-value" x="361" y="127" text-anchor="start">16.8%</text>
+
+      <!-- Divider between groups -->
+      <line class="axis-line" x1="60" y1="158" x2="650" y2="158" stroke-dasharray="2 3"/>
+
+      <!-- Row 2: Bovine meat -->
+      <text class="label-group" x="190" y="184" text-anchor="end">Bovine meat</text>
+
+      <text class="label-axis" x="190" y="212" text-anchor="end">Share of FLW mass</text>
+      <rect class="bar-alt" x="200" y="198" width="6.3" height="24"/>
+      <text class="label-value" x="216" y="215" text-anchor="start">0.7%</text>
+
+      <text class="label-axis" x="190" y="252" text-anchor="end">Share of FLW emissions</text>
+      <rect class="bar-warn" x="200" y="238" width="146.7" height="24"/>
+      <text class="label-value" x="356" y="255" text-anchor="start">16.3%</text>
+
+    </svg>
+    <p class="exhibit-caption"><strong>Exhibit 8.1</strong> Mass-based and emissions-based rankings point in opposite directions. Fruits &amp; vegetables are about 70× heavier than bovine meat in the FLW stream but contribute roughly the same share of embedded greenhouse gases. The policy implication: choose your metric before choosing your intervention. Data from Guo et al. 2020 as reproduced in the chapter <span class="pg">p.151</span>.</p>
+  </div>
+
+  <div class="box">
+    <h4>The takeaway</h4>
+    <p>FLW isn’t caused primarily by technology gaps or individual laziness. It is caused by power imbalances, missing infrastructure, misaligned standards, and a regulatory landscape that has barely begun. The entry points for intervention usually sit at meso and macro levels, not at the stage where the loss is counted.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 9 ============ -->
+<section id="ch9">
+  <h1>9. Navigating the Complexities <span class="subtitle">A deeper dive into FLW interventions</span></h1>
+  <div class="chapter-meta">
+    <span><span class="dot">●</span> Interventions &amp; evaluation</span>
+    <span><span class="dot">●</span> PDF pp. 171–183</span>
+    <span><span class="dot">●</span> Book pp. 159–169</span>
+  </div>
+
+  <p class="lede">What actually works? And how would we know? Chapter 9 is the most sober chapter in the book — a review of intervention evidence that keeps finding the same gaps.</p>
+
+  <h3>Prevention vs. management</h3>
+  <p>FLW interventions split into two families <span class="pg">p.160</span>:</p>
+  <ul>
+    <li><strong>Prevention</strong> — actions that keep edible food in the value chain and prevent its diversion or degradation. Dominant at earlier stages (production through processing).</li>
+    <li><strong>Management</strong> — actions that minimise the damage once pFLW has occurred (redirecting to feed, composting, biogas, landfill diversion, food donation). Dominant at later stages (retail, food service, household).</li>
+  </ul>
+  <p>A subtle but important distinction: management of <em>inedible</em> food parts is always necessary — those parts were never going to be eaten. Management of <em>edible</em> food parts that became pFLW is a different matter, and the trade-offs against prevention should be weighed explicitly.</p>
+
+  <h3>Food donation: necessary but complicated</h3>
+  <p>Redistribution to food banks and social services is the headline example of management <span class="pg">pp.160–161</span>. It addresses both food security and pFLW at once. But food-bank supply chains face their own management challenges: irregular donations, nutritional quality of donated food, matching perishable supply to demand, reaching beneficiaries, covering transport and storage costs. Deeper questions lurk: does food donation genuinely help vulnerable consumers, or is it primarily a mechanism for retailers and manufacturers to reduce disposal costs? The book raises the question without pretending to have solved it.</p>
+
+  <h3>Upcycling vs. valorisation</h3>
+  <p>These two market-based strategies pull in different directions <span class="pg">p.161</span>. <strong>Upcycling</strong> transforms parts that would otherwise be wasted into new products <em>for human consumption</em>. <strong>Valorisation</strong> turns pFLW into non-food uses (animal feed, compost, energy). A study in the EU showed that reducing consumer pFLW saves more greenhouse-gas emissions than valorising the same food as pig feed — but valorisation still offers benefits depending on feed-market prices. There is no universal answer; context decides.</p>
+
+  <h3>Three intervention categories</h3>
+  <p>The chapter organises interventions across three dimensions, not one <span class="pg">p.162</span>:</p>
+  <ul>
+    <li><strong>Technology</strong> — physical tools, equipment, machinery, materials (cold chain units, improved packaging, processing machines).</li>
+    <li><strong>Practices</strong> — training programs, peer-to-peer learning, workshops, behaviour change, awareness campaigns.</li>
+    <li><strong>Enabling environment</strong> — finance, credit access, infrastructure investment, grades and standards, contracts, market-access policy.</li>
+  </ul>
+  <p>The book’s stance: none of these is sufficient alone. Technology without practice-change is underused; practice-change without enabling environments is unscalable; enabling environments without technology and practices have nothing to support.</p>
+
+  <h3>What the intervention literature actually shows</h3>
+  <p>Two recent systematic reviews are the anchor evidence here <span class="pg">p.163</span>:</p>
+  <ul>
+    <li><strong>Stathers et al. (2020)</strong> examined 334 studies covering 1,565 interventions. Of the 780 interventions targeting perishable foods, <span class="stat">89%</span> used technology, tools, or equipment. Only 82 interventions focused on handling-practice change and just 2 addressed road infrastructure. Only <span class="stat">13%</span> of studies considered economic, social, or environmental outcomes beyond loss reduction itself. <strong>Zero studies</strong> addressed gender-specific outcomes.</li>
+    <li><strong>Rolker et al. (2022)</strong> focused on perishables and found the same pattern, with preventive interventions heavily skewed toward technology while management interventions were more balanced. Stakeholder participation was limited; most studies were in controlled settings rather than real-world; only two formally assessed adoption barriers and enablers.</li>
+  </ul>
+  <p>The takeaway is uncomfortable: the intervention literature over-invests in technology, under-invests in enabling environments, almost ignores gender, and rarely evaluates real-world scalability.</p>
+
+  <h3>Evaluation needs a better framework</h3>
+  <p>Patinha Caldeira et al. (2019) proposed an evaluation framework that quantifies both effectiveness (reduction relative to target) and efficiency (resources used per unit reduction) while adding qualitative criteria: design quality, long-term sustainability, transferability, scalability, and cross-sectoral collaboration <span class="pg">p.164</span>. The book endorses this approach and pushes for it to be standard practice.</p>
+
+  <h3>Packaging, revisited</h3>
+  <p>Food and beverage packaging accounts for 10–20% of plastic products, often with very short lifespans <span class="pg">p.164</span>. In Europe in 2018, 26.3% of post-consumer plastic was recycled domestically and 6.2% was exported. Much of the rest is incinerated or landfilled; in low-income regions, open burning is common. Any FLW intervention that relies on increased packaging needs to account for these downstream impacts. The book doesn’t take a single position — it argues for better data on both FLW avoided and environmental impact produced, and for prioritising packaging around products with the highest embedded environmental footprint.</p>
+
+  <h3>The informal midstream is most of the chain</h3>
+  <p>A statistic from Ch. 9 that reframes the whole intervention conversation: <strong>over 90% of domestically produced fruits and vegetables in LMICs are traded through the informal midstream sector</strong> (de Steenhuijsen Piters et al. 2021) <span class="pg">p.167</span>. Small, informal midstream and downstream businesses dominate the chain that moves perishable nutritious food from farm to retail. Most FLW interventions in the literature are designed around formal actors. If 9-in-10 of the units of perishable food move through informal channels, an intervention that only addresses formal actors is by construction limited to the other 10%. Women, in particular, are disproportionately represented in these informal midstream roles and are often excluded from both monitoring and intervention design.</p>
+
+  <h3>Eleven criteria for whether an intervention will be adopted</h3>
+  <p>Soethoudt et al. (2021) proposed a practical adoption framework that the book reproduces in Table 9.2 <span class="pg">p.166</span>. Any FLW intervention in a LMIC context can be evaluated against these criteria before it is rolled out:</p>
+  <ul>
+    <li><strong>Logistical</strong> — is the technology physically available and accessible? Are extension services available to share knowledge?</li>
+    <li><strong>Sociocultural</strong> — is it acceptable to the value-chain actors and the wider society? Is there awareness of it? Are local stakeholders meaningfully involved in decision-making?</li>
+    <li><strong>Economic</strong> — is it affordable to everyone targeted by the intervention? Are resources available locally?</li>
+    <li><strong>Technical</strong> — is it technically feasible in the specific context? Adaptable to changing conditions? Scalable? Does it work within a reasonable time-to-impact?</li>
+  </ul>
+  <p>Two concrete examples illustrate why interventions pass or fail these tests:</p>
+  <ul>
+    <li><strong>Indian dairy chillers</strong> (Debnath et al. 2021) — local value-chain actors were <em>not</em> interested in investing in milk chillers and processing equipment, because local milk production was too small in scale to make the capital payback viable <span class="pg">p.167</span>. A good technology, a bad scale, no adoption.</li>
+    <li><strong>Nigerian tomato value chains</strong> (Obanubi et al. 2020) — financial viability of FLW-reduction technology depended critically on the business model (ownership vs. leasing vs. service-based), operating scale, and the enabling environment <span class="pg">p.167</span>. The same technology could be viable in one context and not in another.</li>
+  </ul>
+
+  <h3>FLW sits inside — not next to — the SDGs</h3>
+  <p>Ch. 9 makes explicit the cross-linkages that Ch. 1 only gestured at <span class="pg">p.168</span>. FLW reduction and management progress directly contributes to SDG 2 (hunger, nutrition), SDGs 6, 11, 13, 14, 15 (water, cities, climate, oceans, land), and SDGs 1, 8, 10 (poverty, livelihoods, equality). In the opposite direction, <em>policies targeting other SDGs can deliver FLW reduction as a secondary benefit</em> — especially SDG 5 (gender), SDG 7 (affordable clean energy), SDG 9 (infrastructure), and SDG 17 (partnerships). The implication: FLW reduction doesn’t need its own dedicated policy silo to make progress; it can ride on — and benefit from — investment in other goals if the enabling environment is coherent.</p>
+  <p>A notable gap the chapter flags: the Food Systems Countdown Initiative — the inter-disciplinary indicator framework tracking progress toward global food-system goals through 2030 — does not currently include SDG 12.3 indices, because the data gaps discussed in Ch. 4 are too severe to support annual tracking <span class="pg">p.168</span>. That is a quiet but revealing signal about where the evidence base actually stands.</p>
+
+  <div class="box">
+    <h4>The takeaway</h4>
+    <p>The intervention literature is still early. Most of what we know is about technology trials in controlled settings. What we need is evidence on real-world scalability, on enabling environments, on gender, and on the trade-offs between FLW reduction and other food-system outcomes. The book’s pitch is for an evaluation infrastructure robust enough to actually tell us what works.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 10 ============ -->
+<section id="ch10">
+  <h1>10. The Way Forward <span class="subtitle">Setting a food loss and waste policy agenda</span></h1>
+  <div class="chapter-meta">
+    <span><span class="dot">●</span> Policy agenda &amp; synthesis</span>
+    <span><span class="dot">●</span> PDF pp. 184–199</span>
+    <span><span class="dot">●</span> Book pp. 173–187</span>
+  </div>
+
+  <p class="lede">The closing chapter pulls the book’s threads into a four-part policy agenda. It is explicitly a blueprint for enabling environments rather than a wish-list of interventions.</p>
+
+  <h3>The four pillars</h3>
+  <p>Chapter 10 organises its recommendations around four policy domains <span class="pg">p.173</span>, all in service of sustainable and healthy food systems:</p>
+  <ol>
+    <li><strong>Policies that incentivise supply by increasing demand for safe, nutritious foods.</strong></li>
+    <li><strong>Policies that support innovation to keep nutritious, perishable foods in the value chain.</strong></li>
+    <li><strong>Policies for market coordination to facilitate efficient transactions and better linkages.</strong></li>
+    <li><strong>Policies that address environmental trade-offs in FLW reduction and management.</strong></li>
+  </ol>
+  <p>The logic is that FLW reduction can’t be solved only from the supply side. If no one wants the extra nutritious food you’re preventing from being wasted, the intervention just pushes losses upstream or collapses price signals.</p>
+
+  <h3>Pillar 1 — Demand for safe, nutritious foods</h3>
+  <p><strong>Adopt and strengthen food-based dietary guidelines.</strong> Ninety countries have them; many need updating to align with WHO global guidance and to integrate environmental sustainability and sociocultural factors <span class="pg">p.175</span>. These guidelines are the upstream input into food-production priorities, labelling regulation, public procurement rules, and nutrition education.</p>
+
+  <p><strong>Improve the food safety of fresh foods.</strong> Public policies must both prevent FQL (so safe food stays safe) and remove unsafe food from the chain when it appears (even if that generates pFLW) <span class="pg">p.176</span>. Investment in clean water, hygienic market facilities, training, and certification is the public-infrastructure side of the safety equation. The affordability gap is real: over 80% of the cost of a healthy diet comes from perishable, nutrient-rich foods; a calorie-adequate but micronutrient-deficient staple-based diet is 3–8 times cheaper.</p>
+
+  <p><strong>Establish clear date-labelling requirements.</strong> Distinguishing safety-based from quality-based labels is a near-free policy intervention with large household-FLW payoff <span class="pg">pp.176–177</span>. The current Codex Alimentarius guidance isn’t enforceable; most countries haven’t passed the distinction into law.</p>
+
+  <h3>Pillar 2 — Innovation for perishables</h3>
+  <p><strong>Expand cold-chain infrastructure.</strong> The chapter acknowledges the high capital and operating costs of mechanical cold chains and the availability of lower-cost non-mechanical options (evaporative cooling, shaded coverings) for rural applications <span class="pg">p.177</span>. Cold-chain costs are often passed to consumers, which concentrates benefits among higher-income buyers unless policies deliberately subsidise equity. Off-grid solar is a promising frontier, but products for commercial food applications are mostly still in pilot or early-commercialisation stages <span class="pg">p.178</span>. Environmental concerns about short lifespan, disposal, and lead exposure in solar equipment are real and need policy attention.</p>
+
+  <p><strong>Encourage processing of perishable foods.</strong> Shelf-stable processed products — dried, canned, jarred, frozen — extend availability in regions with weak cold chains <span class="pg">p.179</span>. Public investment in reliable energy and transport infrastructure lowers barriers for small and medium processing enterprises. Innovations like multi-seasonal processing facilities that handle different crops at different times of year address the “seasonally stranded” problem.</p>
+
+  <h4>Bulk packaging, not just consumer packaging</h4>
+  <p>The public conversation about food packaging focuses on single-use retail plastic, but the book makes the case that bulk packaging — the crates, boxes, trays, and pallets that move food between midstream actors — deserves similar attention <span class="pg">p.183</span>. Transitioning from raffia baskets to stackable plastic crates, adopting modified-atmosphere packaging for specific perishables, and applying edible coatings can all reduce FLW in transit. The book also flags worker-safety implications: some packaging innovations require heavy manual lifting, and policies that prioritise FLW reduction without regard to labour conditions can produce equity-reducing outcomes in the warehouses and markets where this work is done.</p>
+
+  <p><strong>Broaden cosmetic standards to create markets for “ugly” foods.</strong> Ugly-food markets can work — through price differentiation within existing retail or through dedicated channels <span class="pg">pp.179–180</span>. But pricing is genuinely hard: discount too much and you cannibalise standard-grade sales; discount too little and consumers don’t buy. Consumer communication matters more than most retailers appreciate. And cosmetic attributes sometimes overlap with <em>functional</em> attributes (a uniformly sized fruit packs more reliably; a firm fruit travels better), so simply removing cosmetic standards can create new losses elsewhere in the chain.</p>
+
+  <h4>The ugly-food pricing problem, in detail</h4>
+  <p>The book spends a Box (10.3) on why pricing “ugly” food is genuinely hard <span class="pg">pp.180–181</span>. Price reductions based purely on cosmetic imperfections are more readily accepted by consumers than reductions on attributes that imply safety or sensory problems. But retailers face real costs too: inventory management, dedicated storage, additional marketing. There is also a cannibalisation risk — ugly-food sales can reduce sales of higher-priced “normal” produce, hurting overall margin. And consumer concerns about quality can spill over to brand perception: a retailer seen as selling a lot of visibly imperfect produce may be perceived as a lower-quality retailer overall. The book emphasises that <em>field experiments translating consumer preferences for ugly food into real-world market conditions remain rare</em>, so most policy design in this area is still flying on stated-preference data that may not hold up at the till.</p>
+
+  <h3>Pillar 3 — Market coordination</h3>
+  <p>Better coordination among value-chain actors reduces the friction that creates FLW <span class="pg">p.181</span>. The chapter highlights SME inclusion as critical — small and medium enterprises in midstream positions are often the ones who manage perishable value chains but are often excluded from both financing and formal standards frameworks. Policies that support producer organisations, collective logistics, contract farming, and shared infrastructure all help. Public investment in market infrastructure (wholesale markets, storage, digital information platforms) reduces coordination costs system-wide.</p>
+
+  <h4>Infrastructure specifics that matter</h4>
+  <p>Section 10.4 of the chapter is more specific about market-coordination infrastructure than a policy summary usually conveys <span class="pg">pp.181–182</span>. The priorities:</p>
+  <ul>
+    <li><strong>Road quality at every scale</strong> — motorways for inter-city transit, rural roads for farmgate access, urban roads for last-mile distribution. Trade-offs between optimising transport networks and minimising environmental impacts need to be made explicitly; the relationship between road condition, vehicle type, and load size all shapes FLW risk in transit.</li>
+    <li><strong>Communications infrastructure</strong> — cellular networks that let value-chain actors share price information, coordinate deliveries, and diversify market destinations. Akande &amp; Diei-Ouadi (2010) and Pingali (2015) both highlight this as genuinely high-leverage in LMIC contexts.</li>
+    <li><strong>Financial services with explicit equity indicators</strong> — public investment in financial institutions that prioritises inclusion of marginalised groups, not just aggregate finance availability. Otherwise the benefits of FLW reduction technology concentrate in actors who were already well-served.</li>
+    <li><strong>Aggregation models</strong> — producer organisations, cooperatives, and lead-farmer structures that pool bargaining power, share FLW-reduction infrastructure, and distribute the cost of investment across many smallholders.</li>
+  </ul>
+
+  <h4>Contract innovation: whole-crop purchasing</h4>
+  <p>Hezarkhani et al. (2024) describe “whole-crop contracts” as a practical intervention against cosmetic-standard pFLW <span class="pg">p.182</span>. Retailers commit in advance to purchasing a producer’s entire yield, including cosmetically suboptimal produce, rather than selecting only the portion that meets strict visual standards. This simultaneously reduces farmgate pFLW, stabilises producer income, and shifts some demand risk from producer to retailer. It is a concrete alternative to the current default in which producers absorb rejection risk and cosmetic standards drive waste.</p>
+
+  <h3>Pillar 4 — Environmental trade-offs</h3>
+  <p>The book has been flagging trade-offs throughout: packaging vs. FLW; cold chain vs. energy use; valorisation vs. prevention. The final pillar asks governments to treat these trade-offs explicitly <span class="pg">pp.182–186</span>. That means <em>evidence-based</em> guidance on sustainable packaging (waiting for better data before issuing blanket bans or endorsements), clear distinctions between management of physical FLW for different non-food destinations (animal feed ≠ composting ≠ landfill, either environmentally or nutritionally), and UN-agency coordination to produce shared guidelines on emerging topics.</p>
+
+  <h4>Rebound effects — the caveat that breaks the naive case</h4>
+  <p>A critical qualification that deserves its own billing. Hegwood et al. (2023) found that <strong>rebound effects can offset more than half of the environmental benefits of avoided FLW</strong> <span class="pg">p.186</span>. The mechanism is straightforward: reducing waste effectively increases the supply of food at any given level of production, which lowers prices, which increases consumption. The food-security consequence (higher calorie intake at lower prices, especially for low-income consumers) is good. The environmental consequence — the same crops still being produced, with their embedded land, water, and emissions costs, now feeding more mouths rather than fewer — partially cancels the GHG benefit of the waste prevention itself. Albizzati et al. (2022) documents the same dynamic across multiple interventions.</p>
+  <p>What this means for the policy agenda: FLW reduction isn’t a free environmental win. It is a food-security win with a partially discounted environmental co-benefit, and the size of the discount depends on how much rebound occurs, which foods become cheaper, and what those foods’ production footprints are. Comprehensive policy needs to account for the rebound explicitly, not treat it as a rounding error.</p>
+
+  <h4>Ranking management options when prevention has reached its limits</h4>
+  <p>For food that has already become pFLW, the book walks through a hierarchy of management options <span class="pg">p.185</span>. Wang et al. (2021) ran a systematic review and concluded that <strong>animal feed and composting minimise GHG emissions better than anaerobic digestion, incineration, or landfilling</strong>. Anaerobic digestion, incineration, and landfilling all recover some energy, but landfills globally have low methane-capture rates in practice, so their real-world emissions performance is worse than the theoretical case. The US EPA’s Wasted Food Scale (updated from the older Food Recovery Hierarchy) formalises this ranking for US contexts and prioritises strategies that avoid landfill and incineration. For feed applications specifically, Pinotti et al. (2021) noted that cereal-based food-processing leftovers — bread, pasta, confectionery, salty snacks — can be a sustainable alternative to traditional feed ingredients with low risk to animal health, provided the food-safety chain is controlled.</p>
+
+  <div class="exhibit">
+    <div class="hierarchy">
+      <div class="hierarchy-row best">
+        <div class="rank">1</div>
+        <div class="name">Animal feed<small>Recycles nutrients back into feed production; especially viable for cereal-processing leftovers</small></div>
+        <div class="verdict good">Best GHG</div>
+      </div>
+      <div class="hierarchy-row best">
+        <div class="rank">2</div>
+        <div class="name">Composting<small>Recycles nutrients back to soil; lower GHG footprint than energy-recovery pathways in practice</small></div>
+        <div class="verdict good">Best GHG</div>
+      </div>
+      <div class="hierarchy-row">
+        <div class="rank">3</div>
+        <div class="name">Anaerobic digestion<small>Recovers some energy; GHG performance middling</small></div>
+        <div class="verdict ok">Partial</div>
+      </div>
+      <div class="hierarchy-row">
+        <div class="rank">4</div>
+        <div class="name">Incineration<small>Recovers some energy; worse than composting/feed on emissions</small></div>
+        <div class="verdict ok">Partial</div>
+      </div>
+      <div class="hierarchy-row worst">
+        <div class="rank">5</div>
+        <div class="name">Landfill<small>Low real-world methane capture globally; the most common destination and the least environmentally sound</small></div>
+        <div class="verdict bad">Worst GHG</div>
+      </div>
+    </div>
+    <p class="exhibit-caption"><strong>Exhibit 10.1</strong> Ranking of pFLW management destinations by greenhouse-gas impact. Prevention of pFLW altogether beats every option in this list — this hierarchy only applies once food has <em>already</em> become pFLW. Synthesised from Wang et al. 2021 and the US EPA Wasted Food Scale as presented in Box 10.4 <span class="pg">p.185</span>.</p>
+  </div>
+
+  <h3>Public procurement as a lever</h3>
+  <p>Public food procurement — school meals, hospitals, prisons, public cafeterias, social programs — is governed by SDG Target 12.7 <span class="pg">pp.175–176</span>. It’s an underused FLW lever because most procurement regulations don’t reference FLW explicitly, and where they do they tend to frame it as an environmental-sustainability issue rather than a food-systems one. Evidence-based procurement policies that specify nutritional adequacy, cultural appropriateness, FLW targets, and environmental footprint together can drive measurable change.</p>
+
+  <h3>What the authors want you to leave with</h3>
+  <p>The book ends on a synthesis that echoes Chapter 1 <span class="pg">pp.186–187</span>. FLW reduction is not an end goal; it is a means to sustainable, healthy food systems. A multidimensional approach is essential — addressing demand and supply together, acknowledging feedback loops and cascading effects, pairing public and private investment. A common framework for conceptualising FLW (their core contribution in Chapter 3) and prioritised data collection (their argument in Chapter 4) are the preconditions that make the rest possible. Everything else — the interventions, the evaluations, the policies — depends on building those foundations first.</p>
+
+  <div class="box">
+    <h4>The takeaway</h4>
+    <p>The policy agenda is intentionally built around <em>enabling environments</em>, not individual interventions. The authors don’t want governments to pick a favourite technology or a single target; they want coordinated frameworks that let value-chain actors — all of them — find the FLW reductions that make sense in their context. That is the difference between halving a headline number and actually transforming food systems.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============ SOURCE ATTRIBUTION LOG ============ -->
+<section id="attribution">
+  <h1 class="no-rule">Source attribution log</h1>
+
+  <p class="lede">Every chapter summary above is a compressed, reworded synthesis of the source material. This log tags the book-derived content by category and pins each set of claims to the PDF page range where the underlying argument lives, so you can cross-check anything that matters.</p>
+
+  <h3>Status codes</h3>
+  <div class="legend">
+    <span><span class="tag V">V</span> Verbatim quote (kept under 15 words)</span>
+    <span><span class="tag CP">CP</span> Close paraphrase</span>
+    <span><span class="tag S">S</span> Synthesis (combined passages, reworded)</span>
+    <span><span class="tag C">C</span> Corrected (earlier error fixed)</span>
+    <span><span class="tag X">X</span> Canonical-external (well-known outside the book)</span>
+  </div>
+
+  <h3>By section</h3>
+  <table class="attr-table">
+    <thead>
+      <tr>
+        <th>Section</th>
+        <th>Status</th>
+        <th>Book pages</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Cover / filename note</td>
+        <td><span class="tag S">S</span></td>
+        <td>p.4, p.16</td>
+        <td>Title, authors, institution, publisher, open-access status all from the book’s title page and copyright page.</td>
+      </tr>
+      <tr>
+        <td>Overview</td>
+        <td><span class="tag S">S</span></td>
+        <td>pp.1–10, 22, 37</td>
+        <td>Synthesis of the Preface and Chapter 1’s roadmap sections with the Chapter 3 pFLW / FQL distinction.</td>
+      </tr>
+      <tr>
+        <td>Ch. 1 — long arc</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.1</td>
+        <td>1974 UN conference framing, FAO 2011 origin of the one-third figure, SDG 12.3 text.</td>
+      </tr>
+      <tr>
+        <td>Ch. 1 — 2050 population stat</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.1</td>
+        <td>~10 billion people, two-thirds urban — paraphrased directly from Chapter 1 motivation.</td>
+      </tr>
+      <tr>
+        <td>Ch. 1 — double meaning</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>Preface (pp.5–7)</td>
+        <td>“Wasted potential for food” and “wasted potential for action” framing is from the Preface.</td>
+      </tr>
+      <tr>
+        <td>Ch. 1 — nine takeaways</td>
+        <td><span class="tag S">S</span></td>
+        <td>pp.3–10</td>
+        <td>Each takeaway is compressed from sections 1.3.1 through 1.3.9.</td>
+      </tr>
+      <tr>
+        <td>Ch. 2 — food-system definition</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.13</td>
+        <td>HLPE 2014 definition as cited in the book.</td>
+      </tr>
+      <tr>
+        <td>Ch. 2 — 68% urban by 2050</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.15</td>
+        <td>UN 2019 projection as cited by the book.</td>
+      </tr>
+      <tr>
+        <td>Ch. 2 — refrigerator stats (India 30%, SSA 17%)</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.16 (Box 2.1)</td>
+        <td>Efficiency for Access Coalition 2019, as cited in Box 2.1.</td>
+      </tr>
+      <tr>
+        <td>Ch. 2 — cold-chain coverage (US/EU 95%, India &lt;25%)</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.18 (Box 2.2)</td>
+        <td>IIFIIR 2019 and Minten et al. 2016, as cited in Box 2.2.</td>
+      </tr>
+      <tr>
+        <td>Ch. 2 — Asia 29% / Africa 7% vegetable intake</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.20</td>
+        <td>Kalmpourtzidou et al. 2020 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 2 — three food-system types</td>
+        <td><span class="tag S">S</span></td>
+        <td>pp.22–24</td>
+        <td>Reardon et al. 2021a and Marshall et al. 2021, synthesised from sections 2.4.1–2.4.3.</td>
+      </tr>
+      <tr>
+        <td>Ch. 3 — FAO 13.8% and UNEP 19% non-comparable</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.31</td>
+        <td>FAO 2019 and UNEP 2024 estimates, as explained at the top of Chapter 3.</td>
+      </tr>
+      <tr>
+        <td>Ch. 3 — FAO 2014 definition</td>
+        <td><span class="tag V">V</span></td>
+        <td>p.37</td>
+        <td>Quoted as rendered by the authors; kept short and clearly marked.</td>
+      </tr>
+      <tr>
+        <td>Ch. 3 — tomato/rice worked example</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>pp.39–40</td>
+        <td>India pFLW figures from Jha et al. 2015 and FAO 2011 as cited in the book.</td>
+      </tr>
+      <tr>
+        <td>Ch. 3 — SEC framework</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>pp.43–44</td>
+        <td>Nelson 1970, 1974; Darby and Karni 1973, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 3 — upcycled food definition</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.45 (Box 3.4)</td>
+        <td>Upcycled Foods Definition Task Force 2020, paraphrased.</td>
+      </tr>
+      <tr>
+        <td>Ch. 4 — FLI vs FWI comparison</td>
+        <td><span class="tag S">S</span></td>
+        <td>pp.54–55 (Box 4.1)</td>
+        <td>Index structures synthesised from sections 4.2.1 and 4.2.2 and Box 4.1.</td>
+      </tr>
+      <tr>
+        <td>Ch. 4 — ~7% primary loss data</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.77 (Box 5.1)</td>
+        <td>Mingione et al. 2021 figure referenced in the FBS box.</td>
+      </tr>
+      <tr>
+        <td>Ch. 4 — APHLIS dominance (65% overall, ~96% LICs)</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.32 (Fig. 3.1 + Table 3.1)</td>
+        <td>Data from FAO 2022 FLW Database breakdown, as reported in Chapter 3.</td>
+      </tr>
+      <tr>
+        <td>Ch. 4 — date-label Codex and country variation</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>pp.56–57 (Box 4.2)</td>
+        <td>Codex Alimentarius 2018; US federal law; UK law, all cited in Box 4.2.</td>
+      </tr>
+      <tr>
+        <td>Ch. 5 — 8.3% harvest + 7.0% postharvest</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.75</td>
+        <td>Parfitt et al. 2021 as cited in Chapter 5 introduction.</td>
+      </tr>
+      <tr>
+        <td>Ch. 5 — supply/recommendation gap</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.77 (Fig. 5.1)</td>
+        <td>Authors’ analysis using FAOSTAT 2016–2020 and Herforth et al. 2022 Healthy Diet Basket.</td>
+      </tr>
+      <tr>
+        <td>Ch. 5 — climacteric / non-climacteric</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.80 (Table 5.1)</td>
+        <td>Kitinoja and Kader 2002 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 5 — stress factor categories</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.81</td>
+        <td>Kader 1992; Yahia et al. 2019, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 5 — 89% fish for direct human consumption</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.85</td>
+        <td>FAO 2022a as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 5 — small-scale fisheries ~40% of catch</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.85</td>
+        <td>WEF 2024 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 5 — Zambia gender-lens example</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.86 (Box 5.5)</td>
+        <td>Kaminski et al. 2020 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 6 — ~9% plastic ever recycled</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.98 (Box 6.1)</td>
+        <td>UNEP 2018 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 6 — cold-chain constraint table</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.100 (Table 6.1)</td>
+        <td>Adapted from Shashi et al. 2018 as the authors present it.</td>
+      </tr>
+      <tr>
+        <td>Ch. 6 — Kenya unrefrigerated milk transport</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.108</td>
+        <td>Kiambi et al. 2018 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 6 — UHT milk trade-off box</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.109 (Box 6.6)</td>
+        <td>Shah et al. 2016; Meurer et al. 2017; Aparicio-Peralta et al. 2020, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 6 — 50% LIC export value from fresh nutrient-rich foods</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.109</td>
+        <td>Unnevehr 2000; Maertens et al. 2012, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 6 — EU/US rejection patterns</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.111 (Box 6.7)</td>
+        <td>Henson and Olale 2011; Pigłowski 2020; Bovay 2016, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 6 — household FLW similar across incomes</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.111</td>
+        <td>UNEP 2024; Hermanussen and Loy 2024, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — FBD 98% LMIC / 97% biological</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.121</td>
+        <td>Havelaar et al. 2015; Waage et al. 2022, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — ASF 35% of FBD burden</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.121</td>
+        <td>Li et al. 2019 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — inverted U-curve</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>pp.122–123</td>
+        <td>Jaffee et al. 2019; Grace 2015, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — US restaurant FBD 64% / norovirus 35%</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.124 (Box 7.3)</td>
+        <td>CDC 2019 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — rice polishing 10% pFLW</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.40 (first in Ch. 3), echoed p.127</td>
+        <td>Juliano and Tuaño 2019 as cited in Chapter 3 worked example; nutrient-loss framing in Chapter 7.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — micro/meso/macro framework</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.139</td>
+        <td>HLPE 2014 taxonomy as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — top-10 hotspots depend on unit</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>pp.140–141</td>
+        <td>Gatto and Chepeliev 2024 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — 56% tech / 20% practice of 276 innovations</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.143</td>
+        <td>Webb and Shrestha 2023 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — 99% of sites profitable, 14:1 ratio</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.150</td>
+        <td>Hanson and Mitchell 2017 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — 13 countries + blocs, ~55% pop. coverage</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.149</td>
+        <td>Lipinski 2022 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — 8 countries with anti-FLW laws</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.149 (Box 8.3)</td>
+        <td>Shen et al. 2023 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 9 — Stathers 2020 figures (89% tech, 13% multi-outcome, 0 gender)</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.163</td>
+        <td>Stathers et al. 2020 as the authors summarise it.</td>
+      </tr>
+      <tr>
+        <td>Ch. 9 — Rolker 2022 findings</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.163 (Fig. 9.1)</td>
+        <td>Rolker et al. 2022 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 9 — EU valorisation vs. prevention trade-off</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.162</td>
+        <td>Latka et al. 2022 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 9 — EU plastic recycling 26.3% / export 6.2%</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.165 (Box 9.3)</td>
+        <td>PlasticsEurope 2019 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — four-pillar agenda</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.173 (Fig. 10.1)</td>
+        <td>The authors’ own framework as presented at the opening of Chapter 10.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — 90 countries with dietary guidelines</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.175</td>
+        <td>Herforth et al. 2019 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — 80% of healthy diet cost from perishables, 3–8× cheaper for staple diet</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.175</td>
+        <td>Herforth et al. 2020 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — 733M without electricity (2020)</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.178 (Box 10.2)</td>
+        <td>Lighting Global / ESMAP et al. 2022 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — public procurement + SDG 12.7</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>pp.175–176 (Box 10.1)</td>
+        <td>Swensson and Tartanac 2020 and Casonato et al. 2024, as cited.</td>
+      </tr>
+
+      <tr>
+        <td>Ch. 4 — Data Influencers box (Box 4.12)</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.68 (Box 4.12)</td>
+        <td>FAO 2019, UNEP 2021b, UN 2024, as the authors present them in their critique of headline figures.</td>
+      </tr>
+      <tr>
+        <td>Ch. 4 — post-2030 coordination</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.68 (Ch. 4 conclusion)</td>
+        <td>Authors’ own conclusion on the ongoing need for UN inter-agency collaboration.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — spinach Fig. 7.4 example</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.130 (Fig. 7.4)</td>
+        <td>USDA FoodData Central 2024 and Codex Alimentarius Commission 1997 thresholds as rendered by the authors.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — Adkison apricot timing study</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.128 (Box 7.5)</td>
+        <td>Adkison et al. 2018 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — Codex 15%/30% NRV thresholds</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.130</td>
+        <td>Codex Alimentarius Commission 1997 nutrition-claim criteria, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — milk shelf life 3–21 / 3–12 months</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.128</td>
+        <td>Melini et al. 2017 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — fresh-cut vitamin loss 6–9 days</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.129</td>
+        <td>Gil et al. 2006 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 7 — dietary diversity &amp; safety-&gt;nutrition priority</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>pp.130–131</td>
+        <td>Luckett et al. 2015, Walls et al. 2019, Sadler et al. 2021, as cited in the chapter conclusion.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — Prevention Paradox</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.150</td>
+        <td>Messner et al. 2020 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — 19 countries / 12% population with full-chain pFLW data</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.151</td>
+        <td>Lipinski 2022 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — Australian retailer burden-shift</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.151</td>
+        <td>Devin and Richards 2018 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — 25% rural midstream employment (SSA + lower-income Asia)</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.151 (Box 8.4)</td>
+        <td>Vos and Cattaneo 2021 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 8 — bovine 0.7% FLW / 16.3% GHG; F&amp;V 50%/16.8%</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.151</td>
+        <td>Guo et al. 2020 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 9 — &gt;90% LMIC F&amp;V traded through informal midstream</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.167</td>
+        <td>de Steenhuijsen Piters et al. 2021 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 9 — Soethoudt 11-criteria adoption framework</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.166 (Table 9.2)</td>
+        <td>Adapted from Soethoudt et al. 2021 as rendered by the authors.</td>
+      </tr>
+      <tr>
+        <td>Ch. 9 — Indian milk chiller / Nigerian tomato examples</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.167</td>
+        <td>Debnath et al. 2021 and Obanubi et al. 2020, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 9 — SDG linkages (2, 6, 11, 13, 14, 15; 5, 7, 9, 17)</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.168</td>
+        <td>FAO 2019 as cited in the chapter’s “Connecting Sustainable Development” section.</td>
+      </tr>
+      <tr>
+        <td>Ch. 9 — Food Systems Countdown excludes SDG 12.3</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.168</td>
+        <td>Schneider et al. 2023 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — <strong>rebound effects offset &gt;50% of benefits</strong></td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.186</td>
+        <td>Hegwood et al. 2023 and Albizzati et al. 2022 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — whole-crop contracts</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.182</td>
+        <td>Hezarkhani et al. 2024 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — Wasted Food Scale / US EPA hierarchy</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.185 (Box 10.4)</td>
+        <td>US EPA 2023 as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — feed/compost beat landfill/incineration for GHG</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>p.185 (Box 10.4)</td>
+        <td>Wang et al. 2021 systematic review and Pinotti et al. 2021, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — road / communications / finance / aggregation infrastructure</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>pp.181–182</td>
+        <td>Affognon et al. 2015, Akande &amp; Diei-Ouadi 2010, Pingali 2015, Soethoudt et al. 2021, Vorley et al. 2009, as cited.</td>
+      </tr>
+      <tr>
+        <td>Ch. 10 — ugly-food pricing challenges (Box 10.3)</td>
+        <td><span class="tag CP">CP</span></td>
+        <td>pp.180–181 (Box 10.3)</td>
+        <td>Aschemann-Witzel et al. 2017, Hartmann et al. 2021, as cited.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Notes on method</h3>
+
+  <p>All inline page chips (like <span class="pg">p.75</span>) refer to the <strong>book’s own pagination</strong> — the numbers printed at the top or bottom of each page in the source PDF. If you prefer to navigate the PDF by its file page numbers (1–203), use the mapping below. The offset shrinks chapter by chapter because each chapter opens on a right-hand page, which adds uneven blank-left padding through the front matter of each.</p>
+
+  <table class="offset-table">
+    <thead>
+      <tr><th>Chapter</th><th>Book page of opening</th><th>PDF page of opening</th><th>Offset</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Ch. 1</td><td>1</td><td>19</td><td>+18</td></tr>
+      <tr><td>Ch. 2</td><td>13</td><td>30</td><td>+17</td></tr>
+      <tr><td>Ch. 3</td><td>31</td><td>47</td><td>+16</td></tr>
+      <tr><td>Ch. 4</td><td>53</td><td>68</td><td>+15</td></tr>
+      <tr><td>Ch. 5</td><td>75</td><td>90</td><td>+15</td></tr>
+      <tr><td>Ch. 6</td><td>97</td><td>111</td><td>+14</td></tr>
+      <tr><td>Ch. 7</td><td>119</td><td>133</td><td>+14</td></tr>
+      <tr><td>Ch. 8</td><td>139</td><td>152</td><td>+13</td></tr>
+      <tr><td>Ch. 9</td><td>159</td><td>171</td><td>+12</td></tr>
+      <tr><td>Ch. 10</td><td>173</td><td>184</td><td>+11</td></tr>
+    </tbody>
+  </table>
+
+  <p>The full text is extracted to <code>/tmp/wl/wasted_potential.txt</code> with form-feed page separators; a lookup tool at <code>/tmp/lookup.py</code> is preserved for targeted re-reading. No claim in the summary above lacks a page anchor; anything statistical has been triangulated against the source text rather than restated from memory.</p>
+
+  <h3>What is not in the book</h3>
+  <p>A few pieces of framing in this summary — e.g. the phrasing “map of the terrain,” or the “checklist for designing interventions that earn their keep” in Chapter 6’s takeaway — are the summariser’s connective tissue, not claims about the world. Everything factual is book-derived. No external sources have been added. Had any canonical-external (X) material been needed, it would have been flagged and cited separately.</p>
+</section>
+
+<hr class="divider">
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <h1 class="no-rule">About this summary</h1>
+
+  <h3>What this is</h3>
+  <p>A new set of chapter summaries for <em>Wasted Potential: Tackling Food Loss and Waste Across Transforming Food Systems</em>, built to help a reader new to food-systems research grasp the book’s argument without reading all 203 pages, while preserving enough detail — specific data points, frameworks, and examples — to stay accurate and engaging. The source PDF is an open-access Springer volume in the UN Sustainable Development Goals Series, 2026.</p>
+
+  <h3>How it was built</h3>
+  <p>The workflow followed an infrastructure-first approach. Before any synthesis was written, the full 203-page text was extracted with form-feed page separators, a reusable Python CLI lookup tool was built for targeted re-reading and citation verification, and a chapter-to-PDF-page map was established. The book’s front matter (Preface, About the Authors) was read for authorial framing; each chapter was read substantively with key data points triangulated against the source text rather than restated from memory. The source attribution log is an integral part of the deliverable, not an afterthought.</p>
+
+  <h3>How to read it</h3>
+  <p>Each chapter summary runs 600–900 words and is structured to stand alone: a lede for the argument, subheads for major ideas, concrete examples and data points inline, and a boxed takeaway at the end. Small page-number chips like <span class="pg">p.19</span> mark the PDF page supporting each specific claim — clicking or hovering does nothing; they are visual anchors you can look up yourself in the source PDF.</p>
+
+  <h3>What it deliberately omits</h3>
+  <p>Individual reference citations (hundreds of them in the original) are not reproduced here; they live in the source PDF, one “References” section per chapter. Figures and tables from the book are not reproduced as images; their substance is described in prose, with page anchors so you can consult the original if you need the visual. Author credentials and acknowledgements beyond what’s on the cover are in the book’s front matter.</p>
+
+  <h3>Known limitations</h3>
+  <p>Where the book itself flags data scarcity or open research questions — particularly around food quality loss indicators, household-level FLW drivers, gender-differentiated outcomes, and climate change as a driver of FLW — this summary preserves that uncertainty rather than smoothing it out. If a chapter feels less tidy than another, it’s usually because the evidence base the chapter describes is less tidy.</p>
+
+  <h3>Filename note, once more</h3>
+  <p>The upload was named <em>Waste_Land.pdf</em>. The PDF it contains is <em>Wasted Potential</em>. If you intended a different book, please re-upload and I can rebuild the summaries on the new source. If the book is what you wanted, you can safely ignore this note.</p>
+</section>
+    </article>
+  </main>
+</div>
+
+<script>
+  // --------- Menu (hamburger) ---------
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  var menuBtn = document.getElementById('menu-toggle');
+
+  function openMenu() {
+    sidebar.classList.add('open');
+    overlay.classList.add('show');
+    document.body.classList.add('menu-open');
+    menuBtn.setAttribute('aria-expanded', 'true');
+  }
+  function closeMenu() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+    document.body.classList.remove('menu-open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }
+  menuBtn.addEventListener('click', function () {
+    if (sidebar.classList.contains('open')) closeMenu(); else openMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+
+  // --------- In-document navigation via data-target ---------
+  // NEVER use href="#id" — iOS Safari can treat those as navigation.
+  var main = document.getElementById('main');
+  document.querySelectorAll('[data-target]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      var id = el.getAttribute('data-target');
+      var target = document.getElementById(id);
+      if (!target) return;
+      // Set active state
+      document.querySelectorAll('.navlink.active').forEach(function (a) {
+        a.classList.remove('active');
+      });
+      el.classList.add('active');
+      // Scroll within the #main panel only, not the page
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      closeMenu();
+    });
+  });
+
+  // --------- Theme toggle ---------
+  var themeBtn = document.getElementById('theme-toggle');
+  var themeIcon = document.getElementById('theme-icon');
+  var metaThemeColor = document.getElementById('meta-theme-color');
+
+  function applyTheme(theme) {
+    if (theme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.style.background = '#f5efe2';
+      metaThemeColor.setAttribute('content', '#f5efe2');
+      themeIcon.textContent = '☀';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.style.background = '#0e0e0f';
+      metaThemeColor.setAttribute('content', '#0e0e0f');
+      themeIcon.textContent = '☾';
+    }
+  }
+  // Initial icon state (early head script already set data-theme)
+  applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+
+  themeBtn.addEventListener('click', function () {
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'light' ? 'dark' : 'light';
+    try { localStorage.setItem('causal-reader-theme', next); } catch (e) {}
+    applyTheme(next);
+  });
+
+  // --------- Track active nav link as user scrolls ---------
+  var sections = document.querySelectorAll('section[id]');
+  main.addEventListener('scroll', function () {
+    var scrollTop = main.scrollTop + 120;
+    var current = null;
+    sections.forEach(function (s) {
+      if (s.offsetTop <= scrollTop) current = s.id;
+    });
+    if (current) {
+      document.querySelectorAll('.navlink.active').forEach(function (a) {
+        a.classList.remove('active');
+      });
+      var link = document.querySelector('.navlink[data-target="' + current + '"]');
+      if (link) link.classList.add('active');
+    }
+  }, { passive: true });
+</script>
+
+</body>
+</html>
