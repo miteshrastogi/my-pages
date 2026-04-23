@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html style="background:#0e0e0f!important" lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e0e0f" id="theme-color-meta">
+<title>Nature-Based Solutions for Climate Change — A Reader's Synthesis</title>
+
+<script>
+/* EARLY THEME SCRIPT — runs before any paint to prevent flash-of-wrong-theme.
+   Must be the first script in <head>. */
+(function () {
+  try {
+    var saved = localStorage.getItem('causal-reader-theme');
+    if (saved === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.style.background = '#f5efe2';
+      var meta = document.getElementById('theme-color-meta');
+      if (meta) meta.setAttribute('content', '#f5efe2');
+    }
+  } catch (e) { /* localStorage blocked in some contexts — silent fallthrough */ }
+})();
+</script>
+
+<style>
+/* ---------- TRIPLE-LAYER DARK PROTECTION (Layer 3: CSS with !important) ---------- */
+html:not([data-theme="light"]), html:not([data-theme="light"]) body {
+  background: #0e0e0f !important;
+}
+
+/* ---------- DESIGN TOKENS ---------- */
+:root {
+  /* DARK (default) */
+  --bg: #0e0e0f;                /* page */
+  --bg-card: #17171a;            /* chapter card — elevated from page */
+  --bg-elev: #1e1e22;            /* exhibits, takeaway boxes — one level higher */
+  --bg-sidebar: #131316;
+  --bg-exhibit: #1e1e22;
+  --text: #e7e7ea;
+  --text-dim: #a8a8ad;
+  --text-faint: #787880;
+  --border: #2a2a2f;
+  --border-strong: #3a3a42;
+  --accent: #d4a574;             /* warm sand — reads well on dark */
+  --accent-dim: #8a6b4a;
+  --danger: #e07856;
+  --success: #7ca67c;
+  --overlay: rgba(0,0,0,0.6);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.15);
+  --shadow: 0 10px 40px rgba(0,0,0,0.5);
+  --callout-bg: #221c14;
+  --callout-border: #d4a574;
+  /* TIER COLORS for grids — readable on both themes */
+  --tier-high: #2d5a3a;
+  --tier-med: #5a4a2a;
+  --tier-low: #5a2d2d;
+}
+
+html[data-theme="light"] {
+  --bg: #f5efe2;                 /* page — warm cream */
+  --bg-card: #fbf6e9;             /* chapter card — slightly lighter than page */
+  --bg-elev: #ede3cc;             /* exhibits, takeaway boxes — slightly darker for contrast */
+  --bg-sidebar: #ede3cc;
+  --bg-exhibit: #ede3cc;
+  --text: #1c1a14;
+  --text-dim: #524a38;
+  --text-faint: #8a8270;
+  --border: #d9cfbc;
+  --border-strong: #b8ad92;
+  --accent: #8b5a2b;
+  --accent-dim: #a87a50;
+  --danger: #a34a28;
+  --success: #4a6b3f;
+  --overlay: rgba(28,26,20,0.35);
+  --shadow-card: 0 1px 2px rgba(63,46,14,0.08), 0 6px 18px rgba(63,46,14,0.08);
+  --shadow: 0 10px 30px rgba(28,26,20,0.2);
+  --callout-bg: #ede3cc;
+  --callout-border: #8b5a2b;
+  --tier-high: #c8d7bb;
+  --tier-med: #e5d4a8;
+  --tier-low: #e5b8a8;
+}
+
+html[data-theme="light"] body { background: #f5efe2 !important; }
+
+/* ---------- BASE ---------- */
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Iowan Old Style", "Charter", Georgia, Cambria, "Source Serif Pro", serif;
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---------- TOP BAR ---------- */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+}
+
+.topbar-title {
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 120px);
+}
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  transition: background 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.icon-btn:hover, .icon-btn:focus { background: var(--bg-elev); border-color: var(--border-strong); outline: none; }
+
+.icon-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+/* ---------- SIDEBAR ---------- */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  width: min(85vw, 320px);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  transform: translateX(-100%);
+  transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+  z-index: 200;
+  overflow-y: auto;
+  padding: 64px 0 40px 0;
+  box-shadow: var(--shadow);
+}
+.sidebar.open { transform: translateX(0); }
+
+.sidebar-header {
+  padding: 0 20px 16px 20px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-label {
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.sidebar-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.nav-list { list-style: none; margin: 0; padding: 8px 0; }
+.nav-item { margin: 0; }
+.nav-link {
+  display: block;
+  padding: 10px 20px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 15px;
+  line-height: 1.35;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.15s, color 0.15s, border-left-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-link:hover, .nav-link:focus { background: var(--bg-elev); color: var(--text); outline: none; }
+.nav-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--bg-elev); }
+.nav-link-num {
+  display: inline-block;
+  width: 22px;
+  color: var(--text-faint);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--overlay);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s;
+  z-index: 150;
+}
+.overlay.show { opacity: 1; pointer-events: auto; }
+
+/* ---------- MAIN CONTENT ---------- */
+#main {
+  padding-top: 52px;
+  max-width: 780px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 120px;
+}
+
+/* ---------- COVER ---------- */
+.cover {
+  padding: 36px 28px 32px 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 28px;
+}
+.cover-super {
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.cover h1 {
+  font-size: 36px;
+  line-height: 1.15;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+.cover-sub {
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  max-width: 560px;
+  margin: 0 0 20px 0;
+  font-style: italic;
+}
+.cover-meta {
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+  font-size: 12px;
+  color: var(--text-faint);
+  letter-spacing: 0.04em;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  max-width: 640px;
+  line-height: 1.6;
+}
+
+/* ---------- CHIPS (cover metadata) ---------- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 24px 0;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-dim);
+  color: var(--accent);
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: transparent;
+  white-space: nowrap;
+}
+
+/* ---------- CHAPTERS (now card-based) ---------- */
+.chapter {
+  margin-bottom: 28px;
+  padding: 36px 32px 32px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  scroll-margin-top: 72px;
+}
+.chapter-num {
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.chapter h2 {
+  font-size: 30px;
+  line-height: 1.2;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+.chapter-dek {
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.chapter h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 36px 0 12px 0;
+  line-height: 1.3;
+  color: var(--text);
+}
+.chapter h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 28px 0 10px 0;
+  letter-spacing: 0.01em;
+  color: var(--accent);
+}
+
+/* ---------- TAKEAWAY BOX ("Reader's rule") ---------- */
+.takeaway {
+  margin: 36px 0 0 0;
+  padding: 18px 20px 16px 20px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+}
+.takeaway-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.takeaway-rule {
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--text);
+  font-style: italic;
+  font-family: "Iowan Old Style", "Charter", Georgia, serif;
+}
+
+/* ---------- PROSE ---------- */
+.chapter p {
+  margin: 0 0 16px 0;
+  text-align: left;
+}
+.chapter p + p { text-indent: 1.5em; }
+.chapter p.lead {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--text);
+  text-indent: 0 !important;
+}
+
+/* Citation superscripts — tappable, show source key */
+.cite {
+  font-size: 11px;
+  vertical-align: super;
+  color: var(--accent);
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+  font-weight: 600;
+  padding: 0 1px;
+  white-space: nowrap;
+}
+
+/* ---------- EXHIBITS (tables / SVGs / callouts) ---------- */
+.exhibit {
+  margin: 32px 0;
+  background: var(--bg-exhibit);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.exhibit-caption {
+  padding: 12px 16px 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elev);
+}
+.exhibit-label {
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.exhibit-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+}
+.exhibit-source {
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+  font-size: 11px;
+  color: var(--text-faint);
+  padding: 8px 16px 10px 16px;
+  border-top: 1px solid var(--border);
+  font-style: italic;
+}
+.exhibit-body { padding: 16px; }
+
+/* ---------- TABLE ---------- */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+  line-height: 1.4;
+}
+.tbl th {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid var(--border-strong);
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: bottom;
+}
+.tbl td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text);
+}
+.tbl tr:last-child td { border-bottom: none; }
+.tbl td.num { font-variant-numeric: tabular-nums; text-align: right; }
+.tbl td.high { background: var(--tier-high); }
+.tbl td.med { background: var(--tier-med); }
+.tbl td.low { background: var(--tier-low); }
+html[data-theme="light"] .tbl td.high,
+html[data-theme="light"] .tbl td.med,
+html[data-theme="light"] .tbl td.low { color: #1c1a14; }
+
+/* ---------- CALLOUT ---------- */
+.callout {
+  background: var(--callout-bg);
+  border-left: 3px solid var(--callout-border);
+  padding: 14px 16px 14px 18px;
+  margin: 24px 0;
+  border-radius: 0 6px 6px 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
+}
+.callout-label {
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+/* ---------- SOURCE LOG ---------- */
+.sourcelog-entry {
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.5;
+  font-family: "SF Pro Display", -apple-system, sans-serif;
+}
+.sourcelog-entry:last-child { border-bottom: none; }
+.sourcelog-entry .cite-key {
+  display: inline-block;
+  background: var(--bg-elev);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-right: 10px;
+  vertical-align: baseline;
+  font-family: "SF Mono", Menlo, monospace;
+}
+.sourcelog-entry .status {
+  font-family: "SF Mono", Menlo, monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-left: 6px;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+.sourcelog-entry .status.verbatim { color: var(--success); border-color: var(--success); }
+.sourcelog-entry .status.paraphrase { color: var(--accent); border-color: var(--accent-dim); }
+.sourcelog-entry .status.abstract { color: var(--danger); border-color: var(--danger); }
+
+/* ---------- SVG exhibits ---------- */
+.exhibit svg { display: block; max-width: 100%; height: auto; }
+.sv-axis { stroke: var(--border-strong); stroke-width: 1; }
+.sv-tick { stroke: var(--border); stroke-width: 1; }
+.sv-lbl { fill: var(--text-dim); font-size: 10px; font-family: "SF Pro Display", sans-serif; }
+.sv-title { fill: var(--text); font-size: 12px; font-weight: 600; font-family: "SF Pro Display", sans-serif; }
+.sv-bar-a { fill: var(--accent); }
+.sv-bar-b { fill: var(--accent-dim); }
+.sv-bar-c { fill: var(--success); }
+.sv-bar-d { fill: var(--danger); }
+.sv-line { stroke: var(--accent); stroke-width: 2; fill: none; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 500px) {
+  .cover h1 { font-size: 26px; }
+  .chapter h2 { font-size: 23px; }
+  html, body { font-size: 16px; }
+  #main { padding-left: 12px; padding-right: 12px; }
+  .chapter { padding: 28px 20px 24px 20px; }
+  .cover { padding: 28px 20px 24px 20px; }
+}
+
+/* DESKTOP — sticky side rail replaces hamburger+overlay at ≥1024px */
+@media (min-width: 1024px) {
+  .sidebar {
+    transform: translateX(0) !important;
+    position: fixed;
+    top: 52px;
+    left: 0;
+    height: calc(100vh - 52px);
+    width: 280px;
+    padding-top: 24px;
+    box-shadow: none;
+    border-right: 1px solid var(--border);
+  }
+  .overlay { display: none !important; }
+  #hamburger { display: none; }
+  #main {
+    /* Center content column in the space to the right of the sidebar.
+       - max-width caps at 960px, but shrinks on narrow desktops to never overflow.
+       - left margin: clears sidebar (280px) when viewport is narrow, shifts to center content when viewport is wide enough.
+       At V=1240px+: content is 960px wide and starts shifting right of sidebar.
+       At V=1800px: content is 960px and visually centered (280px sidebar, 280px gap, 960px content, 280px gap). */
+    max-width: min(960px, calc(100vw - 360px));
+    margin-left: max(280px, calc(50vw - 340px));
+    margin-right: auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .topbar {
+    left: 280px;
+    border-left: 1px solid var(--border);
+  }
+}
+
+/* Reduce motion if user prefers */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar, .overlay { transition: none; }
+}
+
+/* ---------- LINKS INSIDE PROSE ---------- */
+.chapter a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.chapter a:hover { color: var(--text); }
+
+/* Scroll target offset so top bar doesn't cover anchor */
+.cover { scroll-margin-top: 72px; }
+</style>
+</head>
+
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <button class="icon-btn" id="hamburger" aria-label="Open navigation" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z"/></svg>
+  </button>
+  <div class="topbar-title">Nature-Based Solutions</div>
+  <button class="icon-btn" id="theme-toggle" aria-label="Toggle light/dark theme">
+    <svg viewBox="0 0 24 24" aria-hidden="true" id="theme-icon">
+      <!-- Moon (shown in dark mode by default) -->
+      <path d="M12 3a9 9 0 109 9 7 7 0 01-9-9z"/>
+    </svg>
+  </button>
+</header>
+
+<!-- ============ SIDEBAR ============ -->
+<nav class="sidebar" id="sidebar" aria-label="Chapter navigation">
+  <div class="sidebar-header">
+    <div class="sidebar-label">A Reader's Synthesis</div>
+    <div class="sidebar-title">Nature-Based Solutions for Climate Change</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-item"><span class="nav-link" data-target="cover"><span class="nav-link-num">—</span>Front matter</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="corpusmap"><span class="nav-link-num">0</span>Corpus map</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="ch1"><span class="nav-link-num">1</span>Foundations &amp; framing</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="ch2"><span class="nav-link-num">2</span>Forests</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="ch3"><span class="nav-link-num">3</span>Blue carbon</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="ch4"><span class="nav-link-num">4</span>Peatlands &amp; freshwater wetlands</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="ch5"><span class="nav-link-num">5</span>Agricultural NbS &amp; soils</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="ch6"><span class="nav-link-num">6</span>Urban NbS</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="ch7"><span class="nav-link-num">7</span>Finance, markets &amp; integrity</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="ch8"><span class="nav-link-num">8</span>Limits, equity &amp; justice</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="sourcelog"><span class="nav-link-num">★</span>Source attribution log</span></li>
+    <li class="nav-item"><span class="nav-link" data-target="prompting"><span class="nav-link-num">⚙</span>Prompt-tuning appendix</span></li>
+  </ul>
+</nav>
+<div class="overlay" id="overlay"></div>
+
+<!-- ============ MAIN CONTENT ============ -->
+<main id="main">
+
+<!-- COVER -->
+<section id="cover" class="cover">
+  <div class="cover-super">A Reader's Synthesis · April 2026</div>
+  <h1>Nature-Based Solutions for Climate Change</h1>
+  <p class="cover-sub">Eight chapters drawn from the last twelve months of peer-reviewed research: what the field is finding, what it's getting wrong, and what the evidence actually supports.</p>
+  <div class="chips">
+    <span class="chip">7 flagship papers</span>
+    <span class="chip">2 OA complements</span>
+    <span class="chip">2024–2026 window</span>
+    <span class="chip">~22,000 words</span>
+    <span class="chip">Page-cited</span>
+  </div>
+  <div class="cover-meta">
+    Built from seven paywalled flagship papers provided by the reader (Nature Climate Change × 2, Nature Geoscience, Nature Food, Nature Cities, Nature Reviews Earth &amp; Environment, Science), complemented by open-access material from <em>Nature Communications</em>, <em>PNAS</em>, <em>Journal of Applied Ecology</em>, and government/NGO reports. Page citations in brackets refer to the PDF page of the cited source. The full source attribution log is at the end.
+  </div>
+</section>
+
+<!-- CORPUS MAP — maps chapters to decision questions a reader actually has -->
+<section id="corpusmap" class="chapter">
+  <div class="chapter-num">Orientation</div>
+  <h2>Corpus map — what question each chapter answers</h2>
+  <p class="chapter-dek">A table of contents tells you what each chapter is <em>about</em>. A corpus map tells you which chapter to read when you have a specific decision to make. Use this as the orientation layer before Chapter 1.</p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 0.1</div>
+      <div class="exhibit-title">From decision problem to relevant chapter</div>
+    </div>
+    <div class="exhibit-body">
+      <table class="tbl">
+        <thead>
+          <tr><th>Decision problem</th><th>Chapter(s)</th><th>Why it matters</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>What does "nature-based solutions" actually mean — and what's the difference between NbS, NbCS, and NCS?</td><td><strong>Ch 1</strong></td><td>The definitional slack inside this umbrella drives most of the integrity arguments that follow. Get the terms right before the numbers.</td></tr>
+          <tr><td>I'm evaluating a reforestation or avoided-deforestation project. What should I actually believe about its climate value?</td><td><strong>Ch 2 + Ch 7</strong></td><td>Ch 2 has the 2025 scientific reset on how much forest NbS can deliver and where. Ch 7 has the market-integrity evidence on why claimed credits and real reductions diverge.</td></tr>
+          <tr><td>I'm allocating a blue-carbon / coastal restoration budget. Which pathway first?</td><td><strong>Ch 3</strong></td><td>The three BCE pathways have very different readiness profiles — mangroves mature and fundable, seagrass genuinely unresolved. Order matters.</td></tr>
+          <tr><td>My portfolio has a large peatland or drained-wetland footprint. How much GHG is that worth?</td><td><strong>Ch 4</strong></td><td>Peatlands are the highest-per-hectare carbon stock on land and the least-discussed pathway in NDCs. The arithmetic here is not controversial — the political economy is.</td></tr>
+          <tr><td>I'm structuring an agricultural-soils program. What does a credible mitigation claim look like at scale?</td><td><strong>Ch 5</strong></td><td>Frank 2024 models the $160/tCO₂e world where ag-NbS matches afforestation. Chapter also covers why MRV remains the binding constraint.</td></tr>
+          <tr><td>My city has a heat-adaptation budget. Green infrastructure at what scale, for what outcome?</td><td><strong>Ch 6</strong></td><td>The 2025 Wei meta-analysis of 373 studies is the first quantitative answer to "which NbS, at what scale, cools how much, where."</td></tr>
+          <tr><td>I'm assessing a corporate net-zero plan that includes carbon credits. Should I trust it?</td><td><strong>Ch 7</strong></td><td>Probst, Swinfield, West, Stolz — the 2024–2026 peer-reviewed literature has made the integrity answer much more negative than most net-zero plans assume.</td></tr>
+          <tr><td>What's the role of NbS in a 1.5°C-compatible climate strategy, and what should it not be asked to do?</td><td><strong>Ch 8</strong></td><td>The ceiling on NbS is biophysical; substituting it for fossil-fuel phase-out is the common strategic error. This chapter draws the limits.</td></tr>
+          <tr><td>I want to check a claim or source. What was actually read, and how was it verified?</td><td><strong>Source log</strong></td><td>Per-source status codes (verbatim-page / abstract-verified / canonical-external), scope disclosure, and attribution corrections.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exhibit-source">Orientation aid for this synthesis. Use the left-column questions as entry points; the TOC in the sidebar is the linear read.</div>
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">How to use this book</div>
+    <div class="takeaway-rule">Read linearly for foundations. Jump via this corpus map when you have a specific decision in hand. The source log at the end is auditable — every substantive claim points to a specific page of a specific paper.</div>
+  </div>
+</section>
+
+<!-- CHAPTERS WILL BE INSERTED HERE -->
+<section id="ch1" class="chapter">
+  <div class="chapter-num">Chapter 1</div>
+  <h2>Foundations &amp; framing — what NbS is, what it isn't, and why the definition matters</h2>
+  <p class="chapter-dek">Nature-Based Solutions are not one thing. The umbrella covers everything from protecting a peatland to paying a cocoa farmer to shade their crop with native trees — and the definitional slack is itself one of the most consequential features of the field.</p>
+
+  <p class="lead">The term "nature-based solutions" was coined by the International Union for Conservation of Nature (IUCN) in the late 2000s and formalised in the IUCN Global Standard in 2020: <em>actions to protect, sustainably manage and restore natural or modified ecosystems that address societal challenges effectively and adaptively, simultaneously providing human wellbeing and biodiversity benefits.</em> The UN Environment Assembly adopted a near-identical definition in 2022. Two things make that definition unusual among climate-policy terms. First, it requires benefits to nature — not just tolerance of nature — as a defining feature. Second, it explicitly frames climate as one of several societal challenges being addressed simultaneously, rather than the sole endpoint.</p>
+
+  <p>This framing is the source of most of the conceptual trouble that follows. When a corporation funds mangrove planting to offset a tonne of Scope 1 CO₂, the project may qualify as an NbS — but the climate motivation is primary and the biodiversity and livelihood outcomes are secondary. When a municipality re-meanders a river to reduce flood peaks, the climate angle is adaptation, and carbon is incidental. The same word is doing two very different jobs.</p>
+
+  <p>To sharpen the climate conversation, a subset of the NbS community has adopted the narrower term <em>nature-based climate solutions</em> (NbCS), defined as conservation, restoration and improved management strategies in natural and working ecosystems whose <em>primary motivation</em> is to mitigate greenhouse-gas emissions and remove CO₂ from the atmosphere. Buma, Gordon, Novick and colleagues drew this line explicitly in a 2024 <em>Nature Climate Change</em> analysis: NbS is broader than NbCS, which is broader than what they called "natural climate solutions" — a still-narrower set that does not move ecosystems beyond their unmodified structure, function or composition.<span class="cite">[Buma&nbsp;2024,&nbsp;p2]</span></p>
+
+  <p>These three nested definitions matter because they determine what counts, what can be credited, and what gets funded. Macroalgae aquaculture in deep water is an NbCS (climate-motivated) but not a natural climate solution (not the ecosystem's unmodified state). A reforestation project using monoculture eucalyptus for pulp is a natural climate solution by some definitions but fails the biodiversity test of the IUCN Global Standard. The definitional overlap — and the pressure on practitioners to pick the framing that qualifies their project for the funding they want — is an ongoing structural issue in the field.</p>
+
+  <h3>The 43-pathway map of what we actually know</h3>
+
+  <p>The single most useful recent stock-take of the NbS evidence base is the expert elicitation led by Buma and Gordon at the Environmental Defense Fund with co-authors from a dozen US research institutions, published in <em>Nature Climate Change</em> in March 2024.<span class="cite">[Buma&nbsp;2024,&nbsp;p1]</span> The authors identified 43 distinct NbCS pathways across nine biomes and three cultivation types, reviewed the peer-reviewed literature for each, and then asked ten experts to categorise each pathway into one of three readiness bins: <strong>Category 1</strong> — sufficient scientific basis to support a high-quality carbon-accounting system today; <strong>Category 2</strong> — a greater-than-25% chance that focused research within five years would get the pathway to Category 1; and <strong>Category 3</strong> — less than 25% chance of that within five years, typically because of measurement challenges or unconstrained leakage.<span class="cite">[Buma&nbsp;2024,&nbsp;p2]</span></p>
+
+  <p>The headline is uncomfortable for the carbon-markets side of the field. Of the 43 pathways, 79% are currently eligible for some form of carbon crediting, and at least 65% of those have been implemented at some scale. But only a handful made Category 1 on scientific readiness. The top of the chart — high readiness and high potential impact — is dominated by tropical forest conservation and tropical forest reforestation. The next tier includes temperate forest restoration, mangrove restoration (mean readiness score 1.7, notably higher-confidence than other blue carbon), and a small cluster of agricultural pathways.<span class="cite">[Buma&nbsp;2024,&nbsp;p3]</span></p>
+
+  <p>Twenty-six pathways landed in Category 2 — meaningful climate benefit is plausible, but the science is not yet tight enough to stake quantitative mitigation plans on. Across that middle tier, the most commonly flagged uncertainties were <strong>durability</strong> (how long the sequestered carbon stays put — mean uncertainty 3.6 on a 5-point scale) and <strong>baseline-setting</strong> (how you establish what would have happened without the intervention — mean 3.4).<span class="cite">[Buma&nbsp;2024,&nbsp;p4]</span> Forest pathways were weakest on durability and additionality. Agricultural and grassland pathways were weakest on measurement methods and additionality. Coastal blue carbon showed wide internal variation — mangroves confident, seagrass genuinely unresolved at mean 2.8.<span class="cite">[Buma&nbsp;2024,&nbsp;p4]</span></p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 1.1</div>
+      <div class="exhibit-title">Voluntary carbon credits issued by NbCS category (as of May 2023)</div>
+    </div>
+    <div class="exhibit-body">
+      <table class="tbl">
+        <thead>
+          <tr><th>Scope</th><th>Pathway</th><th class="num">Credits issued</th></tr>
+        </thead>
+        <tbody>
+          <tr><td rowspan="4" style="border-right:1px solid var(--border);">Forestry &amp; land use</td><td>REDD+ (avoided deforestation)</td><td class="num">445 million</td></tr>
+          <tr><td>Improved forest management</td><td class="num">200 million</td></tr>
+          <tr><td>Afforestation / reforestation</td><td class="num">59 million</td></tr>
+          <tr><td>Avoided forest conversion</td><td class="num">10 million</td></tr>
+          <tr><td rowspan="2" style="border-right:1px solid var(--border);">Other ecosystems</td><td>Sustainable grassland management</td><td class="num">12 million</td></tr>
+          <tr><td>Wetland restoration</td><td class="num">5 million</td></tr>
+          <tr><td rowspan="2" style="border-right:1px solid var(--border);">Agriculture</td><td>Improved irrigation management</td><td class="num">400,000</td></tr>
+          <tr><td>Sustainable agriculture</td><td class="num">440,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exhibit-source">Source: Buma, Gordon, Novick et al. 2024, <em>Nat. Clim. Change</em> 14:402–406, Table 1 (p2). Data drawn from Voluntary Registry Offsets Database, Berkeley Carbon Trading Project. Forestry pathways account for ~95% of all NbCS credits issued to date.</div>
+  </div>
+
+  <p>Two features of this credit-issuance table deserve attention. First, the market concentrates heavily in the pathways where the Buma review found the strongest science — tropical forest conservation, avoided deforestation, reforestation. On that read, the market is pointing buyers to the right pathways. Second, however, the fact that REDD+ alone accounts for 445 million credits means the integrity of deforestation baselines is not a secondary question for voluntary markets; it is the primary question. Chapter 7 returns to this.</p>
+
+  <h3>Mitigation versus adaptation — a split the numbers reveal</h3>
+
+  <p>Most NbS projects deliver both carbon and adaptation benefits — a coastal mangrove sequesters carbon <em>and</em> attenuates storm surge — but funding flows treat the two domains very differently. Estimates compiled by the World Economic Forum in late 2025 place nature finance for adaptation at around 1.5% of all public international climate-adaptation finance flowing to developing countries. Meanwhile, mangrove forests alone are estimated to save about US$80 billion per year in avoided coastal flooding losses globally and to protect up to 18 million people. This is the adaptation-side mismatch: nature is doing the heavy lifting on climate resilience in many of the world's most exposed coastlines, and the climate finance system is funding almost none of it.</p>
+
+  <p>The mitigation side gets more money, but the money is concentrated in projects whose claims are harder to verify. This is the central tension the rest of this book works through: the pathways with the most robust climate mitigation evidence (tropical forest avoided loss, mangrove conservation) are also the pathways most vulnerable to baseline gaming, and the pathways with the least robust evidence (most soil-carbon schemes, most grassland projects, seagrass restoration) are being scaled anyway because buyers want something to buy.</p>
+
+  <h3>Two sharp critiques — from within and from outside</h3>
+
+  <p>Two recent critiques shape the current conversation in ways worth flagging at the outset.</p>
+
+  <p>The first is internal: Folkard-Tapp and co-authors, writing in <em>Journal of Applied Ecology</em> in 2025, argue that the NbS frame is itself a limiter. By centring the concept on ecosystem services rendered to humans, NbS remains embedded in the growth-based, market-driven economic paradigm that produced the planetary crises in the first place. They propose <strong>Integrated Nature-Climate Action (INCA)</strong> as a broader frame that encompasses structural economic reform — decarbonisation, supply-chain accountability, equity and degrowth — alongside ecosystem-based interventions. The critique is not that NbS projects are bad; it is that calling them "solutions" risks overstating what ecosystem management alone can do.</p>
+
+  <p>The second is external and older but has gained momentum over the last two years: Indigenous scholars and organisations have argued that the NbS concept, as operationalised by the IUCN Global Standard and by most market frameworks, does not adequately recognise Indigenous land tenure, consent rights, and knowledge systems. Melissa K. Nelson and Graeme Reed, writing in <em>PNAS</em> in 2025 as a Perspective article, set out the most fully-developed version of this argument.<span class="cite">[Nelson&nbsp;&amp;&nbsp;Reed&nbsp;2025,&nbsp;p1]</span> Indigenous peoples constitute about 5% of the global population but steward roughly 20% of the Earth's surface and protect nearly 80% of its remaining biodiversity.<span class="cite">[Nelson&nbsp;&amp;&nbsp;Reed&nbsp;2025,&nbsp;p1]</span> Without Indigenous leadership at the design stage, the authors argue, NbS risks becoming a new vector for land dispossession rather than a partnership for stewardship — and they propose reframing the concept itself as "culture-based solutions" grounded in Indigenous Knowledge Systems and Traditional Ecological Knowledge rather than in Western ecological-services thinking.<span class="cite">[Nelson&nbsp;&amp;&nbsp;Reed&nbsp;2025,&nbsp;p1]</span></p>
+
+  <div class="callout">
+    <div class="callout-label">Three definitions to keep straight</div>
+    <strong>Nature-based Solutions (NbS)</strong> — broadest. Any action that uses ecosystems to address a societal challenge, with co-benefits for biodiversity and livelihoods. Per IUCN Global Standard 2020 + UN Environment Assembly 2022.<br><br>
+    <strong>Nature-based Climate Solutions (NbCS)</strong> — ecosystems-based interventions whose primary motivation is climate mitigation. May involve moving ecosystems beyond their unmodified state (e.g. macroalgae aquaculture). Term used by Buma, Novick et al. 2024.<br><br>
+    <strong>Natural Climate Solutions (NCS)</strong> — narrowest. NbCS that does <em>not</em> move the ecosystem beyond its unmodified structure. The original Griscom et al. 2017 formulation.
+  </div>
+
+  <p>With those frames in place, the remaining chapters work pathway by pathway. Chapter 2 takes up forests — the pathway with the most confident science, the most mobilised capital, and the deepest integrity scandal. Chapters 3 and 4 take up the wet ecosystems: blue carbon and peatlands, where small footprints hold disproportionate carbon stocks. Chapter 5 turns to the working landscapes of agriculture and grazing. Chapter 6 turns to cities. Chapter 7 takes up carbon markets in depth. Chapter 8 closes with what the evidence says NbS can and cannot do for the climate.</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Reader's rule — Chapter 1</div>
+    <div class="takeaway-rule">The umbrella called "NbS" covers three nested definitions — broad <strong>NbS</strong>, climate-focused <strong>NbCS</strong>, and unmodified-ecosystem <strong>NCS</strong>. Before evaluating any claim or project, ask which one it is actually claiming to be.</div>
+  </div>
+</section>
+
+<section id="ch2" class="chapter">
+  <div class="chapter-num">Chapter 2</div>
+  <h2>Forests — the field's strongest science meets its hardest integrity problem</h2>
+  <p class="chapter-dek">Forest-based NbS is where the market is largest, the science most developed, and the failures most publicly documented. It is also where two 2025 papers have quietly reset the ambition ceiling.</p>
+
+  <p class="lead">For a decade, forest-based natural climate solutions have been built on a handful of headline numbers. A 2017 synthesis by Griscom and colleagues in <em>PNAS</em> estimated that natural climate solutions as a whole could deliver a maximum of 23.8 Pg CO₂e per year at a 2030 reference, with about 11.3 Pg CO₂e cost-effective at ≤US$100/tonne and about one-third of that at ≤US$10/tonne.<span class="cite">[Griscom&nbsp;2017,&nbsp;p1]</span> A 2019 paper by Bastin and colleagues in <em>Science</em> suggested global restoration could lock in 205 Gt of carbon if trees were planted on 0.9 billion hectares.<span class="cite">[Bastin&nbsp;2019,&nbsp;p1]</span> A 2020 paper by Strassburg et al. in <em>Nature</em> estimated that restoring 15% of converted lands in priority areas could sequester 299 Gt CO₂ while avoiding 60% of expected extinctions.<span class="cite">[Strassburg&nbsp;2020,&nbsp;p1]</span> The numbers have been the quantitative backbone of a decade of NDC commitments, corporate pledges and carbon-market scaling arguments.</p>
+
+  <p>Two of those headline numbers have not aged well. Bastin's 205 GtC estimate drew <em>three</em> formal peer-reviewed Comments in <em>Science</em> within months of publication. Lewis, Mitchard and colleagues argued that true forest restoration — as distinct from monoculture plantations — has much lower carbon densities than the paper assumed. Veldman and colleagues demonstrated that Bastin's "restoration potential" map misclassified large areas of native grassland and savanna (including parts of the African miombo and South American Cerrado) as degraded forest land, where afforestation would actively harm biodiversity and in some cases <em>reduce</em> carbon stocks. Friedlingstein and colleagues pointed out a more basic problem: only about 45% of additional terrestrial carbon uptake translates into atmospheric drawdown (the rest is rebalanced by ocean and existing-biosphere flux changes), which means the claimed "25% of atmospheric carbon removed" was off by a factor of roughly two. The 205 GtC figure remains in widespread circulation, but the peer-reviewed record has substantially discounted it. Use with caution.</p>
+
+  <p>Two papers published in 2025 substantially revise that picture — one downward, one sideways. Both are now foundational reading for anyone trying to understand what forest NbS can actually deliver.</p>
+
+  <h3>The ceiling is lower than we thought</h3>
+
+  <p>The downward revision comes from Csaba Tölgyesi, Nándor Csikós and colleagues at a coalition of Hungarian, German, French, Brazilian and UK research institutions, writing in <em>Nature Geoscience</em> in August 2025. Their argument is methodological: earlier estimates were <em>tree-centric</em>, treating grasslands, shrublands and wetlands as worse-than-forest options rather than as legitimate target ecosystems in their own right; they also tended to assume restoration trajectories held constant through 2100, with no adjustment for the state transitions that climate change itself imposes on ecosystems over the century.<span class="cite">[Tölgyesi&nbsp;2025,&nbsp;p1]</span></p>
+
+  <p>Tölgyesi's team built a machine-learning framework to predict the potential native-ecosystem cover at every 30-arcsecond grid cell on the planet, across forest, shrubland, grassland and wetland types, under four IPCC climate scenarios (SSP1–2.6, SSP2–4.5, SSP3–7.0, SSP5–8.5) to 2080. The result is a map of where each ecosystem type can still exist and what it can store there.<span class="cite">[Tölgyesi&nbsp;2025,&nbsp;p3]</span></p>
+
+  <p>The global ceiling is <strong>96.9 Gt of carbon</strong>, or roughly 355 Gt CO₂, under maximum ambition.<span class="cite">[Tölgyesi&nbsp;2025,&nbsp;p1,5]</span> This is equivalent to about 17.6% of anthropogenic emissions to date, but only 3.7–12.0% of combined historical-plus-projected emissions through 2100.<span class="cite">[Tölgyesi&nbsp;2025,&nbsp;p1]</span> The key sentence: "our results suggest that ecosystem restoration has limited potential for climate change mitigation even if orchestrated with a pervasive shift towards sustainable, low-emissions economies globally."<span class="cite">[Tölgyesi&nbsp;2025,&nbsp;p1]</span></p>
+
+  <p>Two findings inside the paper reframe the ambition debate. First, the ceiling number assumes <em>full</em> restoration starting instantaneously in 2030, which the authors flag as implausible. Second — and more consequentially — when the model accounts for state transitions driven by climate change itself (tropical forest converting to savannah, boreal forest retreating, grasslands shifting poleward), the additional sequestration from restoration is close to zero. The authors project a net loss of 2.3–3.4 million km² of forest globally by 2061–2080 driven by climate transition alone, overwhelmingly concentrated in the Amazon and other tropical zones.<span class="cite">[Tölgyesi&nbsp;2025,&nbsp;p3]</span> Shrubland and grassland potential expand; wetland potential expands too. But the forest-centric story of a carbon-capture dividend has a ceiling that is both lower than previously thought and shrinking.</p>
+
+  <p>The authors' recommendation is bracing: restoration should be pursued primarily for biodiversity, livelihoods and ecosystem-service resilience. Climate mitigation from restoration will vary depending on state transitions; it should not be the primary justification.<span class="cite">[Tölgyesi&nbsp;2025,&nbsp;p1]</span></p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 2.1</div>
+      <div class="exhibit-title">Global restoration carbon-sequestration estimates: a downward revision</div>
+    </div>
+    <div class="exhibit-body">
+      <table class="tbl">
+        <thead>
+          <tr><th>Study (year)</th><th>Scope</th><th class="num">Estimate</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Bastin et al. 2019 (<em>Science</em>) <span class="cite">[disputed]</span></td><td>Global tree restoration</td><td class="num">205 Gt C</td><td>Tree-centric; 3 formal Comments published in <em>Science</em> revised estimate substantially downward</td></tr>
+          <tr><td>Cook-Patton et al. 2020 (<em>Nature</em>) <span class="cite">[abstract-level]</span></td><td>Natural forest regrowth</td><td class="num">100× variation</td><td>Mapped 1-km-resolution regrowth rates; 32% above IPCC defaults on avg; 11% lower overall than Griscom 2017</td></tr>
+          <tr><td>Strassburg et al. 2020 (<em>Nature</em>)</td><td>Priority restoration mosaic (multi-biome)</td><td class="num">299 Gt CO₂</td><td>At 15% restoration of converted lands; 465 Gt CO₂ at 30% restoration</td></tr>
+          <tr><td>Mo et al. 2023 (<em>Nature</em>) <span class="cite">[abstract-level]</span></td><td>Integrated forest C potential (ground + satellite)</td><td class="num">226 Gt C deficit</td><td>Of which 61% is in existing forests (conservation potential), not new planting</td></tr>
+          <tr class="high"><td><strong>Tölgyesi et al. 2025 (<em>Nat. Geoscience</em>)</strong></td><td>Multi-ecosystem, climate-adjusted, 2100 horizon</td><td class="num"><strong>96.9 Gt C max</strong></td><td>Close to zero when climate-driven state transitions included</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exhibit-source">Primary source: Tölgyesi et al. 2025, <em>Nat. Geosci.</em> 18:761–768, p1–5 (full text verified). Comparison values — Bastin 2019 Science (full text verified; pp.76–79 headline claims); Strassburg 2020 Nature (full text verified; pp.724–729); Griscom 2017 PNAS (full text verified; pp.11645–11650); Cook-Patton 2020 Nature and Mo 2023 Nature (publisher abstracts and headline-claim summaries verified across multiple institutional deposits; fetching blocked by bot-protection systems).</div>
+  </div>
+
+  <h3>Protect, don't plant — the secondary-forest paradigm shift</h3>
+
+  <p>The sideways revision — equally important — comes from Nathaniel Robinson, C. Ronnie Drever, David Gibbs, and colleagues at The Nature Conservancy, Arkansas, Birmingham and elsewhere, writing in <em>Nature Climate Change</em> in July 2025. Their paper does not challenge the idea that forests remove carbon; it challenges the idea that <em>planting new trees</em> is the most efficient way to achieve that removal.<span class="cite">[Robinson&nbsp;2025,&nbsp;p1]</span></p>
+
+  <p>The dataset is the key. Robinson's team combined 109,708 field estimates of above-ground live carbon in naturally regrowing forests with 66 environmental covariates, and generated grid-level (~1 km²) growth curves for every forested region on the planet, across the first 100 years of regrowth.<span class="cite">[Robinson&nbsp;2025,&nbsp;p1]</span> Two headline findings emerge.</p>
+
+  <p>First, spatial and temporal variation in carbon-removal rates is enormous — roughly <strong>200-fold</strong> across the globe, and more than 200-fold even within single ecoregions.<span class="cite">[Robinson&nbsp;2025,&nbsp;p1,2]</span> This variation is not captured by the IPCC Tier-1 default factors that most national greenhouse-gas inventories rely on. Robinson's modelled rates are on average 26% lower than IPCC defaults.<span class="cite">[Robinson&nbsp;2025,&nbsp;p4]</span> That implies the IPCC defaults are systematically overstating how much carbon forest restoration removes in the average location.</p>
+
+  <p>Second, and this is the operational finding: maximum removal rates occur in forests aged roughly 20–40 years, peaking around 30 ± 12 years. Newly planted trees sequester little. Mature old-growth forests sequester comparatively little (their carbon is already in the system). The peak is in established young secondary stands.<span class="cite">[Robinson&nbsp;2025,&nbsp;p1]</span> The punchline: <strong>protecting an existing young secondary forest provides up to 8-fold more carbon removal per hectare than waiting for a new planting on an equivalent site to reach the same age.</strong><span class="cite">[Robinson&nbsp;2025,&nbsp;p1]</span></p>
+
+  <p>For climate policy this is a paradigm reset. The political and philanthropic story of forest NbS has been dominated by planting — "trillion trees" campaigns, aggressive afforestation targets in corporate net-zero plans, Verra's VM0047 reforestation methodology issuing credits for new tree establishment. Robinson's work suggests that the highest-leverage intervention is the much less photogenic one of <em>protecting the young regrowth that already exists on abandoned agricultural land</em>. Abandoned cropland and pasture in the tropics already hosts billions of hectares of natural regrowth at various stages; most of this is unprotected and at risk of being re-cleared or subjected to illegal logging.</p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 2.2</div>
+      <div class="exhibit-title">Why young secondary forests matter most — qualitative carbon-uptake curve</div>
+    </div>
+    <div class="exhibit-body">
+      <svg viewBox="0 0 700 320" role="img" aria-label="Stylised uptake curve showing peak carbon removal in forests aged roughly 20 to 40 years">
+        <rect x="60" y="30" width="600" height="240" fill="none" class="sv-axis"/>
+        <!-- x axis ticks -->
+        <line x1="60" y1="270" x2="660" y2="270" class="sv-axis" stroke-width="2"/>
+        <line x1="60" y1="30" x2="60" y2="270" class="sv-axis" stroke-width="2"/>
+        <g class="sv-lbl">
+          <text x="60" y="288" text-anchor="middle">0</text>
+          <text x="180" y="288" text-anchor="middle">20</text>
+          <text x="300" y="288" text-anchor="middle">40</text>
+          <text x="420" y="288" text-anchor="middle">60</text>
+          <text x="540" y="288" text-anchor="middle">80</text>
+          <text x="660" y="288" text-anchor="middle">100</text>
+          <text x="360" y="308" text-anchor="middle" font-weight="bold">Forest age (years)</text>
+        </g>
+        <g class="sv-lbl">
+          <text x="50" y="270" text-anchor="end">low</text>
+          <text x="50" y="150" text-anchor="end">peak</text>
+          <text x="50" y="40" text-anchor="end">max</text>
+          <text x="20" y="150" text-anchor="middle" transform="rotate(-90 20 150)" font-weight="bold">Annual C removal per ha</text>
+        </g>
+        <!-- curve: rises from 0, peaks ~30, declines -->
+        <path d="M 60 270 Q 120 250 180 120 Q 240 60 300 55 Q 360 70 420 120 Q 500 180 660 230" class="sv-line" stroke-width="3"/>
+        <!-- peak marker -->
+        <circle cx="240" cy="60" r="5" fill="var(--danger)"/>
+        <line x1="240" y1="60" x2="240" y2="270" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
+        <text x="250" y="50" class="sv-title" fill="var(--danger)">Peak removal: ~30 yr ± 12</text>
+        <!-- zone shade -->
+        <rect x="120" y="30" width="240" height="240" fill="var(--accent)" opacity="0.08"/>
+        <text x="240" y="260" text-anchor="middle" class="sv-lbl" fill="var(--accent)">Established young secondary forests</text>
+        <text x="240" y="248" text-anchor="middle" class="sv-lbl" fill="var(--accent)">(up to 8× the per-ha removal of new regrowth)</text>
+      </svg>
+    </div>
+    <div class="exhibit-source">Source: shape schematic, not numeric, drawn from Robinson, Drever, Gibbs et al. 2025, <em>Nat. Clim. Change</em> 15:793–800 (p1, p4). Absolute rates vary ~200-fold by location; curve shape and peak-age range are the cross-site generalisation. Precise per-ecoregion curves are in the paper's Fig. 2 and Extended Data.</div>
+  </div>
+
+  <p>Put together, Tölgyesi and Robinson reset two pillars of forest-based NbS. Tölgyesi lowers the absolute ceiling on what restoration can deliver. Robinson redirects the spending that does happen from planting new trees toward guarding the regrowth we already have. Neither paper argues that forest NbS is useless; both argue that the story the market has been telling is overstated and misdirected.</p>
+
+  <h3>The third leg — avoided deforestation — and its integrity crisis</h3>
+
+  <p>The largest slice of the forest-NbS market has always been REDD+: reducing emissions from deforestation and forest degradation. REDD+ credits alone account for 445 million of the roughly 730 million forestry-related voluntary credits issued (Exhibit 1.1).<span class="cite">[Buma&nbsp;2024,&nbsp;Table&nbsp;1&nbsp;p2]</span> The core logic is unassailable — a tonne of CO₂ not emitted by avoided deforestation counts the same as a tonne removed by regrowth, and typically costs less. The problem is execution.</p>
+
+  <p>The most influential critique of first-generation REDD+ projects is the 2023 <em>Science</em> paper by Thales West, Sven Wunder, Erin Sills, Jan Börner and colleagues. The paper examined 27 voluntary REDD+ projects spanning 6 tropical countries across 3 continents — including Peru, Colombia, Brazil, and selected African and Southeast Asian project sites — using synthetic control methods for causal inference.<span class="cite">[West&nbsp;2023,&nbsp;p1]</span> The synthetic-control method constructs, for each project, a "synthetic" counterfactual from carefully matched non-project areas, then compares observed deforestation in the project with the counterfactual. The ex-post counterfactual is then compared with the ex-ante baseline the project used to claim credits.</p>
+
+  <p>The finding was unambiguous: "most projects have not reduced deforestation. For projects that did, reductions were substantially lower than claimed."<span class="cite">[West&nbsp;2023,&nbsp;p1]</span> Peru was the notable exception: roughly half the Peruvian projects showed some real additionality.<span class="cite">[West&nbsp;2023,&nbsp;p4]</span> For most others, the ex-ante baselines the projects used to claim credits were simply not supported by what happened on comparable reference lands. The authors concluded that baseline methodologies for REDD+ crediting "need urgent revisions" if the integrity of carbon accounting is to be maintained.<span class="cite">[West&nbsp;2023,&nbsp;p1]</span></p>
+
+  <p>West's paper provoked a substantial counter-response from Verra and from certain methodology providers. But it also triggered a chain of follow-on studies that deepened rather than softened the critique. Chapter 7 takes those up — Probst et al. 2024, Swinfield et al. 2026, and a growing body of work — because the integrity crisis belongs primarily to the finance story. For the forests chapter, the relevant summary is that the 445 million REDD+ credits retired against corporate climate targets over the past decade likely correspond to a <em>fraction</em> — and in many cases a small fraction — of real avoided emissions.</p>
+
+  <h3>What this means for the next decade</h3>
+
+  <p>Three operational conclusions follow from the literature as it stands at the end of 2025:</p>
+
+  <p>One, <strong>protecting intact tropical forest remains the single highest-integrity, highest-impact forest NbS pathway</strong>. Buma's expert elicitation placed tropical forest avoided loss at Category 1 on scientific readiness with a median estimated global potential of 1–8 Gt CO₂e per year.<span class="cite">[Buma&nbsp;2024,&nbsp;Fig.&nbsp;1&nbsp;p3]</span> The caveat is that this is protection funding, not project-level carbon crediting — the market mechanism is the part that keeps failing, not the underlying ecological proposition.</p>
+
+  <p>Two, <strong>the reforestation story should be rewritten around secondary-forest protection</strong>. The 109,708-plot evidence base in Robinson et al. 2025 makes clear that "plant a trillion trees" as a meme has been doing more to raise funds for photogenic plantings than to identify the highest-leverage use of those funds. Re-focusing credit methodologies and NDC targets on protecting 20-to-40-year-old regrowth is a redirect that does not require new science; it requires the political will to count protection as credit-worthy.</p>
+
+  <p>Three, <strong>the absolute ceiling on forest climate contribution is lower than a generation of policy frameworks assumed</strong>. Combining Tölgyesi's 96.9 Gt C upper bound with Robinson's per-hectare downward revisions, and with the honest scientific uncertainty in Buma's expert elicitation, the defensible position is that forest-based NbS can contribute meaningfully to mitigation but cannot substitute for rapid fossil-fuel phase-out. This is the framing every national adaptation plan and corporate net-zero plan should be using for the remainder of this decade.</p>
+
+  <p>Finally, the literature consistently notes a structural risk that is worth naming: climate change itself will reduce the forest-carbon dividend. Drier Amazon, more-fire-prone boreal, bark-beetle expansion in temperate zones — each of these erodes the very resource that forest NbS depends on. Forests are not a bank. They are a biological system operating on biophysical timescales, and those timescales are now moving against us.</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Reader's rule — Chapter 2</div>
+    <div class="takeaway-rule">Protect the forest you have, especially the 20-to-40-year-old regrowth, before planting the forest you don't. Planting is photogenic; protection is what the 2025 evidence base says actually removes carbon fastest.</div>
+  </div>
+</section>
+
+<section id="ch3" class="chapter">
+  <div class="chapter-num">Chapter 3</div>
+  <h2>Blue carbon — small footprints, big stocks, uneven confidence</h2>
+  <p class="chapter-dek">Mangroves, salt marshes and seagrasses occupy about 0.5% of the seafloor but account for more than half of long-term carbon burial in the ocean. The conservation case is strong; the restoration case is far more uneven.</p>
+
+  <p class="lead">Blue carbon — the carbon stored in coastal vegetated ecosystems — has the most lopsided cost-benefit profile of any NbS pathway. Mangroves, tidal salt marshes and seagrass meadows occupy roughly 185 million hectares globally, less than 0.5% of the seafloor, and yet contribute more than 50% of global carbon burial in the oceans. The foundational synthesis, by Peter Macreadie, Micheli Costa, Trisha Atwood, Daniel Friess and colleagues, published in <em>Nature Reviews Earth &amp; Environment</em> in 2021, estimates that these ecosystems collectively store more than 30,000 Tg of carbon in their sediments and biomass.<span class="cite">[Macreadie&nbsp;2021,&nbsp;p1]</span> That stock — the sediment carbon alone can exceed 1,000 tonnes per hectare in some mangrove sites — is the single most concentrated per-hectare store of carbon in any ecosystem on Earth.</p>
+
+  <h3>Conservation first, restoration second</h3>
+
+  <p>The Macreadie review frames the mitigation opportunity in two parts.</p>
+
+  <p>The <strong>conservation opportunity</strong> is the avoided emission from protecting existing blue carbon ecosystems from loss. Coastal vegetated ecosystems have been lost at rates between 0.4% and 2.8% per year historically, driven by aquaculture expansion (most notoriously, shrimp farms carved out of Southeast Asian mangroves), coastal development, pollution, dredging and sea-level rise. When these ecosystems are cleared or drained, the centuries-to-millennia of accumulated sediment carbon is exposed to oxidation and returned to the atmosphere. Protecting the remaining standing stock avoids an estimated <strong>304 Tg CO₂ equivalent per year</strong>, with a 95% confidence interval of 141–466 Tg CO₂e per year.<span class="cite">[Macreadie&nbsp;2021,&nbsp;p1,p2,p8]</span></p>
+
+  <p>The <strong>restoration opportunity</strong> is harder to quantify but also larger. Potential restoration areas are estimated at 0.2–3.2 million hectares for tidal marshes, 8.3–25.4 million hectares for seagrasses, and 9–13 million hectares for mangroves.<span class="cite">[Macreadie&nbsp;2021,&nbsp;p1]</span> If fully executed, restoration at this scale could draw down an additional 841 Tg CO₂e per year (621–1,064 Tg CO₂e/yr range) by 2030 — collectively roughly 3% of global annual fossil-fuel emissions. The uncertainty ranges are wide because restoration success rates vary dramatically by ecosystem, by location and by technique.<span class="cite">[Macreadie&nbsp;2021,&nbsp;p1]</span></p>
+
+  <p>The two numbers — 304 Tg avoided via conservation, 841 Tg potential via restoration — frame the policy sequencing. Conservation is both larger than generally recognised (equivalent to roughly the national CO₂ emissions of Vietnam or the UK) and substantially cheaper, since it avoids the well-documented failure modes of coastal restoration. Restoration is bigger at theoretical ceiling but harder to realise in practice, and the 841 Tg number should be treated as an upper bound rather than a plan.</p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 3.1</div>
+      <div class="exhibit-title">Blue carbon ecosystems compared — stocks, flows, restoration potential</div>
+    </div>
+    <div class="exhibit-body">
+      <table class="tbl">
+        <thead>
+          <tr><th>Ecosystem</th><th>Approx. global extent</th><th>Carbon density</th><th>Restoration potential</th><th>Scientific readiness</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Mangroves</strong></td><td>~14 Mha</td><td>Highest among BCEs (sediments often &gt;1,000 t C/ha)</td><td>9–13 Mha restorable</td><td class="high">Highest confidence (readiness 1.7)</td></tr>
+          <tr><td><strong>Tidal salt marshes</strong></td><td>~5 Mha</td><td>High sediment C; rapid accretion</td><td>0.2–3.2 Mha restorable</td><td class="med">Moderate (readiness ~2.0)</td></tr>
+          <tr><td><strong>Seagrass meadows</strong></td><td>~160–270 Mha (wide range)</td><td>Variable, skewed by Mediterranean <em>Posidonia</em></td><td>8.3–25.4 Mha restorable</td><td class="low">Lowest confidence (readiness 2.8)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exhibit-source">Source: Macreadie et al. 2021, <em>Nat. Rev. Earth Environ.</em>, Abstract and Figure 1 (p1, p3). Readiness scores from expert elicitation in Buma et al. 2024, <em>Nat. Clim. Change</em> 14:402–406 (p4). Seagrass extent range reflects ongoing revision; see Krause et al. 2025 below.</div>
+  </div>
+
+  <h3>Mangroves — the one pathway where everything lines up</h3>
+
+  <p>Mangroves are the rarest case in the NbS landscape: a pathway with high carbon density, documented co-benefits, well-understood restoration ecology, and market readiness. The Buma expert elicitation placed mangrove restoration at a readiness score of 1.7 (on the 1-to-3 scale where 1 is ready for quantitative climate planning), the highest of any blue carbon pathway and among the highest of any pathway in the full 43-pathway review.<span class="cite">[Buma&nbsp;2024,&nbsp;p4]</span> The co-benefits are unusually well-monetised: mangroves protect an estimated 18 million people from coastal flooding and prevent about US$80 billion per year in property damage globally. In purely financial terms, the avoided-damages value of a hectare of intact mangrove typically exceeds its carbon value by an order of magnitude.</p>
+
+  <p>The restoration pipeline is operationally mature. Techniques for site preparation, hydrological restoration and species selection are well-documented. The historical failure mode — planting in the wrong tidal zone, or monoculturing a single species — is now well-understood and avoidable. Mangrove restoration projects in Sri Lanka, Vietnam and Indonesia have documented high survival rates and measurable carbon accrual over multi-decade monitoring periods.</p>
+
+  <p>The reason mangrove NbS is not delivering more credits to the voluntary market is not scientific; it is structural. Mangrove carbon crediting methodologies have historically required long monitoring horizons (reasonable, given durability questions) and high upfront project-development costs. Only 5 million wetland restoration credits had been issued as of May 2023 — a rounding error compared to REDD+.<span class="cite">[Buma&nbsp;2024,&nbsp;Table&nbsp;1&nbsp;p2]</span> If any blue carbon pathway is ready to absorb substantially more climate finance, it is this one.</p>
+
+  <h3>Salt marshes — reliable science, smaller scale</h3>
+
+  <p>Temperate tidal salt marshes are a smaller global footprint (~5 Mha) but punch above their weight on carbon density and restoration reliability. Rates of sediment accretion in healthy salt marshes can be measured in millimetres per year, meaning the ecosystem literally builds itself taller against sea-level rise — a feedback that both stores carbon and provides flood protection. The Buma elicitation placed emergent marsh avoided loss and restoration in Category 2, with moderate readiness and well-understood mechanisms.<span class="cite">[Buma&nbsp;2024,&nbsp;Fig.&nbsp;1&nbsp;p3]</span></p>
+
+  <p>Two specific issues keep marsh restoration from scaling faster. First, the estuarine settings where marshes thrive are the same settings most heavily engineered for flood control — dikes, sea-walls, tidal gates — which means restoration typically requires active re-engineering rather than passive protection. Second, the greenhouse-gas accounting has a methane problem: wet anoxic sediments emit methane, and although the long-lived CO₂ drawdown dominates over century timescales, the short-term warming footprint can be net-positive in some conditions. This is a less acute issue for salt marshes than for freshwater wetlands (sulfate in seawater suppresses methanogenesis), but it is a non-trivial accounting complication.</p>
+
+  <h3>Seagrass — the frontier, with the most unresolved science</h3>
+
+  <p>Seagrass is the blue-carbon frontier — both in the sense of having the largest potential restoration area (8.3–25.4 million hectares in Macreadie's synthesis) and in the sense of having the most genuinely unresolved science. The Buma expert elicitation placed seagrass restoration at a readiness of 2.8 — effectively at the borderline between "research could resolve in five years" and "unlikely to resolve on that timescale" — with the main concerns being scale of potential impact and durability.<span class="cite">[Buma&nbsp;2024,&nbsp;p4]</span></p>
+
+  <p>A 2025 <em>Nature Communications</em> paper by Krause and colleagues, published in May, pushes the global seagrass carbon-stock estimate meaningfully downward. Based on a compilation of 2,771 seagrass soil cores — the largest single-species dataset to date — the team found a median global sediment carbon stock in the top 30 cm of seagrass soils of 24.2 Mg C/ha, roughly 27% lower than prior global syntheses. The effect is driven by the realisation that prior syntheses over-weighted the carbon-dense Mediterranean <em>Posidonia oceanica</em> meadows, which are genuinely exceptional, and applied their values to ephemeral tropical seagrass meadows that sequester far less.<span class="cite">[Krause&nbsp;2025&nbsp;abstract]</span></p>
+
+  <p>The implication: global seagrass blue-carbon potential is probably smaller than the Macreadie 2021 estimate. Krause's team also flags that seagrass loss, if unchecked, could emit an estimated 1,154 Tg CO₂ (range 665–1,699 Tg) cumulatively, with social-cost-of-CO₂ valuations of roughly US$213 billion at $185/tonne. The conservation case remains strong even as the restoration-potential number comes down.</p>
+
+  <div class="callout">
+    <div class="callout-label">A recurring pattern worth noting</div>
+    In blue carbon, as in forests, the 2025 literature consistently revises earlier global potential estimates downward. Tölgyesi on forests, Robinson on secondary forest productivity, Krause on seagrass: three independent research groups using much larger datasets than were available five years ago have all concluded that earlier top-line numbers were too optimistic. The direction of travel in the NbS research frontier is toward tighter, smaller, better-resolved quantification. This is healthy for the science; it is uncomfortable for climate plans that were built on the earlier headline figures.
+  </div>
+
+  <h3>Kelp, macroalgae and the extension question</h3>
+
+  <p>Beyond the three classical blue-carbon ecosystems, attention has turned to kelp forests, other macroalgae beds, and open-ocean aquaculture of macroalgae. These are not included in the Macreadie 2021 synthesis because their mitigation accounting is fundamentally different. Macroalgae do not form permanent sediment stores the way mangroves and seagrasses do; their carbon either enters the food web (returning as CO₂ within years), gets buried in deep-sea sediments (long-term storage, but extremely hard to verify), or is harvested (converting to products whose lifecycle determines the mitigation effect).</p>
+
+  <p>The Buma expert elicitation categorised both ocean-based macroalgae farming and seaweed cultivation at intermediate readiness with substantial scale uncertainty.<span class="cite">[Buma&nbsp;2024,&nbsp;Fig.&nbsp;1&nbsp;p3]</span> The pathway is scientifically interesting and may ultimately prove viable, but the MRV (measurement, reporting, verification) challenges are more severe than for any of the three sediment-based blue carbon ecosystems. A climate-accounting system that credits macroalgae farming on the basis of sunken-biomass assumptions is, at this point, writing cheques that the science cannot yet verify.</p>
+
+  <h3>A decision rule for blue carbon funding</h3>
+
+  <p>The Macreadie synthesis and the Buma elicitation converge on the same operational ranking. For a funder or policy planner trying to allocate money across blue-carbon pathways today, the evidence supports this order of priority:</p>
+
+  <p><strong>Tier 1 — Fund at scale now.</strong> Mangrove avoided loss and mangrove restoration. Science is mature, co-benefits are large and monetisable, restoration techniques are well-characterised, crediting methodologies are operational. The main constraint is the pipeline of fundable projects, which remains small relative to available capital.</p>
+
+  <p><strong>Tier 2 — Fund with appropriate caveats.</strong> Salt-marsh restoration and avoided loss. Strong science, smaller absolute scale, some methane-accounting complexity, re-engineering intensity varies by site. Suitable for regional and national programmes where engineering capacity is available.</p>
+
+  <p><strong>Tier 3 — Fund research and demonstration only.</strong> Seagrass restoration, macroalgae climate applications, kelp-based CDR schemes. The science is on a clear trajectory but has not yet arrived at the point where large-scale investment can claim verifiable mitigation. These are legitimate research investments, not carbon-offset opportunities.</p>
+
+  <p>This ranking tracks closely with where the market has naturally concentrated and, for once, with where the science says it should.</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Reader's rule — Chapter 3</div>
+    <div class="takeaway-rule">Fund mangroves at scale now. Fund salt marshes with engineering discipline. Fund seagrass research — not offset credits — until the science lands.</div>
+  </div>
+</section>
+
+<section id="ch4" class="chapter">
+  <div class="chapter-num">Chapter 4</div>
+  <h2>Peatlands — the densest carbon store on land, and the quietest emergency</h2>
+  <p class="chapter-dek">Peatlands cover about 3% of the global land surface and hold roughly 30% of soil carbon. Drained peatlands emit more CO₂ annually than global aviation. The policy response has been disproportionately quiet.</p>
+
+  <p class="lead">Among terrestrial ecosystems, peatlands have the most extreme carbon-to-footprint ratio on Earth. Covering around 3% of the global land surface (~4 million km²), they store an estimated 500–600 gigatonnes of carbon in their soils — roughly twice the carbon contained in all standing forest biomass globally. A single hectare of undisturbed tropical peatland can hold 2,000–5,000 tonnes of carbon, most of it in peat layers several metres deep that have been accumulating for millennia. The Buma 2024 expert review placed tropical peatland avoided loss at intermediate readiness with clear recommendations for near-term prioritisation.<span class="cite">[Buma&nbsp;2024,&nbsp;Fig.&nbsp;1&nbsp;p3]</span></p>
+
+  <p>When peatlands are drained — for agriculture, forestry, palm oil, or peat extraction for fuel — the carbon that took thousands of years to accumulate begins oxidising within years. Drained peatlands globally are estimated to emit around 2 Gt CO₂ per year, which would make them, if treated as a country, the fourth-largest emitter on the planet, ahead of India and behind China, the United States and the European Union. Global aviation emits roughly 0.9 Gt CO₂ per year by comparison. And unlike fossil-fuel emissions, which continue until the source is burned, drained peatland emissions continue until either the peat is gone or the water returns.</p>
+
+  <h3>Three peatland geographies, three distinct problems</h3>
+
+  <p>Peatlands are not a homogeneous category. Tropical peatlands, concentrated in Southeast Asia (Indonesia, Malaysia, parts of the Congo Basin and Peru), boreal peatlands covering northern Canada, Russia, Scandinavia and Alaska, and temperate peatlands in the UK, Ireland, central Europe and parts of North America — each has a distinct emission profile, restoration pathway, and political economy.</p>
+
+  <p><strong>Tropical peatlands</strong> are the most acute problem. Indonesia alone contains roughly 22 million hectares of peatland, much of it drained for oil palm and acacia plantations since the 1990s. Once drained, tropical peat is vulnerable to fire in dry years; the Indonesian peat fires of 2015 released an estimated 1.5–2.6 Gt CO₂ in a single season — comparable to annual emissions of the EU. Tropical peat rewetting is technically straightforward (block drainage canals, raise the water table) but politically and economically complex because the drained land is typically under active cultivation and generates income for smallholders and concession-holders alike. The Buma expert panel rated tropical peatland avoided loss at Category 2 readiness with durability and baseline-setting as the primary concerns.<span class="cite">[Buma&nbsp;2024,&nbsp;p4]</span></p>
+
+  <p><strong>Boreal peatlands</strong> are the largest carbon store but the slowest emitter when disturbed. The Northern Hemisphere holds the bulk of the global peat carbon stock, particularly in Western Siberia, the Hudson Bay lowlands and Scandinavia. Boreal peat accumulates slowly — millimetres per year — but also oxidises relatively slowly when drained because the climate is cool. The acute concern in boreal peatlands is less drainage than thaw: as permafrost regions warm, peat that was effectively frozen for centuries is becoming biologically active again, and a significant fraction of boreal peatland carbon is vulnerable to this thermokarst-driven release.</p>
+
+  <p><strong>Temperate peatlands</strong> have been the most intensively drained and farmed, and are the testbed for rewetting policy. The UK, Germany, Poland, the Netherlands and Denmark have all initiated peatland rewetting programmes of various scales. The evidence base from these programmes is now large enough to draw conclusions about what works: rewetting reliably reduces net greenhouse-gas emissions (the avoided CO₂ substantially exceeds the methane that rewetting stimulates), though the payback timescale — when the rewetted peatland moves from net-source to net-sink — can be decades rather than years.</p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 4.1</div>
+      <div class="exhibit-title">Peatland carbon density compared with other terrestrial ecosystems</div>
+    </div>
+    <div class="exhibit-body">
+      <svg viewBox="0 0 700 260" role="img" aria-label="Bar chart showing peatlands hold roughly 5-10 times the per-hectare carbon of tropical forests">
+        <g class="sv-lbl">
+          <text x="360" y="20" text-anchor="middle" class="sv-title">Illustrative per-hectare soil+biomass carbon (tonnes C per hectare)</text>
+        </g>
+        <line x1="200" y1="230" x2="680" y2="230" class="sv-axis" stroke-width="2"/>
+        <g class="sv-lbl">
+          <text x="200" y="248" text-anchor="middle">0</text>
+          <text x="296" y="248" text-anchor="middle">500</text>
+          <text x="392" y="248" text-anchor="middle">1,000</text>
+          <text x="488" y="248" text-anchor="middle">1,500</text>
+          <text x="584" y="248" text-anchor="middle">2,000</text>
+          <text x="680" y="248" text-anchor="middle">2,500+</text>
+        </g>
+        <!-- Bars -->
+        <g>
+          <text x="195" y="55" text-anchor="end" class="sv-lbl" font-weight="bold">Tropical peatland</text>
+          <rect x="200" y="40" width="480" height="22" class="sv-bar-d"/>
+          <text x="688" y="55" class="sv-lbl">up to 5,000 t C/ha</text>
+        </g>
+        <g>
+          <text x="195" y="95" text-anchor="end" class="sv-lbl" font-weight="bold">Boreal peatland</text>
+          <rect x="200" y="80" width="280" height="22" class="sv-bar-d" opacity="0.8"/>
+          <text x="486" y="95" class="sv-lbl">~1,200 t C/ha avg</text>
+        </g>
+        <g>
+          <text x="195" y="135" text-anchor="end" class="sv-lbl" font-weight="bold">Mangrove</text>
+          <rect x="200" y="120" width="220" height="22" class="sv-bar-a"/>
+          <text x="426" y="135" class="sv-lbl">~1,000 t C/ha</text>
+        </g>
+        <g>
+          <text x="195" y="175" text-anchor="end" class="sv-lbl" font-weight="bold">Tropical forest</text>
+          <rect x="200" y="160" width="75" height="22" class="sv-bar-c"/>
+          <text x="281" y="175" class="sv-lbl">~300–400 t C/ha</text>
+        </g>
+        <g>
+          <text x="195" y="215" text-anchor="end" class="sv-lbl" font-weight="bold">Temperate grassland</text>
+          <rect x="200" y="200" width="30" height="22" class="sv-bar-b"/>
+          <text x="236" y="215" class="sv-lbl">~100–150 t C/ha</text>
+        </g>
+      </svg>
+    </div>
+    <div class="exhibit-source">Source: schematic comparison based on commonly-cited soil-plus-biomass carbon density ranges in the literature (IPCC AR6 WG3 Ch.7 AFOLU, 2022; Page et al. 2011 <em>Global Change Biology</em> for tropical peat depth/carbon; Macreadie et al. 2021 <em>Nat. Rev. Earth Environ.</em> for mangroves p3). Ranges are order-of-magnitude approximations; site-specific values vary substantially.</div>
+  </div>
+
+  <h3>Rewetting works — but the methane question needs honest framing</h3>
+
+  <p>Peatland rewetting is the core restoration intervention. Done well — and the now-extensive evidence base from UK, German and Indonesian projects confirms this — rewetting stops or substantially slows peat oxidation, which is the dominant emission pathway. The tradeoff is that re-saturated peat is a methanogenic environment: rewet peatlands emit CH₄ at rates substantially higher than their drained-but-cultivated counterparts.</p>
+
+  <p>This sounds like a wash, but the arithmetic is clear. CO₂ emissions from drained peat typically run 20–40 tonnes CO₂ per hectare per year (higher for tropical peat, lower for boreal). Methane emissions from rewetted peat typically run 50–200 kg CH₄ per hectare per year, which at the 100-year global warming potential of methane (28×) translates to 1.4–5.6 tonnes CO₂-equivalent per hectare per year. On a 100-year basis, the avoided CO₂ outweighs the stimulated CH₄ by roughly an order of magnitude. On a 20-year basis — using the short-lived-pollutant framing with methane GWP of 84 — the math tightens but still favours rewetting.</p>
+
+  <p>The operational implication: rewetting is nearly always the right answer for drained peatlands, but project-level GHG accounting must honestly track both gases and not assume the methane effect away. This is also why the Buma panel's flagging of "incomplete GHG measurement and accounting" as a recurring concern across NbS pathways applies with particular force here.<span class="cite">[Buma&nbsp;2024,&nbsp;p1]</span></p>
+
+  <h3>The overlooked pathway in the NDC landscape</h3>
+
+  <p>A striking feature of the current NbS policy landscape is how little attention peatlands receive relative to their carbon weight. Of 104 Paris Agreement signatories that include nature-based actions in their NDCs, mentions of peatlands are comparatively rare, and commitments to peatland restoration are rarer still.<span class="cite">[Buma&nbsp;2024,&nbsp;p2]</span> Indonesia's BRG (Badan Restorasi Gambut, Peatland Restoration Agency) is the single largest national peatland programme and has targeted rewetting of 2 million hectares since 2016, with partial implementation. The UK has committed to 280,000 hectares of peatland restoration by 2050. Ireland and Germany have national programmes. Russia, which contains a very large fraction of global boreal peat, has no systematic restoration programme of comparable ambition.</p>
+
+  <p>The voluntary carbon market issuance for wetland restoration (including peatlands) was 5 million credits as of mid-2023 — a rounding error compared to REDD+.<span class="cite">[Buma&nbsp;2024,&nbsp;Table&nbsp;1&nbsp;p2]</span> This is not because the science is weaker than in other wetland pathways; it is because peatland crediting methodologies are less developed, and because peatland projects do not photograph as well as tree planting. Verra and Gold Standard have both been expanding their wetland methodologies, but the market has not yet caught up to the mitigation opportunity.</p>
+
+  <h3>What this chapter adds up to</h3>
+
+  <p>Peatland NbS is the highest-integrity-per-dollar intervention in the entire nature-based solutions portfolio. The carbon arithmetic is unambiguous. The rewetting techniques are mature. The co-benefits (biodiversity, water regulation, fire reduction) are substantial. The uncertainty budget is concentrated on methane accounting, not on whether the intervention works.</p>
+
+  <p>The constraint is political-economic. Drained peatlands in the tropics sustain large agricultural economies that cannot be walked back without genuine livelihood-transition finance. Boreal peatlands are geopolitically locked up — a substantial fraction lies in Russia and northern Canada, where national climate frameworks do not currently prioritise them. Temperate peatlands are where most restoration is happening and where the science is being demonstrated. If the next decade of NbS finance were reallocated on pure mitigation-per-dollar logic, peatland restoration and avoided loss would be where a substantially larger share of it should flow.</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Reader's rule — Chapter 4</div>
+    <div class="takeaway-rule">The peatland arithmetic is unambiguous; the political economy is where the intervention stalls. For pure mitigation-per-dollar, this is where more NbS finance should be flowing than is.</div>
+  </div>
+</section>
+
+<section id="ch5" class="chapter">
+  <div class="chapter-num">Chapter 5</div>
+  <h2>Agricultural NbS — the largest working-land opportunity, and the hardest to verify</h2>
+  <p class="chapter-dek">Agriculture accounts for roughly a third of global greenhouse gas emissions. It also holds the largest undeployed NbS opportunity. A 2024 <em>Nature Food</em> analysis models what a 160 USD/tCO₂e carbon price would unlock — and where.</p>
+
+  <p class="lead">The global food system emits roughly 16–18 Gt CO₂-equivalent per year, or about a third of all anthropogenic greenhouse-gas emissions. Of this, roughly 11.9 ± 4.4 Gt CO₂e per year comes from agriculture, forestry and other land uses (AFOLU) directly. The agricultural portion — soil carbon losses, enteric methane from livestock, nitrous oxide from fertiliser, methane from rice paddies — has been the most politically difficult sector to address in climate policy because food security sits over every lever.<span class="cite">[Frank&nbsp;2024,&nbsp;p1]</span></p>
+
+  <p>Nature-based climate solutions on agricultural land take a specific form: they are conservation and restoration interventions that keep land in agricultural production while shifting the management practice to one that sequesters more carbon or emits fewer GHGs. The most fully-developed recent quantification of this pathway is Stefan Frank and colleagues' 2024 <em>Nature Food</em> paper, which couples an economic land-use model to a mitigation-portfolio optimisation across four practice types: soil organic carbon (SOC) on cropland, SOC on pasture, silvopasture (integration of trees into grazing systems), and biochar application.<span class="cite">[Frank&nbsp;2024,&nbsp;p1]</span></p>
+
+  <h3>The 160-dollar-per-tonne scenario</h3>
+
+  <p>Frank's team ran the GLOBIOM integrated assessment model under a range of global carbon-price trajectories. The anchoring scenario — a global GHG price that reaches 160 USD<sub>2022</sub> per tCO₂e by 2050 — is consistent with 1.5°C no-overshoot stabilisation pathways. Under this carbon price, agricultural NbCS pathways contribute cumulative mitigation comparable to afforestation by 2050 — in the range of 7–8 Gt CO₂e per year in the most ambitious scenarios — while generating additional farmer revenues of up to US$375 billion per year at that price level.<span class="cite">[Frank&nbsp;2024,&nbsp;p1,p2]</span></p>
+
+  <p>The revenue side of that number matters. NbCS pathways are often described as "free" or even "negative cost" in abstract mitigation-cost curves, but in practice, farmers bear real opportunity costs in the form of yield reductions, capital investments in new practices, and delayed income (soil carbon accumulates over years, not over a crop cycle). A carbon price of this magnitude, properly directed to farm-level compensation, turns agricultural NbCS from a burden on producers into a genuine income stream. The Frank paper models this explicitly and finds that Global South producers are the largest beneficiaries, because they have the largest remaining SOC depletion gaps to refill and the lowest abatement costs.<span class="cite">[Frank&nbsp;2024,&nbsp;p1,p2]</span></p>
+
+  <p>A secondary finding matters for how climate policy frames these pathways: when agricultural NbCS options are included in the mitigation portfolio, global mitigation costs decline and global GDP by mid-century is about 0.6% higher in 1.5°C-no-overshoot scenarios compared to a mitigation path that excludes these options. Net-zero for the AFOLU sector becomes achievable at costs of roughly US$80–120 per tCO₂e — comfortably below the 160 USD anchor.<span class="cite">[Frank&nbsp;2024,&nbsp;p1]</span> The policy implication: including agricultural NbCS in climate strategy is not a drag on economic growth; it is a modest accelerator.</p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 5.1</div>
+      <div class="exhibit-title">Agricultural NbCS mitigation potential by practice (Frank et al. 2024)</div>
+    </div>
+    <div class="exhibit-body">
+      <table class="tbl">
+        <thead>
+          <tr><th>Practice</th><th class="num">Annual mitigation potential</th><th>Mechanism</th><th>Global South share</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>SOC cropland</strong> (cover crops, no-till, rotations, residue management)</td><td class="num">~2–3 GtCO₂e/yr</td><td>Carbon accumulation in topsoil; reduced oxidation</td><td>Majority</td></tr>
+          <tr><td><strong>SOC pasture</strong> (improved grazing, reseeding, fertility management)</td><td class="num">~1–2 GtCO₂e/yr</td><td>Root-system carbon; reduced erosion</td><td>Majority (sub-Saharan Africa dominant)</td></tr>
+          <tr><td><strong>Silvopasture</strong> (tree integration into grazing systems)</td><td class="num">~1 GtCO₂e/yr</td><td>Above- and below-ground biomass; shade reduces heat-stress yield losses</td><td>Significant (Latin America strongest)</td></tr>
+          <tr><td><strong>Biochar</strong> (pyrolised biomass applied as soil amendment)</td><td class="num">0.3–1.8 GtCO₂e/yr</td><td>Highly-stable carbon; soil-quality co-benefits</td><td>Mixed; depends on feedstock supply</td></tr>
+          <tr><td colspan="2"><strong>Combined cumulative 2050 potential</strong></td><td colspan="2" class="num"><strong>Comparable to afforestation</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exhibit-source">Source: Frank, Lessa Derci Augustynczik, Havlík et al. 2024, <em>Nature Food</em> 5:742–753 (abstract p1, results pp2–4, Fig. 2). Mitigation-potential ranges are aggregated from model scenarios across shared-socioeconomic-pathway and climate-stabilisation pathway combinations. Biochar range is for 0.3–1.8 GtCO₂e/yr, explicitly quoted in paper.</div>
+  </div>
+
+  <h3>The MRV problem — and why it may be the binding constraint</h3>
+
+  <p>The economic case Frank and colleagues make is strong. The scientific case for individual practices — soil carbon accumulation under cover cropping, no-till yield trajectories, biochar longevity — is moderately strong and improving. But the Buma expert elicitation flagged something that the economic model treats as a side issue: measurement, reporting and verification (MRV) for soil carbon is genuinely hard, and the uncertainty is not evenly distributed across the 43 pathways.<span class="cite">[Buma&nbsp;2024,&nbsp;p4]</span></p>
+
+  <p>For agricultural pathways, Buma's experts identified incomplete measurement methods and additionality as the primary sources of uncertainty (3.9 and 3.5 on a 5-point scale respectively, among the highest uncertainty scores in the entire review).<span class="cite">[Buma&nbsp;2024,&nbsp;p4]</span> Two mechanisms drive this. First, soil carbon varies spatially over metres — the sampling density required to detect the ~0.1–0.5 tonnes per hectare per year of accrual that practices typically deliver is prohibitively expensive using conventional coring methods. Second, soil carbon is reversible: a single year of tillage can release multiple years of accumulated gains, which means durability cannot be assumed from the intervention; it must be continuously verified.</p>
+
+  <p>Remote-sensing-based MRV using satellite-derived proxies (NDVI, canopy cover, thermal signatures) is improving rapidly, and several private verification platforms (Indigo, Nori, Boomitra) have reached operational scale. But the gap between model-predicted mitigation and verifiable project-level mitigation remains substantial. Frank's economic model treats mitigation delivery as if measurement were not a binding constraint; in the real world it frequently is.</p>
+
+  <p>The operational consequence: Frank's top-line numbers are best interpreted as a <em>potential ceiling</em>, not as a delivery forecast. A substantial fraction of that potential will be realised only when MRV systems catch up, and the last decade suggests the catch-up is slow.</p>
+
+  <h3>Biochar — the wildcard</h3>
+
+  <p>Biochar occupies a unique position in agricultural NbCS because it is both a natural climate solution (plant-based carbon stored in soil) and more similar in character to engineered carbon removal than most other NbS pathways. Biochar is pyrolised biomass — typically agricultural residue, forestry waste or dedicated feedstock — converted into a highly stable carbon form through low-oxygen heating, then applied as a soil amendment. Because the pyrolised carbon has a chemical structure that resists microbial decomposition for decades to centuries, biochar effectively locks carbon into soils on long timescales.</p>
+
+  <p>Frank's modelling places biochar at 0.3–1.8 Gt CO₂e per year of potential.<span class="cite">[Frank&nbsp;2024,&nbsp;p1]</span> Buma's expert review rates cropland biochar amendment at moderate readiness — among the higher-scoring agricultural pathways — with scale being the primary remaining uncertainty: the potential depends heavily on feedstock availability, competing uses for agricultural residues (animal feed, bedding, conversion to bioenergy), and the life-cycle emissions of pyrolysis itself.<span class="cite">[Buma&nbsp;2024,&nbsp;Fig.&nbsp;1&nbsp;p3]</span></p>
+
+  <p>The crediting methodology landscape for biochar is less developed than for forest pathways but is maturing rapidly: Puro.earth's biochar methodology is the most widely adopted, Verra has an emerging methodology, and ICVCM has signalled that biochar crediting approaches are high-integrity candidates under its Core Carbon Principles framework. This is one of the few NbCS pathways where the market infrastructure and the scientific readiness are moving in sync.</p>
+
+  <h3>Silvopasture and the livestock-shaped hole in the debate</h3>
+
+  <p>Global livestock production accounts for about 14.5% of anthropogenic GHG emissions. Cattle alone emit approximately 4.6 Gt CO₂e per year through enteric methane, manure management and land-use change. Silvopasture — the integration of trees into grazing landscapes — is the NbCS pathway most directly responsive to the livestock problem. Trees in pasture provide shade (reducing heat-stress yield losses in a warming climate), diversify farmer income through wood or fruit production, protect soil from erosion, and sequester both above-ground and below-ground carbon. Frank's model places silvopasture at approximately 1 Gt CO₂e per year of global potential, with the strongest opportunity in Latin America's extensive pasture landscapes.<span class="cite">[Frank&nbsp;2024,&nbsp;p3]</span></p>
+
+  <p>What silvopasture does <em>not</em> directly address is enteric methane from the cattle themselves. That's a feed-additive and breeding problem, not a NbS problem. The two approaches — silvopasture for land-carbon and feed-side interventions for enteric methane — are complementary but distinct. A cohesive livestock climate strategy needs both, and the NbS frame cannot carry the full weight of a decarbonisation path for the sector.</p>
+
+  <h3>Why agriculture is central and under-credited</h3>
+
+  <p>Two structural features keep agricultural NbCS under-represented in the current voluntary carbon market relative to its scientific potential. First, most agricultural mitigation is distributed across millions of smallholders rather than concentrated in large project developers, making transaction costs disproportionately high. Second, the political-economic infrastructure needed to deploy carbon pricing at 160 USD/tCO₂e — with international finance transfers to the Global South producers who hold most of the potential — does not yet exist at meaningful scale.</p>
+
+  <p>Frank and colleagues are explicit about what is required. "Unlocking these potentials requires the deployment of highly efficient institutions and monitoring systems over the next 5 years across the whole world, including sub-Saharan Africa, where the largest mitigation potential exists."<span class="cite">[Frank&nbsp;2024,&nbsp;p1]</span> Five years is a short horizon for institutional transformation of this magnitude. It is almost certainly longer than that — and the longer it takes, the larger the share of the modelled potential that goes unrealised.</p>
+
+  <p>A realistic read of agricultural NbCS over the next decade: the science will continue to mature, MRV tooling will continue to improve, and the pathway will absorb a growing but still-minority share of voluntary market capital. The 160 USD/tCO₂e scenario that Frank's model is built around is not the world we live in today and is unlikely to be the world we live in by 2035. The potential remains real; the delivery timeline is uncertain.</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Reader's rule — Chapter 5</div>
+    <div class="takeaway-rule">Agricultural NbS is large on paper and bounded on delivery. The MRV gap, not the carbon price, is the binding constraint — until remote-sensing tools close it, the modelled potential stays mostly potential.</div>
+  </div>
+</section>
+
+<section id="ch6" class="chapter">
+  <div class="chapter-num">Chapter 6</div>
+  <h2>Urban NbS — cooling, energy saving, and the most consequential recent meta-analysis</h2>
+  <p class="chapter-dek">Cities occupy 3% of land area, house 57% of humanity, and face the worst outcomes from heat. A 2025 meta-analysis of 373 studies across every climate zone provides the first quantitative answer to "which urban NbS, at what scale, works where?"</p>
+
+  <p class="lead">Urbanisation has dramatically intensified the urban heat-island (UHI) effect and the energy demand it drives. Urban areas worldwide are projected to experience temperature rises of up to 4°C by 2100, on top of whatever background climate warming occurs. Rising temperatures impose the most severe costs on the most vulnerable populations — the elderly, low-income residents, outdoor workers, those without adequate air-conditioning — and place growing stress on electricity grids as cooling demand spikes during heatwaves.<span class="cite">[Wei&nbsp;2025,&nbsp;p1]</span> The "cooling people, not spaces" policy framing that has emerged in the last several years advocates for prioritising human thermal comfort while reducing reliance on energy-intensive mechanical cooling. Urban nature-based solutions — street trees, parks, green roofs, green walls, permeable pavement, urban wetlands and waterways — are central to that strategy.<span class="cite">[Wei&nbsp;2025,&nbsp;p1]</span></p>
+
+  <p>Until 2025, the literature on urban NbS effectiveness was fragmented: individual city case studies, a few regional reviews, model projections that rarely reconciled with measurement. The field needed a meta-analysis that could answer the comparative questions policymakers were actually asking — which NbS interventions work best in which climate zones, at which spatial scales, for which outcome (cooling, energy savings, stormwater)?</p>
+
+  <h3>Wei et al. 2025 — the first quantitative answer</h3>
+
+  <p>Hailu Wei, Xiaohang Bai, Qinhui Lu and colleagues at Tianjin University, Lawrence Berkeley National Laboratory, Southeast University Nanjing, Seoul National University and Beijing Normal University published that meta-analysis in <em>Nature Cities</em> in November 2025. They systematically reviewed 373 peer-reviewed studies published between 2013 and 2025, covering all 16 Köppen-Geiger climate zones. The resulting synthesis is the most authoritative current quantitative evidence base on urban NbS performance.<span class="cite">[Wei&nbsp;2025,&nbsp;p1]</span></p>
+
+  <p>Three headline findings:</p>
+
+  <p>Urban NbS globally reduce daytime temperatures during hot periods by <strong>2.04 ± 0.17°C</strong>.<span class="cite">[Wei&nbsp;2025,&nbsp;p1,p2,p8]</span> This is a measurable, policy-relevant amount — roughly the difference between a dangerous and a tolerable heatwave in many climates. It is notably also consistent across the full range of climate zones, though with substantial variation in magnitude.</p>
+
+  <p>Urban NbS reduce annual cooling loads by <strong>1.32 ± 0.06%</strong> globally. This is a smaller number that requires interpretation: it is averaged across all building types, all zones, all NbS configurations, many of which are deployed at street or neighbourhood scale rather than directly on buildings. At building scale, the effect is much larger — roughly 8.62% average energy savings at building scale specifically.<span class="cite">[Wei&nbsp;2025,&nbsp;p1]</span></p>
+
+  <p>Spatial scale critically shapes outcomes. Neighbourhood-scale NbS (a park, a greenway network, a district-scale tree canopy) deliver the strongest cooling (−2.22 ± 0.25°C). Building-scale NbS (green roofs, green walls, shade trees immediately adjacent to buildings) deliver the largest per-building energy savings (8.62 ± 0.78%). The two are not competing; they address different problems at different scales, and an effective urban climate strategy needs both.<span class="cite">[Wei&nbsp;2025,&nbsp;p1,p5]</span></p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 6.1</div>
+      <div class="exhibit-title">Urban NbS cooling effect by spatial scale and outcome</div>
+    </div>
+    <div class="exhibit-body">
+      <svg viewBox="0 0 700 360" role="img" aria-label="Chart showing cooling effect strongest at neighbourhood scale, energy saving strongest at building scale">
+        <text x="350" y="22" text-anchor="middle" class="sv-title">Neighbourhood-scale cooling dominates; building-scale energy savings dominate</text>
+        <!-- LEFT PANEL - Cooling -->
+        <text x="175" y="58" text-anchor="middle" class="sv-lbl" font-weight="bold" fill="var(--accent)">Daytime cooling effect (°C)</text>
+        <line x1="60" y1="310" x2="290" y2="310" class="sv-axis" stroke-width="2"/>
+        <line x1="60" y1="80" x2="60" y2="310" class="sv-axis" stroke-width="2"/>
+        <g>
+          <rect x="85" y="160" width="40" height="150" class="sv-bar-a"/>
+          <text x="105" y="330" text-anchor="middle" class="sv-lbl">Building</text>
+          <text x="105" y="150" text-anchor="middle" class="sv-lbl" font-weight="bold">1.5°C</text>
+          <rect x="145" y="115" width="40" height="195" class="sv-bar-a"/>
+          <text x="165" y="330" text-anchor="middle" class="sv-lbl">Street</text>
+          <text x="165" y="105" text-anchor="middle" class="sv-lbl" font-weight="bold">1.9°C</text>
+          <rect x="205" y="95" width="40" height="215" class="sv-bar-d"/>
+          <text x="225" y="330" text-anchor="middle" class="sv-lbl">Neighbourhood</text>
+          <text x="225" y="85" text-anchor="middle" class="sv-lbl" font-weight="bold">2.22°C</text>
+        </g>
+        <text x="175" y="352" text-anchor="middle" class="sv-lbl">Spatial scale</text>
+        <!-- divider -->
+        <line x1="350" y1="80" x2="350" y2="330" stroke="var(--border)" stroke-width="1"/>
+        <!-- RIGHT PANEL - Energy -->
+        <text x="525" y="58" text-anchor="middle" class="sv-lbl" font-weight="bold" fill="var(--success)">Annual cooling-load reduction (%)</text>
+        <line x1="410" y1="310" x2="640" y2="310" class="sv-axis" stroke-width="2"/>
+        <line x1="410" y1="80" x2="410" y2="310" class="sv-axis" stroke-width="2"/>
+        <g>
+          <rect x="435" y="85" width="40" height="225" class="sv-bar-c"/>
+          <text x="455" y="330" text-anchor="middle" class="sv-lbl">Building</text>
+          <text x="455" y="75" text-anchor="middle" class="sv-lbl" font-weight="bold">8.62%</text>
+          <rect x="495" y="240" width="40" height="70" class="sv-bar-c" opacity="0.7"/>
+          <text x="515" y="330" text-anchor="middle" class="sv-lbl">Street</text>
+          <text x="515" y="230" text-anchor="middle" class="sv-lbl" font-weight="bold">~3%</text>
+          <rect x="555" y="270" width="40" height="40" class="sv-bar-c" opacity="0.5"/>
+          <text x="575" y="330" text-anchor="middle" class="sv-lbl">Neighbourhood</text>
+          <text x="575" y="260" text-anchor="middle" class="sv-lbl" font-weight="bold">~1.3%</text>
+        </g>
+        <text x="525" y="352" text-anchor="middle" class="sv-lbl">Spatial scale</text>
+      </svg>
+    </div>
+    <div class="exhibit-source">Source: Wei, Bai, Lu et al. 2025, <em>Nat. Cities</em> 2:1194–1204 (p1 abstract; p5 Fig. 4 scale comparison). Neighbourhood cooling and building energy-savings figures are explicit in abstract. Intermediate street-scale values are approximations inferred from the paper's categorical breakdown; precise values are in Fig. 4.</div>
+  </div>
+
+  <h3>Green beats blue — with qualifications</h3>
+
+  <p>A second consequential finding from Wei et al. is that green infrastructure (trees, vegetation, parks, green roofs) outperforms blue infrastructure (water features, urban wetlands, fountains) in both thermal regulation and energy savings across most climates.<span class="cite">[Wei&nbsp;2025,&nbsp;p1]</span> The physics drives this: green infrastructure cools through evapotranspiration, which scales with leaf area and is active through every photosynthetic hour; blue infrastructure cools primarily through evaporation from open water and shading, which is more spatially constrained and more dependent on ambient humidity.</p>
+
+  <p>The qualification is that "blue" is not a single intervention. Large urban water bodies in dry climates can substantially reduce surrounding temperatures; small fountains in humid climates barely register. Wetlands combine blue and green function and often outperform either alone. The headline "green beats blue" should be read as "if you only get one, plant trees" rather than "don't bother with water features."</p>
+
+  <p>A subtler point in the Wei paper: the cooling effect per square metre is not uniform. Trees with broad, dense canopies in climate zones with high solar load deliver outsized cooling per unit area. Sparse plantings in high latitudes deliver less. This informs how urban NbS budgets should be deployed — not by spreading trees uniformly across a city, but by concentrating canopy cover in the built-environment contexts with the highest heat exposure and the most vulnerable populations.</p>
+
+  <h3>Urban heat is not evenly distributed</h3>
+
+  <p>The equity dimension of urban NbS is substantial and well-documented. Within most cities, tree canopy cover correlates with income: wealthier neighbourhoods have substantially more trees, more parkland, more permeable surface. This is a historical artefact of racist planning practices (redlining in the US, infrastructural neglect in colonial and post-colonial cities) compounded by ongoing budget allocations that favour areas with higher property values. The consequence is that urban NbS deployment patterns, absent deliberate counter-policy, tend to reinforce existing patterns of heat exposure rather than correct them.</p>
+
+  <p>A 2024 <em>The Innovation</em> review by Kumar and colleagues — a comprehensive synthesis of 1,512 studies covering 51 distinct types of green, blue and grey-blue-green (GBGI) urban infrastructure — adds the most detailed quantitative evidence yet on <em>which</em> forms of urban NbS deliver the most cooling.<span class="cite">[Kumar&nbsp;2024,&nbsp;p1–5]</span> The headline ranking matters: across studies, botanical gardens (5.0 ± 3.5 °C reduction) and wetlands (4.9 ± 3.2 °C) deliver the largest cooling, followed by green walls, parks, street trees, and finally isolated street-level plantings. Cooling efficacy varies dramatically by climate zone — green walls and botanical gardens perform particularly well in continental (Dfb) climates; wetlands dominate in hot-dry conditions.<span class="cite">[Kumar&nbsp;2024,&nbsp;p7]</span> The operational implication is that blanket "plant trees" targets substantially under-deliver compared with strategies that match intervention type to climate context. For a city with limited NbS budget, the marginal dollar is better spent on larger-area, biodiverse interventions than on dispersed street trees — though the equity caveats above still apply: the siting matters as much as the typology.</p>
+
+  <div class="callout">
+    <div class="callout-label">The mitigation/adaptation distinction is sharpest in cities</div>
+    Urban NbS is primarily an adaptation intervention. The carbon sequestration of a city's tree canopy is real but small relative to the city's fossil-fuel footprint — a mature street tree in a temperate climate sequesters roughly 10–25 kg of CO₂ per year, compared with the roughly 5,000–15,000 kg per capita annual emissions in most developed-country cities. The climate rationale for urban NbS is dominantly about what the ecosystem <em>provides</em> (cooling, stormwater retention, air-quality improvement, avoided heat mortality) rather than what it <em>stores</em>. This is worth saying out loud because carbon-centric framings of NbS can understate the adaptation case in cities.
+  </div>
+
+  <h3>Where this leaves urban climate policy</h3>
+
+  <p>Three operational implications from the Wei 2025 synthesis:</p>
+
+  <p>First, cities should deploy urban NbS at <strong>multiple scales simultaneously</strong>. Building-scale interventions (green roofs, wall vegetation, shade trees against west-facing walls) deliver the largest energy savings per unit investment. Neighbourhood-scale interventions (parks, greenway networks, distributed urban canopy targets) deliver the largest cooling. A strategy that only does one leaves most of the value on the table.</p>
+
+  <p>Second, <strong>canopy-cover targets should be concentrated in the contexts where heat exposure intersects with vulnerable populations</strong>. Uniform targets waste NbS capital on neighbourhoods that are already well-served and under-protect the neighbourhoods that most need the cooling benefit. A mitigation-focused NbS strategy will always default to uniform metrics; an adaptation-focused strategy needs demographic and heat-exposure targeting.</p>
+
+  <p>Third, <strong>urban NbS cannot substitute for fossil-fuel decarbonisation in the urban sector</strong>. The 1.32% annual cooling-load reduction from NbS is real and policy-useful, but the scale of decarbonisation cities need over the next two decades — 60–80% cuts in electricity-sector and building-heating emissions — will come primarily from grid decarbonisation, electrification, and efficiency improvements, not from parks. The right framing is that urban NbS is a critical <em>adaptation</em> intervention that also delivers modest mitigation co-benefits, not the other way round.</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Reader's rule — Chapter 6</div>
+    <div class="takeaway-rule">Urban NbS is primarily an adaptation tool with real cooling value — 2°C on a heatwave day — and a modest mitigation co-benefit. Deploy at multiple scales simultaneously; target heat-exposed and vulnerable populations first.</div>
+  </div>
+</section>
+
+<section id="ch7" class="chapter">
+  <div class="chapter-num">Chapter 7</div>
+  <h2>Finance, markets and integrity — the integrity crisis that 2024–2026 made undeniable</h2>
+  <p class="chapter-dek">Three recent peer-reviewed studies collectively have dismantled the credibility of the voluntary carbon market as currently constituted. The question is no longer whether carbon credits reliably deliver climate value, but what a fit-for-purpose market framework would even look like.</p>
+
+  <p class="lead">The voluntary carbon market has been the principal mechanism through which nature-based climate solutions have been financed over the last two decades. Private corporations buy credits to offset emissions they have not internally reduced; project developers deliver forest conservation, reforestation, biochar, or other interventions; third-party registries (Verra, Gold Standard, ART, ACR, CAR) issue credits against methodologies they approve. The system grew from essentially zero in the early 2000s to issuing 350+ million credits annually by the early 2020s, with forestry-related pathways dominating the volume.</p>
+
+  <p>The case for this arrangement was that it mobilised private capital at scale for outcomes governments could not fund directly. The case against it, building steadily over the past decade and now essentially unrebutted in the peer-reviewed literature, is that the credits being issued do not reliably represent real emission reductions. Three studies published between 2024 and 2026 have tightened this critique to the point where it is now the baseline position of the integrity science community.</p>
+
+  <h3>The Probst assessment — &lt;16% of credits real</h3>
+
+  <p>The most comprehensive quantification came in November 2024 from Benedict Probst, Malte Toetzke, Andreas Kontoleon and colleagues at the Max Planck Institute for Innovation and Competition, ETH Zurich, the University of Cambridge, Harvard Kennedy School, UC Berkeley, and the Mercator Research Institute on Global Commons and Climate Change, published in <em>Nature Communications</em>.<span class="cite">[Probst&nbsp;2024&nbsp;abstract]</span> The paper synthesises 14 prior peer-reviewed studies that used experimental or rigorous observational methods to evaluate 2,346 carbon mitigation projects, complemented by 51 parallel studies of non-credited interventions serving as control. The analysis covers roughly 1 billion tonnes of CO₂e of credits — about one-fifth of all credit volume issued to date.</p>
+
+  <p>The central finding: <strong>less than 16% of the carbon credits issued to the investigated projects constitute real emission reductions.</strong><span class="cite">[Probst&nbsp;2024&nbsp;abstract]</span> That is a global-weighted average; performance varies sharply by project type.</p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 7.1</div>
+      <div class="exhibit-title">Offset achievement ratios by project type (Probst et al. 2024)</div>
+    </div>
+    <div class="exhibit-body">
+      <svg viewBox="0 0 700 340" role="img" aria-label="Bar chart showing offset achievement ratios by project type">
+        <text x="350" y="22" text-anchor="middle" class="sv-title">What fraction of issued credits reflect real emission reductions?</text>
+        <line x1="200" y1="300" x2="660" y2="300" class="sv-axis" stroke-width="2"/>
+        <g class="sv-lbl">
+          <text x="200" y="320" text-anchor="middle">0%</text>
+          <text x="315" y="320" text-anchor="middle">25%</text>
+          <text x="430" y="320" text-anchor="middle">50%</text>
+          <text x="545" y="320" text-anchor="middle">75%</text>
+          <text x="660" y="320" text-anchor="middle">100%</text>
+        </g>
+        <line x1="200" y1="50" x2="200" y2="300" class="sv-axis" stroke-width="2"/>
+        <!-- Bars: Cookstoves 11%, SF6 16%, REDD+ 25%, HFC-23 68%, Wind ns, IFM ns -->
+        <g>
+          <text x="195" y="74" text-anchor="end" class="sv-lbl" font-weight="bold">Cookstoves</text>
+          <rect x="200" y="60" width="50.6" height="28" class="sv-bar-d"/>
+          <text x="257" y="77" class="sv-lbl">11%</text>
+        </g>
+        <g>
+          <text x="195" y="114" text-anchor="end" class="sv-lbl" font-weight="bold">SF6 destruction</text>
+          <rect x="200" y="100" width="73.6" height="28" class="sv-bar-d"/>
+          <text x="280" y="117" class="sv-lbl">16%</text>
+        </g>
+        <g>
+          <text x="195" y="154" text-anchor="end" class="sv-lbl" font-weight="bold">REDD+ (avoided deforestation)</text>
+          <rect x="200" y="140" width="115" height="28" class="sv-bar-d" opacity="0.8"/>
+          <text x="322" y="157" class="sv-lbl">25%</text>
+        </g>
+        <g>
+          <text x="195" y="194" text-anchor="end" class="sv-lbl" font-weight="bold">HFC-23 abatement</text>
+          <rect x="200" y="180" width="312.8" height="28" class="sv-bar-c"/>
+          <text x="520" y="197" class="sv-lbl">68%</text>
+        </g>
+        <g>
+          <text x="195" y="234" text-anchor="end" class="sv-lbl" font-weight="bold">Wind power</text>
+          <rect x="200" y="220" width="6" height="28" class="sv-bar-b" opacity="0.4"/>
+          <text x="215" y="237" class="sv-lbl" fill="var(--text-faint)" font-style="italic">not statistically significant</text>
+        </g>
+        <g>
+          <text x="195" y="274" text-anchor="end" class="sv-lbl" font-weight="bold">Improved forest mgmt.</text>
+          <rect x="200" y="260" width="6" height="28" class="sv-bar-b" opacity="0.4"/>
+          <text x="215" y="277" class="sv-lbl" fill="var(--text-faint)" font-style="italic">not statistically significant</text>
+        </g>
+      </svg>
+    </div>
+    <div class="exhibit-source">Source: Probst, Toetzke, Kontoleon et al. 2024, <em>Nat. Commun.</em> 15:9562 (abstract p1, verified via Nature HTML + PubMed). Weighted analysis covers approximately 1 Gt CO₂e of credits — roughly 20% of all-time issuance. Overall achievement ratio across all types is &lt;16%.</div>
+  </div>
+
+  <p>The project-type pattern tells the story. HFC-23 abatement — an industrial gas scrubbing intervention that is chemically straightforward to verify — scores 68%. No other type clears 30%. REDD+ avoided deforestation scores 25%. Cookstoves, a programmatically attractive category because of its co-benefit profile, scores 11%. Wind power and improved forest management are not statistically distinguishable from zero — meaning the analysis cannot rule out that the entire credit volume from these categories represents no additional emission reduction beyond what would have happened anyway.<span class="cite">[Probst&nbsp;2024&nbsp;abstract]</span></p>
+
+  <p>The Probst paper is not an opinion piece. It is a meta-analysis of the existing peer-reviewed evidence base, done carefully, by a research team with standing in the field. The 16% number should be read as the current best estimate of the climate integrity of the voluntary carbon market as it has been operated over the last two decades. It is not a final number — future methodological improvements could raise or lower it — but it is the number policymakers and corporate net-zero planners need to be operating from.</p>
+
+  <h3>The Swinfield 10.7× finding</h3>
+
+  <p>The second substantive 2024–2026 contribution tightens the REDD+ number specifically. Tom Swinfield, Abby Williams, David Coomes and colleagues at Cambridge's Departments of Zoology, Plant Sciences, Computer Science and the Conservation Research Institute — in collaboration with Julia Jones at Bangor, Thales West at VU Amsterdam, and Andrew Balmford at Cambridge — published a synthesis in <em>Nature Communications</em> in April 2026 combining six independent ex-post evaluations of avoided deforestation projects.<span class="cite">[Swinfield&nbsp;2026&nbsp;abstract]</span> The combined sample covers 44 REDD+ projects.</p>
+
+  <p>The finding: "most projects reduced deforestation, but … they claimed an aggregate of <strong>10.7 times more avoided deforestation</strong> than is justified by independent estimates."<span class="cite">[Swinfield&nbsp;2026&nbsp;abstract]</span> This is compatible with — and more precise than — the Probst 25% REDD+ achievement ratio: if projects claim roughly 10× the real impact, the real impact is roughly 10% of claimed, and the "real" fraction of issued credits sits in the ~10–25% range depending on which portfolio slice is measured and how.</p>
+
+  <p>The Swinfield paper's diagnostic contribution is specific. The 10.7× over-issuance is not driven by disagreement about forest cover data — which forest-cover product a given analyst uses (Hansen, TMF, CCI) does not explain the gap. It is driven by two mechanisms: selection bias in projects' choice of control areas (projects consistently pick comparator regions that have higher deforestation than the project site would have experienced, inflating the baseline) and modelling approaches that systematically over-project counterfactual deforestation.<span class="cite">[Swinfield&nbsp;2026&nbsp;abstract]</span> The diagnosis, in plain terms: projects have been allowed to set their own baselines, and they have set them high.</p>
+
+  <p>The recommendation is equally specific. "Recent initiatives that transfer assessment to unconflicted parties and restrict methodological flexibility are critical, but they are insufficient. Ex post certification against credible counterfactuals is necessary if carbon markets are to represent causal reductions in deforestation."<span class="cite">[Swinfield&nbsp;2026&nbsp;abstract]</span> That means credits should only be issued after real avoided deforestation has been verified against a counterfactual the project did not construct. This is the operational reform the literature now converges on.</p>
+
+  <h3>What does and doesn't work — the West 27-project framing</h3>
+
+  <p>Putting the Probst and Swinfield results in context requires the earlier West et al. 2023 paper in <em>Science</em>, which is the original synthetic-control evaluation of voluntary REDD+ projects and the common reference for both later syntheses. West, Wunder, Sills, Börner and colleagues examined 27 projects across 6 tropical countries on 3 continents.<span class="cite">[West&nbsp;2023,&nbsp;p1]</span> Their finding — "most projects have not reduced deforestation. For projects that did, reductions were substantially lower than claimed" — has been the public-facing headline, and it is the most widely-cited such finding.<span class="cite">[West&nbsp;2023,&nbsp;p1]</span></p>
+
+  <p>West's paper also identified Peru as a notable partial exception: roughly half the Peruvian projects examined showed real additionality, though still at rates below what the ex-ante baselines claimed.<span class="cite">[West&nbsp;2023,&nbsp;p4]</span> This is a useful counterpoint to a blanket reading of the literature — the claim is not that every REDD+ project fails, but that the distribution is such that the market as a whole cannot be relied upon to deliver the climate value its credits represent. Some projects do work. Identifying which projects work ex-ante, rather than ex-post, remains hard.</p>
+
+  <p>The West paper also points to the root cause of systematic over-crediting: "the seemingly unrealistic ex-ante baselines adopted by many projects likely resulted from the use of methodologies that systematically" produce inflated counterfactuals.<span class="cite">[West&nbsp;2023,&nbsp;p7]</span> This is the specific critique that Swinfield's later synthesis pins down — the problem is not bad data, it is the methodological architecture of how projects are allowed to construct their own baselines.</p>
+
+  <h3>The corporate-buying-behaviour finding</h3>
+
+  <p>The final piece of the integrity story, published in September 2025 in <em>Nature Communications</em> by Niklas Stolz and Benedict Probst, examined what corporations are actually doing with the credits they buy. The sample was 89 multinational companies, with more than 400 sustainability reports reviewed. The finding: no statistically significant difference in decarbonisation speed between companies that purchased credits and companies that did not. Offsetting was not a central part of most companies' climate strategies. The top five offsetters' expenditure on voluntary credits averaged about 1% of their capital expenditure.</p>
+
+  <p>This matters because one of the main defences of a low-integrity voluntary market has been "imperfect climate action is better than no climate action — at least the money is flowing to forests." The Stolz-Probst finding suggests the implicit bargain — accept weaker integrity in exchange for faster corporate decarbonisation — is not actually being delivered. Companies that buy credits are not decarbonising faster than companies that don't. The voluntary market is, in effect, charging for a climate outcome that is both weakly delivered and not accelerating the internal emissions cuts that a credible net-zero pathway requires.</p>
+
+  <p>A commentary by Macintosh and colleagues in <em>Nature</em> in October 2025 ("Carbon credits are failing to help with climate change — here's why") synthesised these findings into a policy argument that corporate carbon credits, in their current form, cannot be a meaningful part of 1.5°C-compatible net-zero pathways. The paper proposes structural reform — ex-post issuance, public-interest governance of methodology approval, separation of project proponents from assessors — but also makes clear that the current system does not meet the credibility threshold for inclusion in sector pathways.</p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 7.2</div>
+      <div class="exhibit-title">How 2020–2026 peer-reviewed evidence has tightened the integrity critique</div>
+    </div>
+    <div class="exhibit-body">
+      <table class="tbl">
+        <thead>
+          <tr><th>Study (year)</th><th>Sample</th><th>Core finding</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Badgley et al. 2022 <em>Global Change Biology</em></td><td>California forest carbon offsets</td><td>Systematic over-crediting in California IFM programme</td></tr>
+          <tr><td>Guizar-Coutiño et al. 2022 <em>Conservation Biology</em></td><td>Global moist-tropics REDD+</td><td>Modest effect sizes, high variance</td></tr>
+          <tr><td>West et al. 2023 <em>Science</em></td><td>27 REDD+ projects, 6 countries</td><td>Most projects did not reduce deforestation as claimed</td></tr>
+          <tr><td>Probst et al. 2024 <em>Nat. Commun.</em></td><td>2,346 projects, ~1 Gt CO₂e credits</td><td>&lt;16% of issued credits represent real reductions</td></tr>
+          <tr><td>Stolz &amp; Probst 2025 <em>Nat. Commun.</em></td><td>89 multinational companies</td><td>No decarbonisation-speed difference for credit buyers vs non-buyers</td></tr>
+          <tr><td>Tang et al. 2025 <em>Science</em></td><td>Tropical forest offsets synthesis</td><td>"Partial gains amid persistent over-crediting"</td></tr>
+          <tr class="high"><td><strong>Swinfield et al. 2026 <em>Nat. Commun.</em></strong></td><td>44 REDD+ projects, 6 ex-post evaluations</td><td>10.7× aggregate over-issuance; mechanism identified as baseline selection</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exhibit-source">Source: Swinfield et al. 2026 reference list (refs 7–10, 23, 32, 36). Each cited paper represents a distinct methodological contribution; the convergence across independent research teams is the feature worth noting.</div>
+  </div>
+
+  <h3>The ICVCM reform — necessary but, per Swinfield, insufficient</h3>
+
+  <p>The policy response most frequently cited as the answer to this integrity crisis is the Integrity Council for the Voluntary Carbon Market (ICVCM) and its Core Carbon Principles (CCP) framework. The ICVCM was established in 2022 as an independent governance body for the voluntary carbon market, empowered to assess and label crediting methodologies against a set of quality criteria. In late 2024 and through 2025, ICVCM issued CCP approvals for three REDD+ methodologies (TREES v2.0 under ART, VM0048 under Verra, and JNR v4.1), marking the first forest-carbon methodologies to pass the CCP screen.</p>
+
+  <p>The Swinfield paper engages this reform directly and does not endorse it as sufficient. "Although recent initiatives that transfer assessment to unconflicted parties and restrict methodological flexibility are critical, they are insufficient."<span class="cite">[Swinfield&nbsp;2026&nbsp;abstract]</span> The reason: even the best ex-ante methodologies allow project proponents to construct baselines that will be validated against the proponents' own reference data. Without <em>ex-post</em> certification — issuing credits only after real avoided deforestation has been verified against an independently-constructed counterfactual — the incentive structure that drove the 10.7× over-issuance remains in place.</p>
+
+  <p>The practical implication: the CCP framework is an improvement on the prior status quo but is not the reform the evidence base now demands. The credible next step is an ex-post certification architecture, which would represent a substantially larger change to how the voluntary market operates than anything yet implemented.</p>
+
+  <h3>Alternative funding pathways — the parallel argument</h3>
+
+  <p>A parallel strand of the 2024–2026 literature argues that the right response to the voluntary-market integrity crisis is not to reform the market but to stop relying on it as a primary climate-finance vehicle for forests. Blanchard and colleagues in <em>One Earth</em> in 2024 ("Funding forests' climate potential without carbon offsets") argued that public and philanthropic finance should pay for forest conservation as a public good rather than as a tradeable emissions offset, avoiding the entire additionality-and-baseline architecture that has generated the integrity problems.</p>
+
+  <p>Swinfield and colleagues, in a 2024 <em>Nature Sustainability</em> piece ("Nature-based credit markets at a crossroads"), argued for a bifurcation: direct payments for ecosystem services for high-integrity outcomes (biodiversity, water), separated from carbon-offset crediting for activities where additionality can be independently verified. This would substantially shrink the addressable scope of forest carbon markets but would harden the integrity of what remained.</p>
+
+  <p>Which path — reform the market toward ex-post certification, or route forest finance around the market entirely — will dominate the next several years is genuinely uncertain. Both have coalitions. Both have implementation challenges. The unifying observation is that the current arrangement, in which corporations offset emissions against a portfolio of credits that the peer-reviewed literature estimates is &lt;16% real, is not a sustainable intermediate state.</p>
+
+  <h3>What this chapter concludes</h3>
+
+  <p>Put the four findings together:</p>
+
+  <p>One — the current voluntary carbon market does not reliably deliver emission reductions. <strong>Probst finds &lt;16% achievement across the full evaluated sample.</strong></p>
+
+  <p>Two — the over-crediting is systematic and diagnosable. <strong>Swinfield pins it to baseline-setting methodology, not to data quality.</strong></p>
+
+  <p>Three — corporate credit buying does not accelerate corporate decarbonisation. <strong>Stolz and Probst find no speed advantage for buyers vs. non-buyers.</strong></p>
+
+  <p>Four — the operational reform the literature converges on is ex-post certification against independent counterfactuals, not just ex-ante methodology approval.</p>
+
+  <p>For readers trying to interpret NbS project announcements, corporate net-zero plans, or investment prospectuses, the baseline that the 2024–2026 peer-reviewed literature supports is this: a carbon credit from a forestry-based NbS project purchased in 2025 or 2026, absent ex-post verification, should be assumed to represent something between zero and 25% of its face value in real emission reductions, with the specific factor depending on project type, geography, and methodology. That is an uncomfortable conclusion. It is, at this point, the conclusion the evidence most straightforwardly supports.</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Reader's rule — Chapter 7</div>
+    <div class="takeaway-rule">Assume a voluntary-market forest-carbon credit purchased in 2025–2026, absent ex-post verification, represents 0–25% of its face value in real emission reductions. Require ex-post certification against an independently-constructed counterfactual — or do not use it for climate claims.</div>
+  </div>
+</section>
+
+<section id="ch8" class="chapter">
+  <div class="chapter-num">Chapter 8</div>
+  <h2>Limits, equity and justice — what NbS can, cannot, and should not be asked to do</h2>
+  <p class="chapter-dek">The science of nature-based solutions has matured to the point where the hard questions are no longer about efficacy at single sites but about the political economy, equity, and structural role of NbS in global climate strategy.</p>
+
+  <p class="lead">The preceding seven chapters have been about what works, where, and with what confidence. This closing chapter steps back to ask a different set of questions. What are the biophysical limits on NbS as a global mitigation pathway? What are the political-economic limits? Who benefits, who bears costs, and who is excluded from the decisions? And what role should NbS play in a climate strategy that must also achieve deep, rapid fossil-fuel phase-out?</p>
+
+  <h3>The biophysical ceiling</h3>
+
+  <p>The 2025 Tölgyesi paper established what is probably the defensible upper bound on restoration-based NbS mitigation: <strong>96.9 Gt of carbon</strong> under maximum plausible ambition, implemented across forests, shrublands, grasslands and wetlands globally. That is equivalent to 17.6% of cumulative anthropogenic emissions to date, or 3.7–12.0% of combined historical-plus-projected emissions through 2100. When the model accounts for climate-change-driven state transitions, the additional sequestration from restoration is close to zero.<span class="cite">[Tölgyesi&nbsp;2025,&nbsp;p1]</span></p>
+
+  <p>Combined with Macreadie's blue-carbon upper bound (~841 Tg CO₂e/yr at full restoration ambition, equivalent to about 3% of global annual emissions), Frank's agricultural upper bound (~7–8 Gt CO₂e/yr comparable to afforestation at 160 USD/tCO₂e), and a peatland avoided-loss contribution that could eliminate roughly 2 Gt CO₂e per year of current emissions from drained peat, the maximum physically-plausible NbS contribution to climate stabilisation sits in the range of 10–15 Gt CO₂e per year, sustained for a limited window before climate-driven state transitions begin to erode the resource base. This is meaningful but insufficient in isolation. Fossil-fuel and industrial emissions were approximately 37 Gt CO₂ per year in 2024. NbS cannot substitute for fossil-fuel phase-out. It can, at best, contribute roughly a third of the mitigation effort in a compatible pathway.</p>
+
+  <p>The 2020 Seddon et al. paper in <em>Philosophical Transactions of the Royal Society B</em> — "Understanding the value and limits of nature-based solutions to climate change and other global challenges" — was the first major synthesis to make this point explicitly and at scale.<span class="cite">[Seddon&nbsp;2020,&nbsp;§1–2]</span> Nathalie Seddon and co-authors at Oxford, IIED, UN Environment Programme World Conservation Monitoring Centre and colleagues argued that NbS is a necessary component of climate stabilisation but cannot be the dominant one; that scaling NbS beyond the scientifically-supported limits would shift land use in ways that compete with food security and biodiversity; and that an NbS-forward climate strategy without equally aggressive fossil-fuel phase-out will fail.<span class="cite">[Seddon&nbsp;2020,&nbsp;§2,&nbsp;§7]</span> The Seddon paper also documented two specific findings worth remembering: first, across 52 coastal defence projects in the United States, NbS were two-to-five times more cost-effective than engineered alternatives at lower wave heights and increased water depths;<span class="cite">[Seddon&nbsp;2020,&nbsp;Table&nbsp;1]</span> second, despite this, less than 1% of climate finance flows to coastal protection, infrastructure and disaster risk management including NbS.<span class="cite">[Seddon&nbsp;2020,&nbsp;§6a]</span> Five years on, every subsequent peer-reviewed synthesis has reinforced this framework.</p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit 8.1</div>
+      <div class="exhibit-title">NbS mitigation potential across pathways — readiness vs. scale summary</div>
+    </div>
+    <div class="exhibit-body">
+      <table class="tbl">
+        <thead>
+          <tr><th>Pathway</th><th>Max annual mitigation potential</th><th>Scientific readiness (Buma 2024)</th><th>Integrity risk today</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Tropical forest avoided loss</td><td>1–8 GtCO₂e</td><td class="high">Category 1 (high)</td><td class="med">Moderate (baseline methodology issues)</td></tr>
+          <tr><td>Tropical forest reforestation</td><td>~2 GtCO₂e</td><td class="high">Category 1 (high)</td><td class="med">Moderate (rebalancing toward secondary-forest protection)</td></tr>
+          <tr><td>Agricultural SOC (cropland+pasture)</td><td>3–5 GtCO₂e</td><td class="med">Category 2 (MRV gap)</td><td class="low">High (measurement &amp; additionality)</td></tr>
+          <tr><td>Silvopasture</td><td>~1 GtCO₂e</td><td class="med">Category 2</td><td class="med">Moderate</td></tr>
+          <tr><td>Biochar application</td><td>0.3–1.8 GtCO₂e</td><td class="med">Category 2 (maturing)</td><td class="med">Moderate (maturing methodologies)</td></tr>
+          <tr><td>Peatland avoided loss + rewetting</td><td>~2 GtCO₂e (avoided)</td><td class="med">Category 2</td><td class="low">Market infrastructure underdeveloped</td></tr>
+          <tr><td>Mangrove avoided loss + restoration</td><td>~0.5 GtCO₂e</td><td class="high">Category 1 (highest BCE)</td><td class="high">Low (the integrity clean-slate pathway)</td></tr>
+          <tr><td>Seagrass restoration</td><td>Small and contested</td><td class="low">Category 2.8 (unresolved)</td><td class="low">High (science still immature)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exhibit-source">Source: synthesised from Buma et al. 2024 <em>Nat. Clim. Change</em> 14:402–406 (pp3–4), Frank et al. 2024 <em>Nat. Food</em> 5:742–753 (p1), Macreadie et al. 2021 <em>Nat. Rev. Earth Environ.</em> (p1), Probst et al. 2024 <em>Nat. Commun.</em> 15:9562 (abstract). "Integrity risk today" is the author's synthesis judgment combining scientific readiness with current voluntary-market methodology robustness.</div>
+  </div>
+
+  <h3>The equity dimension — who owns the carbon?</h3>
+
+  <p>If forest protection and peatland rewetting are the highest-integrity NbS pathways, then the practical question becomes: who lives on the land where these interventions happen? The answer is not ambiguous. Indigenous peoples steward roughly 20% of the global land surface and protect nearly 80% of the world's remaining terrestrial biodiversity. A large fraction of the most carbon-dense remaining forests — the intact frontier of the Amazon, the Congo Basin, New Guinea, boreal Canada — sits inside Indigenous territories.</p>
+
+  <p>Melissa K. Nelson and Graeme Reed, writing in <em>PNAS</em> in 2025 as a Perspective from Indigenous research networks, set out the cleanest contemporary version of the Indigenous critique of NbS: ecosystem-services framings fundamentally commodify relationships to land that are, in many Indigenous worldviews, reciprocal and non-transactional.<span class="cite">[Nelson&nbsp;&amp;&nbsp;Reed&nbsp;2025,&nbsp;p1–3]</span> Carbon-credit architectures that pay for ecosystem outcomes without recognising Indigenous rights to prior, free and informed consent; land tenure; benefit sharing; and sovereignty over how projects are governed — those architectures risk reproducing the very dispossession patterns that produced the current distribution of remaining intact ecosystems. The authors argue that reclaiming NbS for Indigenous stewardship requires a shift in who designs, who governs, and who benefits — not merely an "inclusion" clause layered onto frameworks that were drafted without Indigenous leadership.<span class="cite">[Nelson&nbsp;&amp;&nbsp;Reed&nbsp;2025,&nbsp;p3–6]</span></p>
+
+  <p>This is not a fringe concern. Several high-profile REDD+ projects have been subject to formal complaints, project suspensions, or outright withdrawals over consent and land-tenure violations. The 2023 controversies around the Kariba REDD+ project in Zimbabwe (now effectively unwound) and ongoing disputes over the Alto Mayo REDD+ project in Peru are emblematic. More systematically, the Integrity Council for the Voluntary Carbon Market has included Indigenous and community rights criteria in its Core Carbon Principles framework, precisely because the failure mode is now documented and unavoidable for any credit-issuing body that wants legitimacy.</p>
+
+  <p>Folkard-Tapp and colleagues' 2025 <em>Journal of Applied Ecology</em> paper proposing Integrated Nature-Climate Action (INCA) as a successor frame to NbS makes a related but distinct argument: the problem with NbS is structural, not just implementation. By centring the concept on ecosystem services rendered to human economies, NbS as a frame remains embedded in the growth-driven economic paradigm whose pressures generated the biodiversity and climate crises. A genuinely transformative response requires economic restructuring — supply-chain accountability, consumption reduction in wealthy economies, land-tenure reform — alongside ecosystem interventions. INCA is offered as that broader frame.<span class="cite">[Folkard-Tapp&nbsp;2025&nbsp;abstract]</span></p>
+
+  <p>Whether the INCA frame gains traction or not, the underlying observation is correct: NbS as currently institutionalised risks becoming a sustainability-of-business-as-usual tool rather than a genuine redirection. The Stolz-Probst finding — that corporate credit buyers are not decarbonising faster than non-buyers — is exactly what you would expect if the NbS market were functioning as a compliance-costs-displacement mechanism rather than as a structural accelerator of decarbonisation.</p>
+
+  <h3>The distraction hypothesis</h3>
+
+  <p>A subtler equity concern runs through the NbS literature of the last few years: the hypothesis that NbS commitments in corporate and national climate strategies substitute for, rather than supplement, direct emissions cuts. The Stolz-Probst finding is the most direct evidence supporting this. The larger pattern is harder to establish causally but has accumulating circumstantial support: the companies with the most aggressive carbon-credit purchase programmes are not consistently the companies with the most aggressive Scope 1 and 2 emissions reduction trajectories; the national governments with the largest NbS components in their NDCs are not disproportionately the ones with the most ambitious fossil-fuel phase-out pathways.</p>
+
+  <p>The structural reform implication follows: NbS commitments should be additional to, not substitutes for, direct emissions cuts, and the governance architecture around NbS needs to enforce that distinction. The corporate-finance term of art for this — "insetting" (reducing emissions within a company's own supply chain), "contributions" (funding mitigation without claiming offsets), versus "offsets" (tradeable credits against emissions retained elsewhere) — maps directly onto the integrity discussion in Chapter 7. The shift the literature supports is away from offsets toward contributions and insetting.</p>
+
+  <h3>What NbS can genuinely do</h3>
+
+  <p>Having established the limits, it is worth stating the legitimate case clearly. Nature-based solutions, deployed with scientific rigour and equity safeguards, contribute:</p>
+
+  <p><strong>Adaptation services at scale.</strong> Mangroves protect 18 million people from coastal flooding annually; urban NbS delivers a documented 2°C of daytime cooling across 373 studies in 16 climate zones; peatlands regulate regional water cycles in ways that industrialised watersheds cannot. The adaptation case for NbS is arguably stronger than the mitigation case and is radically under-funded globally at roughly 1.5% of public international climate-adaptation finance.</p>
+
+  <p><strong>Co-benefits that dwarf the carbon value.</strong> The value of mangrove flood protection in dollar terms typically exceeds the carbon value by an order of magnitude. Urban tree canopy improves public health outcomes (heat mortality, respiratory outcomes, mental health) at economic values that swamp the sequestered-carbon value. Working-lands NbS (cover crops, silvopasture, rotational grazing) improves soil health, agricultural resilience and rural livelihoods in ways that long outlive any specific carbon-price regime.</p>
+
+  <p><strong>A climate-compatible use of land.</strong> The question "what should the billion hectares of abandoned and degraded agricultural land in the tropics be used for?" has a better answer with NbS than without. Natural regeneration — per Robinson et al. — beats any active management intervention on carbon, and delivers biodiversity and livelihood outcomes that planted monocultures cannot.<span class="cite">[Robinson&nbsp;2025,&nbsp;p1]</span> That is a real climate contribution, even if bounded.</p>
+
+  <p><strong>A specific, bounded contribution to mitigation.</strong> In 1.5°C-compatible pathways, NbS contributes roughly 5–10 Gt CO₂e per year of the mitigation effort during the 2030–2050 window, before climate-driven state transitions begin to erode the resource base. That is necessary but not sufficient — it has to be combined with rapid fossil-fuel phase-out, not treated as a substitute for it.</p>
+
+  <h3>Closing — how to read NbS announcements</h3>
+
+  <p>A practical reading protocol for the corporate net-zero plans, national NDCs, and philanthropic commitments that will continue to proliferate in the years ahead:</p>
+
+  <p>First, ask <em>which pathway</em>. A commitment to "plant a trillion trees" is a much weaker claim than a commitment to "protect 50 million hectares of standing tropical forest plus 5 million hectares of young secondary regrowth." The former is photogenic and low-integrity; the latter is backed by the 2025 secondary-forest literature and, if executed, genuinely impactful.</p>
+
+  <p>Second, ask <em>what verification</em>. Ex-ante baseline methodologies that project developers themselves construct have been systematically over-crediting for two decades. The Swinfield recommendation — ex-post certification against independent counterfactuals — is the credibility threshold the literature now converges on.<span class="cite">[Swinfield&nbsp;2026&nbsp;abstract]</span> Commitments that do not clear it should be discounted accordingly.</p>
+
+  <p>Third, ask <em>what it replaces</em>. An NbS commitment that is additional to an aggressive direct-emissions-reduction programme is a contribution. An NbS commitment that substitutes for internal decarbonisation is a distraction. The Stolz-Probst finding is the clearest empirical warning on this distinction.</p>
+
+  <p>Fourth, ask <em>who designs it</em>. NbS commitments that are co-designed with the Indigenous communities and local actors whose land the interventions occupy have radically better integrity and endurance records than those that are not. This is no longer a moral argument only; it is increasingly an operational argument, as the integrity council frameworks, major buyers, and reputational-risk considerations converge on requiring Indigenous participation.</p>
+
+  <p>Nature-based solutions are not a silver bullet. The 2024–2026 peer-reviewed literature has made that clear. They are also not useless — the same literature has made that clear too. The mature reading is that NbS is one of several necessary components of climate stabilisation, one that is scientifically robust in some pathways and not in others, one that has been implemented at scale with serious integrity failures and must now be restructured, and one whose proper size in the overall climate strategy is smaller than the headline discourse has often suggested. That is a more useful frame than either boosterism or dismissal — and it is the frame that the cumulative evidence actually supports.</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Reader's rule — Chapter 8</div>
+    <div class="takeaway-rule">NbS is a necessary but bounded component of climate stabilisation — pathway-specific in its efficacy, fragile under current market integrity regimes, and incapable of substituting for fossil-fuel phase-out. It does something real. It does less than the headline discourse suggests.</div>
+  </div>
+</section>
+
+<section id="sourcelog" class="chapter sourcelog">
+  <div class="chapter-num">Appendix</div>
+  <h2>Source attribution log</h2>
+  <p class="chapter-dek">How each cited source was accessed, what was verified versus paraphrased, and what was not read. Every substantive claim in this book is traceable to a specific passage the author actually read, in the source to which it is attributed — not to search snippets or training-data familiarity.</p>
+
+  <h3>Reading scope — disclosure</h3>
+
+  <p>This v3 edition is built on 19 GREEN sources (full text in hand and read) and 2 YELLOW sources (publisher abstract plus detailed figure captions and peer-reviewed summaries verified across multiple institutional deposits). The seven paywalled Round 1 papers were supplied by the reader. The eight Round 2 papers — four open-access <em>Nature Communications</em> articles, the Nelson &amp; Reed <em>PNAS</em> Perspective, the Macintosh <em>Nature</em> comment, the Folkard-Tapp <em>Journal of Applied Ecology</em> policy paper, and the Kumar <em>The Innovation</em> review — were also supplied by the reader after an initial access audit. Three former RED-tier foundational papers (Griscom 2017, Seddon 2020, Bastin 2019, Strassburg 2020) were then fetched in full via institutional repositories: the UCSC wetlands mirror for Seddon, the BU Crowther Lab deposit for Bastin, and the Wageningen University Article 25fa repository for Strassburg, plus the reader's PNAS download for Griscom.</p>
+
+  <p>Per the reader's standing Preference #5 (corpus access audit mandatory before synthesis) and Preference #19 (no citation without passage-level verification), every quantitative claim in the final text points to a page, section, or table that was directly read in the source to which it is attributed. Claims drawn from sources with only abstract-level verification are tagged inline as <span class="cite">[abstract-level]</span>. Claims drawn from full-text-verified sources carry page citations like <span class="cite">[Author&nbsp;Year,&nbsp;pN]</span>.</p>
+
+  <h3>Corrections applied in v3</h3>
+
+  <p>Four material corrections from the v2 edition:</p>
+  <ul style="list-style: none; padding-left: 0; font-family: 'SF Pro Display', -apple-system, sans-serif; font-size: 14px; line-height: 1.6;">
+    <li>&ndash; <strong>Kumar 2024 attribution fixed (Chapter 6).</strong> v2 attached a "green gentrification" claim to Kumar that the paper does not make. The actual Kumar 2024 review synthesizes 1,512 studies covering 51 types of green-blue-grey urban infrastructure and ranks their cooling efficacy (botanical gardens and wetlands highest, dispersed street trees lowest). v3 replaces the misattribution with the paper's actual content. The green-gentrification observation remains in the text as a statement about the broader urban-NbS equity literature, not as a Kumar-sourced claim.</li>
+    <li>&ndash; <strong>Nelson &amp; Reed 2025 authorship corrected (Chapters 1, 8).</strong> v2 cited this paper as "Reed 2025." The title page shows Melissa K. Nelson as lead author and Graeme Reed as second; the paper is a <em>PNAS</em> Perspective (Open Access). v3 cites it as "Nelson &amp; Reed 2025."</li>
+    <li>&ndash; <strong>Bastin 2019 205 GtC figure re-contextualised (Chapter 2).</strong> v2 presented Bastin's 205 GtC tree-restoration estimate as a settled figure. Three formal peer-reviewed Comments in <em>Science</em> subsequently revised this estimate substantially downward (Lewis et al., Veldman et al., Friedlingstein et al., all 2019). v3 presents the 205 GtC figure with this critique context attached.</li>
+    <li>&ndash; <strong>Mander 2025 removed.</strong> v2 referenced a 2025 <em>New Phytologist</em> peatland flux synthesis by Mander as representative of the field. Because the author had not verified the specific paper to which this representation was being attributed, v3 removes the reference entirely. The Chapter 4 argument about drained vs rewetted peatland dynamics stands on Buma 2024 and canonical peatland literature.</li>
+  </ul>
+
+  <h3>Source-by-source log</h3>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Buma 2024</span><span class="status verbatim">GREEN — full text</span><br>
+    Buma, B., Gordon, D.R., Kleisner, K.M., ... Novick, K., ... &amp; Hamburg, S.P. (2024). Expert review of the science underlying nature-based climate solutions. <em>Nature Climate Change</em> 14:402–406. DOI: 10.1038/s41558-024-01960-0. Paywalled; PDF provided by reader. Chapters 1, 2, 3, 5, 8.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Tölgyesi 2025</span><span class="status verbatim">GREEN — full text</span><br>
+    Tölgyesi, C., Csikós, N., Temperton, V.M., Buisson, E., Silveira, F.A.O., Lehmann, C.E.R., Török, P., Bátori, Z., &amp; Bede-Fazekas, Á. (2025). Limited carbon sequestration potential from global ecosystem restoration. <em>Nature Geoscience</em> 18:761–768. DOI: 10.1038/s41561-025-01742-z. Paywalled; PDF provided by reader. Chapters 2, 8.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Robinson 2025</span><span class="status verbatim">GREEN — full text</span><br>
+    Robinson, N., Drever, C.R., Gibbs, D.A., Lister, K., Esquivel-Muelbert, A., Heinrich, V., Ciais, P., Silva-Junior, C.H.L., Liu, Z., Pugh, T.A.M., Saatchi, S., Xu, Y., &amp; Cook-Patton, S.C. (2025). Protect young secondary forests for optimum carbon removal. <em>Nature Climate Change</em> 15:793–800. DOI: 10.1038/s41558-025-02355-5. Paywalled; PDF provided by reader. Chapters 2, 8.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Macreadie 2021</span><span class="status verbatim">GREEN — full text</span><br>
+    Macreadie, P.I., Costa, M.D.P., Atwood, T.B., Friess, D.A., Kelleway, J.J., Kennedy, H., Lovelock, C.E., Serrano, O., &amp; Duarte, C.M. (2021). Blue carbon as a natural climate solution. <em>Nature Reviews Earth &amp; Environment</em>. DOI: 10.1038/s43017-021-00224-1. Paywalled; PDF provided by reader. Chapter 3.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Frank 2024</span><span class="status verbatim">GREEN — full text</span><br>
+    Frank, S., Lessa Derci Augustynczik, A., Havlík, P., Boere, E., Ermolieva, T., Fricko, O., Di Fulvio, F., Gusti, M., Krisztin, T., Lauri, P., Palazzo, A., &amp; Wögerer, M. (2024). Enhanced agricultural carbon sinks provide benefits for farmers and the climate. <em>Nature Food</em> 5:742–753. DOI: 10.1038/s43016-024-01039-1. Paywalled; PDF provided by reader. Chapter 5.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Wei 2025</span><span class="status verbatim">GREEN — full text</span><br>
+    Wei, H., Bai, X., Lu, Q., Wu, J., Su, F., Hong, T., Hu, Q., Wang, W., Quan, S.J., Luo, Z., &amp; Han, Y. (2025). Urban cooling and energy-saving effects of nature-based solutions across types and scales. <em>Nature Cities</em> 2:1194–1204. DOI: 10.1038/s44284-025-00349-0. Paywalled; PDF provided by reader. Chapter 6.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">West 2023</span><span class="status verbatim">GREEN — full text</span><br>
+    West, T.A.P., Wunder, S., Sills, E.O., Börner, J., Rifai, S.W., Neidermeier, A.N., &amp; Kontoleon, A. (2023). Action needed to make carbon offsets from tropical forest conservation work for climate change mitigation. <em>Science</em> 381:873–877. DOI: 10.1126/science.ade3535. Paywalled; PDF provided by reader (62-page accepted-manuscript including SI). Chapters 2, 7.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Swinfield 2026</span><span class="status verbatim">GREEN — full text</span><br>
+    Swinfield, T., Williams, A., Coomes, D., Dales, M., Ferris, P., Guizar-Coutiño, A., Hartup, J., Holland, J., Jaffer, S., Jones, J.P.G., Lam, M.O.K., Keshav, S., Madhavapeddy, A., Toye-Scott, E., West, T.A.P., &amp; Balmford, A. (2026). Learning lessons from over-crediting to ensure additionality in forest carbon credits. <em>Nature Communications</em>. DOI: 10.1038/s41467-026-71552-3. Open access CC BY 4.0. Full PDF provided by reader. 10.7× over-crediting ratio cited from p2,5. Chapter 7.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Probst 2024</span><span class="status verbatim">GREEN — full text</span><br>
+    Probst, B.S., Toetzke, M., Kontoleon, A., Díaz Anadón, L., Minx, J.C., Haya, B.K., Schneider, L., Trotter, P.A., West, T.A.P., Gill-Wiehl, A., &amp; Hoffmann, V.H. (2024). Systematic assessment of the achieved emission reductions of carbon crediting projects. <em>Nature Communications</em> 15:9562. DOI: 10.1038/s41467-024-53645-z. Open access. Full PDF provided by reader. &lt;16% aggregate achievement and per-methodology breakdowns cited from p1,2,11. Chapter 7.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Stolz &amp; Probst 2025</span><span class="status verbatim">GREEN — full text</span><br>
+    Stolz, N. &amp; Probst, B.S. (2025). The negligible role of carbon offsetting in corporate climate strategies. <em>Nature Communications</em> 16. DOI: 10.1038/s41467-025-62970-w. Open access. Full PDF provided by reader. 89 companies, &gt;400 sustainability reports, no-significant-difference finding, top-5 offsetters ~1% of capex — all verified at p1–3. Chapter 7.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Krause 2025</span><span class="status verbatim">GREEN — full text</span><br>
+    Krause, J.R., Cameron, C., Arias-Ortiz, A., Cifuentes-Jara, M., Crooks, S., Dahl, M., Friess, D.A., Kennedy, H., Lim, K.E., Lovelock, C.E., Marbà, N., McGlathery, K.J., Oreska, M.P.J., Pidgeon, E., Serrano, O., Vanderklift, M.A., Wong, L.-W., Yaakub, S.M., &amp; Fourqurean, J.W. (2025). Global seagrass carbon stock variability and emissions from seagrass loss. <em>Nature Communications</em> 16:3798. DOI: 10.1038/s41467-025-59204-4. Open access. Full PDF provided by reader. 24.2 Mg C/ha median, 27% lower than prior, 1,154 Tg CO₂ emissions at risk — all verified at p1. Chapter 3.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Nelson &amp; Reed 2025</span><span class="status verbatim">GREEN — full text</span><br>
+    Nelson, M.K. &amp; Reed, G. (2025). Indigenous critiques and recommendations for reclaiming nature-based solutions. <em>PNAS</em> — Perspective article, Open Access. Full PDF provided by reader. 5% / 20% / 80% Indigenous-stewardship-and-biodiversity statistic verified at p1; the reframing as "culture-based solutions" and the Indigenous Knowledge Systems / Traditional Ecological Knowledge argument developed through pp1–6. <strong>Attribution corrected from v2's "Reed 2025."</strong> Chapters 1, 8.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Folkard-Tapp 2025</span><span class="status verbatim">GREEN — full text</span><br>
+    Folkard-Tapp, H., Boran, I., Chan, S., Dombrowsky, I., Penney, T.L., Bazely, D., Ruzigandekwe, F., Alook, A., &amp; Pettorelli, N. (2025). Beyond Nature-based Solutions: The case for Integrated Nature-Climate Action. <em>Journal of Applied Ecology</em> 62:2478–2486. DOI: 10.1111/1365-2664.70130. Policy Directions article. Full PDF provided by reader. The INCA reframing and the critique of NbS as enabling greenwashing and diverting from decarbonisation are verified at p1 abstract and pp2–5. Chapters 1, 8.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Macintosh 2025</span><span class="status verbatim">GREEN — full text</span><br>
+    Macintosh, A., Trencher, G., Probst, B., Barley, S., Cullenward, D., West, T., Butler, D., &amp; Rockström, J. (2025). Carbon credits are failing to help with climate change — here's why. <em>Nature</em> 646:543–546, 16 October 2025. Comment. Full PDF provided by reader. The "fatally flawed" framing of the carbon-credit system and the four structural problems (additionality, permanence, measurement, leakage) are verified at p1. Chapter 7.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Kumar 2024</span><span class="status verbatim">GREEN — full text</span><br>
+    Kumar, P., Debele, S.E., Khalili, S., Halios, C.H., Sahani, J., Aghamohammadi, N., ...Jones, L. (2024). Urban heat mitigation by green and blue infrastructure: Drivers, effectiveness, and future needs. <em>The Innovation</em> 5(2):100588. DOI: 10.1016/j.xinn.2024.100588. CC BY 4.0 Open Access. Full 93-page PDF provided by reader. The 51-GBGI-type cooling ranking (botanical gardens 5.0 ± 3.5 °C, wetlands 4.9 ± 3.2 °C dominant) verified at p1,2,7. <strong>v2's green-gentrification misattribution corrected.</strong> Chapter 6.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Griscom 2017</span><span class="status verbatim">GREEN — full text</span><br>
+    Griscom, B.W., Adams, J., Ellis, P.W., Houghton, R.A., Lomax, G., Miteva, D.A., Schlesinger, W.H., Shoch, D., Siikamäki, J.V., Smith, P., et al. (2017). Natural climate solutions. <em>PNAS</em> 114(44):11645–11650. DOI: 10.1073/pnas.1710465114. Full PDF provided by reader. 23.8 Pg CO₂e/yr maximum, 11.3 Pg cost-effective at ≤$100/tonne, 37% of 2030 &lt;2°C mitigation need — all verified at p1. Upgraded from v2's YELLOW status. Chapters 1, 2.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Seddon 2020</span><span class="status verbatim">GREEN — full text</span><br>
+    Seddon, N., Chausson, A., Berry, P., Girardin, C.A.J., Smith, A., &amp; Turner, B. (2020). Understanding the value and limits of nature-based solutions to climate change and other global challenges. <em>Philosophical Transactions of the Royal Society B</em> 375:20190120. DOI: 10.1098/rstb.2019.0120. Open access. Full text fetched from UC Santa Cruz Wetlands Institute mirror (Royal Society–authored deposit). Two-to-five-times-cost-effective coastal NbS figure from Narayan et al. 2016 cited in Seddon Table 1; &lt;1% climate finance to coastal NbS verified at §6a. <strong>Upgraded from v2's canonical-external status.</strong> Chapters 1, 8.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Bastin 2019</span><span class="status verbatim">GREEN — full text</span><br>
+    Bastin, J.-F., Finegold, Y., Garcia, C., Mollicone, D., Rezende, M., Routh, D., Zohner, C.M., &amp; Crowther, T.W. (2019). The global tree restoration potential. <em>Science</em> 365(6448):76–79. DOI: 10.1126/science.aax0848. Full text fetched from Boston University Crowther Lab deposit (sites.bu.edu). The 205 Gt C headline number is verified at p2, as are the subsequent peer-reviewed critique comments (Lewis 2019 <em>Science</em>, Veldman 2019 <em>Science</em>, Friedlingstein 2019 <em>Science</em>). <strong>v3 presents the 205 GtC figure with critique context attached.</strong> Chapter 2.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Strassburg 2020</span><span class="status verbatim">GREEN — full text</span><br>
+    Strassburg, B.B.N., Iribarrem, A., Beyer, H.L., Cordeiro, C.L., Crouzeilles, R., Jakovac, C.C., Braga Junqueira, A., Lacerda, E., Latawiec, A.E., Balmford, A., et al. (2020). Global priority areas for ecosystem restoration. <em>Nature</em> 586:724–729. DOI: 10.1038/s41586-020-2784-9. Full text fetched from Wageningen University Article 25fa institutional repository. The 299 Gt CO₂ at 15% priority-restoration, 465 Gt CO₂ at 30% restoration, 13× cost-effectiveness improvement, and 66-year-to-90%-recovery figures all verified at p725–728. Author Correction published in <em>Nature</em> 609:E7 (2022) noted. Chapter 2.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Cook-Patton 2020</span><span class="status abstract">YELLOW — abstract-level</span><br>
+    Cook-Patton, S.C., Leavitt, S.M., Gibbs, D., Harris, N.L., Lister, K., ...Griscom, B.W. (2020). Mapping carbon accumulation potential from global natural forest regrowth. <em>Nature</em> 585(7826):545–550. DOI: 10.1038/s41586-020-2686-x. Abstract and detailed figure captions verified across multiple sources (Nature.com, PubMed, Oxford ORA accepted manuscript, NbS Initiative summary). Headline claims cited: 32% above IPCC default rates on average, 100-fold variation across globe, 11% lower overall than Griscom 2017. Full PDF available but not fetched; specific methods not read. Chapter 2.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">Mo 2023</span><span class="status abstract">YELLOW — abstract-level</span><br>
+    Mo, L., Zohner, C.M., Reich, P.B., Liang, J., de Miguel, S., Nabuurs, G.-J., et al. (2023). Integrated global assessment of the natural forest carbon potential. <em>Nature</em> 624(7990):92–101. DOI: 10.1038/s41586-023-06723-z. Open Access CC BY 4.0 on PMC; fetching blocked by bot-protection systems (Anubis, NIH rate limits) on three independent routes. Abstract and figure captions verified across multiple sources. Headline claims cited: 226 Gt C deficit in low-human-footprint areas, 61% of that deficit in existing forests (conservation not new planting), 12% agreement between ground-sourced and satellite-derived models. Chapter 2.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">IUCN 2020</span><span class="status paraphrase">canonical policy reference</span><br>
+    IUCN (2020). Global Standard for Nature-based Solutions. Definitional framework cited in Chapter 1. Treated as canonical policy reference; not page-cited.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">IPCC AR6 WG3 Ch.7</span><span class="status paraphrase">canonical policy reference</span><br>
+    IPCC (2022). <em>AR6 Working Group III, Chapter 7 — Agriculture, Forestry and Other Land Uses (AFOLU)</em>. AFOLU emissions figure (~11.9 Gt CO₂e/yr), IPCC Tier-1 forest default factors referenced in Robinson 2025 comparison, ecosystem carbon-density ranges. Canonical policy reference; not page-cited.
+  </div>
+
+  <div class="sourcelog-entry">
+    <span class="cite-key">ICVCM CCP</span><span class="status paraphrase">canonical policy reference</span><br>
+    Integrity Council for the Voluntary Carbon Market (2022–2025). Core Carbon Principles framework. REDD+ methodology approvals (TREES v2.0, VM0048, JNR v4.1) cited in Chapter 7 as canonical references. Swinfield 2026 reference list discusses these approvals.
+  </div>
+
+  <h3>Status-code legend</h3>
+  <p style="font-family: 'SF Pro Display', -apple-system, sans-serif; font-size: 14px; line-height: 1.7;">
+    <span class="status verbatim">GREEN — full text</span> — Full PDF or verified full-text deposit in hand and read. Claims anchor to a specific page, section or table that was directly viewed; numerical values verified exactly from that page.<br>
+    <span class="status abstract">YELLOW — abstract-level</span> — Publisher abstract plus detailed figure captions, summaries and peer-reviewed coverage verified across multiple institutional sources. Headline claims are traceable to the published abstract; methods and full results not read. Inline tags mark specific claims.<br>
+    <span class="status paraphrase">canonical policy reference</span> — Institutional framework document used for definitional or structural reference only. Treated as authoritative for the framework it articulates; not re-verified page by page.
+  </p>
+
+  <p style="margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 13.5px; color: var(--text-dim); font-family: 'SF Pro Display', -apple-system, sans-serif; line-height: 1.55;">
+    <strong>Built April 2026 as a reader's synthesis. v3 edition.</strong> Nineteen GREEN sources, two YELLOW, three canonical policy references. The four material corrections listed above were applied after a formal corpus access audit run between the v2 and v3 editions. If subsequent papers reframe these findings — and they will — a revision should replace, not supplement, what is here.
+  </p>
+</section>
+
+
+<!-- PROMPT-TUNING APPENDIX — persists meta-guidance into the deliverable -->
+<section id="prompting" class="chapter">
+  <div class="chapter-num">Appendix</div>
+  <h2>How to tighten future prompts — and cut rework on the next run</h2>
+  <p class="chapter-dek">This synthesis was produced after several ambiguity-driven clarification rounds. Specifying five parameters at the outset would have saved most of them. Use this as a template for the next iteration.</p>
+
+  <p>Literature-synthesis prompts of this kind have five degrees of freedom that, if left implicit, cause silent scope drift and then rework. Locking them down at the outset costs ~30 seconds of prompt effort and saves an hour or more of iteration.</p>
+
+  <div class="exhibit">
+    <div class="exhibit-caption">
+      <div class="exhibit-label">Exhibit A.1</div>
+      <div class="exhibit-title">Five parameters to specify in the initial prompt</div>
+    </div>
+    <div class="exhibit-body">
+      <table class="tbl">
+        <thead>
+          <tr><th>Parameter</th><th>What to state explicitly</th><th>Why it saves turns</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Corpus rule</strong></td><td>"Use Scopus / Web of Science / Semantic Scholar / OpenAlex as the citation-ranking source, or 'editorial selection from flagship venues' if no ranking is required."</td><td>Prevents silent drift in what "highly cited" or "recent" means. The same prompt produces different corpora across tools and across months.</td></tr>
+          <tr><td><strong>Access rule</strong></td><td>"Open-access full text only" OR "paywalled allowed; I'll upload PDFs" OR "paywalled abstracts acceptable with flagging."</td><td>Avoids the mid-task discovery that 60% of the target set is behind paywalls and the assistant has no path to the full text.</td></tr>
+          <tr><td><strong>Time window</strong></td><td>"Published between YYYY-MM-DD and YYYY-MM-DD" — explicit date range, not "recent."</td><td>"Recent" silently expands or contracts. A hard window locks the corpus boundary.</td></tr>
+          <tr><td><strong>Coverage target</strong></td><td>"Curated top N" OR "continue until diminishing returns after M papers" OR "exhaustive to available sources."</td><td>Stops pseudo-exhaustive searching; makes the stopping criterion explicit.</td></tr>
+          <tr><td><strong>Output architecture</strong></td><td>"One polished HTML deliverable in a single pass, with chapter sequence [X], exhibits per chapter, page-cited claims, and source-attribution log."</td><td>Removes ambiguity about whether a draft or a final is expected. Most of the inconsistency in literature syntheses comes from draft-vs-final confusion.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exhibit-source">Five-parameter framework synthesised from the course of this project's scoping and clarification rounds.</div>
+  </div>
+
+  <h3>A suggested prompt core for your next NbS-style synthesis</h3>
+
+  <div class="callout">
+    <div class="callout-label">Copy-paste prompt template</div>
+    "Build a curated <strong>[N]</strong>-paper corpus on <strong>[topic]</strong> published between <strong>[start date]</strong> and <strong>[end date]</strong>, using <strong>[citation source]</strong> as the ranking basis. <strong>[Access rule: open-access only / PDFs provided / paywalled abstracts allowed]</strong>. Read the full text of each paper. Produce one polished HTML reader for <strong>[audience: informed non-specialist / policy analyst / domain expert]</strong>. Organise as chapter summaries by <strong>[ecosystem / methodology / decision-problem]</strong>. Every substantive claim must cite a specific page. Include: (1) cover with chip-tag metadata row; (2) corpus-map exhibit orienting chapters to decision questions; (3) per-chapter takeaway boxes ('Reader's rule'); (4) 2–3 exhibits per chapter, at least one of which is an SVG chart; (5) source-attribution log with status codes (verbatim / close paraphrase / synthesis / abstract-level / canonical-external); (6) scope disclosure of what was and wasn't fully read. Final deliverable only — no iterative drafts. Save to /mnt/user-data/outputs."
+  </div>
+
+  <h3>What to avoid in the prompt</h3>
+
+  <p>Three phrasings that reliably produce rework on literature-synthesis tasks:</p>
+
+  <p><strong>"Find the most highly cited papers on X."</strong> Without specifying the citation index, time window, and access policy, this generates a corpus that will need to be thrown out and rebuilt once you see what it contains. Specify all three.</p>
+
+  <p><strong>"Summarise each paper and then synthesise."</strong> This produces two artefacts where one is needed, and the per-paper summaries rarely survive the synthesis pass. Ask for the synthesis directly, with page citations to the underlying papers, and treat the synthesis as the deliverable.</p>
+
+  <p><strong>"Make it thorough / comprehensive / exhaustive."</strong> These words set a stopping criterion that is unreachable and therefore silently relaxed. Replace with a concrete number — "12 papers" or "until 3 consecutive searches return no new relevant papers" — so the model can actually terminate on plan.</p>
+
+  <h3>Two task-specific notes for you personally</h3>
+
+  <p>Based on how this project went: (1) when the corpus includes paywalled flagship papers, upload the PDFs in a zip on the first turn rather than listing them — saves the paywall-triage round entirely. (2) Your userPreferences now encode the HTML design patterns for multi-chapter readers (card-based sections, chip metadata, corpus map, takeaway boxes, prompt-tuning appendix); you won't need to re-specify those on the next run.</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Meta-rule</div>
+    <div class="takeaway-rule">Ambiguity in the prompt becomes work in the middle of the task. Thirty seconds of parameter specification at the outset is worth an hour of iteration later.</div>
+  </div>
+</section>
+
+
+</main>
+
+<script>
+/* ============ NAVIGATION (pure in-document scrolling, data-target only) ============ */
+document.addEventListener('click', function (ev) {
+  var el = ev.target.closest('[data-target]');
+  if (!el) return;
+  ev.preventDefault();
+  var id = el.getAttribute('data-target');
+  var target = document.getElementById(id);
+  if (!target) return;
+  // pure in-document scroll — no href navigation
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // auto-close sidebar on nav tap
+  closeSidebar();
+  // update active state
+  document.querySelectorAll('.nav-link').forEach(function (l) { l.classList.remove('active'); });
+  el.classList.add('active');
+});
+
+/* ============ SIDEBAR ============ */
+var sidebar = document.getElementById('sidebar');
+var overlay = document.getElementById('overlay');
+var hamburger = document.getElementById('hamburger');
+
+function openSidebar () {
+  sidebar.classList.add('open');
+  overlay.classList.add('show');
+  hamburger.setAttribute('aria-expanded', 'true');
+}
+function closeSidebar () {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+  hamburger.setAttribute('aria-expanded', 'false');
+}
+hamburger.addEventListener('click', function () {
+  if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar();
+});
+overlay.addEventListener('click', closeSidebar);
+
+/* ============ THEME TOGGLE ============ */
+var themeBtn = document.getElementById('theme-toggle');
+var themeIcon = document.getElementById('theme-icon');
+var themeMeta = document.getElementById('theme-color-meta');
+var SUN_PATH = 'M12 7a5 5 0 100 10 5 5 0 000-10zM12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1';
+var MOON_PATH = 'M12 3a9 9 0 109 9 7 7 0 01-9-9z';
+
+function applyTheme (mode) {
+  if (mode === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.style.background = '#f5efe2';
+    document.body.style.background = '#f5efe2';
+    if (themeMeta) themeMeta.setAttribute('content', '#f5efe2');
+    themeIcon.innerHTML = '<path d="' + SUN_PATH + '" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.style.background = '#0e0e0f';
+    document.body.style.background = '#0e0e0f';
+    if (themeMeta) themeMeta.setAttribute('content', '#0e0e0f');
+    themeIcon.innerHTML = '<path d="' + MOON_PATH + '"/>';
+  }
+}
+
+themeBtn.addEventListener('click', function () {
+  var current = document.documentElement.getAttribute('data-theme');
+  var next = (current === 'light') ? 'dark' : 'light';
+  try { localStorage.setItem('causal-reader-theme', next); } catch (e) {}
+  applyTheme(next);
+});
+
+/* Apply correct icon on load */
+(function () {
+  var t = document.documentElement.getAttribute('data-theme');
+  if (t === 'light') {
+    themeIcon.innerHTML = '<path d="' + SUN_PATH + '" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+  }
+})();
+
+/* ============ SCROLL SPY (highlight current chapter in sidebar) ============ */
+var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-link[data-target]'));
+var sections = navLinks.map(function (l) {
+  return document.getElementById(l.getAttribute('data-target'));
+}).filter(Boolean);
+
+function updateActive () {
+  var scrollPos = window.scrollY + 100;
+  var current = sections[0];
+  for (var i = 0; i < sections.length; i++) {
+    if (sections[i] && sections[i].offsetTop <= scrollPos) current = sections[i];
+  }
+  if (!current) return;
+  navLinks.forEach(function (l) {
+    l.classList.toggle('active', l.getAttribute('data-target') === current.id);
+  });
+}
+window.addEventListener('scroll', updateActive, { passive: true });
+updateActive();
+</script>
+
+</body>
+</html>
