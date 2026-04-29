@@ -2,7 +2,7 @@
 <html lang="en" style="background:#15151b;color-scheme:dark light">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="color-scheme" content="dark light" />
 <meta name="theme-color" content="#15151b" id="theme-color-meta" />
 <title>Catastrophe Modeling: A Synthesis for the 2026 Webcast</title>
@@ -105,30 +105,84 @@ a:hover{border-bottom-style:solid}
 }
 .theme-toggle:hover{color:var(--text)}
 
-/* === Hamburger === */
-.hamburger{
-  display:none;position:fixed;top:14px;left:14px;z-index:50;
+/* === Floating controls — visible at all viewport sizes === */
+.controls{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));z-index:60;display:flex;gap:8px}
+.controls-left{left:calc(14px + env(safe-area-inset-left,0px))}
+.controls-right{right:calc(14px + env(safe-area-inset-right,0px))}
+.ctrl-btn{
   width:42px;height:42px;border-radius:10px;
   background:var(--surface);border:1px solid var(--border);
-  cursor:pointer;align-items:center;justify-content:center;
+  color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font:inherit;font-size:16px;padding:0;
+  transition:background .15s,border-color .15s;
 }
-.hamburger span{display:block;width:18px;height:2px;background:var(--text);position:relative;transition:transform .18s}
-.hamburger span::before,.hamburger span::after{content:"";position:absolute;left:0;width:18px;height:2px;background:var(--text);transition:transform .18s}
-.hamburger span::before{top:-6px}
-.hamburger span::after{top:6px}
+.ctrl-btn:hover{background:var(--surface-2);border-color:var(--accent)}
+.ctrl-btn svg{width:20px;height:20px;display:block;color:var(--text)}
+.ctrl-btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.theme-icon-sun,.theme-icon-moon{display:none}
+html:not([data-theme="light"]) .theme-icon-sun{display:block}
+html[data-theme="light"] .theme-icon-moon{display:block}
+
+/* === Sidebar overlay (mobile slide-in) === */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;backdrop-filter:blur(2px)}
 .overlay.show{display:block}
 
+/* === Hamburger (legacy class kept for the in-flow JS hook; styled as ctrl-btn) === */
+.hamburger{display:none}
+
 /* === Mobile rules: < 1024px === */
+/* === Responsive: <1024px = mobile/tablet sidebar slides in === */
 @media (max-width:1023.98px){
-  .hamburger{display:flex}
   .sidebar{
-    position:fixed;top:0;left:0;height:100vh;z-index:45;
+    position:fixed;top:0;left:0;height:100vh;height:100dvh;z-index:45;
     transform:translateX(-100%);transition:transform .22s ease;
     box-shadow:var(--shadow-lg);
+    padding-top:calc(28px + env(safe-area-inset-top,0px));
+    padding-left:calc(22px + env(safe-area-inset-left,0px));
   }
   .sidebar.open{transform:translateX(0)}
-  .main{padding:60px 18px 80px}
+  .main{
+    padding:72px 18px 80px;
+    padding-left:calc(18px + env(safe-area-inset-left,0px));
+    padding-right:calc(18px + env(safe-area-inset-right,0px));
+  }
+  body{font-size:16px}
+}
+
+/* === Responsive: <=520px = phones in portrait (tighter typography) === */
+@media (max-width:520px){
+  body{font-size:15.5px;line-height:1.6}
+  .cover{padding:32px 22px 28px}
+  .cover h1{font-size:30px}
+  .cover .subtitle{font-size:16.5px}
+  .card{padding:26px 22px}
+  .card h2{font-size:24px}
+  .card .lede{font-size:16.5px}
+  .card h3{font-size:18px}
+  .exhibit{padding:18px 18px}
+  .exhibit-headline{font-size:15.5px}
+  .tbl th,.tbl td{padding:8px 8px;font-size:13.5px}
+}
+
+/* === Responsive: short heights (e.g. iPhone landscape) === */
+@media (max-height:540px) and (orientation:landscape){
+  .sidebar{padding-top:14px;padding-bottom:18px}
+  .brand-title{margin-bottom:14px;font-size:16px}
+  .nav button{padding:7px 10px;font-size:13.5px}
+  .nav .group{margin:12px 0 4px 12px}
+}
+
+/* === Desktop sidebar-collapsed state (≥1024px, click hamburger to hide sidebar) === */
+@media (min-width:1024px){
+  .app.sidebar-collapsed .sidebar{
+    flex:0 0 0;width:0;border-right-width:0;padding-left:0;padding-right:0;
+    overflow:hidden;opacity:0;
+    transition:flex-basis .25s ease,width .25s ease,opacity .15s ease;
+  }
+  .app:not(.sidebar-collapsed) .sidebar{
+    transition:flex-basis .25s ease,width .25s ease,opacity .15s ease;
+  }
+  .app.sidebar-collapsed .main{padding-left:80px}
 }
 
 /* === Cover === */
@@ -243,8 +297,19 @@ hr.soft{border:0;border-top:1px solid var(--rule);margin:24px 0}
 </head>
 <body>
 
-<button class="hamburger" id="hamburger" aria-label="Open navigation"><span></span></button>
+<div class="controls controls-left" role="toolbar" aria-label="Sidebar controls">
+  <button class="ctrl-btn" id="sidebarToggle" type="button" aria-label="Toggle sidebar" title="Toggle sidebar (full-screen reading)" aria-pressed="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</div>
+<div class="controls controls-right" role="toolbar" aria-label="Theme controls">
+  <button class="ctrl-btn" id="themeToggle" type="button" aria-label="Toggle light/dark theme" title="Toggle theme">
+    <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</div>
 <div class="overlay" id="overlay"></div>
+<button class="hamburger" id="hamburger" aria-label="Open navigation" hidden></button>
 
 <div class="app">
   <aside class="sidebar" id="sidebar">
@@ -265,7 +330,7 @@ hr.soft{border:0;border-top:1px solid var(--rule);margin:24px 0}
       <button data-target="sources"><span class="num">·</span><span>Sources &amp; corpus inventory</span></button>
       <button data-target="glossary"><span class="num">·</span><span>Glossary</span></button>
     </nav>
-    <button class="theme-toggle" id="themeToggle">Toggle theme</button>
+
   </aside>
 
   <main class="main">
@@ -1175,6 +1240,13 @@ hr.soft{border:0;border-top:1px solid var(--rule);margin:24px 0}
 (function(){
   var html = document.documentElement;
   var meta = document.getElementById('theme-color-meta');
+  var app = document.querySelector('.app');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  var sidebarToggle = document.getElementById('sidebarToggle');
+  var themeToggle = document.getElementById('themeToggle');
+
+  // === Theme toggle ===
   function setTheme(t){
     html.setAttribute('data-theme', t);
     if (t === 'light'){
@@ -1188,22 +1260,45 @@ hr.soft{border:0;border-top:1px solid var(--rule);margin:24px 0}
     }
     try { localStorage.setItem('cm_theme', t); } catch(e){}
   }
-  var btn = document.getElementById('themeToggle');
-  if (btn){
-    btn.addEventListener('click', function(){
+  if (themeToggle){
+    themeToggle.addEventListener('click', function(){
       var current = html.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
       setTheme(current === 'light' ? 'dark' : 'light');
     });
   }
 
-  var sidebar = document.getElementById('sidebar');
-  var hamburger = document.getElementById('hamburger');
-  var overlay = document.getElementById('overlay');
-  function openSidebar(){ sidebar.classList.add('open'); overlay.classList.add('show'); }
-  function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); }
-  if (hamburger){ hamburger.addEventListener('click', openSidebar); }
-  if (overlay){ overlay.addEventListener('click', closeSidebar); }
+  // === Sidebar toggle: works on both desktop (collapse) and mobile (slide-in) ===
+  function isDesktop(){ return window.matchMedia('(min-width: 1024px)').matches; }
+  function openMobileSidebar(){ sidebar.classList.add('open'); overlay.classList.add('show'); }
+  function closeMobileSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+  function toggleSidebar(){
+    if (isDesktop()){
+      app.classList.toggle('sidebar-collapsed');
+      var collapsed = app.classList.contains('sidebar-collapsed');
+      sidebarToggle.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
+      sidebarToggle.setAttribute('title', collapsed ? 'Show sidebar' : 'Hide sidebar (full-screen reading)');
+      // Persist desktop preference
+      try { localStorage.setItem('cm_sidebar', collapsed ? 'collapsed' : 'expanded'); } catch(e){}
+    } else {
+      if (sidebar.classList.contains('open')) closeMobileSidebar();
+      else openMobileSidebar();
+    }
+  }
+  if (sidebarToggle){ sidebarToggle.addEventListener('click', toggleSidebar); }
 
+  // Restore desktop sidebar preference
+  try {
+    if (isDesktop() && localStorage.getItem('cm_sidebar') === 'collapsed'){
+      app.classList.add('sidebar-collapsed');
+      sidebarToggle.setAttribute('aria-pressed', 'true');
+      sidebarToggle.setAttribute('title', 'Show sidebar');
+    }
+  } catch(e){}
+
+  // Close mobile sidebar on overlay click
+  if (overlay){ overlay.addEventListener('click', closeMobileSidebar); }
+
+  // === Data-target navigation ===
   var navButtons = document.querySelectorAll('.nav button[data-target]');
   navButtons.forEach(function(b){
     b.addEventListener('click', function(){
@@ -1211,15 +1306,14 @@ hr.soft{border:0;border-top:1px solid var(--rule);margin:24px 0}
       var el = document.getElementById(id);
       if (el){
         el.scrollIntoView({ behavior:'smooth', block:'start' });
-        if (window.matchMedia('(max-width: 1023.98px)').matches){
-          closeSidebar();
-        }
+        if (!isDesktop()){ closeMobileSidebar(); }
         navButtons.forEach(function(x){ x.classList.remove('active'); });
         b.classList.add('active');
       }
     });
   });
 
+  // === Active section indicator on scroll ===
   var sections = Array.from(navButtons).map(function(b){
     return { id: b.getAttribute('data-target'), button: b };
   });
@@ -1227,7 +1321,7 @@ hr.soft{border:0;border-top:1px solid var(--rule);margin:24px 0}
     var bestId = null, bestTop = -Infinity;
     sections.forEach(function(s){
       var el = document.getElementById(s.id);
-      if (\!el) return;
+      if (!el) return;
       var rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight / 3 && rect.top > bestTop){
         bestTop = rect.top; bestId = s.id;
@@ -1240,7 +1334,15 @@ hr.soft{border:0;border-top:1px solid var(--rule);margin:24px 0}
   window.addEventListener('scroll', function(){
     window.requestAnimationFrame(updateActive);
   }, { passive:true });
+  window.addEventListener('resize', updateActive, { passive:true });
   updateActive();
+
+  // === Keyboard shortcuts: Esc closes mobile sidebar ===
+  window.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && !isDesktop() && sidebar.classList.contains('open')){
+      closeMobileSidebar();
+    }
+  });
 })();
 </script>
 
