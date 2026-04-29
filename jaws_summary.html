@@ -183,8 +183,23 @@ cite.pg{
   padding-bottom:1rem;
   border-bottom:1px solid var(--line-soft);
   margin-bottom:1rem;
-  /* leave space so the fixed top-left hamburger doesn't overlap the timestamp on mobile */
-  padding-top:.2rem;
+  /* Place the timestamp horizontally to the right of the fixed top-left hamburger
+     button (rule #16: "must clear the fixed hamburger on top and/or left"; we
+     choose left so the timestamp sits next to the button rather than below).
+
+     Geometry: hamburger button right edge ≈ 13.6px (.85rem controls padding) +
+     42px (button) = 55.6px from viewport left. Sidebar's own padding-left is
+     max(1.2rem, env(safe-area-inset-left)) — at least 19.2px. Header needs
+     enough additional padding-left so that the timestamp's left edge sits at
+     ≥ 68px from viewport left (≈12px gap past the button). 68 − 19.2 = ~49px,
+     so padding-left of 3.1rem (49.6px) is the minimum.
+
+     Vertically: button center sits at .85rem + 21px = 34.6px from viewport top.
+     Sidebar's own padding-top is 1.4rem (22.4px). Header padding-top of .4rem
+     puts the text top edge at ~28.8px, which centers the .72rem (≈12px) text
+     against the 42px button cleanly. */
+  padding-top:.4rem;
+  padding-left:3.1rem;
 }
 .sidebar-stamp{
   font-family:var(--display);
@@ -998,7 +1013,7 @@ footer.colophon{
   <p>Catlin was not, by 19th-century lights, sane on every front: he believed mouth breathing let in malarial particles, a theory of disease his medical contemporaries shared <cite class="pg">pp. 23–24</cite>. But he was a brilliant observer, and his core empirical claim — that mouth breathing was associated with worse health and worse facial development — has since been confirmed by anthropologists studying jaw shrinkage across human history.</p>
 
   <h3>The skull record</h3>
-  <p>The museum and graveyard evidence runs in the same direction. Stanford evolutionary biologist Richard Klein, an authority on the human fossil record, has personally never seen an early human skull with malocclusion <cite class="pg">p. 24</cite>. Harvard evolutionary biologist Daniel Lieberman, in <em>The Human Body</em>, describes the museum he works in: most skulls from the last few hundred years are a dentist's nightmare, with cavities, abscesses, crowded teeth, and about a quarter showing impacted teeth; preindustrial farmers had cavities and abscesses but fewer than 5% had impacted wisdom teeth; hunter-gatherers had nearly perfect dental health <cite class="pg">p. 24</cite>.</p>
+  <p>The chapter then walks through the museum-and-graveyard evidence. Stanford evolutionary biologist Richard Klein, an authority on the human fossil record, has personally never seen an early human skull with malocclusion <cite class="pg">p. 24</cite>. Harvard evolutionary biologist Daniel Lieberman, in <em>The Human Body</em>, describes the museum he works in: most skulls from the last few hundred years are a dentist's nightmare, with cavities, abscesses, crowded teeth, and about a quarter showing impacted teeth; preindustrial farmers had cavities and abscesses but fewer than 5% had impacted wisdom teeth; hunter-gatherers had nearly perfect dental health <cite class="pg">p. 24</cite>.</p>
 
   <p>Closer to home, Swedish orthodontist Lennard Lysell carefully measured 97 medieval Swedish skulls (out of about 250 skeletons from the 11th–13th centuries) excavated during construction of an airfield in 1951 and found a detectable reduction in jaw width since then <cite class="pg">p. 26</cite>. Dentist Christopher Lavelle's study of 210 lower jaws from Romano-British, Anglo-Saxon and 19th-century skulls showed the same trajectory: as the diet got softer, British jaws got smaller <cite class="pg">p. 26</cite>. A cemetery of common Amarna-era Egyptians from more than 3,000 years ago shows tooth wear typical of a farming people but very little malocclusion — wear is extensive in Amarna and rare in America; malocclusion is the reverse <cite class="pg">p. 9</cite>.</p>
 
@@ -1028,7 +1043,7 @@ footer.colophon{
   <p>The authors place the steepest jump in soft-food consumption in the 19th century. The meat grinder was invented and the hamburger followed; ice cream became a popular phenomenon; mass-produced baby foods entered the market; canning matured <cite class="pg">p. 31</cite>. Honey had once been the only meaningful sweetener (raided over the protests of bees), and only the wealthy could indulge in soft sweet pastries. Sugarcane and the slave economy that produced it dropped the price until ordinary Europeans could eat the soft, sweet diet that had previously belonged to the rich <cite class="pg">p. 31</cite>.</p>
 
   <h3>Pottenger's cats and Weston Price's travels</h3>
-  <p>Two famous early-20th-century episodes deserve appropriately calibrated scepticism. <strong>Frances Pottenger</strong>'s 1930s experiment fed one group of cats raw meat and another cooked food and pasteurised milk; the cooked-food cats grew smaller, sicker, and could not reproduce <cite class="pg">p. 31</cite>. The study had real flaws — Pottenger lacked modern feline-nutrition knowledge, and cats today thrive on cooked food — but the underlying observation that mechanical and processing differences in diet matter biologically has been borne out elsewhere <cite class="pg">p. 31</cite>.</p>
+  <p>The chapter walks through two famous early-20th-century episodes with appropriately calibrated scepticism. <strong>Frances Pottenger</strong>'s 1930s experiment fed one group of cats raw meat and another cooked food and pasteurised milk; the cooked-food cats grew smaller, sicker, and could not reproduce <cite class="pg">p. 31</cite>. The authors are careful to note this study had real flaws — Pottenger lacked modern feline-nutrition knowledge, and cats today thrive on cooked food — but the underlying observation that mechanical and processing differences in diet matter biologically has been borne out elsewhere <cite class="pg">p. 31</cite>.</p>
 
   <p><strong>Weston Price</strong>, who founded the research arm of the American Dental Association and chaired it from 1914 to 1928 <cite class="pg">pp. 31–32</cite>, travelled the world in the 1930s comparing the teeth of indigenous people to those eating Westernised diets. Many of his specific theories — particularly his nutrient-centred explanation for tooth decay — remain controversial. But his core observation, the one the book picks up, was sound: indigenous peoples on traditional diets did not have crowded teeth, and their wisdom teeth fit comfortably in spacious arches <cite class="pg">p. 32</cite>. The shift to a Western diet could change facial shape within a single generation. Where Price went wrong was in attributing this to the chemistry of the diet rather than to its mechanical properties <cite class="pg">p. 32</cite>.</p>
 
@@ -1043,7 +1058,7 @@ footer.colophon{
   </div>
 
   <h3>The cavity cascade</h3>
-  <p>One less-obvious mechanism closes the chapter. The bacterial communities in our mouths shifted with the agricultural transition, favouring decay-causing strains in a higher-carbohydrate environment <cite class="pg">p. 35</cite>. A child with a painful cavity instinctively keeps the teeth out of contact to spare the pain. The tongue drops as a shock absorber. The dental arch loses the gentle scaffold that the tongue normally provides against the palate, and crowds <cite class="pg">pp. 35–36</cite>. The face elongates downward and back, restricting the airway. A cavity, in other words, is not just a hole — it is a posture-changing event during a developmental window.</p>
+  <p>The chapter closes with a less obvious mechanism. The bacterial communities in our mouths shifted with the agricultural transition, favouring decay-causing strains in a higher-carbohydrate environment <cite class="pg">p. 35</cite>. A child with a painful cavity instinctively keeps the teeth out of contact to spare the pain. The tongue drops as a shock absorber. The dental arch loses the gentle scaffold that the tongue normally provides against the palate, and crowds <cite class="pg">pp. 35–36</cite>. The face elongates downward and back, restricting the airway. A cavity, in other words, is not just a hole — it is a posture-changing event during a developmental window.</p>
 
   <p>So the difference between hunter-gatherer children with abscessed teeth and modern children with abscessed teeth, the authors note bluntly, is that the hunter-gatherer child still had to chew tough food because the alternative was starvation. The modern child can switch to a milkshake <cite class="pg">pp. 36–37</cite>.</p>
 
@@ -1060,7 +1075,7 @@ footer.colophon{
   <p class="section-deck">Three cultural shifts, the authors argue, account for most of what went wrong: what we eat, how we hold our mouths when we are not eating, and the fact that we now live indoors.</p>
 
   <h3>The Great Leap Forward</h3>
-  <p>A bigger-picture move first. Following Jared Diamond, Kahn and Ehrlich place the rise of complex syntactic language somewhere between 70,000 and 100,000 years ago — the moment when humans began to evolve culturally rather than primarily genetically <cite class="pg">p. 39</cite>. Cultural change can move within a generation; genetic change usually takes thousands. The implication is a permanent mismatch: humans built by deep evolutionary time to live as nomadic foragers now live as fast-food-eating, allergen-breathing, sedentary apartment-dwellers.</p>
+  <p>The chapter opens with a bigger-picture move. Following Jared Diamond, Kahn and Ehrlich place the rise of complex syntactic language somewhere between 70,000 and 100,000 years ago — the moment when humans began to evolve culturally rather than primarily genetically <cite class="pg">p. 39</cite>. Cultural change can move within a generation; genetic change usually takes thousands. The implication is a permanent mismatch: humans built by deep evolutionary time to live as nomadic foragers now live as fast-food-eating, allergen-breathing, sedentary apartment-dwellers.</p>
 
   <h3>Lever 1 · what we eat and how we eat it</h3>
   <p>The "Big Mac environment" line lands here <cite class="pg">p. 40</cite>. Not only is the food softer and sweeter, but the eating pace has accelerated. The authors point to soft staples like applesauce, yogurt, and peanut butter as foods that bypass chewing entirely, and note the well-meaning parental habit of cutting tough meats into tiny pieces for fear of choking — which deprives the child of exactly the developmental input the jaw needs <cite class="pg">p. 40</cite>. They borrow a wonderfully telegraphic image from Pixar's <em>WALL·E</em>: in the dystopian future, all food is liquefied and sucked through straws, hamburgers and all, and human bodies and faces have softened to match. Even the animators understood <cite class="pg">p. 41</cite>.</p>
@@ -1078,7 +1093,7 @@ footer.colophon{
     <p>Sandra Kahn writes about a turning point in her own attention. At a theme park in Orlando, watching her children Ilan and Ariela run between rides, she pulled out her iPhone and began photographing children walking past — almost every one with their mouth wide open. She grabbed her husband David and said, "Look at them all, just walking around with their mouths wide open, mouth breathing." David's reply: it looked like a zombie nation of mouth breathers. Kahn now invites readers to repeat the experiment in any mall, any large public space, any traffic stop. Once you see it, she says, you cannot stop seeing it <cite class="pg">p. 44</cite>.</p>
   </div>
 
-  <p>The obvious counter-argument — that life in industrial societies is, on average, longer and healthier than in pre-agricultural ones — is one Kahn and Ehrlich concede <cite class="pg">p. 46</cite>. They argue, though, that the existence of net gains does not exempt us from accounting for specific, preventable losses. The current generation of children, in their view, could live both longer and better than the current generation of adults if these issues were addressed.</p>
+  <p>The chapter closes by acknowledging the obvious counter-argument — that life in industrial societies is, on average, longer and healthier than in pre-agricultural ones. Kahn and Ehrlich concede this <cite class="pg">p. 46</cite>, but argue that the existence of net gains does not exempt us from accounting for specific, preventable losses. The current generation of children, in their view, could live both longer and better than the current generation of adults if these issues were addressed.</p>
 
   <div class="rule">
     <div class="rule-label">Reader's rule</div>
@@ -1093,7 +1108,7 @@ footer.colophon{
   <p class="section-deck">A chapter about beauty, posed as a public-health question. The face, the authors argue, is a thermometer — an outward signal of internal developmental health that our culture insists on reading as if it were destiny.</p>
 
   <h3>How appearance came to matter</h3>
-  <p>A scale-setting statistic frames the chapter: there were perhaps a few million humans at the time of the agricultural revolution, and there are now nearly eight billion. Average life expectancy has risen from somewhere between 20 and 25 years to 72 globally, and into the 80s in many wealthy nations <cite class="pg">p. 47</cite>. Yet, the authors argue, the rich nations are not as healthy as they could be — and one piece of the unfinished business is what's happening to children's faces.</p>
+  <p>The chapter opens with a scale-setting statistic: there were perhaps a few million humans at the time of the agricultural revolution, and there are now nearly eight billion. Average life expectancy has risen from somewhere between 20 and 25 years to 72 globally, and into the 80s in many wealthy nations <cite class="pg">p. 47</cite>. Yet, the authors argue, the rich nations are not as healthy as they could be — and one piece of the unfinished business is what's happening to children's faces.</p>
 
   <p>Kahn and Ehrlich situate the cultural valuation of beauty in the Great Leap Forward — the same syntactic-language revolution invoked in Chapter 3. Once humans could gossip about each other, attractiveness became a cultural variable. The earliest body decorations (shell beads dated to roughly 75,000–100,000 years ago) and the earliest cave paintings suggest aesthetic sensibilities reaching deep into prehistory <cite class="pg">p. 48</cite>. Today, in a society saturated with selfies and photo-mediated self-presentation, those Stone Age aesthetic instincts are amplified to absurdity.</p>
 
@@ -1115,7 +1130,7 @@ footer.colophon{
   <p>The authors compile evidence that people perceived as attractive in Western and Westernised societies do better materially. They are less likely to be bullied as children, get more votes in elections, earn more, are treated more leniently by juries, and may even live healthier lives <cite class="pg">p. 54</cite>. Even six-month-old infants look longer at faces adults rate as more attractive, with "averageness" being a major component of those judgements <cite class="pg">p. 54</cite>. None of this is new, but the chapter's twist is to name the public-health consequences of an ongoing, society-wide drift in facial development away from the very features the same society has decided to value.</p>
 
   <h3>Smoking, obesity, jaws</h3>
-  <p>A parallel with two earlier public-health epidemics closes the chapter. Smoking was so normal in Paul Ehrlich's 1930s childhood that he and his friends, at seven or eight years old, picked up cigarette butts from the street to look grown-up — already calling them "coffin nails" <cite class="pg">p. 55</cite>. It took decades of public-health work to bend the curve. Obesity is in an earlier stage of the same arc, still partly stigmatised as a personal failing <cite class="pg">p. 56</cite>. Malocclusion and slack-jaw posture, the authors argue, sit even earlier on the curve: the connection to serious illness is not yet public knowledge, and the food and infant-care industries that contribute to it are not yet treated as anything like the tobacco industry <cite class="pg">pp. 56–57</cite>. Their hope is that recognising facial deformity as a preventable condition will eventually drive the same kind of social change.</p>
+  <p>The chapter ends by drawing a parallel with two earlier public-health epidemics. Smoking was so normal in Paul Ehrlich's 1930s childhood that he and his friends, at seven or eight years old, picked up cigarette butts from the street to look grown-up — already calling them "coffin nails" <cite class="pg">p. 55</cite>. It took decades of public-health work to bend the curve. Obesity is in an earlier stage of the same arc, still partly stigmatised as a personal failing <cite class="pg">p. 56</cite>. Malocclusion and slack-jaw posture, the authors argue, sit even earlier on the curve: the connection to serious illness is not yet public knowledge, and the food and infant-care industries that contribute to it are not yet treated as anything like the tobacco industry <cite class="pg">pp. 56–57</cite>. Their hope, restated through the chapter, is that recognising facial deformity as a preventable condition will eventually drive the same kind of social change.</p>
 
   <div class="rule">
     <div class="rule-label">Reader's rule</div>
@@ -1141,7 +1156,7 @@ footer.colophon{
   <p>The central animal evidence in this chapter is Egil Harvold's pioneering 1970s rhesus monkey work. Harvold blocked the nostrils of young rhesus monkeys (aged 2 to 6) with silicon plugs, forcing them to breathe through the mouth <cite class="pg">p. 64</cite>. Initially the monkeys thrashed around, trying different tongue, lip, and jaw positions. Over months, they developed the same long face, downward-sloping mandibles and various forms of malocclusion that human mouth-breathers display, including narrowed dental arches <cite class="pg">pp. 64–65</cite>. When the plugs were removed after about 18 months, most of the changes reversed <cite class="pg">p. 65</cite>. Harvold also showed that gentle tongue pressure against the palate — the resting tongue posture humans are supposed to maintain — produces wide palates and properly aligned arches <cite class="pg">p. 65</cite>. The book treats this as the experimental backbone of its theoretical claim: posture, not movement, is the primary signal.</p>
 
   <h3>The critical period</h3>
-  <p>How late is too late? The authors draw an analogy to vision: children born blind who have sight surgically restored after a critical early period generally do not develop normal visual processing, even though the optical hardware works <cite class="pg">p. 67</cite>. They cite a study of a person blind from age 3 to 46 who two years after surgery still had not developed normal vision <cite class="pg">p. 67</cite>. The implication for jaw development is a similar critical period — particularly in the first decade, and perhaps especially in the first year <cite class="pg">p. 67</cite>. John Mew's clinical claim, which the authors quote, is that around age eight the maxilla becomes increasingly fused to the base of the skull and becomes hard to move without active appliances; the mandible remains adaptable for some years longer, particularly in boys <cite class="pg">p. 68</cite>.</p>
+  <p>The chapter closes by raising the question every parent will ask: how late is too late? The authors draw an analogy to vision. Children born blind who have sight surgically restored after a critical early period generally do not develop normal visual processing, even though the optical hardware works <cite class="pg">p. 67</cite>. They cite a study of a person blind from age 3 to 46 who two years after surgery still had not developed normal vision <cite class="pg">p. 67</cite>. The implication for jaw development is that there is a similar critical period — particularly in the first decade, and perhaps especially in the first year <cite class="pg">p. 67</cite>. John Mew's clinical claim, which the authors quote, is that around age eight the maxilla becomes increasingly fused to the base of the skull and becomes hard to move without active appliances; the mandible remains adaptable for some years longer, particularly in boys <cite class="pg">p. 68</cite>.</p>
 
   <div class="aside">
     <h4>Anecdote · the gerbil</h4>
@@ -1150,7 +1165,7 @@ footer.colophon{
 
   <p>One troubling sidebar in the chapter is a photograph of an infant in an unusual posture — head tipped back, neck extended — a pose the parents found "funny" and photographed without alarm. The child died of sudden infant death syndrome shortly after. The authors share the photograph (with the family's permission, via Christian Guilleminault) as a reminder that an infant struggling to keep an airway open does not always cry; sometimes she simply contorts <cite class="pg">p. 60 · Image 27</cite>.</p>
 
-  <p>Chewing, posture, and growth all tie back to sleep itself: growth hormone is secreted most efficiently between roughly 11 pm and 2 am <cite class="pg">p. 70</cite>, and disordered breathing during that window cuts directly into the growth process that the rest of the book is about.</p>
+  <p>The chapter closes by tying chewing, posture and growth back to sleep itself: growth hormone, the authors note, is secreted most efficiently between roughly 11 pm and 2 am <cite class="pg">p. 70</cite>, and disordered breathing during that window cuts directly into the growth process that the rest of the book is about.</p>
 
   <div class="rule">
     <div class="rule-label">Reader's rule</div>
@@ -1165,7 +1180,7 @@ footer.colophon{
   <p class="section-deck">The hardest-hitting chapter. Up to this point the book has been about teeth and faces; here it argues that the same underlying disease, untreated, kills people slowly through sleep.</p>
 
   <h3>Why mouth breathing isn't trivial</h3>
-  <p>One small but important distinction first. Many parents see "lips closed" and assume their child is nose breathing, when in fact a child can hold the lips together with the teeth and tongue dropped behind them. John Mew prefers the term "open mouth posture" for that reason, but the book sticks with "mouth breathing" as the more familiar phrase <cite class="pg">p. 73</cite>. A careful study of 150 schoolchildren aged 8 to 10 in Recife, Brazil, found that 80 of them — 53% — were mouth breathers, tested by mirror-fogging and a three-minute water-holding task that filters out children with closed lips who still breathe through the nose <cite class="pg">p. 73</cite>.</p>
+  <p>The chapter opens with the small but important distinction that Kahn highlights: many parents see "lips closed" and assume their child is nose breathing, when in fact a child can hold the lips together with the teeth and tongue dropped behind them. John Mew prefers the term "open mouth posture" for that reason, but the book sticks with "mouth breathing" as the more familiar phrase <cite class="pg">p. 73</cite>. A careful study of 150 schoolchildren aged 8 to 10 in Recife, Brazil, found that 80 of them — 53% — were mouth breathers, tested by mirror-fogging and a three-minute water-holding task that filters out children with closed lips who still breathe through the nose <cite class="pg">p. 73</cite>.</p>
 
   <p>The nose, the authors remind us, is not a redundant organ. It warms, moistens, filters, and adds small amounts of bactericidal nitric oxide to inhaled air <cite class="pg">pp. 73–74</cite>. None of this happens when the mouth is the air channel. A list of consequences, drawn from a group of pediatric dentists at the University of Pernambuco, runs from breathlessness during exercise and chronic neck pain through halitosis, dry mouth, dark circles under the eyes, narrow nostrils, weak cheek muscles, high palate, and malocclusion <cite class="pg">p. 74</cite>.</p>
 
@@ -1173,7 +1188,7 @@ footer.colophon{
 
   <div class="aside">
     <h4>Anecdote · Deamonte Driver</h4>
-    <p>From Mary Otto's book <em>Teeth</em>: Deamonte Driver, a 12-year-old in Maryland, came home one day with a headache. His grandmother took him to the emergency department, where he was given medications for headache, sinusitis, and a dental abscess. The next day at school he was worse and, by Friday, could not talk. He was diagnosed with meningitis, underwent emergency brain surgery for an abscess on the left side of his brain, had a second operation when the seizures started, and during that second surgery the source — an infected upper-left molar — was finally extracted. Bacteria from the abscess had reached his brain. He survived for several weeks of physical therapy in hospital before dying. He was 12. The Kahn–Ehrlich point is not that mouth breathing alone killed Deamonte but that the cascade — stuffy nose, mouth breathing, dry mouth, decay, infection, sepsis — is real, and the social cause is poverty: his family could not access timely dental care <cite class="pg">pp. 75–76</cite>.</p>
+    <p>The chapter reproduces, from Mary Otto's book <em>Teeth</em>, the death of Deamonte Driver, a 12-year-old in Maryland. He came home one day with a headache. His grandmother took him to the emergency department, where he was given medications for headache, sinusitis, and a dental abscess. The next day at school he was worse and, by Friday, could not talk. He was diagnosed with meningitis, underwent emergency brain surgery for an abscess on the left side of his brain, had a second operation when the seizures started, and during that second surgery the source — an infected upper-left molar — was finally extracted. Bacteria from the abscess had reached his brain. He survived for several weeks of physical therapy in hospital before dying. He was 12. The Kahn–Ehrlich point is not that mouth breathing alone killed Deamonte but that the cascade — stuffy nose, mouth breathing, dry mouth, decay, infection, sepsis — is real, and the social cause is poverty: his family could not access timely dental care <cite class="pg">pp. 75–76</cite>.</p>
   </div>
 
   <h3>OSA, in plain language</h3>
@@ -1182,9 +1197,9 @@ footer.colophon{
   <p>What makes OSA so dangerous, the chapter argues, is that breathing disruption triggers the autonomic nervous system's sympathetic ("fight-or-flight") response, even though the trigger is not a tiger but the back of the tongue falling into the airway <cite class="pg">pp. 77–78</cite>. The body floods with adrenaline, the heart speeds up, blood pressure rises, growth and digestion are switched off. Robert Sapolsky's image, borrowed for this chapter: an antelope fleeing a lioness doesn't have time or energy to grow antlers. A child whose nights are a low-grade chase scene is not building antlers either <cite class="pg">p. 78</cite>. Recurrent partial suffocation also damages the hippocampus, the brain region central to memory <cite class="pg">p. 79</cite>, and may compromise the blood–brain barrier — implicated in stroke, epilepsy, multiple sclerosis, and Alzheimer's disease <cite class="pg">p. 81</cite>.</p>
 
   <h3>Snoring, before it was harmless</h3>
-  <p>Snoring is not normal — though the cultural assumption is that it is. Some 30% of people over 30 and 40% over 50 snore in some surveys; in Britain the prevalence runs from 25% to 40% <cite class="pg">p. 79</cite>. Childhood snoring is now common in pre-schoolers — University of Chicago sleep scientist David Gozal estimates that 7 to 13% of all preschool children snore <cite class="pg">p. 80</cite> — and "primary snoring" (snoring without OSA) has been linked to attention and memory problems, a higher risk of epileptic seizures, and the risk of progressing to OSA <cite class="pg">p. 80</cite>. Stephen Sheldon, sleep specialist at Lurie Children's Hospital and author of <em>Principles and Practice of Pediatric Sleep Medicine</em>, has estimated that 75% of children with ADHD could trace their problem to sleep-disordered breathing <cite class="pg">p. 80</cite>. James O'Brien's blunt formulation: anyone who snores will develop obstructive sleep apnea, if they live long enough <cite class="pg">p. 80</cite>.</p>
+  <p>The chapter dismantles the cultural assumption that snoring is normal. Some 30% of people over 30 and 40% over 50 snore in some surveys; in Britain the prevalence runs from 25% to 40% <cite class="pg">p. 79</cite>. Childhood snoring is now common in pre-schoolers — University of Chicago sleep scientist David Gozal estimates that 7 to 13% of all preschool children snore <cite class="pg">p. 80</cite> — and "primary snoring" (snoring without OSA) has been linked to attention and memory problems, a higher risk of epileptic seizures, and the risk of progressing to OSA <cite class="pg">p. 80</cite>. Stephen Sheldon, sleep specialist at Lurie Children's Hospital and author of <em>Principles and Practice of Pediatric Sleep Medicine</em>, has estimated that 75% of children with ADHD could trace their problem to sleep-disordered breathing <cite class="pg">p. 80</cite>. James O'Brien's blunt formulation: anyone who snores will develop obstructive sleep apnea, if they live long enough <cite class="pg">p. 80</cite>.</p>
 
-  <p>An important caveat — "associated with" is not "causes" — applies throughout. Establishing causation in disordered sleep is harder than for, say, smoking and lung cancer, because the relevant exposure (interrupted breathing during sleep over decades) is harder to measure than packs per day <cite class="pg">pp. 83–84</cite>. The book is careful to state that its goal is not to convince readers that a mouth-breathing child is doomed.</p>
+  <p>The chapter pauses to install an important caveat — "associated with" is not "causes" — and acknowledges that establishing causation in disordered sleep is harder than for, say, smoking and lung cancer. It is harder because the relevant exposure (interrupted breathing during sleep over decades) is harder to measure than packs per day <cite class="pg">pp. 83–84</cite>. The book is careful to state that its goal is not to convince readers that a mouth-breathing child is doomed.</p>
 
   <h3>Treatment, ranked from worst to least bad</h3>
   <p>For adults already living with OSA, the chapter walks down the menu. <strong>Maxillomandibular advancement (MMA)</strong> surgery moves both jaws forward and is the only operation that can cure severe adult OSA <cite class="pg">p. 84</cite>, but William Bell — described as the "godfather of corrective jaw surgery" — has called it too complicated, too invasive, too time-consuming, expensive, and unpredictable <cite class="pg">pp. 84–85</cite>. Soft-tissue surgeries like uvulopalatopharyngeoplasty (UPPP) and tongue reduction are also done, with limited results <cite class="pg">p. 85</cite>. Tonsil-and-adenoid removal helps children temporarily but rarely solves adult cases <cite class="pg">p. 85</cite>. <strong>CPAP machines</strong> are the workhorse: they push pressurised air into the airway through a mask, can transform some patients' lives, but require a prescription and several hundred dollars, and many people simply cannot tolerate them <cite class="pg">pp. 85–86</cite>.</p>
@@ -1211,7 +1226,7 @@ footer.colophon{
   <p class="section-deck">The longest and most practical chapter in the book — a parent's manual built around six interventions: how to feed, how to chew, how to breathe, how to rest the mouth, how to sleep, and how to spot trouble.</p>
 
   <h3>1 · Breastfeeding and baby-led weaning</h3>
-  <p>The easiest advice first: breastfeed for as long as possible — at least a year, exclusively for six months — and avoid bottle feeding even of pumped breast milk during that early window <cite class="pg">p. 89 · p. 113 (Box 4)</cite>. The mechanical work of suckling is part of the developmental signal. Wean slowly and onto solids, not into the soft sweet pap that fills the baby-food aisle. The authors recommend exploring <strong>baby-led weaning</strong>, in which the child feeds herself with her hand from the moment of weaning, sharing the family's food rather than receiving spoon-fed purée <cite class="pg">p. 105</cite>. The term traces to British midwife Gill Rapley <cite class="pg">p. 105</cite>, and the practical effect is that the child is doing real chewing from the start.</p>
+  <p>The chapter opens with the easiest advice: breastfeed for as long as possible — at least a year, exclusively for six months — and avoid bottle feeding even of pumped breast milk during that early window <cite class="pg">p. 89 · p. 113 (Box 4)</cite>. The mechanical work of suckling is part of the developmental signal. Wean slowly and onto solids, not into the soft sweet pap that fills the baby-food aisle. The authors recommend exploring <strong>baby-led weaning</strong>, in which the child feeds herself with her hand from the moment of weaning, sharing the family's food rather than receiving spoon-fed purée <cite class="pg">p. 105</cite>. The term traces to British midwife Gill Rapley <cite class="pg">p. 105</cite>, and the practical effect is that the child is doing real chewing from the start.</p>
 
   <h3>2 · Chewing</h3>
   <p>Eat together; eat slowly; chew thoroughly; do not let children speak with food in their mouths. The book offers a specific protocol for chewing: aim for at least 15 chews per mouthful for soft food, 20 for hard. With practice the food liquefies before you swallow. Always begin the swallow with upper and lower teeth touching and pause for a deliberate two seconds before swallowing <cite class="pg">p. 105</cite>. The authors also propose, somewhat unusually for a health book, that chewing gum — properly chosen — can build jaw muscle. Gum chewers should pick something genuinely tough (the authors mention <em>Mastic</em>, the resin from the Greek island of Chios, as a candidate raw material) <cite class="pg">p. 108</cite>, without sugar or artificial sweeteners; chew on both sides for at least 30 minutes a day with closed lips and nasal breathing <cite class="pg">p. 108</cite>.</p>
@@ -1227,7 +1242,7 @@ footer.colophon{
   </div>
 
   <h3>4 · Breathing and allergies</h3>
-  <p>Stuffy noses in babies and toddlers are not background noise. Indoor air pollutants matter — formaldehyde from furniture and construction is highlighted; pet dander, cockroaches, mould, dust mites, the cold viruses that circulate in daycare centres <cite class="pg">pp. 98–99</cite>. Frequent bathing of pets, controlling cockroaches and mould, ventilating well, using air cleaners cautiously, and (most underrated) basic hand-washing in childcare are all useful <cite class="pg">p. 99</cite>. The authors quote air-pollution scientist Kirk Smith: after seventy years and tens of billions of dollars, scientists still do not know exactly which components of tobacco smoke produce the observed health effects <cite class="pg">p. 98</cite>. The point is not to diagnose every particle but to minimise inhalation through the mouth in favour of nasal filtration.</p>
+  <p>Stuffy noses in babies and toddlers are not background noise. The chapter walks through indoor air pollutants — formaldehyde from furniture and construction is highlighted; pet dander, cockroaches, mould, dust mites, the cold viruses that circulate in daycare centres <cite class="pg">pp. 98–99</cite>. Frequent bathing of pets, controlling cockroaches and mould, ventilating well, using air cleaners cautiously, and (most underrated) basic hand-washing in childcare are all useful <cite class="pg">p. 99</cite>. The authors quote air-pollution scientist Kirk Smith: after seventy years and tens of billions of dollars, scientists still do not know exactly which components of tobacco smoke produce the observed health effects <cite class="pg">p. 98</cite>. The point is not to diagnose every particle but to minimise inhalation through the mouth in favour of nasal filtration.</p>
 
   <p>One counter-intuitive note from sleep-apnea specialist Christian Guilleminault: enlarged tonsils and adenoids may be more often a <em>result</em> of mouth breathing than a cause of it <cite class="pg">p. 99</cite>. Breathe more particles in through the mouth, the immune system reacts. In other words, the cycle can run in either direction.</p>
 
@@ -1255,7 +1270,7 @@ footer.colophon{
   <p>This is also where the chapter introduces a critical clinical re-frame: many adult sleep, headache, and TMJ pain problems are downstream of teenage orthodontics that pulled premolars and pushed jaws backward. The book describes a 30-year-old woman whose teenage extraction-and-braces treatment had produced beautifully straight teeth and an airway whose throat space was too small for restful breathing. Reversing the extractions orthodontically, and replacing the missing teeth with implants, resolved her headaches and sleep problems <cite class="pg">p. 110</cite>. The illustration drives the chapter's underlying clinical claim: in modern jaws, you almost never want to push things backward.</p>
 
   <h3>The two checklists</h3>
-  <p>Two explicit checklists end the chapter, distilled from the book's case material. The first — what to do — runs from "breastfeed for at least a year" through "treat any sign of stuffy nose or snoring promptly" to "seek professional help immediately if you detect symptoms of the oral-facial epidemic" <cite class="pg">p. 113 (Box 4)</cite>. The second — what to look for — is organised by activity. While sitting, does the child put things in her mouth, suck her lips, hold her mouth open, breathe noisily, find it hard to sit still? While speaking, does she pause to gulp air through the mouth, lisp, fail to bring lips together between words? While eating, does she breathe through her mouth between bites, stick her tongue out when swallowing, drink a lot of liquid with the meal, make noise, tighten the lips, wrinkle the chin, tilt the head? While sleeping, does she snore, wet the bed, toss, stretch the head backwards, wake frequently, have nightmares, grind her teeth, struggle to wake up, drool, have dark circles under the eyes? Each item, the chapter argues, is data <cite class="pg">pp. 118–119 (Box 5)</cite>.</p>
+  <p>The chapter ends with two explicit checklists, distilled from the book's case material. The first — what to do — runs from "breastfeed for at least a year" through "treat any sign of stuffy nose or snoring promptly" to "seek professional help immediately if you detect symptoms of the oral-facial epidemic" <cite class="pg">p. 113 (Box 4)</cite>. The second — what to look for — is organised by activity. While sitting, does the child put things in her mouth, suck her lips, hold her mouth open, breathe noisily, find it hard to sit still? While speaking, does she pause to gulp air through the mouth, lisp, fail to bring lips together between words? While eating, does she breathe through her mouth between bites, stick her tongue out when swallowing, drink a lot of liquid with the meal, make noise, tighten the lips, wrinkle the chin, tilt the head? While sleeping, does she snore, wet the bed, toss, stretch the head backwards, wake frequently, have nightmares, grind her teeth, struggle to wake up, drool, have dark circles under the eyes? Each item, the chapter argues, is data <cite class="pg">pp. 118–119 (Box 5)</cite>.</p>
 
   <div class="rule">
     <div class="rule-label">Reader's rule</div>
@@ -1299,7 +1314,7 @@ footer.colophon{
   </div>
 
   <h3>The airway, finally, on the agenda</h3>
-  <p>One hopeful note ends the chapter. A small group within the dental profession has begun to put the airway first, organising as the <strong>American Academy of Physiological Medicine and Dentistry</strong> (AAPMD), of which Kahn is a member <cite class="pg">p. 139</cite>. They commit to never choosing a treatment plan that shrinks the airway, even when that plan is faster or cheaper. Donald Enlow, author of <em>Essentials of Facial Growth</em>, gave them the slogan: the airway is the cornerstone of facial growth <cite class="pg">p. 139</cite>. Forwardontics fits naturally inside this airway-centric movement.</p>
+  <p>The chapter ends on a hopeful note. A small group within the dental profession has begun to put the airway first. They have organised as the <strong>American Academy of Physiological Medicine and Dentistry</strong> (AAPMD), of which Kahn is a member <cite class="pg">p. 139</cite>. They commit to never choosing a treatment plan that shrinks the airway, even when that plan is faster or cheaper. Donald Enlow, author of <em>Essentials of Facial Growth</em>, gave them the slogan: the airway is the cornerstone of facial growth <cite class="pg">p. 139</cite>. Forwardontics fits naturally inside this airway-centric movement.</p>
 
   <p>For parents trying to choose a practitioner, the chapter offers a short list of questions: what will this treatment do to the airway, will it require extracting healthy permanent teeth, does the practitioner consider the whole face or only the alignment of the smile, and — crucially — do you understand that the cure may take a decade and tens of thousands of dollars and depend heavily on your child's cooperation <cite class="pg">p. 143</cite>?</p>
 
@@ -1316,7 +1331,7 @@ footer.colophon{
   <p class="section-deck">The closing chapter widens the lens from the family to the society. Kahn and Ehrlich argue that the oral-facial epidemic is one symptom of a larger refusal — in the United States especially — to invest in prevention rather than repair.</p>
 
   <h3>"Health repair," not health care</h3>
-  <p>Oral-facial health sits inside the larger pattern Ehrlich has spent his career writing about: humanity's "predicament" of overpopulation, overconsumption, climate disruption, and the systematic preference for cleaning up disasters rather than preventing them <cite class="pg">p. 145</cite>. The U.S. medical system, the authors argue, is more honestly described as a "health repair" system than a health-care one — it manages chronic disease as an afterthought rather than fostering wellness <cite class="pg">p. 145</cite>. The same prevention-versus-cure asymmetry shows up in climate policy, in biodiversity, and in food systems. The "ounce of prevention" cliché is invoked, deliberately, because in this case it really does seem to apply <cite class="pg">p. 145</cite>.</p>
+  <p>The chapter opens by placing oral-facial health inside the larger pattern Ehrlich has spent his career writing about: humanity's "predicament" of overpopulation, overconsumption, climate disruption, and the systematic preference for cleaning up disasters rather than preventing them <cite class="pg">p. 145</cite>. The U.S. medical system, the authors argue, is more honestly described as a "health repair" system than a health-care one — it manages chronic disease as an afterthought rather than fostering wellness <cite class="pg">p. 145</cite>. The same prevention-versus-cure asymmetry shows up in climate policy, in biodiversity, and in food systems. The "ounce of prevention" cliché is invoked, deliberately, because in this case it really does seem to apply <cite class="pg">p. 145</cite>.</p>
 
   <h3>What needs to change, in three steps</h3>
   <p>The book's policy proposal is unusually concrete. <strong>First</strong>, the public should be informed about the actual scale of oral-facial problems and about the existence of preventive and curative alternatives to standard orthodontics. <strong>Second</strong>, health professionals should be educated to discuss treatment alternatives honestly — including the airway-affecting consequences of extraction-based orthodontics. <strong>Third</strong>, dental and medical schools must train forwardontists in numbers; weekend seminars are not enough, because forwardontic treatment depends on watching a patient grow over a decade <cite class="pg">p. 147</cite>. The authors recommend the residency model: residents start cases under multiple supervisors, pass them on at graduation, supervise the next intake, and the institutional knowledge accumulates <cite class="pg">pp. 148–149</cite>.</p>
@@ -1516,6 +1531,11 @@ footer.colophon{
       <span class="pg-foot">Book pp. 4–5 (Introduction)</span>
     </div>
     <div class="anec-card">
+      <h4>Catlin and the Mandan</h4>
+      <p>George Catlin (1796–1872) examined hundreds of Mandan skulls and reported beautiful teeth and almost no children's burials. He observed mothers pinching infants' lips closed after nursing, and described the white settlers as "black-mouths." His 1861 book <em>Shut Your Mouth and Save Your Life</em> reads as oddly prescient.</p>
+      <span class="pg-foot">Book pp. 20–24 (Ch 1)</span>
+    </div>
+    <div class="anec-card">
       <h4>Huggins's mule</h4>
       <p>Dentist Hal A. Huggins's signature line, quoted to dispatch the genetic-mismatch theory of malocclusion: cross a horse and a donkey and you get a mule, but no mule has ever been born with horse-sized teeth in a donkey-sized jaw.</p>
       <span class="pg-foot">Book p. 17 (Ch 1)</span>
@@ -1546,9 +1566,24 @@ footer.colophon{
       <span class="pg-foot">Book pp. 64–65 (Ch 5)</span>
     </div>
     <div class="anec-card">
+      <h4>The gerbil-allergic boy</h4>
+      <p>Two photographs in Chapter 5 show a young boy before and after acquiring a severe allergy to a pet gerbil. Chronic nasal congestion forced him into mouth breathing; his face elongated and the jaw retreated. The "experiment" was accidental but matched Harvold's monkey results.</p>
+      <span class="pg-foot">Book p. 66 (Ch 5)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Wellington and Margaret Theresa</h4>
+      <p>The Duke of Wellington (Robert Home portrait, 1804) and the Spanish princess Margaret Theresa (Velázquez 1656, then anonymous artist 1662–4) both display "long face syndrome." In their day a long aristocratic profile was an asset; in ours it signals airway compromise.</p>
+      <span class="pg-foot">Book p. 52 (Ch 4)</span>
+    </div>
+    <div class="anec-card">
       <h4>Recife mirror tests</h4>
       <p>A careful study of 150 Brazilian schoolchildren aged 8–10 in Recife found that 80 of them — 53% — were mouth breathers, verified by mirror fogging and a three-minute water-holding task. The numbers in industrialised societies are reliably this high.</p>
       <span class="pg-foot">Book p. 73 (Ch 6)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Deamonte Driver, age 12</h4>
+      <p>A Maryland boy who died after an upper-left molar abscess seeded an infection in his brain. The cascade — stuffy nose, mouth breathing, dry mouth, decay, abscess, sepsis — is exactly the chain Kahn and Ehrlich are warning about, made tragic by lack of access to dental care.</p>
+      <span class="pg-foot">Book pp. 75–76 (Ch 6)</span>
     </div>
     <div class="anec-card">
       <h4>Sapolsky's antelope</h4>
@@ -1556,9 +1591,44 @@ footer.colophon{
       <span class="pg-foot">Book p. 78 (Ch 6)</span>
     </div>
     <div class="anec-card">
+      <h4>The University of Georgia bulldogs</h4>
+      <p>Mike Gelb's photographic sequence of the university's bulldog mascots from 1956 to 2011 — narrowed nostrils, crooked teeth, narrowed soft palate — and falling lifespans. The 1956 mascot died at 8; the 2011 mascot at 2. A near-perfect parallel to industrialisation's effect on human faces, but driven by selective breeding.</p>
+      <span class="pg-foot">Book pp. 86–87 (Ch 6)</span>
+    </div>
+    <div class="anec-card">
+      <h4>The zombie nation</h4>
+      <p>Kahn at an Orlando theme park, photographing every passing child mouth-breathing. Her husband David's reaction supplied the line: a zombie nation of mouth breathers. The chapter invites readers to repeat the experiment in any mall or traffic jam.</p>
+      <span class="pg-foot">Book p. 44 (Ch 3)</span>
+    </div>
+    <div class="anec-card">
+      <h4>The !Kung leisure data</h4>
+      <p>Anthropologist Richard Lee's classic input-output analysis: !Kung women gathered enough food in a day to feed the family for three days; men hunted intensely for a week, then often not at all for weeks. Rest was built in. Modern industrial life has stripped it out.</p>
+      <span class="pg-foot">Book pp. 95–97 (Ch 7 box)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Buteyko, Lao Tse, and Sandra's father</h4>
+      <p>The Soviet physician Konstantin Buteyko (1923–2003) developed the breathing-retraining method around 1950. The chapter opens with Lao Tse: the perfect man breathes as if he didn't. Kahn writes that her 89-year-old father, suffering from COPD, found the method dramatically improved his quality of life.</p>
+      <span class="pg-foot">Book pp. 100–102 (Ch 7)</span>
+    </div>
+    <div class="anec-card">
       <h4>Tarahumara and Apache runners</h4>
       <p>The Tarahumara people of Mexico's Copper Canyon, known for running marathons-and-then-some at altitude, do so almost exclusively through nasal breathing. Apache "spirit runners" trained from childhood by carrying water in the mouth while running long distances in the desert.</p>
       <span class="pg-foot">Book p. 101 (Ch 7)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Mew's identical twins</h4>
+      <p>The cleanest piece of evidence Mew produced: six pairs of identical twins, one of each pair treated by Mew, the other by a local orthodontist. Ten years later judges rated the orthodontist-treated twins as less attractive after treatment, the Mew-treated twins as more attractive — and the latter's teeth held without retainers.</p>
+      <span class="pg-foot">Book pp. 130–131 (Ch 8)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Semmelweis at the door</h4>
+      <p>The chapter on the dental professions reaches for the 1840s case of Ignaz Semmelweis, who proved that hand-washing nearly eliminated childbed fever and was largely ignored for decades because his evidence threatened doctors' self-image. The authors think Mew is in the same position now.</p>
+      <span class="pg-foot">Book p. 141 (Ch 8)</span>
+    </div>
+    <div class="anec-card">
+      <h4>"Volkswagen in her mouth"</h4>
+      <p>Kahn's mother in Mexico City, thirty years ago, watching a child wearing braces — a then-luxury procedure visible from across the room. Today such braces are routine. Kahn uses the story to argue that the same speed of cultural change is possible for forwardontics.</p>
+      <span class="pg-foot">Book p. 148 (Ch 9)</span>
     </div>
     <div class="anec-card">
       <h4>Mew picketing</h4>
@@ -1566,7 +1636,7 @@ footer.colophon{
       <span class="pg-foot">Book p. 147 (Ch 9)</span>
     </div>
   </div>
-  <p class="exhibit-caption"><strong>Exhibit 7.</strong> Anecdote highlights — supplemental index. Eleven case studies and historical episodes mentioned in the chapter prose without their own callout box, indexed for quick reference. Anecdotes already presented as named asides inside the chapters (Mandan skulls, gerbil boy, Wellington and Margaret Theresa, Deamonte Driver, Georgia bulldogs, zombie nation, !Kung leisure data, Sandra's father, identical-twin study, Semmelweis, Volkswagen) are not duplicated here. Each card cites the book pages where the underlying material is described.</p>
+  <p class="exhibit-caption"><strong>Exhibit 7.</strong> Anecdote highlights. Twenty-two case studies, historical episodes, and personal vignettes from the body of the book, indexed for quick reference. Each card cites the book pages where the underlying material is described.</p>
 </section>
 
 <!-- ============================ SOURCE LOG (Exhibit 8) ============================ -->
