@@ -1,0 +1,1804 @@
+<!doctype html>
+<html lang="en" style="background:#15130f;color:#ede5d3;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#15130f" id="meta-theme">
+<title>Jaws — A Detailed Chapter-by-Chapter Summary (v3)</title>
+<script>
+/* Apply saved theme before first paint to prevent flash */
+(function(){
+  try{
+    var t = localStorage.getItem("jaws.theme");
+    var root = document.documentElement;
+    if (t === "light") {
+      root.setAttribute("data-theme","light");
+      root.style.background = "#f5efe2";
+      root.style.color = "#1c1a14";
+      root.style.colorScheme = "light";
+      var m = document.getElementById("meta-theme");
+      if (m) m.setAttribute("content","#f5efe2");
+    } else {
+      root.setAttribute("data-theme","dark");
+    }
+  } catch(e){}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..800,30..100&family=EB+Garamond:ital,wght@0,400..700;1,400..600&display=swap" rel="stylesheet">
+<style>
+/* ============== Triple-layer dark protection ============== */
+html:not([data-theme="light"]){
+  background:#15130f; color:#ede5d3; color-scheme:dark;
+}
+
+/* ============== Design tokens ============== */
+:root{
+  --bg:#15130f;
+  --bg-deep:#0f0d0a;
+  --card:#1d1a14;
+  --card-elev:#221e17;
+  --line:#332d22;
+  --line-soft:#26221a;
+  --text:#ede5d3;
+  --text-muted:#a89a82;
+  --text-faint:#7a6f5d;
+  --accent:#d49a52;
+  --accent-soft:#a87a3e;
+  --accent-glow:rgba(212,154,82,0.18);
+  --rule-bg:#1f1c14;
+  --rule-line:#3d3220;
+  --shadow:0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.35);
+  --pill-bg:#221e17;
+  --pill-line:#36301f;
+  --cite-bg:#221e17;
+  --cite-line:#3d3220;
+  --cite-fg:#c9a36c;
+
+  --display:"Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+  --body:"EB Garamond", ui-serif, Georgia, "Times New Roman", serif;
+
+  --content-w:960px;
+  --sidebar-w:288px;
+
+  /* Semantic colors used by access tags, triage tags, and SVG exhibits */
+  --color-green:#7fc488;
+  --color-green-line:#3d6a44;
+  --color-yellow:#e0b950;
+  --color-yellow-line:#7a5e1c;
+  --color-red:#e07a6a;
+  --color-red-line:#7a3528;
+  --color-blue:#82b7df;
+  --color-blue-line:#3a6485;
+}
+[data-theme="light"]{
+  --bg:#f5efe2;
+  --bg-deep:#ebe3d0;
+  --card:#fbf6ea;
+  --card-elev:#fdf9ee;
+  --line:#d8cdb6;
+  --line-soft:#e6dec9;
+  --text:#1c1a14;
+  --text-muted:#6b614f;
+  --text-faint:#8e8472;
+  --accent:#9a5e1a;
+  --accent-soft:#b67631;
+  --accent-glow:rgba(154,94,26,0.10);
+  --rule-bg:#f0e7d0;
+  --rule-line:#c9b88f;
+  --shadow:0 1px 0 rgba(255,255,255,0.6) inset, 0 8px 24px rgba(40,30,15,0.10);
+  --pill-bg:#ebe1c8;
+  --pill-line:#c9b88f;
+  --cite-bg:#ebe1c8;
+  --cite-line:#c9b88f;
+  --cite-fg:#7a4a14;
+
+  --color-green:#2e6b35;
+  --color-green-line:#7fa685;
+  --color-yellow:#7a5b14;
+  --color-yellow-line:#b89758;
+  --color-red:#8a2e22;
+  --color-red-line:#b87366;
+  --color-blue:#236891;
+  --color-blue-line:#9ab9d2;
+}
+
+/* ============== Reset & base ============== */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  font-size:18px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  font-feature-settings:"liga","kern","onum";
+  font-variant-numeric:oldstyle-nums;
+}
+a{ color:var(--accent); text-decoration:none; border-bottom:1px solid transparent; transition:border-color .15s; }
+a:hover{ border-bottom-color:var(--accent); }
+
+h1,h2,h3,h4{
+  font-family:var(--display);
+  font-weight:550;
+  letter-spacing:-0.01em;
+  margin:0;
+  font-feature-settings:"liga","kern";
+  font-variant-numeric:lining-nums;
+}
+h1{ font-size:clamp(2.2rem, 5vw, 3.6rem); line-height:1.05; font-variation-settings:"opsz" 144, "SOFT" 50; }
+h2{ font-size:clamp(1.6rem, 3.5vw, 2.3rem); line-height:1.15; font-variation-settings:"opsz" 80, "SOFT" 30; margin-bottom:.2em; }
+h3{ font-size:1.3rem; line-height:1.25; font-variation-settings:"opsz" 30, "SOFT" 20; margin:1.6em 0 .4em; }
+h4{ font-size:1.05rem; line-height:1.3; font-weight:600; margin:1.2em 0 .3em; letter-spacing:.01em; }
+p{ margin:.75em 0; }
+em{ font-style:italic; color:var(--text); }
+strong{ font-weight:600; color:var(--text); }
+hr{ border:none; border-top:1px solid var(--line); margin:2em 0; }
+
+/* ============== Inline citation pill ============== */
+cite.pg{
+  display:inline-block;
+  font-style:normal;
+  font-family:var(--display);
+  font-feature-settings:"lnum","tnum";
+  font-variant-numeric:lining-nums tabular-nums;
+  font-size:.74em;
+  letter-spacing:.02em;
+  padding:.05em .42em;
+  margin:0 .12em 0 .18em;
+  border:1px solid var(--cite-line);
+  border-radius:5px;
+  background:var(--cite-bg);
+  color:var(--cite-fg);
+  white-space:nowrap;
+  vertical-align:.08em;
+  font-weight:500;
+}
+
+/* ============== Layout ============== */
+.layout{
+  display:flex;
+  min-height:100vh;
+}
+.sidebar{
+  width:var(--sidebar-w);
+  flex-shrink:0;
+  background:var(--bg-deep);
+  border-right:1px solid var(--line);
+  position:sticky;
+  top:0;
+  height:100dvh;
+  height:100vh;
+  overflow-y:auto;
+  padding:1.4rem 1.2rem 2rem;
+  padding-left:max(1.2rem, env(safe-area-inset-left));
+  z-index:50;
+}
+.sidebar-header{
+  padding-bottom:1rem;
+  border-bottom:1px solid var(--line-soft);
+  margin-bottom:1rem;
+  /* leave space so the fixed top-left hamburger doesn't overlap the timestamp on mobile */
+  padding-top:.2rem;
+}
+.sidebar-stamp{
+  font-family:var(--display);
+  font-size:.72rem;
+  letter-spacing:.04em;
+  color:var(--text-faint);
+  font-variant-numeric:lining-nums tabular-nums;
+  font-feature-settings:"lnum","tnum";
+  font-style:italic;
+  font-variation-settings:"opsz" 14,"SOFT" 30;
+}
+.sidebar nav ol{ list-style:none; padding:0; margin:0; }
+.sidebar nav a{
+  display:block;
+  padding:.5rem .65rem;
+  border-radius:8px;
+  color:var(--text-muted);
+  border:1px solid transparent;
+  font-size:.92rem;
+  line-height:1.3;
+  cursor:pointer;
+  user-select:none;
+  font-family:var(--body);
+}
+.sidebar nav a .nav-num{
+  font-family:var(--display);
+  color:var(--text-faint);
+  font-variant-numeric:lining-nums;
+  font-size:.78rem;
+  display:inline-block;
+  width:1.6em;
+  text-align:right;
+  margin-right:.4em;
+}
+.sidebar nav a:hover, .sidebar nav a.active{
+  background:var(--card);
+  color:var(--text);
+  border-color:var(--line);
+}
+.sidebar nav a.active .nav-num{ color:var(--accent); }
+.sidebar nav .nav-section{
+  font-family:var(--display);
+  font-size:.7rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--text-faint);
+  padding:.9rem .65rem .35rem;
+}
+
+/* ============== Two fixed control groups ============== */
+.controls{
+  position:fixed;
+  top:0;
+  z-index:60;
+  display:flex;
+  align-items:center;
+  pointer-events:none; /* let children re-enable */
+}
+.controls > *{ pointer-events:auto; }
+.controls.left{
+  left:0;
+  padding:.85rem;
+  padding-top:max(.85rem, env(safe-area-inset-top));
+  padding-left:max(.85rem, env(safe-area-inset-left));
+}
+.controls.right{
+  right:0;
+  padding:.85rem;
+  padding-top:max(.85rem, env(safe-area-inset-top));
+  padding-right:max(.85rem, env(safe-area-inset-right));
+}
+.ctrl-button{
+  background:var(--card);
+  border:1px solid var(--line);
+  color:var(--text);
+  width:42px; height:42px;
+  border-radius:10px;
+  cursor:pointer;
+  display:flex;
+  align-items:center; justify-content:center;
+  box-shadow:var(--shadow);
+  padding:0;
+  transition:border-color .15s, color .15s;
+}
+.ctrl-button:hover{ border-color:var(--accent-soft); color:var(--accent); }
+.ctrl-button .ico{ width:18px; height:18px; }
+.ctrl-button .bars{ width:18px; height:14px; position:relative; display:inline-block; }
+.ctrl-button .bars::before, .ctrl-button .bars::after, .ctrl-button .bars span{
+  content:""; position:absolute; left:0; right:0; height:2px; background:currentColor; border-radius:2px;
+}
+.ctrl-button .bars::before{ top:0; }
+.ctrl-button .bars span{ top:6px; display:block; }
+.ctrl-button .bars::after{ bottom:0; }
+
+.overlay{
+  display:none;
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.5);
+  z-index:40;
+  backdrop-filter:blur(2px);
+}
+[data-theme="light"] .overlay{ background:rgba(40,30,15,0.45); }
+
+/* ============== Content column ============== */
+.content{
+  flex:1;
+  min-width:0;
+  padding:2.5rem 2rem 6rem;
+  padding-right:max(2rem, env(safe-area-inset-right));
+  padding-left:max(2rem, env(safe-area-inset-left));
+  display:flex;
+  justify-content:center;
+}
+.content-inner{
+  width:100%;
+  max-width:var(--content-w);
+}
+
+/* ============== Desktop: persistent sidebar, sidebar collapsible ============== */
+@media (min-width:1024px){
+  /* When sidebar is collapsed (user clicked hamburger), main reflows full-width */
+  .sidebar.collapsed{
+    width:0;
+    min-width:0;
+    padding-left:0;
+    padding-right:0;
+    overflow:hidden;
+    border-right:0;
+  }
+  /* On desktop, hamburger lives in the same fixed top-left group; theme toggle in top-right */
+  .controls.left{ /* always visible */ }
+}
+
+/* ============== Mobile: drawer + overlay ============== */
+@media (max-width: 1023px){
+  .sidebar{
+    position:fixed;
+    top:0; left:0;
+    height:100dvh;
+    height:100vh;
+    transform:translateX(-100%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    box-shadow:8px 0 32px rgba(0,0,0,0.45);
+  }
+  .sidebar.open{ transform:translateX(0); }
+  .overlay.open{ display:block; }
+  .content{
+    padding:4.6rem 1.1rem 4rem;
+    padding-right:max(1.1rem, env(safe-area-inset-right));
+    padding-left:max(1.1rem, env(safe-area-inset-left));
+  }
+  body{ font-size:17px; }
+}
+
+/* ============== Phone-portrait tightening ============== */
+@media (max-width:520px){
+  .cover{ padding:1.6rem 1.15rem 1.4rem; border-radius:16px; }
+  section.card{ padding:1.4rem 1.15rem 1.15rem; border-radius:16px; }
+  h1{ line-height:1.08; }
+  h3{ font-size:1.18rem; }
+  body{ font-size:16.5px; line-height:1.62; }
+  .corpus-map th, .corpus-map td,
+  .source-log th, .source-log td{ padding:.5rem .55rem; font-size:.86rem; }
+  .anec-grid{ grid-template-columns:1fr; }
+}
+
+/* ============== Short-landscape (iPhone landscape) ============== */
+@media (max-height:540px) and (orientation:landscape){
+  .sidebar{ padding-top:.7rem; padding-bottom:1rem; font-size:.92rem; }
+  .sidebar-header{ padding-bottom:.6rem; margin-bottom:.5rem; }
+  .sidebar nav a{ padding:.32rem .55rem; font-size:.86rem; }
+  .sidebar nav .nav-section{ padding:.5rem .55rem .15rem; }
+}
+
+/* ============== Cover ============== */
+.cover{
+  margin-bottom:2.5rem;
+  padding:2.5rem 2rem 2.25rem;
+  background:linear-gradient(160deg, var(--card-elev), var(--card) 60%);
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+.cover::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(800px 280px at 80% 0%, var(--accent-glow), transparent 70%);
+  pointer-events:none;
+}
+.cover-eyebrow{
+  font-family:var(--display);
+  font-size:.78rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.85rem;
+  position:relative;
+}
+.cover h1{ position:relative; margin-bottom:.5rem; }
+.cover .subtitle{
+  position:relative;
+  font-family:var(--display);
+  font-size:1.1rem;
+  font-style:italic;
+  color:var(--text-muted);
+  font-variation-settings:"opsz" 30, "SOFT" 50;
+  margin-bottom:1.3rem;
+}
+.cover .byline{
+  position:relative;
+  font-family:var(--display);
+  font-size:1.05rem;
+  color:var(--text);
+  margin-bottom:1.5rem;
+  font-variation-settings:"opsz" 30,"SOFT" 30;
+}
+.chip-row{
+  display:flex; flex-wrap:wrap; gap:.4rem;
+  position:relative;
+  margin-top:.5rem;
+}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  padding:.32rem .65rem;
+  background:var(--pill-bg);
+  border:1px solid var(--pill-line);
+  border-radius:999px;
+  font-family:var(--display);
+  font-size:.74rem;
+  color:var(--text-muted);
+  letter-spacing:.04em;
+  font-variation-settings:"opsz" 14,"SOFT" 0;
+  font-variant-numeric:lining-nums;
+}
+.chip .dot{ width:5px; height:5px; border-radius:50%; background:var(--accent); }
+
+/* ============== Card sections ============== */
+section.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:2rem 2rem 1.6rem;
+  margin:1.6rem 0;
+  box-shadow:var(--shadow);
+  scroll-margin-top:1.5rem;
+}
+.section-eyebrow{
+  font-family:var(--display);
+  font-size:.72rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.6rem;
+  font-variant-numeric:lining-nums;
+}
+.section-deck{
+  font-family:var(--display);
+  font-size:1.08rem;
+  font-style:italic;
+  color:var(--text-muted);
+  margin:.5rem 0 1.2rem;
+  font-variation-settings:"opsz" 30,"SOFT" 50;
+  border-left:2px solid var(--accent-soft);
+  padding-left:.85rem;
+}
+
+/* ============== Reader's-rule box ============== */
+.rule{
+  margin-top:1.6rem;
+  padding:1.1rem 1.2rem 1.05rem;
+  background:var(--rule-bg);
+  border:1px solid var(--rule-line);
+  border-left:3px solid var(--accent);
+  border-radius:14px;
+}
+.rule-label{
+  font-family:var(--display);
+  font-size:.7rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.3rem;
+}
+.rule p{ margin:0; font-style:italic; color:var(--text); font-size:1.02rem; line-height:1.5; }
+
+/* ============== Anecdote callouts inside chapter cards ============== */
+.aside{
+  margin:1.4rem 0;
+  padding:.95rem 1.1rem;
+  background:var(--card-elev);
+  border:1px solid var(--line-soft);
+  border-radius:12px;
+  font-size:.96em;
+}
+.aside h4{
+  font-family:var(--display);
+  margin:0 0 .25em;
+  font-size:.95rem;
+  letter-spacing:.04em;
+  color:var(--accent);
+  font-variation-settings:"opsz" 30,"SOFT" 0;
+  text-transform:uppercase;
+  font-weight:600;
+}
+.aside p{ margin:.3em 0; }
+
+/* ============== Numbered exhibits (tables) ============== */
+.exhibit{
+  margin:1.5rem 0 .6rem;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  background:var(--card-elev);
+}
+.exhibit table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.95rem;
+}
+.exhibit th, .exhibit td{
+  padding:.7rem .9rem;
+  text-align:left;
+  vertical-align:top;
+  border-bottom:1px solid var(--line-soft);
+}
+.exhibit th{
+  font-family:var(--display);
+  font-weight:600;
+  color:var(--accent);
+  font-size:.78rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  background:var(--card);
+  border-bottom:1px solid var(--line);
+  font-variation-settings:"opsz" 30,"SOFT" 0;
+}
+.exhibit tr:last-child td{ border-bottom:none; }
+.corpus-map td.col-q{ font-style:italic; color:var(--text); width:55%; }
+.corpus-map td.col-c{ font-family:var(--display); color:var(--accent-soft); white-space:nowrap; font-variant-numeric:lining-nums; font-variation-settings:"opsz" 30,"SOFT" 30; }
+.source-log td.role{ color:var(--text-muted); }
+/* Base tag — sized and decorated; color comes from .green/.yellow/.red variants */
+.tag{
+  font-family:var(--display);
+  font-size:.72rem;
+  letter-spacing:.08em;
+  padding:.15rem .55rem;
+  border-radius:999px;
+  border:1px solid;
+  font-weight:600;
+  font-variation-settings:"opsz" 14,"SOFT" 0;
+  display:inline-flex;
+  align-items:center;
+  gap:.4em;
+  white-space:nowrap;
+}
+.tag::before{
+  content:"";
+  display:inline-block;
+  width:.55em;
+  height:.55em;
+  border-radius:50%;
+  background:currentColor;
+  flex:none;
+}
+
+/* Traffic-light access colors — semantically correct GREEN/YELLOW/RED.
+   Classes are reusable across access tags and triage tags. */
+.tag.green,
+.source-log td.access .tag.green{
+  color:var(--color-green);
+  border-color:var(--color-green-line);
+  background:color-mix(in srgb, var(--color-green) 10%, transparent);
+}
+.tag.yellow,
+.source-log td.access .tag.yellow{
+  color:var(--color-yellow);
+  border-color:var(--color-yellow-line);
+  background:color-mix(in srgb, var(--color-yellow) 10%, transparent);
+}
+.tag.red,
+.source-log td.access .tag.red{
+  color:var(--color-red);
+  border-color:var(--color-red-line);
+  background:color-mix(in srgb, var(--color-red) 10%, transparent);
+}
+
+/* Triage-matrix layout */
+.triage td.signal{ font-weight:600; color:var(--text); width:34%; }
+.triage td.why{ color:var(--text-muted); font-size:.94rem; }
+.triage td.action{ white-space:normal; width:18%; }
+
+/* SVG mechanism exhibits */
+.svg-exhibit{
+  margin:1.4rem 0 .55rem;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--card-elev);
+  padding:1rem 1.05rem;
+  overflow:hidden;
+}
+.svg-exhibit svg{
+  width:100%;
+  height:auto;
+  max-width:100%;
+  display:block;
+}
+.svg-exhibit .svg-title{
+  font-family:var(--display);
+  font-size:.92rem;
+  color:var(--text);
+  margin:0 0 .55rem;
+  font-variation-settings:"opsz" 30,"SOFT" 30;
+  font-weight:600;
+}
+@media (max-width:520px){
+  .svg-exhibit{ padding:.6rem; }
+}
+
+/* SVG primitives — themable through CSS variables */
+.diag-box-fill{ fill:color-mix(in srgb, var(--text) 4%, transparent); }
+.diag-box-stroke{ stroke:var(--line); }
+.diag-outcome-fill{ fill:var(--accent-glow); }
+.diag-outcome-stroke{ stroke:var(--accent-soft); }
+.diag-water{ stroke:var(--color-blue); stroke-dasharray:8 7; stroke-width:2.5; }
+.diag-above{ fill:color-mix(in srgb, var(--accent) 30%, transparent); stroke:var(--accent-soft); stroke-width:1.5; }
+.diag-below{ fill:color-mix(in srgb, var(--color-blue) 22%, transparent); stroke:var(--color-blue-line); stroke-width:1.5; }
+.diag-arrow{ stroke:var(--accent); stroke-width:2.4; fill:none; }
+.diag-arrow-head{ fill:var(--accent); stroke:none; }
+.diag-text-primary{ fill:var(--text); font-family:Fraunces, ui-serif, Georgia, serif; font-size:15px; font-weight:600; }
+.diag-text-muted{ fill:var(--text-muted); font-family:Fraunces, ui-serif, Georgia, serif; font-size:13px; font-style:italic; }
+.diag-text-zone{ fill:var(--accent); font-family:Fraunces, ui-serif, Georgia, serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; font-weight:700; }
+.diag-band{ fill:color-mix(in srgb, var(--accent) 18%, transparent); stroke:var(--accent-soft); stroke-width:1.5; }
+.diag-band-mid{ fill:color-mix(in srgb, var(--accent) 11%, transparent); stroke:var(--accent-soft); stroke-width:1.2; }
+.diag-band-low{ fill:color-mix(in srgb, var(--text) 5%, transparent); stroke:var(--line); stroke-width:1; }
+.diag-tier-strong{ fill:color-mix(in srgb, var(--color-green) 18%, transparent); stroke:var(--color-green-line); }
+.diag-tier-mid{ fill:color-mix(in srgb, var(--color-yellow) 16%, transparent); stroke:var(--color-yellow-line); }
+.diag-tier-weak{ fill:color-mix(in srgb, var(--color-red) 14%, transparent); stroke:var(--color-red-line); }
+.diag-tier-label{ fill:var(--text); font-family:Fraunces, ui-serif, Georgia, serif; font-size:14px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
+.diag-tier-rank-strong{ fill:var(--color-green); }
+.diag-tier-rank-mid{ fill:var(--color-yellow); }
+.diag-tier-rank-weak{ fill:var(--color-red); }
+.exhibit-caption{
+  font-family:var(--display);
+  font-size:.78rem;
+  letter-spacing:.04em;
+  color:var(--text-faint);
+  font-style:italic;
+  margin:.55rem 0 0;
+  padding-left:.2rem;
+  font-variation-settings:"opsz" 30,"SOFT" 30;
+}
+.exhibit-caption strong{ color:var(--text-muted); font-style:normal; font-weight:600; }
+@media (max-width:640px){
+  .corpus-map td.col-q{ width:auto; }
+}
+
+/* ============== Anecdote highlights grid (Exhibit 2) ============== */
+.anec-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:.9rem;
+  margin-top:.5rem;
+}
+.anec-card{
+  background:var(--card-elev);
+  border:1px solid var(--line-soft);
+  border-radius:14px;
+  padding:1rem 1.05rem;
+  display:flex;
+  flex-direction:column;
+}
+.anec-card h4{
+  font-family:var(--display);
+  font-size:.95rem;
+  letter-spacing:.02em;
+  margin:0 0 .25em;
+  color:var(--accent);
+  font-variation-settings:"opsz" 30,"SOFT" 30;
+}
+.anec-card p{ margin:.2em 0; font-size:.95rem; flex:1; }
+.anec-card .pg-foot{
+  font-family:var(--display);
+  font-size:.74rem;
+  color:var(--text-faint);
+  letter-spacing:.04em;
+  font-variant-numeric:lining-nums;
+  margin-top:.6em;
+  display:block;
+  border-top:1px dashed var(--line-soft);
+  padding-top:.4em;
+}
+
+/* tiny utilities */
+.lead{ font-size:1.07em; line-height:1.6; color:var(--text); margin:.5em 0 1em; }
+.small{ font-size:.92em; color:var(--text-muted); }
+.muted{ color:var(--text-muted); }
+
+::selection{ background:var(--accent-glow); color:var(--text); }
+
+footer.colophon{
+  font-family:var(--display);
+  font-size:.78rem;
+  letter-spacing:.05em;
+  color:var(--text-faint);
+  text-align:center;
+  margin-top:3.5rem;
+  padding-top:1.4rem;
+  border-top:1px solid var(--line-soft);
+  font-style:italic;
+  font-variation-settings:"opsz" 14,"SOFT" 30;
+}
+</style>
+</head>
+<body>
+
+<!-- TWO SEPARATE FIXED CONTROL GROUPS — visible at all viewport sizes -->
+<div class="controls left">
+  <button class="ctrl-button" id="menu-btn" aria-label="Toggle navigation"><span class="bars"><span></span></span></button>
+</div>
+<div class="controls right">
+  <button class="ctrl-button" id="theme-toggle" aria-label="Toggle light/dark theme">
+    <svg class="ico" id="theme-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-stamp">April 29 2026, 1:28pm GMT</div>
+  </div>
+  <nav>
+    <ol>
+      <li><a data-target="cover"><span class="nav-num">i</span>Cover</a></li>
+      <li><a data-target="howto"><span class="nav-num">ii</span>How to read this</a></li>
+      <li><a data-target="mechanism"><span class="nav-num">iii</span>Mechanism at a glance</a></li>
+      <li><a data-target="foreword"><span class="nav-num">iv</span>Foreword</a></li>
+      <li><a data-target="introduction"><span class="nav-num">v</span>Introduction</a></li>
+      <li class="nav-section">Chapters</li>
+      <li><a data-target="ch1"><span class="nav-num">1</span>Primitive big mouths</a></li>
+      <li><a data-target="ch2"><span class="nav-num">2</span>Mostly chewing</a></li>
+      <li><a data-target="ch3"><span class="nav-num">3</span>Diet, posture, housing</a></li>
+      <li><a data-target="ch4"><span class="nav-num">4</span>Appearance</a></li>
+      <li><a data-target="ch5"><span class="nav-num">5</span>Development &amp; oral posture</a></li>
+      <li><a data-target="ch6"><span class="nav-num">6</span>Breathing &amp; sleep</a></li>
+      <li><a data-target="ch7"><span class="nav-num">7</span>What can you do?</a></li>
+      <li><a data-target="ch8"><span class="nav-num">8</span>The professions</a></li>
+      <li><a data-target="ch9"><span class="nav-num">9</span>Changing culture</a></li>
+      <li class="nav-section">Apparatus</li>
+      <li><a data-target="triage"><span class="nav-num">▣</span>Practical triage</a></li>
+      <li><a data-target="evidence"><span class="nav-num">▤</span>Evidence ladder</a></li>
+      <li><a data-target="anecdotes"><span class="nav-num">★</span>Anecdote highlights</a></li>
+      <li><a data-target="sourcelog"><span class="nav-num">§</span>Source log</a></li>
+    </ol>
+  </nav>
+</aside>
+
+<main class="content">
+<div class="content-inner">
+
+<!-- ============================ COVER ============================ -->
+<header id="cover" class="cover">
+  <div class="cover-eyebrow">A Chapter-by-Chapter Reader's Guide</div>
+  <h1>Jaws</h1>
+  <div class="subtitle">The Story of a Hidden Epidemic</div>
+  <div class="byline">Sandra Kahn &amp; Paul R. Ehrlich · Foreword by Robert Sapolsky</div>
+  <div class="chip-row">
+    <span class="chip"><span class="dot"></span>Stanford University Press · 2018</span>
+    <span class="chip"><span class="dot"></span>197 pp. · 9 chapters</span>
+    <span class="chip"><span class="dot"></span>Public health · Orthodontics</span>
+    <span class="chip"><span class="dot"></span>Evolutionary medicine</span>
+    <span class="chip"><span class="dot"></span>Source access: full text (GREEN)</span>
+  </div>
+</header>
+
+<!-- ============================ HOW TO READ ============================ -->
+<section id="howto" class="card">
+  <div class="section-eyebrow">How to read this</div>
+  <h2>The book's argument, in one screen</h2>
+  <p class="section-deck">Modern jaws are too small for modern teeth — not because of bad genes, but because industrial life changed how children chew, breathe, sleep and rest their mouths. Crooked teeth are the cosmetic tip of an iceberg whose deeper bulk is sleep apnea, restricted airways, and downstream cardiovascular and cognitive disease.</p>
+
+  <p>Kahn (an orthodontist of more than two decades) and Ehrlich (the Stanford ecologist of <em>The Population Bomb</em> fame) argue that <strong>malocclusion is largely an environmental disease</strong>, on the same conceptual footing as obesity or type II diabetes. The cure, they argue, is not better braces but earlier <strong>prevention</strong>: long breastfeeding, hard chewing, sealed lips at rest with the tongue on the palate, and indoor environments that don't drive children into chronic mouth breathing. Where prevention has failed, they argue for a small breakaway clinical school called <strong>orthotropics</strong> — which they rebrand as <strong>forwardontics</strong> — pioneered in the UK by John Mew.</p>
+
+  <p>The chapters are arranged so that earlier ones build the diagnosis and later ones build the response. Use the map below to jump to the chapter that answers your specific question.</p>
+
+  <figure class="exhibit corpus-map">
+    <table>
+      <thead>
+        <tr><th>If you're trying to figure out…</th><th>Read</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="col-q">Why are crowded teeth and impacted wisdom teeth so common now when ancient skulls didn't have them?</td><td class="col-c">Ch 1</td></tr>
+        <tr><td class="col-q">What specific change in modern eating caused jaws to shrink — calories, nutrients, or chewing itself?</td><td class="col-c">Ch 2</td></tr>
+        <tr><td class="col-q">If diet is only part of it, what are the other cultural shifts I should worry about?</td><td class="col-c">Ch 3</td></tr>
+        <tr><td class="col-q">Will any of this affect how my child looks as an adult?</td><td class="col-c">Ch 4</td></tr>
+        <tr><td class="col-q">When does the developmental window close, and how does oral posture actually shape bone?</td><td class="col-c">Ch 5</td></tr>
+        <tr><td class="col-q">Is this just cosmetic, or are there real medical risks like sleep apnea, ADHD or heart disease?</td><td class="col-c">Ch 6</td></tr>
+        <tr><td class="col-q">What can I personally do at home, this week, for my child or myself?</td><td class="col-c">Ch 7</td></tr>
+        <tr><td class="col-q">Which dental professional should I trust, and what should I refuse?</td><td class="col-c">Ch 8</td></tr>
+        <tr><td class="col-q">How would we fix this at the level of schools, training and policy?</td><td class="col-c">Ch 9</td></tr>
+      </tbody>
+    </table>
+  </figure>
+  <p class="exhibit-caption"><strong>Exhibit 1.</strong> Reader's decision-map. Each row points to the chapter where the corresponding question is most directly addressed. Mapping is editorial, derived from the book's own table of contents <cite class="pg">p. vii</cite> and chapter framing.</p>
+</section>
+
+<!-- ============================ MECHANISM AT A GLANCE ============================ -->
+<section id="mechanism" class="card">
+  <div class="section-eyebrow">Mechanism at a glance</div>
+  <h2>The book's argument in three pictures</h2>
+  <p class="section-deck">Before the chapters: three diagrams that compress what <em>Jaws</em> spends 155 pages building. The iceberg, the causal chain, and the developmental window are the book's three implicit visualizations; this section makes them explicit.</p>
+
+  <p>None of these are reproductions of figures from the book — Kahn and Ehrlich rely almost entirely on photographs and skull drawings, not abstract diagrams. The schematics below are editorial syntheses of the prose, with each element traceable to the cited pages.</p>
+
+  <figure class="svg-exhibit">
+    <p class="svg-title">Exhibit 2 · The iceberg</p>
+    <svg viewBox="0 0 760 360" role="img" aria-label="Iceberg diagram: visible orthodontic problems above the waterline; hidden airway and sleep burden below" xmlns="http://www.w3.org/2000/svg">
+      <line class="diag-water" x1="20" y1="142" x2="740" y2="142"/>
+      <text class="diag-text-zone" x="34" y="132">Visible to dentistry</text>
+      <text class="diag-text-zone" x="34" y="160">Hidden burden</text>
+
+      <polygon class="diag-above" points="380,32 480,142 280,142"/>
+      <text class="diag-text-primary" x="380" y="80" text-anchor="middle">Visible problem</text>
+      <text class="diag-text-muted" x="380" y="105" text-anchor="middle">crooked teeth · gummy smile</text>
+      <text class="diag-text-muted" x="380" y="124" text-anchor="middle">malocclusion · wisdom-tooth extraction</text>
+
+      <polygon class="diag-below" points="280,142 480,142 600,330 380,346 160,308"/>
+      <text class="diag-text-primary" x="380" y="190" text-anchor="middle">Hidden load</text>
+      <text class="diag-text-muted" x="380" y="218" text-anchor="middle">mouth breathing · narrowed airway</text>
+      <text class="diag-text-muted" x="380" y="240" text-anchor="middle">snoring · fragmented sleep · OSA</text>
+      <text class="diag-text-muted" x="380" y="262" text-anchor="middle">daytime fatigue · attention difficulty</text>
+      <text class="diag-text-muted" x="380" y="284" text-anchor="middle">cardiovascular &amp; metabolic stress</text>
+      <text class="diag-text-muted" x="380" y="306" text-anchor="middle">cognitive and mood costs</text>
+    </svg>
+  </figure>
+  <p class="exhibit-caption"><strong>Exhibit 2.</strong> The iceberg metaphor. The book's central reframing: malocclusion is the visible tip of a much larger problem whose underwater bulk is airway restriction and sleep-disordered breathing. Above-the-water elements are drawn from Chapters 1 and 8 <cite class="pg">pp. 17–28, 121–144</cite>; below-the-water elements from Chapter 6 <cite class="pg">pp. 73–88</cite>. The waterline is editorial; the book uses similar language without drawing the picture.</p>
+
+  <figure class="svg-exhibit">
+    <p class="svg-title">Exhibit 3 · The causal chain</p>
+    <svg viewBox="0 0 880 400" role="img" aria-label="Causal model: cultural inputs converge through oral posture and growth signals into observable outcomes" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowhead-mech" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L9,4.5 L0,9 z" class="diag-arrow-head"/>
+        </marker>
+      </defs>
+
+      <text class="diag-text-zone" x="105" y="22" text-anchor="middle">Cultural inputs</text>
+      <text class="diag-text-zone" x="385" y="22" text-anchor="middle">Posture &amp; growth</text>
+      <text class="diag-text-zone" x="745" y="22" text-anchor="middle">Outcomes</text>
+
+      <rect x="20" y="50" width="170" height="62" rx="10" class="diag-box-fill diag-box-stroke" stroke-width="1.5"/>
+      <text class="diag-text-primary" x="105" y="78" text-anchor="middle">Soft modern diet</text>
+      <text class="diag-text-muted" x="105" y="98" text-anchor="middle">less chewing force</text>
+
+      <rect x="20" y="158" width="170" height="62" rx="10" class="diag-box-fill diag-box-stroke" stroke-width="1.5"/>
+      <text class="diag-text-primary" x="105" y="186" text-anchor="middle">Indoor allergens</text>
+      <text class="diag-text-muted" x="105" y="206" text-anchor="middle">chronic nasal congestion</text>
+
+      <rect x="20" y="266" width="170" height="62" rx="10" class="diag-box-fill diag-box-stroke" stroke-width="1.5"/>
+      <text class="diag-text-primary" x="105" y="294" text-anchor="middle">Bottles &amp; pacifiers</text>
+      <text class="diag-text-muted" x="105" y="314" text-anchor="middle">altered oral muscle work</text>
+
+      <rect x="280" y="100" width="220" height="78" rx="12" class="diag-box-fill diag-box-stroke" stroke-width="1.8"/>
+      <text class="diag-text-primary" x="390" y="128" text-anchor="middle">Slack oral posture</text>
+      <text class="diag-text-muted" x="390" y="148" text-anchor="middle">mouth open · tongue dropped</text>
+      <text class="diag-text-muted" x="390" y="166" text-anchor="middle">teeth not in light contact</text>
+
+      <rect x="280" y="218" width="220" height="78" rx="12" class="diag-box-fill diag-box-stroke" stroke-width="1.8"/>
+      <text class="diag-text-primary" x="390" y="246" text-anchor="middle">Weakened growth signal</text>
+      <text class="diag-text-muted" x="390" y="266" text-anchor="middle">narrow palate · down/back face</text>
+      <text class="diag-text-muted" x="390" y="284" text-anchor="middle">smaller airway volume</text>
+
+      <rect x="600" y="60" width="240" height="60" rx="10" class="diag-outcome-fill diag-outcome-stroke" stroke-width="1.5"/>
+      <text class="diag-text-primary" x="720" y="86" text-anchor="middle">Malocclusion</text>
+      <text class="diag-text-muted" x="720" y="105" text-anchor="middle">crowded teeth · impacted molars</text>
+
+      <rect x="600" y="138" width="240" height="60" rx="10" class="diag-outcome-fill diag-outcome-stroke" stroke-width="1.5"/>
+      <text class="diag-text-primary" x="720" y="164" text-anchor="middle">Long-face appearance</text>
+      <text class="diag-text-muted" x="720" y="183" text-anchor="middle">weak chin · gummy smile</text>
+
+      <rect x="600" y="216" width="240" height="60" rx="10" class="diag-outcome-fill diag-outcome-stroke" stroke-width="1.5"/>
+      <text class="diag-text-primary" x="720" y="242" text-anchor="middle">Sleep-disordered breathing</text>
+      <text class="diag-text-muted" x="720" y="261" text-anchor="middle">snoring · OSA · fragmented sleep</text>
+
+      <rect x="600" y="294" width="240" height="60" rx="10" class="diag-outcome-fill diag-outcome-stroke" stroke-width="1.5"/>
+      <text class="diag-text-primary" x="720" y="320" text-anchor="middle">Downstream disease</text>
+      <text class="diag-text-muted" x="720" y="339" text-anchor="middle">cardiovascular · cognitive · metabolic</text>
+
+      <path class="diag-arrow" d="M 192 80 C 235 90 250 115 278 130" marker-end="url(#arrowhead-mech)"/>
+      <path class="diag-arrow" d="M 192 188 C 235 188 250 165 278 158" marker-end="url(#arrowhead-mech)"/>
+      <path class="diag-arrow" d="M 192 188 C 235 200 250 235 278 248" marker-end="url(#arrowhead-mech)"/>
+      <path class="diag-arrow" d="M 192 296 C 235 290 250 270 278 258" marker-end="url(#arrowhead-mech)"/>
+      <path class="diag-arrow" d="M 390 178 L 390 218" marker-end="url(#arrowhead-mech)"/>
+      <path class="diag-arrow" d="M 502 130 C 545 115 568 100 598 90" marker-end="url(#arrowhead-mech)"/>
+      <path class="diag-arrow" d="M 502 248 C 545 230 568 195 598 168" marker-end="url(#arrowhead-mech)"/>
+      <path class="diag-arrow" d="M 502 257 C 545 250 568 245 598 245" marker-end="url(#arrowhead-mech)"/>
+      <path class="diag-arrow" d="M 502 270 C 545 290 568 310 598 322" marker-end="url(#arrowhead-mech)"/>
+    </svg>
+  </figure>
+  <p class="exhibit-caption"><strong>Exhibit 3.</strong> Causal chain. Three classes of cultural input — softer diet, indoor allergen load, and altered nursing patterns — converge on slack oral posture. Posture in turn weakens the growth signal that builds wide arches and a forward face. Underdevelopment is what produces the four observable outcomes on the right. Drawn from Chapters 2 through 6 <cite class="pg">pp. 29–88</cite>; the convergence framing is editorial, but each arrow is supported by passages in those chapters.</p>
+
+  <figure class="svg-exhibit">
+    <p class="svg-title">Exhibit 4 · The developmental window</p>
+    <svg viewBox="0 0 880 240" role="img" aria-label="Developmental timing band: leverage of intervention by life stage" xmlns="http://www.w3.org/2000/svg">
+      <line x1="60" y1="155" x2="820" y2="155" class="diag-box-stroke" stroke-width="2"/>
+
+      <rect x="60" y="60" width="320" height="135" rx="14" class="diag-band"/>
+      <text class="diag-text-primary" x="220" y="100" text-anchor="middle">Highest leverage</text>
+      <text class="diag-text-muted" x="220" y="125" text-anchor="middle">long breastfeeding · nasal breathing</text>
+      <text class="diag-text-muted" x="220" y="143" text-anchor="middle">hard chewing · closed-lip rest</text>
+
+      <rect x="380" y="80" width="240" height="105" rx="14" class="diag-band-mid"/>
+      <text class="diag-text-primary" x="500" y="118" text-anchor="middle">Still modifiable</text>
+      <text class="diag-text-muted" x="500" y="143" text-anchor="middle">forwardontic appliances · GOPex</text>
+      <text class="diag-text-muted" x="500" y="161" text-anchor="middle">myofunctional therapy</text>
+
+      <rect x="620" y="100" width="200" height="75" rx="14" class="diag-band-low"/>
+      <text class="diag-text-primary" x="720" y="130" text-anchor="middle">Compensation only</text>
+      <text class="diag-text-muted" x="720" y="153" text-anchor="middle">CPAP · MMA surgery · oral appliance</text>
+
+      <circle cx="60" cy="155" r="6" fill="var(--accent)"/><text class="diag-text-muted" x="60" y="218" text-anchor="middle">infancy</text>
+      <circle cx="220" cy="155" r="6" fill="var(--accent)"/><text class="diag-text-muted" x="220" y="218" text-anchor="middle">preschool</text>
+      <circle cx="380" cy="155" r="6" fill="var(--accent)"/><text class="diag-text-muted" x="380" y="218" text-anchor="middle">mixed dentition</text>
+      <circle cx="620" cy="155" r="6" fill="var(--accent)"/><text class="diag-text-muted" x="620" y="218" text-anchor="middle">adolescence</text>
+      <circle cx="820" cy="155" r="6" fill="var(--accent)"/><text class="diag-text-muted" x="820" y="218" text-anchor="middle">adult</text>
+    </svg>
+  </figure>
+  <p class="exhibit-caption"><strong>Exhibit 4.</strong> Developmental window. The book's prevention logic depends on intervening before facial growth is largely complete. Infancy and the preschool years carry the most leverage; the mixed-dentition phase is still meaningfully modifiable through forwardontic appliances and myofunctional/posture training; adolescence and adulthood permit symptom compensation but rarely structural reversal. Drawn from Chapter 5 <cite class="pg">pp. 67–68</cite> on the critical-period analogy and Chapter 7 <cite class="pg">pp. 89–120</cite> on age-graded interventions.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>Read these three pictures before the chapters and you will know what the book is trying to convince you of. Read the chapters before these pictures and you will know whether you believe it.</p>
+  </div>
+</section>
+
+<!-- ============================ FOREWORD ============================ -->
+<section id="foreword" class="card">
+  <div class="section-eyebrow">Foreword</div>
+  <h2>Sapolsky on the unlikeliness of the book</h2>
+  <p class="section-deck">A Stanford neuroscientist explains why an orthodontist and an ecologist writing a book together is exactly the right way to spot a disease that nobody else has named.</p>
+
+  <p>Robert Sapolsky — Stanford neuroscientist, primatologist, and author of <em>Why Zebras Don't Get Ulcers</em> and <em>A Primate's Memoir</em> <cite class="pg">p. x</cite> — opens the book with a Surrealist epigram about beauty being the chance meeting of a sewing machine and an umbrella on a dissecting table, and offers a counter-epigram for what readers are about to experience: the chance meeting, over a dinner table, of an orthodontic scholar and an evolutionist <cite class="pg">p. ix</cite>.</p>
+
+  <p>His point is that human cultural evolution is one long string of examples of the law of unexpected consequences. We invent agriculture and end up with socioeconomic status; we invent permanent housing and end up living closer to our own waste than any self-respecting primate would tolerate; we domesticate wolves and end up dressing dogs in Halloween costumes. Kahn and Ehrlich, he argues, have noticed another such unexpected consequence — that the agricultural revolution, the industrial revolution, and the Westernization of nursing patterns together produced a recognisable orthodontic profile, and that this profile turns out to be relevant to a startling range of childhood and adult disease <cite class="pg">pp. ix–x</cite>.</p>
+
+  <p>His closing line — that the book is worth reading if you have kids, like kids, were ever a kid, or have a jaw <cite class="pg">p. x</cite> — is the friendliest possible framing of what is, underneath, an angry book.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>Trust the strangeness of the pairing. The biology of jaws sits in a blind spot precisely because it falls between specialties; the people who can see it are the ones who don't fit cleanly into either.</p>
+  </div>
+</section>
+
+<!-- ============================ INTRODUCTION ============================ -->
+<section id="introduction" class="card">
+  <div class="section-eyebrow">Introduction</div>
+  <h2>An epidemic hiding behind the commonplace</h2>
+  <p class="section-deck">The book's diagnosis arrives in the introduction. Modern industrial societies have a public-health problem that nobody calls a public-health problem because its symptoms — crooked teeth, mouth breathing, snoring, gummy smiles — have become normal.</p>
+
+  <h3>The thesis</h3>
+  <p>Kahn and Ehrlich argue that the developed world has been undergoing a slow, unrecognised epidemic for several centuries <cite class="pg">p. 1</cite>. Its proximate cause is not pathogenic but cultural: the way modern children chew, breathe, sleep, and hold their mouths at rest deforms the developing jaw, face, and airway, with consequences that range from cosmetic crookedness to <strong>obstructive sleep apnea (OSA)</strong> and the cardiovascular, metabolic, and cognitive disease that ride alongside chronic poor sleep <cite class="pg">pp. 1–2</cite>.</p>
+
+  <p>The dental profession has a name for the most visible symptom — <strong>malocclusion</strong>, literally "bad bite" <cite class="pg">p. 2</cite>. Kahn cites William Proffit's standard orthodontics textbook reporting that about a fifth of the U.S. population has significant malocclusion and that more than half have at least some need for orthodontic treatment <cite class="pg">p. 2</cite>; a 2007 Swedish study put about a third of the population in "real need" of orthodontic care <cite class="pg">p. 2</cite>. Michael Mew goes further, asserting that 95% of modern humans have some dental misalignment, more than 30% are recommended for treatment, and 50% have wisdom teeth removed <cite class="pg">p. 2</cite>.</p>
+
+  <p>The medical stakes are framed early. Some 20% of American adults are afflicted with OSA <cite class="pg">p. 8</cite>, and a Brazilian urban study of 23,596 children aged 3 to 9 found that 55% were mouth breathers <cite class="pg">p. 3</cite>. Today an estimated 50 to 70% of U.S. children wear braces sometime between ages 6 and 18 <cite class="pg">p. 8</cite>.</p>
+
+  <h3>How two scientists ended up writing it together</h3>
+  <p>The origin story occupies the early introduction and matters because the book is partly an argument from clinical experience. Kahn (an orthodontist with two decades of practice) and Ehrlich (the Stanford evolutionary ecologist whose previous fifty-plus books include <em>The Population Bomb</em>) became friends in Palo Alto through their conservation work <cite class="pg">p. 4</cite>. The two couples — Sandra and her husband David Leventhal, Paul and his wife Anne — kept a long-running dinner club where Kahn began telling Ehrlich about her growing professional discomfort. She had treated thousands of patients "by the book": extract permanent teeth, wire the rest, produce a movie-star smile. The smiles were beautiful but, as the book puts it, beautiful without context — at the cost of jawline, airway, and facial structure <cite class="pg">pp. 4–5</cite>.</p>
+
+  <p>Her tipping point was personal. When her son Ilan started showing signs of airway problems — snoring, mouth-open posture — she found that she could not, in good conscience, treat him the way she had been treating other people's children. After exploring myofunctional therapy (which targets <em>movement</em>) she travelled to Oakland in 2012 to hear a lecture by an obscure British orthodontist named John Mew, who had spent decades arguing that <em>posture</em>, not movement, was the lever <cite class="pg">p. 5</cite>. She describes the impact in cosmological language: the kind of clarity that must have hit early astronomers when they realised Earth was not the centre of the universe <cite class="pg">p. 5</cite>.</p>
+
+  <h3>What's at stake</h3>
+  <p>The introduction takes pains to head off the obvious objection — that this is yet another faddish diet book. Kahn and Ehrlich concede they are not selling a product, that the literature is fragmentary, and that ethical limits on human experimentation make some claims necessarily speculative <cite class="pg">pp. 14–16</cite>. They are explicit about which claims they're confident in (that chewing patterns shape jaw growth, that mouth breathing is associated with malocclusion and sleep apnea, that hunter-gatherer skulls almost never show malocclusion) and which they're speculating on — for example, that hunter-gatherer children probably did not snore, where they admit they have no direct evidence and no field reports of leopards drawn to the snoring of !Kung children <cite class="pg">p. 16</cite>.</p>
+
+  <p>That epistemic humility is unusual in a popular book, and it sets the tone: the rest of <em>Jaws</em> reads as a serious attempt to take a body of fragmentary evidence and decide, in plain language, what a parent should do this week with that evidence.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>If 10% of Americans were in bed with the flu, the media would call it an epidemic <cite class="pg">p. 3</cite>. Use the same threshold here: malocclusion, mouth breathing, and disordered sleep cross that threshold; refuse to call them normal just because they are common.</p>
+  </div>
+</section>
+
+<!-- ============================ CHAPTER 1 ============================ -->
+<section id="ch1" class="card">
+  <div class="section-eyebrow">Chapter 1</div>
+  <h2>Primitive big mouths to modern malocclusion</h2>
+  <p class="section-deck">The opening chapter is a historical and evolutionary set-up. It argues that human jaws evolved for a chewing environment that no longer exists, and that the modern jaw is the product of a few thousand years of cultural change layered on top of millions of years of largely unchanged genetics.</p>
+
+  <h3>The genetic objection, dispatched early</h3>
+  <p>Kahn and Ehrlich know that the first reflex of any reader will be: "Crooked teeth run in my family — surely this is genetic." They quote dentist Hal A. Huggins's analogy from <em>Why Raise Ugly Kids?</em>: cross a horse and a donkey and you get a mule, but you never see a mule with horse-sized teeth set into a donkey-sized jaw <cite class="pg">p. 17</cite>. Genetic recombination doesn't work like that. Inherited DNA contains plans for a coherent assembly; the coherent assembly is what gets selected for over millions of generations.</p>
+
+  <p>What has changed, the authors argue, is not the DNA but the <em>environment in which the DNA expresses itself</em>. They use a useful rectangle metaphor: the area is determined jointly by length and width, and you cannot meaningfully ask whether the length or the width is "more important" — only which one changed <cite class="pg">p. 19</cite>. In the case of jaws, the genes have stayed approximately the same since the Stone Age while the developmental environment has shifted dramatically. The result is a disease of mismatch.</p>
+
+  <h3>The 19th-century witness</h3>
+  <p>The chapter's most memorable figure is <strong>George Catlin (1796–1872)</strong>, a Philadelphia attorney who became a self-taught painter and ethnographer of Native American tribes in the decades before the American Civil War. Catlin claimed to have visited 150 tribes with more than two million members <cite class="pg">p. 20</cite>, and his portraits — now housed in the Smithsonian American Art Museum <cite class="pg">p. 20</cite> — were made before most of those communities had been transformed by contact with Europeans.</p>
+
+  <div class="aside">
+    <h4>Anecdote · the Mandan skulls</h4>
+    <p>Among the Mandan, a tribe of roughly 9,000 people, Catlin examined "several hundreds" of bleached skulls in their cemetery <cite class="pg">p. 20</cite>. Two things struck him. First, the near-absence of children's skulls: when he interviewed elders, they reported that death of a child under ten was unusual; he could find only eleven children's skulls among about 150 burials <cite class="pg">pp. 21–22</cite>. Second, the unbroken, beautifully aligned teeth in the adult skulls. He was looking, in other words, at a population that did not lose children at the European rate (where roughly a quarter of European children died before age five in the 1850s <cite class="pg">p. 22</cite>) and did not develop crooked teeth.</p>
+  </div>
+
+  <p>Catlin noticed that the Mandan and other tribes he met slept outdoors and kept their lips closed almost continuously. Mothers breastfed and, when the baby came off the breast, gently closed the infant's lips with their fingers <cite class="pg">p. 21</cite>. He noted that the natives nicknamed white settlers "black-mouths" because their mouths were so often open <cite class="pg">p. 21</cite>. Catlin himself had been a chronic mouth breather since boyhood and described the years of suffering this caused him <cite class="pg">p. 22</cite>. After observing the Native Americans he taught himself to nose-breathe, and he wrote a short book in 1861 — first titled <em>The Breath of Life</em>, later <em>Shut Your Mouth and Save Your Life</em> <cite class="pg">p. 22</cite> — assigning a remarkable list of ills to mouth breathing, including the "derangement" of the teeth that, the authors note, sounds eerily prescient of today's orthodontic epidemic.</p>
+
+  <p>Catlin was not, by 19th-century lights, sane on every front: he believed mouth breathing let in malarial particles, a theory of disease his medical contemporaries shared <cite class="pg">pp. 23–24</cite>. But he was a brilliant observer, and his core empirical claim — that mouth breathing was associated with worse health and worse facial development — has since been confirmed by anthropologists studying jaw shrinkage across human history.</p>
+
+  <h3>The skull record</h3>
+  <p>The museum and graveyard evidence runs in the same direction. Stanford evolutionary biologist Richard Klein, an authority on the human fossil record, has personally never seen an early human skull with malocclusion <cite class="pg">p. 24</cite>. Harvard evolutionary biologist Daniel Lieberman, in <em>The Human Body</em>, describes the museum he works in: most skulls from the last few hundred years are a dentist's nightmare, with cavities, abscesses, crowded teeth, and about a quarter showing impacted teeth; preindustrial farmers had cavities and abscesses but fewer than 5% had impacted wisdom teeth; hunter-gatherers had nearly perfect dental health <cite class="pg">p. 24</cite>.</p>
+
+  <p>Closer to home, Swedish orthodontist Lennard Lysell carefully measured 97 medieval Swedish skulls (out of about 250 skeletons from the 11th–13th centuries) excavated during construction of an airfield in 1951 and found a detectable reduction in jaw width since then <cite class="pg">p. 26</cite>. Dentist Christopher Lavelle's study of 210 lower jaws from Romano-British, Anglo-Saxon and 19th-century skulls showed the same trajectory: as the diet got softer, British jaws got smaller <cite class="pg">p. 26</cite>. A cemetery of common Amarna-era Egyptians from more than 3,000 years ago shows tooth wear typical of a farming people but very little malocclusion — wear is extensive in Amarna and rare in America; malocclusion is the reverse <cite class="pg">p. 9</cite>.</p>
+
+  <p>Dental anthropologist Robert Corruccini summarised it as an acceleration: malocclusion shows modest changes for 6,000 years and then accelerates dramatically in the last 150 years in industrialised societies <cite class="pg">p. 26</cite>. A direct comparison of Austrian male skulls from the 1880s and 1990s confirms it <cite class="pg">p. 26</cite>.</p>
+
+  <h3>The wisdom-tooth corollary</h3>
+  <p>Closing the chapter, the authors note one financially weighty consequence: impacted wisdom teeth, virtually unknown in the hunter-gatherer record, now drive routine extractions in the United States. Dentist and public-health expert Jay W. Friedman has estimated that roughly two-thirds of those extractions are unnecessary, and that some 11,000 patients annually suffer permanent numbness of lip, tongue, or cheek as a complication <cite class="pg">p. 27</cite>. The authors describe this, quoting Friedman, as a silent iatrogenic epidemic — the dental profession harming people because the underlying disease (small jaws) was never named <cite class="pg">p. 27</cite>.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>Don't blame the genes for what the environment changed. We have entered the space age with Stone Age jaws <cite class="pg">p. 19</cite>, and the mismatch is mostly cultural — which means it is mostly fixable.</p>
+  </div>
+</section>
+
+<!-- ============================ CHAPTER 2 ============================ -->
+<section id="ch2" class="card">
+  <div class="section-eyebrow">Chapter 2</div>
+  <h2>Mostly chewing</h2>
+  <p class="section-deck">If Chapter 1 establishes that something changed, Chapter 2 narrows down what changed: not the calories, not the macronutrients, but the <em>mechanical work</em> the jaw is asked to do.</p>
+
+  <h3>Why chewing is the lever</h3>
+  <p>The agricultural revolution, which appeared in different parts of the world between roughly 10,000 and 6,000 years ago <cite class="pg">p. 29</cite>, made surpluses possible, freed up labour for non-food activities, and birthed the long process that ends in industrial civilisation. It also dramatically softened the diet. Spoons appeared first as easy modifications of natural shells; forks came later as tools for handling cooked meat; chopsticks reach back to the Neolithic in China <cite class="pg">p. 30</cite>. Across all of these, soft and fragmentary foods became increasingly central. Fruits, under artificial selection, became sweeter and softer. Hard chewing — which had occupied something close to half the day for our chimp-like forebears — declined steadily with cooking, with farming, and again with industrialisation <cite class="pg">p. 30</cite>.</p>
+
+  <p>Loren Cordain and others have catalogued the nutritional shifts of the agricultural transition (glycemic load, fibre, lactose tolerance) <cite class="pg">pp. 29–30</cite>, but Kahn and Ehrlich emphasise something the nutrition literature largely ignores: <em>diet toughness</em>. Daniel Lieberman puts the mechanical claim simply: chewing forces are not a side-effect of feeding, they are part of the developmental signal that tells the jaw how big to grow and tells the teeth where to settle <cite class="pg">p. 30</cite>.</p>
+
+  <h3>The 19th-century inflection</h3>
+  <p>The authors place the steepest jump in soft-food consumption in the 19th century. The meat grinder was invented and the hamburger followed; ice cream became a popular phenomenon; mass-produced baby foods entered the market; canning matured <cite class="pg">p. 31</cite>. Honey had once been the only meaningful sweetener (raided over the protests of bees), and only the wealthy could indulge in soft sweet pastries. Sugarcane and the slave economy that produced it dropped the price until ordinary Europeans could eat the soft, sweet diet that had previously belonged to the rich <cite class="pg">p. 31</cite>.</p>
+
+  <h3>Pottenger's cats and Weston Price's travels</h3>
+  <p>Two famous early-20th-century episodes deserve appropriately calibrated scepticism. <strong>Frances Pottenger</strong>'s 1930s experiment fed one group of cats raw meat and another cooked food and pasteurised milk; the cooked-food cats grew smaller, sicker, and could not reproduce <cite class="pg">p. 31</cite>. The study had real flaws — Pottenger lacked modern feline-nutrition knowledge, and cats today thrive on cooked food — but the underlying observation that mechanical and processing differences in diet matter biologically has been borne out elsewhere <cite class="pg">p. 31</cite>.</p>
+
+  <p><strong>Weston Price</strong>, who founded the research arm of the American Dental Association and chaired it from 1914 to 1928 <cite class="pg">pp. 31–32</cite>, travelled the world in the 1930s comparing the teeth of indigenous people to those eating Westernised diets. Many of his specific theories — particularly his nutrient-centred explanation for tooth decay — remain controversial. But his core observation, the one the book picks up, was sound: indigenous peoples on traditional diets did not have crowded teeth, and their wisdom teeth fit comfortably in spacious arches <cite class="pg">p. 32</cite>. The shift to a Western diet could change facial shape within a single generation. Where Price went wrong was in attributing this to the chemistry of the diet rather than to its mechanical properties <cite class="pg">p. 32</cite>.</p>
+
+  <h3>The clinching experiments</h3>
+  <p>Robert Corruccini's work on squirrel monkeys is the chapter's pivot. He fed nutritionally equivalent <em>soft</em> versus <em>hard</em> diets to two groups and found that the soft-fed monkeys developed rotated and displaced teeth, crowded premolars, and narrower dental arches — clear malocclusion <cite class="pg">p. 34</cite>. Crucially, there was no difference in tooth wear between the groups, which contradicted the older Begg hypothesis (popular in the 1950s) that malocclusion was caused by lack of grit wearing teeth down <cite class="pg">p. 34</cite>. The lever was chewing force, not abrasive grit.</p>
+
+  <p>Corruccini extended the work to humans by comparing genetically similar Indian populations — one rural, one urban — and finding that the urban diet produced smaller jaws and worse occlusion <cite class="pg">p. 34</cite>. He documented the same shift in a generation of Australian Aboriginal Australians moving onto a soft non-wearing diet <cite class="pg">pp. 34–35</cite>. Dental anthropologists Jerome Rose and Richard Roblee summarised it: most modern malocclusion comes from a mismatch between jaw size and the space the full set of teeth requires — and the constraint is small jaws, not large teeth <cite class="pg">p. 34</cite>.</p>
+
+  <div class="aside">
+    <h4>Anecdote · two brothers, one reservation</h4>
+    <p>One of Weston Price's photographs shows two brothers from an indigenous community who moved to an industrialised area and switched to a more processed diet <cite class="pg">p. 32</cite>. The younger brother — who made the move at a younger, more developmentally vulnerable age — shows substantially worse dental development than his older brother. A later three-generation portrait of an Indian family that emigrated to London (grandfather raised on a traditional diet, son and grandson on a Westernised one) shows the same arc: the grandfather's jaws sit forward in the face with well-aligned teeth; each subsequent generation's jaw is set further back <cite class="pg">p. 33</cite>.</p>
+  </div>
+
+  <h3>The cavity cascade</h3>
+  <p>One less-obvious mechanism closes the chapter. The bacterial communities in our mouths shifted with the agricultural transition, favouring decay-causing strains in a higher-carbohydrate environment <cite class="pg">p. 35</cite>. A child with a painful cavity instinctively keeps the teeth out of contact to spare the pain. The tongue drops as a shock absorber. The dental arch loses the gentle scaffold that the tongue normally provides against the palate, and crowds <cite class="pg">pp. 35–36</cite>. The face elongates downward and back, restricting the airway. A cavity, in other words, is not just a hole — it is a posture-changing event during a developmental window.</p>
+
+  <p>So the difference between hunter-gatherer children with abscessed teeth and modern children with abscessed teeth, the authors note bluntly, is that the hunter-gatherer child still had to chew tough food because the alternative was starvation. The modern child can switch to a milkshake <cite class="pg">pp. 36–37</cite>.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>The mechanically active mouth is the well-developed mouth. Tough chewing in childhood is not optional dietary advice — it is the developmental signal that builds jaw architecture <cite class="pg">p. 30</cite>.</p>
+  </div>
+</section>
+
+<!-- ============================ CHAPTER 3 ============================ -->
+<section id="ch3" class="card">
+  <div class="section-eyebrow">Chapter 3</div>
+  <h2>The diet, posture, and housing revolutions</h2>
+  <p class="section-deck">Three cultural shifts, the authors argue, account for most of what went wrong: what we eat, how we hold our mouths when we are not eating, and the fact that we now live indoors.</p>
+
+  <h3>The Great Leap Forward</h3>
+  <p>A bigger-picture move first. Following Jared Diamond, Kahn and Ehrlich place the rise of complex syntactic language somewhere between 70,000 and 100,000 years ago — the moment when humans began to evolve culturally rather than primarily genetically <cite class="pg">p. 39</cite>. Cultural change can move within a generation; genetic change usually takes thousands. The implication is a permanent mismatch: humans built by deep evolutionary time to live as nomadic foragers now live as fast-food-eating, allergen-breathing, sedentary apartment-dwellers.</p>
+
+  <h3>Lever 1 · what we eat and how we eat it</h3>
+  <p>The "Big Mac environment" line lands here <cite class="pg">p. 40</cite>. Not only is the food softer and sweeter, but the eating pace has accelerated. The authors point to soft staples like applesauce, yogurt, and peanut butter as foods that bypass chewing entirely, and note the well-meaning parental habit of cutting tough meats into tiny pieces for fear of choking — which deprives the child of exactly the developmental input the jaw needs <cite class="pg">p. 40</cite>. They borrow a wonderfully telegraphic image from Pixar's <em>WALL·E</em>: in the dystopian future, all food is liquefied and sucked through straws, hamburgers and all, and human bodies and faces have softened to match. Even the animators understood <cite class="pg">p. 41</cite>.</p>
+
+  <h3>Lever 2 · slack jaw and resting oral posture</h3>
+  <p>The single most counter-intuitive thesis of the book lives in this section. Kahn and Ehrlich claim that what your mouth is doing for the seventeen hours a day you are not chewing or talking matters more than anything you do during the other seven. The correct posture, repeated many times throughout the book: lips closed, teeth in light contact, tongue resting against the palate <cite class="pg">p. 42</cite>. The tongue, gently pressing up, acts as a scaffold that keeps the upper dental arch wide and U-shaped. Drop the tongue, and the arch collapses inward <cite class="pg">p. 35 · Image 16</cite>.</p>
+
+  <p>If you chew less, your jaw muscles weaken; if your jaw muscles weaken, your jaw hangs open at rest; if your jaw hangs open at rest, the tongue is not on the palate; if the tongue is not on the palate, the arch narrows. It is a slow, self-reinforcing loop. A child who maintains an open-mouth resting posture for years tilts the head back to keep the airway open and stops looking like a "cute" child by the time she reaches her teens <cite class="pg">p. 43</cite>.</p>
+
+  <h3>Lever 3 · indoor living</h3>
+  <p>The third revolution is housing. Tight, weather-proof homes are a public-health triumph in many ways, but they concentrate allergens. Furry pets, cockroaches, dust mites, moulds and the formaldehyde and other VOCs of modern furnishings all live indoors with us <cite class="pg">pp. 44–45</cite>. The "hygiene hypothesis" suggests that immune systems insufficiently challenged in early life over-react to these allergens. Daycare facilities cycle viruses through small children. Some 60 million Americans suffer from upper respiratory issues <cite class="pg">p. 45</cite>; about 10% of U.S. children have childhood asthma <cite class="pg">p. 45</cite>. A child with a chronically stuffy nose has no choice but to breathe through the mouth, and once the mouth-breathing posture sets in, the jaw responds.</p>
+
+  <div class="aside">
+    <h4>Anecdote · the zombie nation</h4>
+    <p>Sandra Kahn writes about a turning point in her own attention. At a theme park in Orlando, watching her children Ilan and Ariela run between rides, she pulled out her iPhone and began photographing children walking past — almost every one with their mouth wide open. She grabbed her husband David and said, "Look at them all, just walking around with their mouths wide open, mouth breathing." David's reply: it looked like a zombie nation of mouth breathers. Kahn now invites readers to repeat the experiment in any mall, any large public space, any traffic stop. Once you see it, she says, you cannot stop seeing it <cite class="pg">p. 44</cite>.</p>
+  </div>
+
+  <p>The obvious counter-argument — that life in industrial societies is, on average, longer and healthier than in pre-agricultural ones — is one Kahn and Ehrlich concede <cite class="pg">p. 46</cite>. They argue, though, that the existence of net gains does not exempt us from accounting for specific, preventable losses. The current generation of children, in their view, could live both longer and better than the current generation of adults if these issues were addressed.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>What your mouth does at rest matters more than what it does while eating. A face is shaped by hours of light, repeated, near-invisible muscle pressure, not by minutes of mealtime work <cite class="pg">p. 42</cite>.</p>
+  </div>
+</section>
+
+<!-- ============================ CHAPTER 4 ============================ -->
+<section id="ch4" class="card">
+  <div class="section-eyebrow">Chapter 4</div>
+  <h2>Appearance</h2>
+  <p class="section-deck">A chapter about beauty, posed as a public-health question. The face, the authors argue, is a thermometer — an outward signal of internal developmental health that our culture insists on reading as if it were destiny.</p>
+
+  <h3>How appearance came to matter</h3>
+  <p>A scale-setting statistic frames the chapter: there were perhaps a few million humans at the time of the agricultural revolution, and there are now nearly eight billion. Average life expectancy has risen from somewhere between 20 and 25 years to 72 globally, and into the 80s in many wealthy nations <cite class="pg">p. 47</cite>. Yet, the authors argue, the rich nations are not as healthy as they could be — and one piece of the unfinished business is what's happening to children's faces.</p>
+
+  <p>Kahn and Ehrlich situate the cultural valuation of beauty in the Great Leap Forward — the same syntactic-language revolution invoked in Chapter 3. Once humans could gossip about each other, attractiveness became a cultural variable. The earliest body decorations (shell beads dated to roughly 75,000–100,000 years ago) and the earliest cave paintings suggest aesthetic sensibilities reaching deep into prehistory <cite class="pg">p. 48</cite>. Today, in a society saturated with selfies and photo-mediated self-presentation, those Stone Age aesthetic instincts are amplified to absurdity.</p>
+
+  <h3>What "attractive" means here</h3>
+  <p>The authors deliberately use "attractive" and "unattractive" as shorthand for current dominant cultural conventions about facial structure, jaw position, and balance — not as judgements about the value of a person <cite class="pg">p. 49</cite>. They then make a clinical claim: certain features that current Western culture treats as beautiful (high cheekbones, defined jawline, prominent chin, broad smile, even teeth) are also features of a face that developed in the absence of mouth-breathing and slack-jaw posture. A "concave" facial profile, a gummy smile, soft jawline, retreated cheekbones, and crowded teeth are, in their reading, the cosmetic surface of a developmental story underneath <cite class="pg">p. 55</cite>.</p>
+
+  <h3>Long face syndrome</h3>
+  <p>Repeated mouth-open posture during the growing years tends to lengthen the face. Dentists call the resulting pattern <strong>long face syndrome</strong>: a long, narrow face, less defined cheekbones, a small lower jaw, a "weak" chin, and often a smile that shows too much gum <cite class="pg">p. 51</cite>.</p>
+
+  <div class="aside">
+    <h4>Anecdote · Wellington and Margaret Theresa</h4>
+    <p>The authors' favourite illustration is historical. The Duke of Wellington — victor at Waterloo in 1815, twice prime minister, prolific romantic, dead in bed at 83 — shows a textbook long face in his 1804 portrait by Robert Home: the jaws and teeth set back, the nose and chin made prominent by that retreat <cite class="pg">p. 52</cite>. In the era's iconography, this "Roman" profile was an aristocratic asset. The book contrasts it with Diego Velázquez's 1656 <em>Las Meninas</em>, which depicts the Spanish princess Margaret Theresa as a small child with normal facial development, against a portrait of the same princess as a long-faced young woman painted between 1662 and 1664 <cite class="pg">p. 52</cite>. The book's argument is not that Wellington's profile was a tragedy — by his era's standards, it was an advantage — but that the same developmental pattern, common among 17th–18th-century European nobility on delicate diets, is now almost universal.</p>
+  </div>
+
+  <h3>Body posture, oral posture</h3>
+  <p>Modern children slouch, the chapter argues, and slouching is contagious with mouth-open resting posture. A detailed Czech study of 3,520 schoolchildren aged 7 to 15 diagnosed 38% with poor posture <cite class="pg">p. 50</cite>. The authors connect this loosely to oral-facial development through muscle tone: skeletal muscles should rest in partial contraction, and a child whose body muscles are slack tends to have slack jaw muscles too <cite class="pg">p. 50</cite>. They are honest that the strength of this link is debated <cite class="pg">p. 51</cite>, but the clinical intuition that overall posture and oral posture move together is repeated.</p>
+
+  <h3>The social cost</h3>
+  <p>The authors compile evidence that people perceived as attractive in Western and Westernised societies do better materially. They are less likely to be bullied as children, get more votes in elections, earn more, are treated more leniently by juries, and may even live healthier lives <cite class="pg">p. 54</cite>. Even six-month-old infants look longer at faces adults rate as more attractive, with "averageness" being a major component of those judgements <cite class="pg">p. 54</cite>. None of this is new, but the chapter's twist is to name the public-health consequences of an ongoing, society-wide drift in facial development away from the very features the same society has decided to value.</p>
+
+  <h3>Smoking, obesity, jaws</h3>
+  <p>A parallel with two earlier public-health epidemics closes the chapter. Smoking was so normal in Paul Ehrlich's 1930s childhood that he and his friends, at seven or eight years old, picked up cigarette butts from the street to look grown-up — already calling them "coffin nails" <cite class="pg">p. 55</cite>. It took decades of public-health work to bend the curve. Obesity is in an earlier stage of the same arc, still partly stigmatised as a personal failing <cite class="pg">p. 56</cite>. Malocclusion and slack-jaw posture, the authors argue, sit even earlier on the curve: the connection to serious illness is not yet public knowledge, and the food and infant-care industries that contribute to it are not yet treated as anything like the tobacco industry <cite class="pg">pp. 56–57</cite>. Their hope is that recognising facial deformity as a preventable condition will eventually drive the same kind of social change.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>The face is a thermometer. Treat a gummy smile, a weak chin, or dark circles under a child's eyes as data about developmental health, not cosmetic shortcomings to be edited around with braces or filters <cite class="pg">p. 57</cite>.</p>
+  </div>
+</section>
+
+<!-- ============================ CHAPTER 5 ============================ -->
+<section id="ch5" class="card">
+  <div class="section-eyebrow">Chapter 5</div>
+  <h2>Development and oral posture</h2>
+  <p class="section-deck">If Chapter 3 listed the cultural levers, Chapter 5 explains the developmental mechanism. How does a soft diet and a stuffy nose actually translate into a small jaw and a narrow airway? And when in childhood does that translation become irreversible?</p>
+
+  <h3>The unwelcome bargain of language</h3>
+  <p>The chapter's startling opening is that some part of the modern jaw problem is the price of being able to talk. Complex syntactic speech, which probably emerged within the last 50,000–150,000 years, required anatomical changes that narrowed the human airway <cite class="pg">pp. 59–60</cite>. The larynx (voice box) dropped, creating the supralaryngeal vocal tract that lets us shape vowels and consonants <cite class="pg">p. 61</cite>. The cost: air and food now share a single tube in the upper neck, with a system of valves keeping them apart, which makes choking possible. (Hence Henry Heimlich.) Newborns are spared, because the larynx doesn't drop until around age two — a baby can suck and breathe simultaneously without choking <cite class="pg">p. 61</cite>. But the same anatomical compromise that gives adults speech also positions the back of the tongue dangerously close to the airway, which is part of why modern jaw underdevelopment so easily produces obstructive sleep apnea <cite class="pg">pp. 61–62</cite>.</p>
+
+  <h3>Breastfeeding, bottles, and the muscle work of suckling</h3>
+  <p>The mechanics of feeding turn out to matter at the level of millimetres and hours of work. Suzely Moimaz and colleagues describe breastfeeding as a determining factor in craniofacial development because it forces the orofacial muscles into intense, repeated exercise <cite class="pg">p. 62</cite>. Bottle feeding, in contrast, delivers milk passively. Pacifier use is associated with worse occlusion, partly because it reduces breastfeeding time. A study of more than a thousand Italian preschool children found similar but milder effects from bottle feeding <cite class="pg">p. 62</cite>.</p>
+
+  <p>Pediatric dentist Kevin Boyd at Lurie Children's Hospital in Chicago dates the rise of bottle feeding to the mid-18th century in Western Europe, when women began entering textile mills in numbers and abandoning the centuries-long pattern of nursing on demand <cite class="pg">p. 62</cite>. Pumped milk, formula, artificial nipples and pacifiers entered as compensation for an industrial work day <cite class="pg">pp. 62–63</cite>. The result, in the authors' framing, is the loss of the chewing and sucking environment that the developing jaw requires.</p>
+
+  <h3>The Harvold experiments</h3>
+  <p>The central animal evidence in this chapter is Egil Harvold's pioneering 1970s rhesus monkey work. Harvold blocked the nostrils of young rhesus monkeys (aged 2 to 6) with silicon plugs, forcing them to breathe through the mouth <cite class="pg">p. 64</cite>. Initially the monkeys thrashed around, trying different tongue, lip, and jaw positions. Over months, they developed the same long face, downward-sloping mandibles and various forms of malocclusion that human mouth-breathers display, including narrowed dental arches <cite class="pg">pp. 64–65</cite>. When the plugs were removed after about 18 months, most of the changes reversed <cite class="pg">p. 65</cite>. Harvold also showed that gentle tongue pressure against the palate — the resting tongue posture humans are supposed to maintain — produces wide palates and properly aligned arches <cite class="pg">p. 65</cite>. The book treats this as the experimental backbone of its theoretical claim: posture, not movement, is the primary signal.</p>
+
+  <h3>The critical period</h3>
+  <p>How late is too late? The authors draw an analogy to vision: children born blind who have sight surgically restored after a critical early period generally do not develop normal visual processing, even though the optical hardware works <cite class="pg">p. 67</cite>. They cite a study of a person blind from age 3 to 46 who two years after surgery still had not developed normal vision <cite class="pg">p. 67</cite>. The implication for jaw development is a similar critical period — particularly in the first decade, and perhaps especially in the first year <cite class="pg">p. 67</cite>. John Mew's clinical claim, which the authors quote, is that around age eight the maxilla becomes increasingly fused to the base of the skull and becomes hard to move without active appliances; the mandible remains adaptable for some years longer, particularly in boys <cite class="pg">p. 68</cite>.</p>
+
+  <div class="aside">
+    <h4>Anecdote · the gerbil</h4>
+    <p>One of the chapter's most arresting images is a "before and after" sequence of a young boy who began life with normal facial development, then developed a severe allergy to a pet gerbil. Chronic nasal congestion forced him into mouth breathing. The redirected growth changed his face dramatically. As the authors note, allergy can block a young person's nostrils as thoroughly as plastic plugs blocked Harvold's rhesus monkey nostrils <cite class="pg">p. 66</cite>. The two experiments — one deliberate, one accidental — produce the same result.</p>
+  </div>
+
+  <p>One troubling sidebar in the chapter is a photograph of an infant in an unusual posture — head tipped back, neck extended — a pose the parents found "funny" and photographed without alarm. The child died of sudden infant death syndrome shortly after. The authors share the photograph (with the family's permission, via Christian Guilleminault) as a reminder that an infant struggling to keep an airway open does not always cry; sometimes she simply contorts <cite class="pg">p. 60 · Image 27</cite>.</p>
+
+  <p>Chewing, posture, and growth all tie back to sleep itself: growth hormone is secreted most efficiently between roughly 11 pm and 2 am <cite class="pg">p. 70</cite>, and disordered breathing during that window cuts directly into the growth process that the rest of the book is about.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>Treat the first decade — and especially the first year — as the developmental window <cite class="pg">p. 67</cite>. The architecture of the adult face is decided in childhood by gentle, repeated muscle pressure and patent nasal airflow, not by the shape of the smile in a teenager's selfies.</p>
+  </div>
+</section>
+
+<!-- ============================ CHAPTER 6 ============================ -->
+<section id="ch6" class="card">
+  <div class="section-eyebrow">Chapter 6</div>
+  <h2>Disorders of breathing and sleep</h2>
+  <p class="section-deck">The hardest-hitting chapter. Up to this point the book has been about teeth and faces; here it argues that the same underlying disease, untreated, kills people slowly through sleep.</p>
+
+  <h3>Why mouth breathing isn't trivial</h3>
+  <p>One small but important distinction first. Many parents see "lips closed" and assume their child is nose breathing, when in fact a child can hold the lips together with the teeth and tongue dropped behind them. John Mew prefers the term "open mouth posture" for that reason, but the book sticks with "mouth breathing" as the more familiar phrase <cite class="pg">p. 73</cite>. A careful study of 150 schoolchildren aged 8 to 10 in Recife, Brazil, found that 80 of them — 53% — were mouth breathers, tested by mirror-fogging and a three-minute water-holding task that filters out children with closed lips who still breathe through the nose <cite class="pg">p. 73</cite>.</p>
+
+  <p>The nose, the authors remind us, is not a redundant organ. It warms, moistens, filters, and adds small amounts of bactericidal nitric oxide to inhaled air <cite class="pg">pp. 73–74</cite>. None of this happens when the mouth is the air channel. A list of consequences, drawn from a group of pediatric dentists at the University of Pernambuco, runs from breathlessness during exercise and chronic neck pain through halitosis, dry mouth, dark circles under the eyes, narrow nostrils, weak cheek muscles, high palate, and malocclusion <cite class="pg">p. 74</cite>.</p>
+
+  <p>Dry mouth, the authors emphasise, is not an aesthetic complaint. Saliva neutralises acid, washes away bacteria, and protects against decay <cite class="pg">p. 74</cite>. Without it, gingivitis can advance to periodontitis; periodontitis can let bacteria into the bloodstream; and that, in extreme cases, can colonise heart valves as endocarditis <cite class="pg">pp. 74–75</cite>.</p>
+
+  <div class="aside">
+    <h4>Anecdote · Deamonte Driver</h4>
+    <p>From Mary Otto's book <em>Teeth</em>: Deamonte Driver, a 12-year-old in Maryland, came home one day with a headache. His grandmother took him to the emergency department, where he was given medications for headache, sinusitis, and a dental abscess. The next day at school he was worse and, by Friday, could not talk. He was diagnosed with meningitis, underwent emergency brain surgery for an abscess on the left side of his brain, had a second operation when the seizures started, and during that second surgery the source — an infected upper-left molar — was finally extracted. Bacteria from the abscess had reached his brain. He survived for several weeks of physical therapy in hospital before dying. He was 12. The Kahn–Ehrlich point is not that mouth breathing alone killed Deamonte but that the cascade — stuffy nose, mouth breathing, dry mouth, decay, infection, sepsis — is real, and the social cause is poverty: his family could not access timely dental care <cite class="pg">pp. 75–76</cite>.</p>
+  </div>
+
+  <h3>OSA, in plain language</h3>
+  <p>The chapter's centrepiece is obstructive sleep apnea. The authors quote John Remmers, the Harvard-trained physician who coined the term, as flatly stating that structural narrowing of the pharynx is at the root of most or all OSA, and that OSA would not exist if the upper and lower jaws were ideally placed in the face <cite class="pg">p. 77</cite>. The book accepts that obesity, alcohol, and tobacco contribute, but agrees with Remmers that the basic cause is anatomical. An estimated 12 million Americans suffer from OSA <cite class="pg">p. 77</cite>, and Remmers predicted it would become the most common chronic disease in industrialised countries <cite class="pg">p. 77</cite>.</p>
+
+  <p>What makes OSA so dangerous, the chapter argues, is that breathing disruption triggers the autonomic nervous system's sympathetic ("fight-or-flight") response, even though the trigger is not a tiger but the back of the tongue falling into the airway <cite class="pg">pp. 77–78</cite>. The body floods with adrenaline, the heart speeds up, blood pressure rises, growth and digestion are switched off. Robert Sapolsky's image, borrowed for this chapter: an antelope fleeing a lioness doesn't have time or energy to grow antlers. A child whose nights are a low-grade chase scene is not building antlers either <cite class="pg">p. 78</cite>. Recurrent partial suffocation also damages the hippocampus, the brain region central to memory <cite class="pg">p. 79</cite>, and may compromise the blood–brain barrier — implicated in stroke, epilepsy, multiple sclerosis, and Alzheimer's disease <cite class="pg">p. 81</cite>.</p>
+
+  <h3>Snoring, before it was harmless</h3>
+  <p>Snoring is not normal — though the cultural assumption is that it is. Some 30% of people over 30 and 40% over 50 snore in some surveys; in Britain the prevalence runs from 25% to 40% <cite class="pg">p. 79</cite>. Childhood snoring is now common in pre-schoolers — University of Chicago sleep scientist David Gozal estimates that 7 to 13% of all preschool children snore <cite class="pg">p. 80</cite> — and "primary snoring" (snoring without OSA) has been linked to attention and memory problems, a higher risk of epileptic seizures, and the risk of progressing to OSA <cite class="pg">p. 80</cite>. Stephen Sheldon, sleep specialist at Lurie Children's Hospital and author of <em>Principles and Practice of Pediatric Sleep Medicine</em>, has estimated that 75% of children with ADHD could trace their problem to sleep-disordered breathing <cite class="pg">p. 80</cite>. James O'Brien's blunt formulation: anyone who snores will develop obstructive sleep apnea, if they live long enough <cite class="pg">p. 80</cite>.</p>
+
+  <p>An important caveat — "associated with" is not "causes" — applies throughout. Establishing causation in disordered sleep is harder than for, say, smoking and lung cancer, because the relevant exposure (interrupted breathing during sleep over decades) is harder to measure than packs per day <cite class="pg">pp. 83–84</cite>. The book is careful to state that its goal is not to convince readers that a mouth-breathing child is doomed.</p>
+
+  <h3>Treatment, ranked from worst to least bad</h3>
+  <p>For adults already living with OSA, the chapter walks down the menu. <strong>Maxillomandibular advancement (MMA)</strong> surgery moves both jaws forward and is the only operation that can cure severe adult OSA <cite class="pg">p. 84</cite>, but William Bell — described as the "godfather of corrective jaw surgery" — has called it too complicated, too invasive, too time-consuming, expensive, and unpredictable <cite class="pg">pp. 84–85</cite>. Soft-tissue surgeries like uvulopalatopharyngeoplasty (UPPP) and tongue reduction are also done, with limited results <cite class="pg">p. 85</cite>. Tonsil-and-adenoid removal helps children temporarily but rarely solves adult cases <cite class="pg">p. 85</cite>. <strong>CPAP machines</strong> are the workhorse: they push pressurised air into the airway through a mask, can transform some patients' lives, but require a prescription and several hundred dollars, and many people simply cannot tolerate them <cite class="pg">pp. 85–86</cite>.</p>
+
+  <p>The authors are explicit that surgery is a last resort, that CPAP is a management strategy not a cure, and that the only durable solution is prevention from an early age — which is what the next chapter is about <cite class="pg">p. 88</cite>.</p>
+
+  <div class="aside">
+    <h4>Anecdote · the Georgia bulldogs</h4>
+    <p>The chapter's most haunting visual sequence comes courtesy of dentist Mike Gelb (a founding member of the American Academy of Physiological Medicine and Dentistry) and shows the University of Georgia's bulldog mascots from 1956 to 2011. Bulldogs have been bred for ever-shorter snouts: narrowed nostrils, crooked teeth, elongated soft palates that block the airway. They suffer obstructive sleep apnea and obesity-related complications. The 1956 mascot died at age eight; the 2011 mascot died at two. The arc — over decades, accelerating — is a near-perfect parallel to what Kahn and Ehrlich believe industrialisation is doing to the human face, except that in dogs the agent is selective breeding while in humans it is environmental change <cite class="pg">pp. 86–87</cite>.</p>
+  </div>
+
+  <p>One of the chapter's quieter sidebars takes on bruxism — the clenching and grinding of teeth that dentists treat as an enemy of enamel. Kahn argues that bruxism is itself a response to ill-fitting jaws and "premature contacts" — places where the upper and lower teeth meet before the rest <cite class="pg">pp. 82–83</cite>. Standard dental advice (keep the teeth apart, wear an acrylic guard) protects enamel but never lets the bite settle into a working equilibrium. Her counter-suggestion is to file down the premature contacts and train the patient to keep teeth in light contact for at least eight hours a day, which she believes makes grinding stop <cite class="pg">p. 83</cite>. It is one of several places where the book's advice runs head-on into the consensus.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>Loud snoring is not white noise — it is a clinical sign <cite class="pg">p. 79</cite>. So is a child who tosses, sweats, breathes through the mouth, or wakes unrefreshed. The expensive interventions of adulthood are downstream of the cheap interventions of childhood.</p>
+  </div>
+</section>
+
+<!-- ============================ CHAPTER 7 ============================ -->
+<section id="ch7" class="card">
+  <div class="section-eyebrow">Chapter 7</div>
+  <h2>What can you do?</h2>
+  <p class="section-deck">The longest and most practical chapter in the book — a parent's manual built around six interventions: how to feed, how to chew, how to breathe, how to rest the mouth, how to sleep, and how to spot trouble.</p>
+
+  <h3>1 · Breastfeeding and baby-led weaning</h3>
+  <p>The easiest advice first: breastfeed for as long as possible — at least a year, exclusively for six months — and avoid bottle feeding even of pumped breast milk during that early window <cite class="pg">p. 89 · p. 113 (Box 4)</cite>. The mechanical work of suckling is part of the developmental signal. Wean slowly and onto solids, not into the soft sweet pap that fills the baby-food aisle. The authors recommend exploring <strong>baby-led weaning</strong>, in which the child feeds herself with her hand from the moment of weaning, sharing the family's food rather than receiving spoon-fed purée <cite class="pg">p. 105</cite>. The term traces to British midwife Gill Rapley <cite class="pg">p. 105</cite>, and the practical effect is that the child is doing real chewing from the start.</p>
+
+  <h3>2 · Chewing</h3>
+  <p>Eat together; eat slowly; chew thoroughly; do not let children speak with food in their mouths. The book offers a specific protocol for chewing: aim for at least 15 chews per mouthful for soft food, 20 for hard. With practice the food liquefies before you swallow. Always begin the swallow with upper and lower teeth touching and pause for a deliberate two seconds before swallowing <cite class="pg">p. 105</cite>. The authors also propose, somewhat unusually for a health book, that chewing gum — properly chosen — can build jaw muscle. Gum chewers should pick something genuinely tough (the authors mention <em>Mastic</em>, the resin from the Greek island of Chios, as a candidate raw material) <cite class="pg">p. 108</cite>, without sugar or artificial sweeteners; chew on both sides for at least 30 minutes a day with closed lips and nasal breathing <cite class="pg">p. 108</cite>.</p>
+
+  <h3>3 · Posture</h3>
+  <p>Three things together, repeated like a mantra: <em>lips closed, tongue on the palate, teeth in light contact</em> <cite class="pg">p. 91</cite>. Start in infancy. After nursing, gently close the baby's lips with your fingers for a few seconds — Catlin's observation of Mandan mothers <cite class="pg">pp. 91–92</cite>. The authors are honest that the deeper claim — that body posture and oral posture move together — has weak research support, but the clinical intuition is strong <cite class="pg">p. 92</cite>. They cite posture specialist Esther Gokhale as a source of practical observations on how indigenous societies carry babies and toddlers in ways that set up good adult posture <cite class="pg">p. 92</cite>. The recommendation: ergonomic carriers, slings, car seats and strollers; baby-facing-outward as the child matures so they see what the caregiver sees <cite class="pg">pp. 93–95</cite>.</p>
+
+  <p>The chapter quotes a letter from John Mew titled <em>Old Fashioned Rules Create Good-Looking Faces</em>, in which Mew argues — with palpable annoyance — that Victorian table manners did real biological work. Children who play on iPads with mouths open and necks bent for hours a day are paying a developmental cost, and "old-fashioned" rules about closed mouths and good posture were never just etiquette <cite class="pg">p. 92</cite>.</p>
+
+  <div class="aside">
+    <h4>Box · the !Kung leisure data</h4>
+    <p>One of the chapter's longest sidebars, drawing on Marshall Sahlins and on anthropologist Richard Lee's classic !Kung input-output study, makes a humbling point. Lee found that a !Kung woman gathered enough food in a day to feed her family for three days, then spent the rest of her time visiting, doing embroidery, or hosting. !Kung men hunted hard for a week and then often did not hunt for two or three weeks; in the off periods, they visited, danced, and entertained. The implication for jaws and sleep is indirect but real: hunter-gatherer life had built-in rest, and modern industrial life — in which a third of Americans report less than 6 to 8 hours of sleep — does not. Bags under the eyes and falling asleep during the day, the authors argue, are signs of a culture-wide sleep deficit that we have learned to read as normal <cite class="pg">pp. 95–97 (Box 3)</cite>.</p>
+  </div>
+
+  <h3>4 · Breathing and allergies</h3>
+  <p>Stuffy noses in babies and toddlers are not background noise. Indoor air pollutants matter — formaldehyde from furniture and construction is highlighted; pet dander, cockroaches, mould, dust mites, the cold viruses that circulate in daycare centres <cite class="pg">pp. 98–99</cite>. Frequent bathing of pets, controlling cockroaches and mould, ventilating well, using air cleaners cautiously, and (most underrated) basic hand-washing in childcare are all useful <cite class="pg">p. 99</cite>. The authors quote air-pollution scientist Kirk Smith: after seventy years and tens of billions of dollars, scientists still do not know exactly which components of tobacco smoke produce the observed health effects <cite class="pg">p. 98</cite>. The point is not to diagnose every particle but to minimise inhalation through the mouth in favour of nasal filtration.</p>
+
+  <p>One counter-intuitive note from sleep-apnea specialist Christian Guilleminault: enlarged tonsils and adenoids may be more often a <em>result</em> of mouth breathing than a cause of it <cite class="pg">p. 99</cite>. Breathe more particles in through the mouth, the immune system reacts. In other words, the cycle can run in either direction.</p>
+
+  <h3>5 · The Buteyko technique</h3>
+  <p>The Russian physician Konstantin Buteyko (1923–2003) developed his breathing method around 1950 in the Soviet Union <cite class="pg">p. 100</cite>. Its claims regarding asthma remain controversial; the authors are deliberately careful here. But Kahn finds it useful clinically as a way to retrain mouth-breathers into nose breathers, and the chapter gives the basic Buteyko teaching: breathing should be invisible, inaudible, and through a closed mouth — anything else is overbreathing <cite class="pg">p. 100</cite>. The aim is fewer, smaller breaths, repeated until the new pattern becomes implicit habit.</p>
+
+  <p>Three Buteyko exercises are described in detail. <strong>Mouth taping</strong> at night, using a small piece of hypoallergenic Micropore tape across the lips, gives the brain a tactile reminder during sleep — the authors are firm that this is for older children and adults only, never infants or small children <cite class="pg">p. 102</cite>. <strong>Counted steps</strong> — hold your nose, walk until you must breathe in — measure breathing fitness; the count rises with practice <cite class="pg">p. 103</cite>. <strong>Unblocking the nose</strong>: a short routine where the patient breathes out, pinches the nose, gently nods until the urge to breathe becomes overwhelming, then resumes only nasal breathing — usually clears congestion in three repetitions <cite class="pg">p. 103</cite>.</p>
+
+  <div class="aside">
+    <h4>Anecdote · Sandra's father</h4>
+    <p>Kahn writes about her own family. Her 89-year-old father, who suffered from COPD (chronic obstructive pulmonary disease), her husband, and her teenage son all took up the Buteyko method and reported sleeping better, waking fresher, with no dry throat. Her father's quality of life rose sharply: the technique seemed to reduce the anxious overbreathing that often accompanied his illness <cite class="pg">p. 102</cite>. The chapter also mentions American athletes Patrick Feeney and Chris Giesting using nose-breathing technique training as part of their preparation for the IAAF World Indoor Championships 4×400 metre relay; Feeney's quoted endorsement focuses on better sleep and calmer race-day focus <cite class="pg">p. 101</cite>.</p>
+  </div>
+
+  <p>The authors include the Lao Tse epigraph that opens the Buteyko section — the line, attributed to the 6th-century BCE Chinese philosopher, that the perfect man breathes as if he didn't <cite class="pg">p. 100</cite>.</p>
+
+  <h3>6 · GOPex — good oral posture exercises</h3>
+  <p>Kahn and dentist Simon Wong have built a brief exercise programme called <strong>GOPex</strong>, designed to install correct oral posture as muscle memory <cite class="pg">pp. 103–104</cite>. It is a "myopostural" routine, distinct from oral-facial myofunctional therapy (which targets movement). The principle is that posture is what you do for hours; movement is what you do for minutes. Train the brain to default to posture by repeating it through small acts that the child does anyway — chewing, swallowing, reading aloud, counting <cite class="pg">p. 104</cite>.</p>
+
+  <p>The exercises themselves are short. <strong>Meaningful chewing</strong>: two to three minutes a meal, focused, with food chewed until it liquefies, lips together, swallow only after a deliberate two-second pause with teeth touching <cite class="pg">p. 105</cite>. <strong>Counting</strong>: count from 1 to 60 (30 for younger children) out loud, slowly, touching teeth and lips together once between numbers, with breath taken through the nose after every five counts <cite class="pg">p. 106</cite>. <strong>Reading aloud</strong>: 5 to 20 minutes a day, pausing at every comma and full stop to close the lips and inhale only through the nose <cite class="pg">p. 106</cite>. The chapter is candid that controlled studies of GOPex don't exist; the recommendation is based on Kahn, Mew, Wong, and colleagues' clinical experience <cite class="pg">p. 107</cite>.</p>
+
+  <h3>What older children and adults can do</h3>
+  <p>The chapter's last third turns to those past the developmental window. Cure becomes ameliorate; some appliances can help with snoring and mild OSA. The authors mention CPAP, jaw-advancing oral appliances (Homeoblock, DNA appliance, Oasys, Biobloc), nose dilators and even tennis-ball vests that prevent supine sleep <cite class="pg">p. 109</cite>. They emphasise an underappreciated point: simply learning to keep teeth in light contact at rest can produce real cosmetic and clinical improvements in adults — Kahn herself, and patients she's worked with, have reported the muscle-tone changes friends mistook for face-lifts <cite class="pg">pp. 109–110</cite>.</p>
+
+  <h3>Airway-centric orthodontics</h3>
+  <p>This is also where the chapter introduces a critical clinical re-frame: many adult sleep, headache, and TMJ pain problems are downstream of teenage orthodontics that pulled premolars and pushed jaws backward. The book describes a 30-year-old woman whose teenage extraction-and-braces treatment had produced beautifully straight teeth and an airway whose throat space was too small for restful breathing. Reversing the extractions orthodontically, and replacing the missing teeth with implants, resolved her headaches and sleep problems <cite class="pg">p. 110</cite>. The illustration drives the chapter's underlying clinical claim: in modern jaws, you almost never want to push things backward.</p>
+
+  <h3>The two checklists</h3>
+  <p>Two explicit checklists end the chapter, distilled from the book's case material. The first — what to do — runs from "breastfeed for at least a year" through "treat any sign of stuffy nose or snoring promptly" to "seek professional help immediately if you detect symptoms of the oral-facial epidemic" <cite class="pg">p. 113 (Box 4)</cite>. The second — what to look for — is organised by activity. While sitting, does the child put things in her mouth, suck her lips, hold her mouth open, breathe noisily, find it hard to sit still? While speaking, does she pause to gulp air through the mouth, lisp, fail to bring lips together between words? While eating, does she breathe through her mouth between bites, stick her tongue out when swallowing, drink a lot of liquid with the meal, make noise, tighten the lips, wrinkle the chin, tilt the head? While sleeping, does she snore, wet the bed, toss, stretch the head backwards, wake frequently, have nightmares, grind her teeth, struggle to wake up, drool, have dark circles under the eyes? Each item, the chapter argues, is data <cite class="pg">pp. 118–119 (Box 5)</cite>.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>Build correct posture into the activities the child already does. Eating, reading, walking, and sleeping are the training reps; if you make them count, the brain absorbs the new posture as default and the appliances become unnecessary <cite class="pg">p. 105</cite>.</p>
+  </div>
+</section>
+
+<!-- ============================ CHAPTER 8 ============================ -->
+<section id="ch8" class="card">
+  <div class="section-eyebrow">Chapter 8</div>
+  <h2>Orthodontists, dental orthopedists, orthotropists, and forwardontists</h2>
+  <p class="section-deck">A consumer's guide to a fragmented profession. The chapter's quietly devastating argument is that the standard care most parents will encounter is built on assumptions the authors believe are wrong, and that the alternative — Mew's orthotropics, here renamed forwardontics — is hard to find precisely because it is harder, slower, and less profitable.</p>
+
+  <h3>Standard orthodontics</h3>
+  <p>The chapter starts with a market-share fact: well over half of American children wear braces at some point <cite class="pg">p. 121</cite>. The cost of orthodontics has dropped, expectations of perfect teeth have risen, and — Kahn argues — children genuinely are not developing straight teeth on their own. Severity of malocclusions is rising. Surgical jaw correction in teenagers is rising <cite class="pg">p. 121</cite>.</p>
+
+  <p>The mainstream orthodontic worldview, in the chapter's reading, is gene-centric. Parents are told that facial features are inherited and that the dentist's job is cosmetic management of a foreordained outcome <cite class="pg">pp. 122–123</cite>. Treatment is therefore typically delayed until the teenage years (when growth has slowed and outcomes are predictable), centres on fixed braces, and ends with a retainer that the patient is expected to wear for life <cite class="pg">p. 124</cite>. Kahn cites Robert M. Little's long-term study of more than 800 University of Washington cases showing that, after standard orthodontic treatment, room for the tongue shrinks and malocclusion returns — the degree of relapse varies, but the relapse itself is a reliable feature <cite class="pg">p. 124</cite>.</p>
+
+  <h3>Dental orthopedics</h3>
+  <p>A smaller subset of orthodontists treat children earlier, around four or five, on the recognition that environmental factors do shape the developing face <cite class="pg">p. 125</cite>. They use bulky appliances — Twin Block, Herbst, and others — that hold the lower jaw forward and (the authors argue) tend to drag the upper jaw down and back as collateral <cite class="pg">pp. 125–126</cite>. Kahn practiced dental orthopedics for more than two decades <cite class="pg">p. 125</cite>. Her objection to these appliances is mechanical: the maxilla is treated as a fixed anchor, but it isn't fixed, and devices anchored to it can compress the airway. She is especially critical of <strong>cervical headgear</strong>, which she argues actively pushes the upper jaw backward and constricts the airway, even as it improves tooth alignment <cite class="pg">p. 126</cite>. Even with early orthopedic treatment, most cases still need fixed braces in the teenage years; orthodontist Lysle Johnston's review work, the authors write, shows that early functional therapy doesn't materially improve outcomes over straightforward late-teenage braces <cite class="pg">p. 127</cite>.</p>
+
+  <h3>Forwardontics</h3>
+  <p>The chapter's protagonist is John Mew. In the 1970s, after years of clinical practice and observation, Mew formulated what he called the <em>tropic premise</em>: the proposition that many cases of malocclusion can be corrected if young children are encouraged to maintain proper resting oral posture — tongue on the palate, lips sealed, teeth in light contact between four and eight hours a day <cite class="pg">p. 128</cite>. Mew built a set of removable appliances (the Biobloc family, plus the BOW for forward traction without facial anchorage) that are uncomfortable to wear with the mouth open, so they "persuade" patients into using their own jaw muscles to hold the mouth closed <cite class="pg">p. 127</cite>. This is, the authors emphasise, the philosophical break: every other orthodontic and orthopedic appliance does the work for the patient, while Mew's appliances depend on the patient working <cite class="pg">p. 128</cite>.</p>
+
+  <p>Mew's three core claims, summarised in the chapter, are that practically every modern person's upper and lower jaws are positioned behind their ideal forward locations even when the upper jaw appears to protrude; that this underdevelopment is a consequence of eating and breathing history disrupting the gene-environment dialogue between tongue, palate and the muscles around them; and that bone is not static — it is constantly remodelling, which is the reason both orthodontic and forwardontic appliances can move teeth at all <cite class="pg">pp. 128–129</cite>. The forwardontic aim is therefore not to hold a malocclusion in remission with a lifelong retainer, but to <em>cure</em> the underlying postural pattern so that tongue, lips, and teeth themselves act as the retainer <cite class="pg">pp. 129–130</cite>.</p>
+
+  <div class="aside">
+    <h4>Anecdote · the identical-twin study</h4>
+    <p>Mew designed a small, audacious experiment with six sets of identical twins ranging in age from 8 to 19. He approached the parents and offered to treat one twin in each pair at no cost, on condition that the other twin be sent to a local orthodontist of the parents' choice (the orthodontist being told it was a contest, with the right to choose which twin to treat). Ten years later a panel of judges evaluated the pairs. The traditionally treated twins were rated as less attractive after treatment than before; the Mew-treated twins more attractive. The straightness of the Mew-treated twins' teeth held for at least a decade with no retainers, because their resting posture itself had been retrained. The sample is small, but it is the cleanest available evidence that environment, not genetics, drives the divergence <cite class="pg">pp. 130–131</cite>.</p>
+  </div>
+
+  <h3>The differences, in a single table</h3>
+  <p>Box 6 of Chapter 8 is the book's most brutally direct comparison, and worth reproducing in compressed form. Standard orthodontics moves teeth; forwardontics changes the pattern of facial growth. Standard care evaluates around age six and starts active treatment around nine; forwardontic evaluation begins postnatally, with active treatment near seven. Standard care leans on fixed appliances and retrusive mechanics, focuses on the lower jaw, sometimes pulls cervical headgear, often requires extractions, removes wisdom teeth, and is followed by lifelong retainer wear. Forwardontics uses mostly removable appliances, protractive mechanics, focuses on the upper jaw, uses reverse headgear when needed, performs no extractions of permanent teeth, leaves room for wisdom teeth, and ends — when it works — without retainers. The price gap is real: roughly $6,000 versus $15,000 in 2015 dollars, which reflects partly the time involvement and partly the difficulty of the work <cite class="pg">p. 140 (Box 6)</cite>.</p>
+
+  <h3>Why the profession resists</h3>
+  <p>The chapter's final movement is sociological. Why has Mew's evidence not transformed orthodontics? The authors offer three answers. First, dental schooling is siloed and conservative: the gold-standard evidence for any procedure is hard to come by, and most dentists are not trained to read evolutionary or developmental literature <cite class="pg">pp. 141–142</cite>. Second, the kind of evidence available in this field is necessarily indirect — comparative anthropology, museum skull collections, identical-twin natural experiments — which orthodontists are trained to discount as "small samples" <cite class="pg">p. 142</cite>. Third, there are financial incentives. Switching to a treatment that takes a decade per patient, depends on patient compliance, and pays off only by curing the disease (rather than maintaining it with retainers and follow-ups) is not in the short-term interest of established practitioners <cite class="pg">p. 143</cite>. The authors are explicit: extracting wisdom teeth is a cash cow, and the news that prophylactic extraction may worsen oral-facial outcomes is unwelcome to those whose practices depend on it <cite class="pg">p. 143</cite>.</p>
+
+  <div class="aside">
+    <h4>Anecdote · Semmelweis again</h4>
+    <p>The historical analogy Kahn and Ehrlich reach for is Ignaz Semmelweis, the 19th-century Hungarian physician who showed in the 1840s that careful hand-washing nearly eliminated puerperal fever, which had killed roughly 10% (in some cases up to 30%) of women in maternity wards. His evidence was empirical and clear, but it conflicted with the prevailing miasma theory of disease and threatened doctors' self-image as agents of healing rather than possible vectors of harm. He was largely ignored. Women continued to die for decades until Pasteur's germ theory finally re-framed the field. The authors are not subtle: they think Mew is in a similar position <cite class="pg">p. 141</cite>.</p>
+  </div>
+
+  <h3>The airway, finally, on the agenda</h3>
+  <p>One hopeful note ends the chapter. A small group within the dental profession has begun to put the airway first, organising as the <strong>American Academy of Physiological Medicine and Dentistry</strong> (AAPMD), of which Kahn is a member <cite class="pg">p. 139</cite>. They commit to never choosing a treatment plan that shrinks the airway, even when that plan is faster or cheaper. Donald Enlow, author of <em>Essentials of Facial Growth</em>, gave them the slogan: the airway is the cornerstone of facial growth <cite class="pg">p. 139</cite>. Forwardontics fits naturally inside this airway-centric movement.</p>
+
+  <p>For parents trying to choose a practitioner, the chapter offers a short list of questions: what will this treatment do to the airway, will it require extracting healthy permanent teeth, does the practitioner consider the whole face or only the alignment of the smile, and — crucially — do you understand that the cure may take a decade and tens of thousands of dollars and depend heavily on your child's cooperation <cite class="pg">p. 143</cite>?</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>Choose a practitioner who treats the airway as primary and the smile as a side-effect. Be prepared to walk away from any plan that pulls healthy permanent teeth or pushes the upper jaw backward in the name of straightening — those manoeuvres often trade a teenage smile for an adult sleep disorder <cite class="pg">p. 110, p. 140</cite>.</p>
+  </div>
+</section>
+
+<!-- ============================ CHAPTER 9 ============================ -->
+<section id="ch9" class="card">
+  <div class="section-eyebrow">Chapter 9</div>
+  <h2>Changing culture, improving health</h2>
+  <p class="section-deck">The closing chapter widens the lens from the family to the society. Kahn and Ehrlich argue that the oral-facial epidemic is one symptom of a larger refusal — in the United States especially — to invest in prevention rather than repair.</p>
+
+  <h3>"Health repair," not health care</h3>
+  <p>Oral-facial health sits inside the larger pattern Ehrlich has spent his career writing about: humanity's "predicament" of overpopulation, overconsumption, climate disruption, and the systematic preference for cleaning up disasters rather than preventing them <cite class="pg">p. 145</cite>. The U.S. medical system, the authors argue, is more honestly described as a "health repair" system than a health-care one — it manages chronic disease as an afterthought rather than fostering wellness <cite class="pg">p. 145</cite>. The same prevention-versus-cure asymmetry shows up in climate policy, in biodiversity, and in food systems. The "ounce of prevention" cliché is invoked, deliberately, because in this case it really does seem to apply <cite class="pg">p. 145</cite>.</p>
+
+  <h3>What needs to change, in three steps</h3>
+  <p>The book's policy proposal is unusually concrete. <strong>First</strong>, the public should be informed about the actual scale of oral-facial problems and about the existence of preventive and curative alternatives to standard orthodontics. <strong>Second</strong>, health professionals should be educated to discuss treatment alternatives honestly — including the airway-affecting consequences of extraction-based orthodontics. <strong>Third</strong>, dental and medical schools must train forwardontists in numbers; weekend seminars are not enough, because forwardontic treatment depends on watching a patient grow over a decade <cite class="pg">p. 147</cite>. The authors recommend the residency model: residents start cases under multiple supervisors, pass them on at graduation, supervise the next intake, and the institutional knowledge accumulates <cite class="pg">pp. 148–149</cite>.</p>
+
+  <p>They go further. Dentists, the authors argue, should be trained as <strong>oral physicians</strong> with responsibilities beyond tooth alignment: evaluating sleep, breathing, and posture, and collaborating routinely with ear-nose-throat specialists, sleep doctors, paediatricians, and family physicians <cite class="pg">p. 148</cite>. The siloing of dental practice is itself part of the problem.</p>
+
+  <div class="aside">
+    <h4>Anecdote · the Volkswagen in her mouth</h4>
+    <p>Thirty years ago, Kahn writes, her mother in Mexico City would point at children wearing braces and say something to the effect of: look, she's wearing a Volkswagen in her mouth. Orthodontics in that era was a luxury, expensive and visible. In the decades since, all kinds of braces — visible, invisible, removable, clear — have become accessible to roughly any middle-class person in industrialised societies. The cultural shift was real and rapid. Kahn uses the story to argue that the same kind of cultural shift is possible for forwardontics, if the public learns about it <cite class="pg">p. 148</cite>.</p>
+  </div>
+
+  <h3>Mew with a picket sign</h3>
+  <p>One of the chapter's images is John Mew, in his later years, picketing for orthodontic reform — specifically for the principle of fully informed consent, the idea that any patient recommended for surgery or extraction must be told about all viable alternatives <cite class="pg">pp. 146–147</cite>. The picture of an elderly orthodontist with a placard makes the politics of the field hard to miss.</p>
+
+  <h3>Prevention as cultural technology</h3>
+  <p>The authors are realistic. They sketch, half-tongue-in-cheek, what radical prevention would look like — close the baby-food factories, throw away the cutlery, hand a child a half-chicken — and then concede that society isn't going there <cite class="pg">pp. 150–151</cite>. But partial steps are available: parents can dice tough cuts of meat and watch the child chew, serve more raw and undercooked vegetables, treat the under-twos as if their mouths are doing developmental work that nothing else can replace <cite class="pg">p. 151</cite>. School cafeterias can serve harder, less processed food. Health curricula can include posture and breathing. Daycare and kindergarten staff could be trained in the simple GOPex routines around eating, counting and reading aloud <cite class="pg">pp. 149–150</cite>.</p>
+
+  <p>Cultural change can move quickly when it does move. The chapter cites the parallel of antismoking laws — initially unpopular, eventually decisive — and the legal protection of public breastfeeding in the U.S. that increased uptake especially among minority women <cite class="pg">p. 152</cite>. Race and class shape exposure to the disease: soft, processed fast food makes up a larger share of the diet of poor and minority American children than of privileged ones <cite class="pg">p. 153</cite>. The widely accepted framing of obesity as a personal failing, the authors argue, blocks structural action — taxes on super-sugared drinks, controls on what schools serve, subsidies that make unprocessed food available in poor neighbourhoods <cite class="pg">p. 153</cite>.</p>
+
+  <h3>The data we don't have</h3>
+  <p>One of the chapter's quieter calls is for serious epidemiological work. The authors are convinced the malocclusion problem is large, but admit that this is "an informed guess based on fragmentary evidence" <cite class="pg">p. 151</cite>. They want government polling, careful prevalence surveys, and the kind of longitudinal cohort studies that would let public health build a real picture. They cite Evelyne Touchette of the University of Quebec at Three Rivers, who reports that large studies in Australia, the U.S., Italy, and Israel converge on roughly 30% of preschool children suffering from sleep problems <cite class="pg">p. 152</cite> — a figure that, if even partially attributable to disordered breathing, makes the case urgent.</p>
+
+  <h3>The closing pivot</h3>
+  <p>The book ends by binding its narrow subject — children's faces — to its widest concern. The world will add more than two billion people by 2050, most of them in countries where soft, processed food, dense indoor living, and pollution are growing <cite class="pg">p. 155</cite>. The number of mouth breathers, malocclusion sufferers, and OSA patients will grow with them, unless cultural practices around <em>how we eat, how we breathe, where we breathe, and how we rest our mouths</em> shift <cite class="pg">p. 155</cite>. The closing pages argue that this is a problem that cannot be left to dentistry alone; it is a problem of governance, public information, school design, food policy, and parental knowledge. Each individual reader is invited to participate at the level closest to them — a child or grandchild, a friend with a young family, a school board, a paediatrician — because the disease is hidden mostly by the ordinariness of its symptoms, and the cure starts with seeing them <cite class="pg">pp. 154–155</cite>.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>Treat this as a public-health problem, not a private aesthetic one. Prevention scales when culture, schools, and dentistry move together; if you can only pick one lever, pick the children in your own life and start there <cite class="pg">p. 154</cite>.</p>
+  </div>
+</section>
+
+<!-- ============================ PRACTICAL TRIAGE (Exhibit 5) ============================ -->
+<section id="triage" class="card">
+  <div class="section-eyebrow">Apparatus</div>
+  <h2>Practical triage — when to watch, when to act</h2>
+  <p class="section-deck">Chapter 7 distributes a long checklist of warning signs across activities (sitting, speaking, eating, sleeping). This card distills those signals into a single triage table, with action levels coded by the same green/amber/red traffic-light convention the access protocol uses elsewhere in this document.</p>
+
+  <p>The advice level — household habit, monitor, evaluate — is editorial. It draws on the book's own framing in Chapters 6 and 7 but is not lifted verbatim from any single passage. The intent is decision support, not a prescription: a recurring pattern of red-coded signals is reason to seek a clinician, not a basis for self-treatment.</p>
+
+  <figure class="exhibit triage">
+    <table>
+      <thead>
+        <tr>
+          <th>Signal to watch</th>
+          <th>Why the book cares</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="signal">Open-mouth resting posture</td>
+          <td class="why">Suggests nasal obstruction, low tongue, or weak lip seal; central to the book's model of altered growth <cite class="pg">pp. 42, 73–74</cite>.</td>
+          <td class="action"><span class="tag yellow">Monitor</span> if occasional; <span class="tag red">evaluate</span> if habitual.</td>
+        </tr>
+        <tr>
+          <td class="signal">Snoring, restless sleep, daytime fatigue</td>
+          <td class="why">Part of the book's airway / sleep-disordered-breathing concern; primary-snoring data alone is enough to investigate <cite class="pg">pp. 79–80</cite>.</td>
+          <td class="action"><span class="tag red">Clinical evaluation</span> — not DIY.</td>
+        </tr>
+        <tr>
+          <td class="signal">Soft-food diet, avoidance of chewing</td>
+          <td class="why">Reduces the mechanical growth signal emphasised in Chapter 2; the lever the book most clearly identifies <cite class="pg">pp. 29–35</cite>.</td>
+          <td class="action"><span class="tag green">Household habit</span> — introduce age-safe tougher textures.</td>
+        </tr>
+        <tr>
+          <td class="signal">Chronic congestion, allergies, blocked nose</td>
+          <td class="why">Pushes a child toward mouth breathing and altered posture; the indoor-air revolution the book identifies as a third cultural lever <cite class="pg">pp. 44–45, 98–99</cite>.</td>
+          <td class="action"><span class="tag yellow">Treat causes</span>; consider clinician input.</td>
+        </tr>
+        <tr>
+          <td class="signal">Bedwetting, head tossing, neck-extended sleep posture</td>
+          <td class="why">Listed in the book's bedside checklist as signs that breathing is disordered during sleep <cite class="pg">pp. 118–119</cite>.</td>
+          <td class="action"><span class="tag red">Clinical evaluation</span>.</td>
+        </tr>
+        <tr>
+          <td class="signal">Tongue-thrust swallow, lisp, lips-apart speech</td>
+          <td class="why">Indicators that oral muscles aren't doing their developmental work; Kahn flags these in the speaking-while-checking part of the parent's checklist <cite class="pg">p. 118</cite>.</td>
+          <td class="action"><span class="tag yellow">Monitor</span>; consider myofunctional or posture work.</td>
+        </tr>
+        <tr>
+          <td class="signal">Recommendation to extract permanent teeth solely to make room</td>
+          <td class="why">The authors argue this may treat crowding while missing the underlying jaw and airway problem; sometimes makes the airway worse <cite class="pg">pp. 110, 140</cite>.</td>
+          <td class="action"><span class="tag yellow">Ask questions</span>; seek airway-aware second opinion.</td>
+        </tr>
+        <tr>
+          <td class="signal">Recommendation for prophylactic wisdom-tooth extraction</td>
+          <td class="why">Friedman's estimate (cited by the book) is that ~⅔ of such extractions are unnecessary, with ~11,000 patients annually suffering permanent nerve injury <cite class="pg">p. 27</cite>.</td>
+          <td class="action"><span class="tag yellow">Interrogate the recommendation</span>; ask what would happen if you waited.</td>
+        </tr>
+        <tr>
+          <td class="signal">Adult snoring or suspected OSA</td>
+          <td class="why">The book links adult airway restriction to wider cardiovascular and cognitive risk; sleep-medicine pathway is the right entry point <cite class="pg">pp. 77–79</cite>.</td>
+          <td class="action"><span class="tag red">Sleep-medicine pathway</span>.</td>
+        </tr>
+      </tbody>
+    </table>
+  </figure>
+  <p class="exhibit-caption"><strong>Exhibit 5.</strong> Practical triage. Signals derived from the book's Chapter 7 parental checklist <cite class="pg">pp. 118–119</cite> and from medical claims threaded through Chapters 1, 6, and 8. Action levels are editorial; the green/amber/red coding follows the same access convention used in the source log so that monitor/evaluate/act-now is readable at a glance.</p>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>Treat any single signal as data, not diagnosis. A pattern of red-coded signals over weeks is what should send you to a sleep specialist, ENT, or airway-aware dentist — not a single noisy night.</p>
+  </div>
+</section>
+
+<!-- ============================ EVIDENCE LADDER (Exhibit 6) ============================ -->
+<section id="evidence" class="card">
+  <div class="section-eyebrow">Apparatus</div>
+  <h2>Evidence ladder &amp; advocacy caveats</h2>
+  <p class="section-deck">The book draws on at least four kinds of evidence, and they are not interchangeable. A reader who treats Catlin's 1830s observations and a controlled animal experiment as the same kind of evidence will misread what's strong and what's speculative in <em>Jaws</em>.</p>
+
+  <h3>What the authors themselves concede</h3>
+  <p>Kahn and Ehrlich are upfront in the introduction that their literature is fragmentary and that ethical limits on human experimentation make some of their claims necessarily speculative <cite class="pg">pp. 14–16</cite>. They are explicit about which claims they are confident in (chewing patterns shape jaw growth, mouth breathing associates with malocclusion and sleep apnea, hunter-gatherer skulls almost never show malocclusion) and which they are speculating on — for example, that hunter-gatherer children probably did not snore, where they admit they have no direct evidence <cite class="pg">p. 16</cite>. That self-aware framing is the right starting point for any reader.</p>
+
+  <h3>The book's evidence, ranked</h3>
+  <p>The ladder below sorts the evidence the book actually uses into four tiers, from most to least decisive on its own.</p>
+
+  <figure class="svg-exhibit">
+    <p class="svg-title">Exhibit 6 · Evidence ladder</p>
+    <svg viewBox="0 0 880 360" role="img" aria-label="Evidence ladder for the book's claims, from anecdotal at the bottom to systematic clinical evidence at the top" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="260" width="780" height="60" rx="14" class="diag-tier-weak" stroke-width="1.5"/>
+      <text class="diag-tier-rank-weak diag-tier-label" x="78" y="296">LOWER</text>
+      <text class="diag-text-primary" x="200" y="296">Anecdotes, historical observers, before/after images</text>
+      <text class="diag-text-muted" x="640" y="296">Memorable, not decisive</text>
+
+      <rect x="60" y="190" width="780" height="60" rx="14" class="diag-tier-mid" stroke-width="1.5"/>
+      <text class="diag-tier-rank-mid diag-tier-label" x="78" y="226">MIXED</text>
+      <text class="diag-text-primary" x="200" y="226">Population contrasts, skull records, comparative anthropology</text>
+      <text class="diag-text-muted" x="640" y="226">Hypothesis-building, not proof</text>
+
+      <rect x="60" y="120" width="780" height="60" rx="14" class="diag-tier-mid" stroke-width="1.5"/>
+      <text class="diag-tier-rank-mid diag-tier-label" x="78" y="156">STRONGER</text>
+      <text class="diag-text-primary" x="200" y="156">Animal experiments and mechanistic growth models</text>
+      <text class="diag-text-muted" x="640" y="156">Plausibility, not full clinical proof</text>
+
+      <rect x="60" y="50" width="780" height="60" rx="14" class="diag-tier-strong" stroke-width="1.5"/>
+      <text class="diag-tier-rank-strong diag-tier-label" x="78" y="86">NEEDED</text>
+      <text class="diag-text-primary" x="200" y="86">Current systematic clinical evidence and guidelines</text>
+      <text class="diag-text-muted" x="640" y="86">Outside this artifact's scope</text>
+    </svg>
+  </figure>
+  <p class="exhibit-caption"><strong>Exhibit 6.</strong> Evidence-tier ladder. The book's strongest internal case is at the mechanistic and comparative tiers (Harvold's rhesus monkeys <cite class="pg">pp. 64–65</cite>, Corruccini's squirrel monkeys <cite class="pg">p. 34</cite>, the Lieberman skull-collection observations <cite class="pg">p. 24</cite>); its rhetorical reach comes from the anecdotal tier (Catlin and the Mandan <cite class="pg">pp. 20–24</cite>, the gerbil-allergic boy <cite class="pg">p. 66</cite>, the Wellington and Margaret Theresa portraits <cite class="pg">p. 52</cite>). The top tier — current systematic clinical evidence on orthodontics, pediatric sleep medicine, and forwardontics — sits outside the book and outside this summary.</p>
+
+  <h3>The advocacy-versus-consensus distinction</h3>
+  <p><em>Jaws</em> is a book of advocacy as much as exposition. Three positions in particular sit closer to its authors' minority view than to current professional consensus, and a careful reader should keep the distinction live:</p>
+
+  <figure class="exhibit">
+    <table>
+      <thead>
+        <tr>
+          <th>Book claim</th>
+          <th>Where the book makes it</th>
+          <th>Status outside the book</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Forwardontics / orthotropics is a better default than standard orthodontics for most malocclusion.</td>
+          <td>Chapter 8 <cite class="pg">pp. 121–144</cite>; Mew's twin study <cite class="pg">pp. 130–131</cite>.</td>
+          <td>Not the consensus position; orthotropics is a minority school. John Mew was censured by his profession; Box 6's framing presents the contrast as advocacy.</td>
+        </tr>
+        <tr>
+          <td>Untreated mouth breathing and malocclusion drive substantial cardiovascular, metabolic, and cognitive disease through OSA.</td>
+          <td>Chapter 6 <cite class="pg">pp. 77–82</cite>; the Sapolsky antelope/antlers metaphor <cite class="pg">p. 78</cite>.</td>
+          <td>The OSA → cardiovascular link is broadly accepted; the specific magnitudes the book attributes to it, and the mediation through childhood jaw underdevelopment, lean on inference more than direct trial evidence.</td>
+        </tr>
+        <tr>
+          <td>~75% of children with ADHD trace their problem to sleep-disordered breathing (Sheldon).</td>
+          <td>Chapter 6 <cite class="pg">p. 80</cite>.</td>
+          <td>This is one specialist's clinical estimate quoted in the book, not a settled epidemiological finding. Treat as suggestive.</td>
+        </tr>
+        <tr>
+          <td>~⅔ of prophylactic wisdom-tooth extractions are unnecessary; ~11,000 patients suffer permanent nerve injury annually (Friedman).</td>
+          <td>Chapter 1 <cite class="pg">p. 27</cite>.</td>
+          <td>Friedman's 2007 paper in the <em>American Journal of Public Health</em> is the original source. The figures remain contested in oral surgery; the book transmits Friedman without substantial qualification.</td>
+        </tr>
+      </tbody>
+    </table>
+  </figure>
+
+  <div class="rule">
+    <div class="rule-label">Reader's rule</div>
+    <p>Read <em>Jaws</em> as a polemic with a strong evidence base, not as a clinical guideline. Treat its mechanistic claims as plausible, its prevalence claims as book-reported, and its professional-reform recommendations as the authors' minority position arguing its case.</p>
+  </div>
+</section>
+
+<!-- ============================ ANECDOTES (Exhibit 7) ============================ -->
+<section id="anecdotes" class="card">
+  <div class="section-eyebrow">Apparatus</div>
+  <h2>Anecdote highlights</h2>
+  <p class="section-deck">A consolidated index of the book's most memorable case studies and historical episodes — useful for skimming, citing, or simply remembering why the argument is hard to forget.</p>
+
+  <div class="anec-grid">
+    <div class="anec-card">
+      <h4>The dinner club origin</h4>
+      <p>The book began at a series of Palo Alto dinners between Sandra Kahn and her husband David Leventhal, and Paul and Anne Ehrlich. Kahn, halfway through her career as an orthodontist, started telling Ehrlich about her growing professional discomfort. The conversation turned into the book.</p>
+      <span class="pg-foot">Book pp. 4–5 (Introduction)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Huggins's mule</h4>
+      <p>Dentist Hal A. Huggins's signature line, quoted to dispatch the genetic-mismatch theory of malocclusion: cross a horse and a donkey and you get a mule, but no mule has ever been born with horse-sized teeth in a donkey-sized jaw.</p>
+      <span class="pg-foot">Book p. 17 (Ch 1)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Lieberman's museum</h4>
+      <p>Harvard evolutionary biologist Daniel Lieberman, surveying his museum's skull collection: most modern skulls are dental nightmares; preindustrial farmers had cavities but fewer than 5% had impacted wisdom teeth; hunter-gatherers had nearly perfect dental health.</p>
+      <span class="pg-foot">Book p. 24 (Ch 1)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Pottenger's cats</h4>
+      <p>The 1930s experiment in which one group of cats was fed raw meat and another cooked food and pasteurised milk; the cooked-food cats grew smaller and could not reproduce. Methodologically flawed, but the underlying observation about diet processing was a forerunner of modern findings.</p>
+      <span class="pg-foot">Book p. 31 (Ch 2)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Weston Price's travels</h4>
+      <p>The American Dental Association's research founder (chairman 1914–1928) travelled the world in the 1930s comparing indigenous and Westernised diets. His specific theory was wrong; his core observation about jaw shrinkage in a single generation was right.</p>
+      <span class="pg-foot">Book pp. 31–33 (Ch 2)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Corruccini's monkeys</h4>
+      <p>Robert Corruccini fed nutritionally identical hard and soft diets to two groups of squirrel monkeys. The soft-diet group developed crowded premolars, narrowed arches, and rotated teeth. Tooth wear was identical between groups, killing the older "lack of grit" hypothesis.</p>
+      <span class="pg-foot">Book p. 34 (Ch 2)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Harvold's rhesus monkeys</h4>
+      <p>In the 1970s, Egil Harvold blocked young rhesus monkeys' nostrils with silicon plugs, forcing mouth breathing. Eighteen months later they had long faces, sloped mandibles, and varied malocclusions. Most reversed when the plugs were removed.</p>
+      <span class="pg-foot">Book pp. 64–65 (Ch 5)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Recife mirror tests</h4>
+      <p>A careful study of 150 Brazilian schoolchildren aged 8–10 in Recife found that 80 of them — 53% — were mouth breathers, verified by mirror fogging and a three-minute water-holding task. The numbers in industrialised societies are reliably this high.</p>
+      <span class="pg-foot">Book p. 73 (Ch 6)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Sapolsky's antelope</h4>
+      <p>Stress endocrinologist Robert Sapolsky's image, used to explain why a child whose nights are interrupted by partial suffocation cannot grow well: an antelope fleeing a lioness doesn't have the time or energy to grow antlers.</p>
+      <span class="pg-foot">Book p. 78 (Ch 6)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Tarahumara and Apache runners</h4>
+      <p>The Tarahumara people of Mexico's Copper Canyon, known for running marathons-and-then-some at altitude, do so almost exclusively through nasal breathing. Apache "spirit runners" trained from childhood by carrying water in the mouth while running long distances in the desert.</p>
+      <span class="pg-foot">Book p. 101 (Ch 7)</span>
+    </div>
+    <div class="anec-card">
+      <h4>Mew picketing</h4>
+      <p>One photograph in the closing chapter shows John Mew, in his later years, picketing for orthodontic reform — specifically for the principle of fully informed consent. The image is brief in the book and quietly central to its politics.</p>
+      <span class="pg-foot">Book p. 147 (Ch 9)</span>
+    </div>
+  </div>
+  <p class="exhibit-caption"><strong>Exhibit 7.</strong> Anecdote highlights — supplemental index. Eleven case studies and historical episodes mentioned in the chapter prose without their own callout box, indexed for quick reference. Anecdotes already presented as named asides inside the chapters (Mandan skulls, gerbil boy, Wellington and Margaret Theresa, Deamonte Driver, Georgia bulldogs, zombie nation, !Kung leisure data, Sandra's father, identical-twin study, Semmelweis, Volkswagen) are not duplicated here. Each card cites the book pages where the underlying material is described.</p>
+</section>
+
+<!-- ============================ SOURCE LOG (Exhibit 8) ============================ -->
+<section id="sourcelog" class="card">
+  <div class="section-eyebrow">Apparatus</div>
+  <h2>Source-attribution log</h2>
+  <p class="section-deck">A single primary source supports this entire summary: the full text of <em>Jaws</em> by Kahn and Ehrlich (Stanford University Press, 2018). All anecdote and statistical attributions trace to the cited book pages below.</p>
+
+  <div class="exhibit source-log">
+    <table>
+      <thead>
+        <tr>
+          <th>Section of summary</th>
+          <th>Primary source</th>
+          <th>Access</th>
+          <th>Page support</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Foreword summary</td>
+          <td>Kahn &amp; Ehrlich (2018), Foreword by Robert Sapolsky</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. ix–x (PDF pp. 9–10)</td>
+        </tr>
+        <tr>
+          <td>Introduction</td>
+          <td>Kahn &amp; Ehrlich (2018), Introduction</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 1–16 (PDF pp. 15–30)</td>
+        </tr>
+        <tr>
+          <td>Ch 1 — Primitive Big Mouths</td>
+          <td>Kahn &amp; Ehrlich (2018), Ch 1</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 17–28 (PDF pp. 31–42)</td>
+        </tr>
+        <tr>
+          <td>Ch 2 — Mostly Chewing</td>
+          <td>Kahn &amp; Ehrlich (2018), Ch 2</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 29–38 (PDF pp. 43–52)</td>
+        </tr>
+        <tr>
+          <td>Ch 3 — Diet, Posture, Housing</td>
+          <td>Kahn &amp; Ehrlich (2018), Ch 3</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 39–46 (PDF pp. 53–60)</td>
+        </tr>
+        <tr>
+          <td>Ch 4 — Appearance</td>
+          <td>Kahn &amp; Ehrlich (2018), Ch 4</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 47–58 (PDF pp. 61–72)</td>
+        </tr>
+        <tr>
+          <td>Ch 5 — Development &amp; Oral Posture</td>
+          <td>Kahn &amp; Ehrlich (2018), Ch 5</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 59–72 (PDF pp. 73–86)</td>
+        </tr>
+        <tr>
+          <td>Ch 6 — Disorders of Breathing &amp; Sleep</td>
+          <td>Kahn &amp; Ehrlich (2018), Ch 6</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 73–88 (PDF pp. 87–102)</td>
+        </tr>
+        <tr>
+          <td>Ch 7 — What Can You Do?</td>
+          <td>Kahn &amp; Ehrlich (2018), Ch 7</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 89–120 (PDF pp. 103–134)</td>
+        </tr>
+        <tr>
+          <td>Ch 8 — The Professions</td>
+          <td>Kahn &amp; Ehrlich (2018), Ch 8</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 121–144 (PDF pp. 135–158)</td>
+        </tr>
+        <tr>
+          <td>Ch 9 — Changing Culture</td>
+          <td>Kahn &amp; Ehrlich (2018), Ch 9</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 145–155 (PDF pp. 159–169)</td>
+        </tr>
+        <tr>
+          <td>Author biographies</td>
+          <td>Kahn &amp; Ehrlich (2018), About the Authors</td>
+          <td class="access"><span class="tag green">GREEN</span></td>
+          <td>book pp. 189–190 (PDF pp. 203–204)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="exhibit-caption"><strong>Exhibit 8.</strong> Source-attribution log. All twelve rows above are supported by the same primary corpus — the full text of <em>Jaws</em> (Stanford University Press, 2018) — accessed in full from the publisher PDF. Secondary sources mentioned by name in the body (Catlin's <em>Shut Your Mouth and Save Your Life</em>, Lieberman's <em>The Human Body</em>, Mew's identical-twin study, Corruccini's monkey work, Harvold's rhesus experiments, Otto's <em>Teeth</em>, etc.) are cited as Kahn &amp; Ehrlich quote or describe them, with no claim that they were independently verified for this summary; the summary's epistemic status is therefore that of a careful chapter-level paraphrase, not an independent literature review. Inline page citations in the body use the form <cite class="pg">p. N</cite> or <cite class="pg">pp. N–M</cite> and refer to the printed book pagination, not the PDF pagination.</p>
+</section>
+
+<footer class="colophon">
+  Summary of <em>Jaws: The Story of a Hidden Epidemic</em> · Kahn &amp; Ehrlich · Stanford University Press, 2018
+</footer>
+
+</div></main>
+</div>
+
+<script>
+/* ===================== Theme toggle ===================== */
+(function(){
+  var btn = document.getElementById("theme-toggle");
+  var ico = document.getElementById("theme-ico");
+  var meta = document.getElementById("meta-theme");
+  var root = document.documentElement;
+
+  function paintIcon(){
+    var t = root.getAttribute("data-theme");
+    if (t === "light"){
+      meta.setAttribute("content","#f5efe2");
+      ico.innerHTML = '<circle cx="12" cy="12" r="4"/><path d="M12 3v1.5M12 19.5V21M3 12h1.5M19.5 12H21M5.6 5.6l1.1 1.1M17.3 17.3l1.1 1.1M5.6 18.4l1.1-1.1M17.3 6.7l1.1-1.1"/>';
+      btn.setAttribute("aria-label","Switch to dark theme");
+    } else {
+      meta.setAttribute("content","#15130f");
+      ico.innerHTML = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+      btn.setAttribute("aria-label","Switch to light theme");
+    }
+  }
+  paintIcon();
+
+  btn.addEventListener("click", function(){
+    var current = root.getAttribute("data-theme") || "dark";
+    var next = current === "light" ? "dark" : "light";
+    root.setAttribute("data-theme", next);
+    if (next === "light"){
+      root.style.background = "#f5efe2";
+      root.style.color = "#1c1a14";
+      root.style.colorScheme = "light";
+    } else {
+      root.style.background = "#15130f";
+      root.style.color = "#ede5d3";
+      root.style.colorScheme = "dark";
+    }
+    try { localStorage.setItem("jaws.theme", next); } catch(e){}
+    paintIcon();
+  });
+})();
+
+/* ===================== Sidebar toggle (works on all sizes) ===================== */
+(function(){
+  var sidebar = document.getElementById("sidebar");
+  var overlay = document.getElementById("overlay");
+  var btn = document.getElementById("menu-btn");
+  var DESKTOP = "(min-width: 1024px)";
+  var COLLAPSED_KEY = "jaws.sidebar.collapsed";
+
+  /* Apply persisted collapse state on desktop */
+  try {
+    if (window.matchMedia(DESKTOP).matches && localStorage.getItem(COLLAPSED_KEY) === "1") {
+      sidebar.classList.add("collapsed");
+    }
+  } catch(e){}
+
+  function toggleMobile(){
+    var isOpen = sidebar.classList.contains("open");
+    if (isOpen){ sidebar.classList.remove("open"); overlay.classList.remove("open"); }
+    else { sidebar.classList.add("open"); overlay.classList.add("open"); }
+  }
+  function toggleDesktop(){
+    var collapsed = sidebar.classList.toggle("collapsed");
+    try { localStorage.setItem(COLLAPSED_KEY, collapsed ? "1" : "0"); } catch(e){}
+  }
+  function closeMobile(){ sidebar.classList.remove("open"); overlay.classList.remove("open"); }
+
+  btn.addEventListener("click", function(e){
+    e.preventDefault();
+    if (window.matchMedia(DESKTOP).matches) toggleDesktop();
+    else toggleMobile();
+  });
+
+  overlay.addEventListener("click", closeMobile);
+
+  /* Close mobile drawer on nav click; close on Esc */
+  sidebar.querySelectorAll("a[data-target]").forEach(function(a){
+    a.addEventListener("click", function(){
+      if (window.matchMedia("(max-width: 1023px)").matches) closeMobile();
+    });
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && window.matchMedia("(max-width: 1023px)").matches) closeMobile();
+  });
+
+  /* On resize across the breakpoint, normalise state */
+  window.addEventListener("resize", function(){
+    if (window.matchMedia(DESKTOP).matches){
+      sidebar.classList.remove("open");
+      overlay.classList.remove("open");
+    } else {
+      sidebar.classList.remove("collapsed");
+    }
+  });
+})();
+
+/* ===================== Pure in-document scrolling (data-target) ===================== */
+(function(){
+  document.querySelectorAll("a[data-target]").forEach(function(a){
+    a.addEventListener("click", function(e){
+      e.preventDefault();
+      var id = a.getAttribute("data-target");
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+  });
+})();
+
+/* ===================== Active nav link on scroll ===================== */
+(function(){
+  var links = Array.from(document.querySelectorAll(".sidebar nav a[data-target]"));
+  var sections = links.map(function(a){
+    return document.getElementById(a.getAttribute("data-target"));
+  }).filter(Boolean);
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting){
+        var id = entry.target.id;
+        links.forEach(function(a){
+          a.classList.toggle("active", a.getAttribute("data-target") === id);
+        });
+      }
+    });
+  }, {rootMargin:"-30% 0px -55% 0px", threshold:0});
+
+  sections.forEach(function(s){ io.observe(s); });
+})();
+</script>
+</body>
+</html>
