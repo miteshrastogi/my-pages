@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="en" style="background:#15151b;color-scheme:dark light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="dark light" />
+<meta name="theme-color" content="#15151b" id="theme-color-meta" />
+<title>Catastrophe Modeling: A Synthesis for the 2026 Webcast</title>
+<script>
+// Triple-layer dark protection: apply saved theme before paint
+(function(){
+  try {
+    var t = localStorage.getItem('cm_theme');
+    if (t === 'light') {
+      document.documentElement.setAttribute('data-theme','light');
+      document.documentElement.style.background = '#f5efe2';
+      document.documentElement.style.color = '#1c1a14';
+      var m = document.getElementById('theme-color-meta');
+      if (m) m.setAttribute('content','#f5efe2');
+    } else {
+      document.documentElement.setAttribute('data-theme','dark');
+    }
+  } catch(e){}
+})();
+</script>
+<style>
+/* === Base reset === */
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html:not([data-theme="light"]){background:#15151b;color:#e6e3da}
+html[data-theme="light"]{background:#f5efe2;color:#1c1a14}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.65;font-size:16.5px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* === Theme tokens === */
+html:not([data-theme="light"]){
+  --bg:#15151b;
+  --surface:#1d1d27;
+  --surface-2:#252533;
+  --surface-3:#2e2e3f;
+  --border:#383848;
+  --text:#e6e3da;
+  --text-soft:#b4b1a8;
+  --text-mute:#7d7a72;
+  --accent:#e8b04c;
+  --accent-soft:#3a2f17;
+  --accent-2:#7eb8d4;
+  --accent-2-soft:#1d3848;
+  --rule:#3a3a4d;
+  --shadow:0 4px 24px rgba(0,0,0,.45);
+  --shadow-lg:0 14px 48px rgba(0,0,0,.55);
+  --tier-low:#3d5a3d; --tier-mid:#5a4a2a; --tier-high:#5a2e2e;
+}
+html[data-theme="light"]{
+  --bg:#f5efe2;
+  --surface:#fbf6e8;
+  --surface-2:#f0e8d4;
+  --surface-3:#e8dec5;
+  --border:#d6c8a8;
+  --text:#1c1a14;
+  --text-soft:#4d473a;
+  --text-mute:#7d7560;
+  --accent:#a06800;
+  --accent-soft:#f0e3c4;
+  --accent-2:#2e5a78;
+  --accent-2-soft:#dde8f0;
+  --rule:#cfc1a3;
+  --shadow:0 4px 18px rgba(60,45,15,.10);
+  --shadow-lg:0 14px 36px rgba(60,45,15,.16);
+  --tier-low:#c8d8c2; --tier-mid:#e6d6a8; --tier-high:#e8c4b8;
+}
+
+body{background:var(--bg);color:var(--text)}
+a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent)}
+a:hover{border-bottom-style:solid}
+
+/* === Layout === */
+.app{display:flex;min-height:100vh}
+.sidebar{
+  width:280px;flex:0 0 280px;background:var(--surface);
+  border-right:1px solid var(--border);
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  padding:28px 22px 36px;
+}
+.main{flex:1 1 auto;min-width:0;display:flex;justify-content:center;padding:24px 28px 96px}
+.content{width:100%;max-width:960px}
+
+/* === Sidebar nav === */
+.brand{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-mute);margin-bottom:6px}
+.brand-title{font-size:18px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:24px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{
+  background:transparent;border:0;text-align:left;cursor:pointer;
+  color:var(--text-soft);padding:9px 12px;border-radius:8px;
+  font:inherit;font-size:14.5px;line-height:1.4;
+  display:flex;gap:10px;align-items:flex-start;
+}
+.nav button:hover{background:var(--surface-2);color:var(--text)}
+.nav button.active{background:var(--accent-soft);color:var(--text);font-weight:600}
+.nav .num{font-variant-numeric:tabular-nums;color:var(--accent);min-width:22px;font-weight:600}
+.nav .group{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-mute);margin:18px 0 6px 12px}
+.theme-toggle{
+  margin-top:28px;width:100%;background:var(--surface-2);
+  border:1px solid var(--border);color:var(--text-soft);
+  padding:10px 14px;border-radius:10px;cursor:pointer;font:inherit;font-size:14px;
+}
+.theme-toggle:hover{color:var(--text)}
+
+/* === Hamburger === */
+.hamburger{
+  display:none;position:fixed;top:14px;left:14px;z-index:50;
+  width:42px;height:42px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);
+  cursor:pointer;align-items:center;justify-content:center;
+}
+.hamburger span{display:block;width:18px;height:2px;background:var(--text);position:relative;transition:transform .18s}
+.hamburger span::before,.hamburger span::after{content:"";position:absolute;left:0;width:18px;height:2px;background:var(--text);transition:transform .18s}
+.hamburger span::before{top:-6px}
+.hamburger span::after{top:6px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;backdrop-filter:blur(2px)}
+.overlay.show{display:block}
+
+/* === Mobile rules: < 1024px === */
+@media (max-width:1023.98px){
+  .hamburger{display:flex}
+  .sidebar{
+    position:fixed;top:0;left:0;height:100vh;z-index:45;
+    transform:translateX(-100%);transition:transform .22s ease;
+    box-shadow:var(--shadow-lg);
+  }
+  .sidebar.open{transform:translateX(0)}
+  .main{padding:60px 18px 80px}
+}
+
+/* === Cover === */
+.cover{
+  background:linear-gradient(180deg,var(--surface) 0%,var(--surface-2) 100%);
+  border:1px solid var(--border);border-radius:22px;
+  padding:44px 40px 40px;margin-bottom:32px;box-shadow:var(--shadow);
+}
+.cover-eyebrow{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.cover h1{font-size:38px;line-height:1.15;margin:14px 0 10px;font-weight:700;letter-spacing:-.01em}
+.cover .subtitle{font-size:18px;color:var(--text-soft);margin-bottom:24px;line-height:1.45}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:99px;
+  background:var(--surface-3);border:1px solid var(--border);
+  font-size:13px;color:var(--text-soft);
+}
+.chip strong{color:var(--text);font-weight:600}
+
+/* === Cards (chapters) === */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:36px 38px;margin-bottom:28px;box-shadow:var(--shadow);
+}
+.card-eyebrow{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.card h2{font-size:28px;line-height:1.2;margin:8px 0 8px;font-weight:700;letter-spacing:-.005em}
+.card .lede{font-size:18px;color:var(--text-soft);margin:0 0 24px;line-height:1.5;font-weight:400}
+.card h3{font-size:19px;line-height:1.3;margin:28px 0 10px;font-weight:600;letter-spacing:-.003em}
+.card h4{font-size:16.5px;margin:20px 0 6px;font-weight:600;color:var(--text)}
+.card p{margin:0 0 14px}
+.card ul,.card ol{margin:0 0 14px;padding-left:24px}
+.card li{margin-bottom:6px}
+.card li > p{margin-bottom:6px}
+
+/* === Reader's rule box === */
+.rule{
+  margin-top:28px;background:var(--accent-soft);
+  border-left:4px solid var(--accent);border-radius:10px;
+  padding:18px 22px 16px;
+}
+.rule .label{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:6px}
+.rule p{margin:0;color:var(--text);font-size:16px;line-height:1.55}
+
+/* === Inline citation === */
+.cite{
+  display:inline-block;font-size:11.5px;font-weight:600;
+  background:var(--accent-2-soft);color:var(--accent-2);
+  border:1px solid var(--accent-2);border-radius:5px;padding:1px 6px;
+  vertical-align:1px;margin:0 1px;line-height:1.3;letter-spacing:.02em;
+}
+.cite:hover{background:var(--accent-2);color:var(--surface)}
+
+/* === Exhibit === */
+.exhibit{
+  margin:24px 0 8px;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:14px;padding:22px 24px;
+}
+.exhibit-title{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:6px}
+.exhibit-headline{font-size:17px;font-weight:600;margin-bottom:16px;line-height:1.35}
+.exhibit-caption{font-size:13px;color:var(--text-mute);margin-top:14px;font-style:italic;line-height:1.45}
+
+/* === Tables === */
+.tbl{width:100%;border-collapse:collapse;margin:8px 0;font-size:14.5px}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+.tbl th{font-weight:600;color:var(--text);background:var(--surface-3);font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-tier{display:inline-block;padding:2px 8px;border-radius:6px;font-size:12.5px;font-weight:600}
+.tbl-tier.low{background:var(--tier-low);color:var(--text)}
+.tbl-tier.mid{background:var(--tier-mid);color:var(--text)}
+.tbl-tier.high{background:var(--tier-high);color:var(--text)}
+
+/* === Pull quote === */
+.pq{
+  border-left:3px solid var(--accent-2);
+  padding:6px 0 6px 18px;margin:18px 0;
+  font-size:17px;font-style:italic;color:var(--text-soft);line-height:1.5;
+}
+.pq cite{display:block;margin-top:6px;font-style:normal;font-size:13px;color:var(--text-mute)}
+
+/* === Dot list === */
+.taxonomy{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.taxonomy > div{background:var(--surface-3);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.taxonomy h5{margin:0 0 6px;font-size:14px;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.taxonomy p{margin:0;font-size:14.5px;color:var(--text-soft);line-height:1.5}
+@media (max-width:680px){.taxonomy{grid-template-columns:1fr}}
+
+/* === Source log === */
+.sources-table th,.sources-table td{font-size:13.5px;padding:10px 10px}
+.access-tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:12px;font-weight:700;letter-spacing:.04em}
+.access-green{background:var(--tier-low);color:var(--text)}
+
+/* === SVG === */
+svg{max-width:100%;height:auto;display:block}
+.exhibit svg text{fill:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.exhibit svg .axis{stroke:var(--text-mute);stroke-width:1}
+.exhibit svg .grid{stroke:var(--rule);stroke-width:.6;stroke-dasharray:3 3}
+
+/* === Print === */
+@media print{
+  .sidebar,.hamburger,.theme-toggle,.overlay{display:none !important}
+  .main{padding:0}
+  .card,.cover{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
+}
+
+/* === Misc === */
+.section-label{font-size:13px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin:0 0 6px}
+.muted{color:var(--text-mute)}
+.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--surface-3);padding:1px 6px;border-radius:4px;font-size:13px;color:var(--text)}
+hr.soft{border:0;border-top:1px solid var(--rule);margin:24px 0}
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburger" aria-label="Open navigation"><span></span></button>
+<div class="overlay" id="overlay"></div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">Webcast Synthesis · April 2026</div>
+    <div class="brand-title">Catastrophe Modeling: A Synthesis</div>
+    <nav class="nav">
+      <button data-target="cover"><span class="num">·</span><span>Cover &amp; corpus map</span></button>
+      <button data-target="prologue"><span class="num">·</span><span>Prologue</span></button>
+      <div class="group">Chapters</div>
+      <button data-target="ch1"><span class="num">1</span><span>From pins on a map to probabilistic simulation</span></button>
+      <button data-target="ch2"><span class="num">2</span><span>Inside the black box</span></button>
+      <button data-target="ch3"><span class="num">3</span><span>Reading the outputs</span></button>
+      <button data-target="ch4"><span class="num">4</span><span>Uncertainty: the heart of the matter</span></button>
+      <button data-target="ch5"><span class="num">5</span><span>Putting models to work</span></button>
+      <button data-target="ch6"><span class="num">6</span><span>The next decade</span></button>
+      <div class="group">Reference</div>
+      <button data-target="epilogue"><span class="num">·</span><span>10-question diagnostic</span></button>
+      <button data-target="sources"><span class="num">·</span><span>Sources &amp; corpus inventory</span></button>
+      <button data-target="glossary"><span class="num">·</span><span>Glossary</span></button>
+    </nav>
+    <button class="theme-toggle" id="themeToggle">Toggle theme</button>
+  </aside>
+
+  <main class="main">
+    <div class="content">
+
+<!-- ============ COVER ============ -->
+<section id="cover" class="cover">
+  <div class="cover-eyebrow">Synthesis · 12 sources · 349 pages · 2000–2024</div>
+  <h1>Catastrophe Modeling</h1>
+  <p class="subtitle">What 30 years of practice tells us about how to use cat models well, where uncertainty really lives, and what the next decade demands. A synthesis prepared for the 2026 webcast.</p>
+  <div class="chips">
+    <span class="chip"><strong>12</strong> sources</span>
+    <span class="chip"><strong>349</strong> pages</span>
+    <span class="chip">Span <strong>2000–2024</strong></span>
+    <span class="chip">Anchor: <strong>Carter (Oasis 2016)</strong></span>
+    <span class="chip"><strong>6</strong> chapters</span>
+    <span class="chip"><strong>8</strong> exhibits</span>
+  </div>
+</section>
+
+<!-- ============ CORPUS MAP EXHIBIT ============ -->
+<section class="exhibit" id="corpus-map" aria-label="Corpus map">
+  <div class="exhibit-title">Exhibit 1 · Corpus map</div>
+  <div class="exhibit-headline">If you came here to answer one of these questions, this is where the synthesis points you.</div>
+
+  <table class="tbl">
+    <thead><tr><th>Reader's question</th><th>Primary chapter</th><th>Key sources</th></tr></thead>
+  <table class="tbl">
+    <tbody>
+      <tr><td>Why does this field exist? What problem do cat models solve that traditional actuarial methods don't?</td><td>Ch.1 · History</td><td>Marsh 2015, RMS Guide 2008, AAA 2018, ASOP 39 App.1, Wang 2012</td></tr>
+      <tr><td>What is a cat model, mechanically? What goes in, what comes out?</td><td>Ch.2 · Inside the black box</td><td>RMS Guide 2008, NAIC 2011, Sigona 2019, Wang 2012, AAA 2018</td></tr>
+      <tr><td>I'm staring at AAL, EP, PML, TVaR. What does each tell me, and where do they fail?</td><td>Ch.3 · Reading the outputs</td><td>AAA 2018, RMS Guide 2008, Sigona 2019, Carter 2016</td></tr>
+      <tr><td>How wrong can the answer be? Where is the uncertainty hiding?</td><td>Ch.4 · Uncertainty</td><td>Carter 2016, Milliman 2022, Sigona 2019, NAIC 2011, Geneva 2018</td></tr>
+      <tr><td>How is this used in pricing, underwriting, reinsurance, and capital management?</td><td>Ch.5 · Putting models to work</td><td>AAA 2018, Marsh 2015, Wang 2012, RMS Guide 2008, ASOP 39, GC 2024</td></tr>
+      <tr><td>What's coming — climate change, governance, new perils?</td><td>Ch.6 · The next decade</td><td>Geneva 2018, GC 2024 (Jenson NAIC, Denike GC), Milliman 2022, ASOP 38 (2021)</td></tr>
+      <tr><td>I just need a checklist before I sign off on a number.</td><td>Epilogue · Diagnostic</td><td>NAIC 2011 §VII, ASOP 38 §§3.2–3.5, Milliman 2022, Sigona 2019</td></tr>
+    </tbody>
+  </table>
+  <div class="exhibit-caption">Sources are full-text reads (GREEN access) across all 12 PDFs. See the source log at the end for access status, role, and page anchors.</div>
+</section>
+
+<!-- ============ PROLOGUE ============ -->
+<section id="prologue" class="card">
+  <div class="card-eyebrow">Prologue</div>
+  <h2>Why a webcast on catastrophe modeling, in 2026?</h2>
+  <p class="lede">Because the field is doing two things at once: it is more entrenched than it has ever been, and it is being asked questions it was not designed to answer.</p>
+
+  <p>Catastrophe modeling — "Cat modeling" in the trade — emerged as the first <em>InsurTech</em> offering decades before that word existed. It has, in the words of The Geneva Association, become a <em>currency for understanding and quantifying risk</em> across the insurance industry value chain<span class="cite">Geneva 2018, foreword &amp; §2</span>. AIR Worldwide has reported, by its own count, that more than half of US property premiums are written by insurers that license its models in-house, and that more than 90% of US reinsurance capacity is priced using its models<span class="cite">Wang 2012, p.5</span>. RMS, founded at Stanford in 1988, and CoreLogic (formerly EQECAT) round out a vendor concentration that itself constitutes a source of model-risk that we will return to more than once<span class="cite">Sigona 2019, p.7</span>.</p>
+
+  <p>The setting is not normal. The Geneva Association, drawing on Munich Re's NatCatSERVICE, reported that global economic losses from natural disasters and man-made catastrophes in 2017 reached approximately USD 337 billion, with insured losses of USD 144 billion — and noted that the combined insured losses from hurricanes Harvey, Irma, and Maria alone were on the order of USD 92 billion, equal to about 0.5% of US GDP for that year<span class="cite">Geneva 2018, foreword</span>. By the Geneva analysis, weather-related extremes accounted for roughly 91% of disaster loss events, around half of lives lost, and approximately 80% of reported economic losses over the 1980–2017 window<span class="cite">Geneva 2018, §1</span>. The signal is clear enough; the question is whether the tools we use to price and to manage that signal are keeping up.</p>
+
+  <p>The corpus this synthesis draws on covers the full arc of that adjustment. The anchor is a short course note from Johanna Carter at the Oasis Loss Modelling Framework that defines uncertainty in cat-model terms with unusual clarity<span class="cite">Carter 2016</span>. Around it sit three industry primers — the 2008 RMS-supported guide<span class="cite">RMS Guide 2008</span>, Marsh's <em>Decade of Advances</em><span class="cite">Marsh 2015</span>, and the American Academy of Actuaries' <em>Uses of Catastrophe Model Output</em> monograph<span class="cite">AAA 2018</span> — three vendor and educational decks<span class="cite">Wang 2012; Sigona 2019; GC 2024</span>, a Milliman vendor whitepaper<span class="cite">Milliman 2022</span>, the NAIC <em>Catastrophe Computer Modeling Handbook</em><span class="cite">NAIC 2011</span>, the two governing actuarial standards<span class="cite">ASOP 38 (2021); ASOP 39 (2000/2011)</span>, and Geneva's 2018 climate-risk research report<span class="cite">Geneva 2018</span>.</p>
+
+  <p>The argument that runs through all of them, when read together, is not "use this model" or "use that model." It is: <strong>the model serves the decision, and the honest output is a distribution with named, quantified sources of uncertainty.</strong> Everything else — the modules, the metrics, the mitigation discounts, the layer pricing — is in service of that.</p>
+
+  <p>This document is organized as six self-contained chapters of roughly ten minutes each, each ending with a single durable operating principle (a <em>Reader's rule</em>). A ten-question diagnostic for evaluating any cat-model output you are handed sits at the end, followed by the source log.</p>
+
+  <div class="rule">
+    <div class="label">Reader's rule · Prologue</div>
+    <p>Cat modeling is now table stakes for insurance, reinsurance, capital, and increasingly public-sector decisions — but the strongest signals in the data are coming from places the modeling paradigm was not designed to handle. Treat every chapter that follows as a tool for thinking about that gap.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 1 ============ -->
+<section id="ch1" class="card">
+  <div class="card-eyebrow">Chapter 1 · ~10 min</div>
+  <h2>From pins on a map to probabilistic simulation: a thirty-year history</h2>
+  <p class="lede">The story is usually told as "Andrew changed everything." It is more accurate to say that Andrew forced an industry to adopt tools that had been quietly waiting, and that every subsequent inflection point — Northridge, Katrina, Ike, 2017's hurricanes — has rebuilt the toolkit around a different blind spot.</p>
+
+  <h3>1.1 Two strands, separate for a century</h3>
+  <p>Catastrophe modeling has two parents. One is the property-insurance practice, since the 1800s, of <em>visualising exposure by mapping covered property</em> — pins on a wall-hung map for fire and lightning risk — a practice that became too cumbersome to maintain and was largely abandoned by the 1960s<span class="cite">RMS Guide 2008, p.6</span>. The other is the science of natural-hazard measurement: the first modern seismograph and anemometer dates to the 1800s, and a standard set of metrics for measuring earthquake magnitude and hurricane intensity grew up alongside it<span class="cite">RMS Guide 2008, p.6</span><span class="cite">AAA 2018, p.4</span>.</p>
+
+  <p>These two strands — <em>mapping risk</em> and <em>measuring hazard</em> — converged in the late 1980s and early 1990s, when computing power finally caught up with the ambition of stitching them together<span class="cite">AAA 2018, p.4</span><span class="cite">RMS Guide 2008, p.6</span>. The first commercial hurricane loss model was introduced in the late 1980s by AIR Worldwide, which by its own account "founded the catastrophe modeling industry in 1987"<span class="cite">Wang 2012, p.3</span>. RMS was founded at Stanford University in 1988<span class="cite">Sigona 2019, p.7</span>. EQECAT followed; today it is CoreLogic<span class="cite">Sigona 2019, p.7</span>.</p>
+
+  <h3>1.2 1989: the wake-up call that wasn't</h3>
+  <p>The year 1989 should have been the inflection point. Hurricane Hugo cost insurers roughly $4 billion and the Loma Prieta earthquake cost about $6 billion — both, at the time, attention-getters<span class="cite">AAA 2018, p.4</span>. Most of the industry kept using its 25-to-30-year historical loss averages anyway<span class="cite">Marsh 2015, p.2</span>. The traditional ratemaking procedure was to cap catastrophe losses at a selected figure and average the excess over a long period<span class="cite">NAIC 2011, p.2</span><span class="cite">ASOP 39, App.1</span>; the implicit assumption was that the recent past was a fair sample of the near future.</p>
+
+  <h3>1.3 1992: the wake-up call that took</h3>
+  <p>Hurricane Andrew made landfall in southern Florida in August 1992. Cost figures vary slightly by source and reporting basis: AAA reports $15.5 billion in 1992 dollars<span class="cite">AAA 2018, p.4</span>; Marsh's table reports $15.5 billion ($23.8 billion in 2014 dollars)<span class="cite">Marsh 2015, p.2</span>; NAIC reports $16.5 billion<span class="cite">NAIC 2011, p.2</span>; Wang reports $16 billion<span class="cite">Wang 2012, p.6</span>. What is consistent across the corpus is the consequence: nine insurance company insolvencies (per AAA)<span class="cite">AAA 2018, p.4</span>, or eleven (per Wang and Milliman)<span class="cite">Wang 2012, p.6</span><span class="cite">Milliman 2022, p.1</span>. Those discrepancies — counts that drift as the boundary of "insolvency caused by Andrew" is drawn differently — are themselves a useful reminder of how much of the cat-modeling enterprise rests on definitional choices.</p>
+
+  <p>The NAIC framed the lesson with a counterfactual: had Andrew struck the coast 25 miles to the north, the insured loss potential would have been in the $50 billion range<span class="cite">NAIC 2011, p.2</span>. Insurers came to the realisation that their assets were much more exposed than previously believed. AAA notes a related signal that was, in retrospect, the unmistakeable announcement of a new era: a few hours after Andrew struck, one of the modelers shared a real-time estimate of $13 billion in insured losses<span class="cite">AAA 2018, p.4</span> — within roughly 15-20% of the eventual figure, and orders of magnitude better than what historical-data methods could produce in real time.</p>
+
+  <p>The Northridge earthquake of January 1994 — about $12 billion in insured losses<span class="cite">Wang 2012, p.6</span> — completed the pair. Together, ASOP 39 records, "Andrew and Northridge clearly demonstrated the limitations of relying exclusively on historical insurance data in estimating the financial impact of potential future events"<span class="cite">ASOP 39, transmittal</span>. That sentence, written by the Casualty Committee in 2000, did the work of an entire institutional pivot. ASOP 38 — the predecessor of today's all-practice-areas catastrophe-modeling standard — was approved alongside it in June 2000<span class="cite">ASOP 38, history</span>.</p>
+
+  <h3>1.4 1992–2008: maturing under stress</h3>
+  <p>The mid-1990s through the mid-2000s saw cat models become "a necessary and permanent part of the underwriting process"<span class="cite">Marsh 2015, p.2</span>. Cat bonds emerged in the second half of the 1990s — the first transactions were issued in 1997, with George Town Re commonly identified as the first successful transaction in 1996<span class="cite">RMS Guide 2008, p.18</span><span class="cite">Geneva 2018, §2.2 fn 9</span>. Performance-Based Earthquake Engineering (PBEE) approaches matured around 2000<span class="cite">Wang 2012, p.6</span>. The September 11, 2001 attacks made it impossible to treat man-made catastrophes as outside the modeling frame; terrorism and workers'-compensation models followed within a year<span class="cite">Wang 2012, p.6</span><span class="cite">Geneva 2018, §2.1</span>.</p>
+
+  <p>Hurricane Katrina (August 2005) cost insurers more than $41 billion (Marsh)<span class="cite">Marsh 2015, p.2</span> — and revealed a different problem from Andrew. The models did not fail to register the storm; they substantially <em>underestimated</em> it. Initial damage estimates from existing hurricane models identified only about a quarter of the eventual total<span class="cite">Marsh 2015, p.2</span>. Models had under-weighted coastal flooding from wind and storm surge, and had often assumed all properties were built to existing codes, an assumption that proved heroically optimistic in some Gulf Coast neighborhoods<span class="cite">Marsh 2015, p.2</span>. Hurricane Ike in 2008 then drove home a related point: inland wind damage extended far further than models had projected, into Arkansas, Illinois, Indiana, Kentucky, Michigan, Missouri, New York, Ohio, Pennsylvania, Tennessee, and West Virginia<span class="cite">Marsh 2015, p.2</span>. Vendors responded with higher inland wind speeds, greater building vulnerabilities, new storm surge sub-models, and recalibrated vulnerability curves<span class="cite">Marsh 2015, p.3</span>.</p>
+
+  <p>By the time Hurricane Sandy struck the Northeast in October 2012 — $18.8 billion in insured losses, $19.3 billion in 2014 dollars per Marsh<span class="cite">Marsh 2015, p.2</span> — the industry's storm-surge handling was substantially better than it had been at Katrina. Milliman frames the same arc as a vindication of the technology: between Andrew and Katrina, insurers adopted catastrophe models, and although Katrina was a far costlier event in dollar terms (Milliman reports it at $87 billion in 2020 dollars), no insurers became insolvent — three insolvencies after Katrina per Wang's count, but none in Milliman's framing<span class="cite">Milliman 2022, p.1</span><span class="cite">Wang 2012, p.6</span>. Both framings are defensible; both highlight the same point, that models gave the industry pricing and reinsurance adequacy that Andrew had exposed as missing.</p>
+
+  <h3>1.5 The 2010s and 2020s: expansion of scope</h3>
+  <p>The decade following Sandy was about expanding scope. Geneva's <em>Figure 4</em> taxonomy organises the expansion into four axes: peril, geography, application, and provider<span class="cite">Geneva 2018, §2 figure 4</span>. By peril: extra-tropical cyclones, severe convective storms (tornado, hail, straight-line wind), coastal flooding, then in the mid-2000s the more difficult perils — inland flood, agriculture, wildfire — and most recently liquefaction, tsunami, landslide as sub-perils for earthquake; rainfall-induced flooding for tropical cyclones; and pandemic and cyber as the current frontier<span class="cite">Geneva 2018, §§2.1–2.2</span>. By geography: from the US-Europe-Japan core to Canada, Australia, New Zealand in the 1990s; then South America, Caribbean, Southeast Asia in the 2000s; and emerging-market expansion into China and India more recently<span class="cite">Geneva 2018, §2.1</span>. By application: from portfolio management and excess-of-loss reinsurance pricing into capital-markets ILS, agricultural insurance, public-sector disaster risk management, development planning, and now financial-sector physical-climate-risk applications under the FSB-TCFD framework<span class="cite">Geneva 2018, §2.2</span>. By provider: the original three commercial vendors (AIR, RMS, CoreLogic) joined by reinsurance brokers' in-house models (Aon Benfield, Guy Carpenter, Willis Towers Watson) and a new generation of specialist firms — JBA for flood, KatRisk for atmospheric perils — alongside open-framework initiatives such as the Oasis Loss Modelling Framework (the publisher of the anchor seed) and the Global Earthquake Model<span class="cite">Geneva 2018, §2.3 &amp; Table 1</span>.</p>
+
+  <h3>1.6 What changed, and what didn't</h3>
+  <p>The way cat modeling has changed is well documented. The way it has <em>not</em> changed is more important and easier to miss. The fundamental question the model is built to answer has been the same since Andrew: <em>what is the probability of various levels of loss?</em> — not, as Wang puts it, to "forecast future events"<span class="cite">Wang 2012, p.8</span>. The fundamental input the model needs has been the same: high-quality exposure data and a defensible scientific basis for the hazard. The fundamental output remains the EP curve and its derivative metrics. And the fundamental constraint remains the same: historical data is too short and too unrepresentative for the perils that matter most<span class="cite">AAA 2018, pp.31–32</span><span class="cite">Wang 2012, p.7</span>.</p>
+
+  <p>What is likely to drive the next inflection is what is now starting to break that last constraint in a new way: <em>non-stationarity</em>. Historical data are not just too short; they are no longer drawn from the same distribution as the future. Geneva's central technical recommendation — that cat models be conditioned on advancing earth-observation and climate-modeling capabilities — is the explicit articulation of that point<span class="cite">Geneva 2018, executive summary &amp; §3.1</span>. We will return to this in Chapter 6.</p>
+
+  <div class="rule">
+    <div class="label">Reader's rule · Chapter 1</div>
+    <p>History repeats unevenly. Each inflection point in cat modeling has been driven by a peril behaving in a way the previous model paradigm had treated as out of scope — coastal flooding at Katrina, inland wind at Ike, building-code dispersion across Andrew. The next inflection will most likely come from non-stationarity (climate change) and from coupling between perils that current models still treat as independent.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 2 ============ -->
+<section id="ch2" class="card">
+  <div class="card-eyebrow">Chapter 2 · ~10 min</div>
+  <h2>Inside the black box: how a catastrophe model actually works</h2>
+  <p class="lede">There is a canonical four-module structure, and there is a canonical sequence by which a single event becomes a single insured-loss number. Once you can walk one event through the pipeline, you can read any vendor's documentation and know what you are looking at.</p>
+
+  <h3>2.1 The four-module pipeline</h3>
+  <p>Across the corpus, the cat-modeling framework is described with very minor variations in nomenclature but with the same underlying architecture. The 2008 RMS-supported guide names the four modules <em>Stochastic Event</em>, <em>Hazard</em>, <em>Vulnerability</em>, <em>Financial Analysis</em><span class="cite">RMS Guide 2008, p.7</span>. The American Academy of Actuaries' 2018 monograph uses <em>Stochastic Event Generation</em>, <em>Hazard / Local Intensity</em>, <em>Vulnerability / Engineering</em>, <em>Financial / Insurance</em><span class="cite">AAA 2018, p.9</span>. Marsh names <em>Event Generation</em>, <em>Hazard</em>, <em>Vulnerability</em>, <em>Financial Model</em><span class="cite">Marsh 2015, p.4</span>. Wang's AIR slide uses <em>Event Generation</em>, <em>Intensity Calculation</em>, <em>Damage Estimation</em>, <em>Contract Loss Calculations</em><span class="cite">Wang 2012, p.22</span>. NAIC's 2011 Handbook compresses the first two into a single <em>Scientific Module</em> followed by <em>Engineering</em> and <em>Insurance</em>, and explicitly identifies that the modules are used sequentially, with the output from one becoming input to the next<span class="cite">NAIC 2011, §III</span>. Geneva's Box 1 inserts an explicit <em>Exposure</em> module between the hazard and vulnerability modules, on the principle that "the proximity of properties or infrastructure to the hazard is what generates risk"<span class="cite">Geneva 2018, Box 1</span>.</p>
+
+  <p>The right way to read this disagreement is that cat models all have the same skeleton and they argue over whether to call the bone a <em>femur</em> or a <em>thigh</em>. The four functions every cat model performs are:</p>
+
+  <ol>
+    <li><strong>Generate plausible events.</strong> Build a stochastic catalog of hypothetical events (commonly tens of thousands; AIR uses up to 100,000 simulated years per run<span class="cite">Wang 2012, p.7</span>) parameterised on historical hazard data and physical principles.</li>
+    <li><strong>Compute hazard intensity at each location.</strong> For each event, calculate the peak gust wind speed, ground motion, inundation depth, or other peril-specific intensity measure at every site of interest.</li>
+    <li><strong>Translate intensity into damage.</strong> Use a vulnerability curve (a damage function) appropriate to the structure's characteristics to convert intensity into a Mean Damage Ratio (MDR) — loss as a fraction of replacement value — and an associated uncertainty<span class="cite">RMS Guide 2008, p.7</span><span class="cite">AAA 2018, p.10</span>.</li>
+    <li><strong>Convert damage into insured loss.</strong> Apply policy terms (deductibles, limits, coinsurance), and reinsurance structures to produce loss numbers from each financial perspective.</li>
+  </ol>
+
+  <div class="exhibit" style="margin-top:24px">
+    <div class="exhibit-title">Exhibit 2 · The pipeline, with uncertainty overlaid</div>
+    <div class="exhibit-headline">Each module hands its output to the next; each module is also a different home for a different kind of uncertainty.</div>
+    <svg viewBox="0 0 920 280" role="img" aria-label="Catastrophe model pipeline with primary, secondary, and contractual uncertainty overlaid" style="width:100%;height:auto;display:block;margin-top:6px">
+      <defs>
+        <marker id="cm-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L9,3 z" fill="currentColor"></path>
+        </marker>
+      </defs>
+      <!-- Module boxes -->
+      <g>
+        <rect x="20" y="44" width="180" height="92" rx="18" fill="var(--surface-3)" stroke="var(--border)"></rect>
+        <text x="110" y="76" text-anchor="middle" fill="var(--text)" font-size="15" font-weight="700">Stochastic events</text>
+        <text x="110" y="98" text-anchor="middle" fill="var(--text-soft)" font-size="12">catalog, frequency,</text>
+        <text x="110" y="116" text-anchor="middle" fill="var(--text-soft)" font-size="12">clustering</text>
+
+        <rect x="240" y="44" width="180" height="92" rx="18" fill="var(--surface-3)" stroke="var(--border)"></rect>
+        <text x="330" y="76" text-anchor="middle" fill="var(--text)" font-size="15" font-weight="700">Hazard intensity</text>
+        <text x="330" y="98" text-anchor="middle" fill="var(--text-soft)" font-size="12">site-level wind,</text>
+        <text x="330" y="116" text-anchor="middle" fill="var(--text-soft)" font-size="12">shaking, depth</text>
+
+        <rect x="460" y="44" width="180" height="92" rx="18" fill="var(--surface-3)" stroke="var(--border)"></rect>
+        <text x="550" y="76" text-anchor="middle" fill="var(--text)" font-size="15" font-weight="700">Vulnerability</text>
+        <text x="550" y="98" text-anchor="middle" fill="var(--text-soft)" font-size="12">MDR + spread,</text>
+        <text x="550" y="116" text-anchor="middle" fill="var(--text-soft)" font-size="12">building features</text>
+
+        <rect x="680" y="44" width="220" height="92" rx="18" fill="var(--surface-3)" stroke="var(--border)"></rect>
+        <text x="790" y="76" text-anchor="middle" fill="var(--text)" font-size="15" font-weight="700">Financial terms</text>
+        <text x="790" y="98" text-anchor="middle" fill="var(--text-soft)" font-size="12">deductibles, limits,</text>
+        <text x="790" y="116" text-anchor="middle" fill="var(--text-soft)" font-size="12">reinsurance</text>
+      </g>
+      <!-- Arrows -->
+      <g fill="none" stroke="currentColor" stroke-width="2" opacity="0.55">
+        <line x1="200" y1="90" x2="240" y2="90" marker-end="url(#cm-arrow)"></line>
+        <line x1="420" y1="90" x2="460" y2="90" marker-end="url(#cm-arrow)"></line>
+        <line x1="640" y1="90" x2="680" y2="90" marker-end="url(#cm-arrow)"></line>
+      </g>
+      <!-- Exposure data feeding modules 2-4 -->
+      <g>
+        <rect x="240" y="170" width="400" height="40" rx="10" fill="var(--surface-2)" stroke="var(--border)" stroke-dasharray="4 3"></rect>
+        <text x="440" y="195" text-anchor="middle" fill="var(--text-soft)" font-size="13" font-style="italic">Exposure data — geocoding, occupancy, construction, year, modifiers</text>
+        <line x1="330" y1="170" x2="330" y2="136" stroke="currentColor" stroke-width="1.4" opacity="0.45" stroke-dasharray="3 3"></line>
+        <line x1="550" y1="170" x2="550" y2="136" stroke="currentColor" stroke-width="1.4" opacity="0.45" stroke-dasharray="3 3"></line>
+      </g>
+      <!-- Uncertainty annotations -->
+      <g>
+        <rect x="20" y="232" width="200" height="34" rx="9" fill="var(--accent-soft)" stroke="var(--accent)"></rect>
+        <text x="120" y="254" text-anchor="middle" fill="var(--text)" font-size="12.5" font-weight="600">Primary uncertainty</text>
+
+        <rect x="240" y="232" width="400" height="34" rx="9" fill="var(--accent-2-soft)" stroke="var(--accent-2)"></rect>
+        <text x="440" y="254" text-anchor="middle" fill="var(--text)" font-size="12.5" font-weight="600">Secondary uncertainty (hazard intensity + damageability)</text>
+
+        <rect x="660" y="232" width="240" height="34" rx="9" fill="var(--surface)" stroke="var(--border)"></rect>
+        <text x="780" y="254" text-anchor="middle" fill="var(--text-soft)" font-size="12.5" font-weight="600">Contractual interpretation &amp; leakage</text>
+      </g>
+    </svg>
+    <div class="exhibit-caption">Synthesis of <span class="cite">RMS Guide 2008, p.7</span>, <span class="cite">AAA 2018, p.9</span>, <span class="cite">NAIC 2011, §III</span>, <span class="cite">Geneva 2018, Box 1</span>, and Carter's primary/secondary uncertainty taxonomy <span class="cite">Carter 2016, pp.1–2</span>. Exposure data is shown explicitly because it is, in modern practice, often treated as its own functional module rather than a passive input — and because data quality is the single largest controllable source of model error.</div>
+  </div>
+
+  <h3>2.2 Walking one event through the pipeline</h3>
+  <p>Sigona's bootcamp deck for Guy Carpenter offers the cleanest worked walk-through; we adopt it here<span class="cite">Sigona 2019, p.23</span>:</p>
+
+  <ol>
+    <li>Select an event in the event set — say, hurricane Event ID 111234 (Sigona's worked example).</li>
+    <li>For each location in the portfolio, determine the peak-wind gust at that location for that event. At 101 Main Street the model returns 120 mph.</li>
+    <li>Use the appropriate vulnerability curve (residential wood frame, two-story, built 1995, hurricane wind) to look up the MDR. At 120 mph, MDR = 40%.</li>
+    <li>Multiply: $1,000,000 building value × 40% MDR = $400,000 of ground-up damage at the location.</li>
+    <li>Apply policy terms. With a $50,000 deductible, the loss to the insurer for this location for this event is $350,000.</li>
+    <li>Repeat steps 2–5 for every location in the portfolio, sum across locations, and you have the company's loss for Event 111234.</li>
+    <li>Repeat steps 1–6 for every event in the catalog, and you have an event loss table — the data structure underneath every other output.</li>
+  </ol>
+
+  <p>The output of step 7 is the <em>event loss table</em> (ELT). RMS distributes it as a <span class="kbd">.rm2</span> file; AIR as a <span class="kbd">.vnt</span> file; the cross-vendor preferred format is <span class="kbd">.eld</span>, especially for AIR because it includes the simulation year explicitly<span class="cite">Sigona 2019, p.45</span>. Every other output discussed in Chapter 3 — AAL, EP curves, PML at any return period, TVaR, mitigation discounts — is a function of the ELT.</p>
+
+  <h3>2.3 What's actually inside each module</h3>
+
+  <h4>Stochastic event generation: the hardest hidden choice</h4>
+  <p>Carter's Oasis note is unusually direct about why this module matters most: "the assignment of events to years (that is to say, their frequency and correlation) is the most important of all the assumptions in the event-based catastrophe loss modelling paradigm"<span class="cite">Carter 2016, p.1</span>. There are three sub-decisions inside primary event generation: defining the events themselves, assigning their annual frequency, and specifying their time correlation (clustering). Carter's note argues that the simulated horizon must comfortably exceed the longest return period of interest — for a 1-in-200-year metric, "at least 200 years and, more likely, at least 10,000 years"<span class="cite">Carter 2016, p.2</span>.</p>
+
+  <p>Vendors construct event catalogs by sampling joint distributions for the parameters that define an event. For hurricanes, AIR samples annual frequency, location-level frequency, landfall angle, minimum central pressure, forward speed, radius of maximum winds, and a gradient-wind reduction factor — a peak weighting factor combines them<span class="cite">Wang 2012, p.24</span>. The historical record provides the parameter distributions; data sources include the HURDAT North Atlantic basin storm database, NOAA Technical Reports NWS-23 and NWS-38, and storm-by-storm meteorological reconstructions<span class="cite">NAIC 2011, App.2</span>.</p>
+
+  <h4>Hazard intensity: converting events into local conditions</h4>
+  <p>For hurricanes, the wind field is calculated at intervals fine enough — minutes to hours, depending on forward speed — to capture the peak gust at every site<span class="cite">RMS Guide 2008, p.10</span><span class="cite">Wang 2012, p.27</span>. Surface roughness (land use, terrain) degrades the gradient wind speed at ground level; AIR and RMS both use US Geological Survey land-use data at the ZIP-code level to compute roughness<span class="cite">NAIC 2011, App.2</span>. For earthquakes, an attenuation relationship — an empirical function for the rate of decay of ground motion with distance — combined with local soil conditions translates magnitude and epicenter into shaking intensity at every site<span class="cite">RMS Guide 2008, p.10</span><span class="cite">NAIC 2011, App.2</span>. The 2009 update of US earthquake models incorporated next-generation attenuation (NGA) relationships from the USGS National Seismic Hazard Mapping Project — a recalibration that had material loss impacts across the country<span class="cite">Marsh 2015, p.4</span>.</p>
+
+  <h4>Vulnerability: where engineering meets statistics</h4>
+  <p>A vulnerability curve relates expected damage (the MDR) to local hazard intensity for a structure with given characteristics. Wang's AIR illustration shows three regimes for residential wood frame at increasing wind speed: roof covering and siding damage; envelope and cladding damage; major damage to structural and non-structural elements<span class="cite">Wang 2012, p.31</span>. The same wind speed produces a distribution of damage outcomes, not a single number — a non-zero probability of zero damage and of total loss is observed even for the same nominal severity, "globally observed in severe wind events for many types of structures"<span class="cite">NAIC 2011, App.2 (AIR)</span>. The standard deviation around the MDR is what Carter calls "secondary uncertainty"<span class="cite">Carter 2016, p.2</span> — Chapter 4 returns to this.</p>
+
+  <p>Vulnerability functions are built from engineering studies, structural testing, post-disaster field surveys, and actual claims data; they are continually recalibrated. The 2008 Ike updates included recalibration of vulnerability curves based on recent hurricane-related claims and new secondary modifiers for storm-surge damage<span class="cite">Marsh 2015, p.3</span>. For US earthquakes outside California, RMS notes its vulnerability relationships are based on the ATC-13 (<em>Earthquake Damage Evaluation Data for California</em>) expert-opinion dataset, calibrated against actual claims data from the 1994 Northridge earthquake, and modified to account for differing building code requirements and construction practices in other regions<span class="cite">NAIC 2011, App.2 (RMS)</span>.</p>
+
+  <h4>Financial: where five perspectives stack up</h4>
+  <p>The financial module applies policy terms and reinsurance structure to ground-up damage. Sigona's deck enumerates the canonical five financial perspectives that stack on top of each other<span class="cite">Sigona 2019, p.11</span>:</p>
+  <ul>
+    <li><strong>Damage (ground-up)</strong> — the gross amount of loss before any deductible or limit applies.</li>
+    <li><strong>Gross</strong> — loss after deductibles, limits, and attachment points.</li>
+    <li><strong>Net of facultative</strong> — gross minus loss ceded to facultative reinsurance.</li>
+    <li><strong>Net of per-risk</strong> — also known as <em>net pre-cat</em>, after per-risk treaty cessions.</li>
+    <li><strong>Net of treaty</strong> — also <em>net post-cat</em>, after catastrophe treaty cessions.</li>
+  </ul>
+  <p>The point of the stack is operational. Different decisions need different perspectives: capital adequacy looks at net-post-cat; reinsurance buying looks at gross; pricing of an individual policy looks at ground-up. A single number is meaningful only when paired with the perspective that produced it.</p>
+
+  <h3>2.4 Inputs: primary attributes and secondary modifiers</h3>
+  <p>The four modules are only as good as what is fed in. Across sources, exposure data falls into two tiers. <em>Primary attributes</em>, which determine which vulnerability curve is selected, include: location (geocoded to street level where possible, ZIP code at minimum), occupancy / use class, construction type, year of construction, height (number of stories), and square footage<span class="cite">Marsh 2015, p.5</span><span class="cite">Wang 2012, p.29</span><span class="cite">Sigona 2019, p.21</span>. <em>Secondary modifiers</em>, which adjust the curve, include roof covering and attachment, roof geometry, roof anchorage, glass type and percentage, window protection (shutters), wall type and siding, foundation type and connection, soft story / cripple wall conditions, and special earthquake-resistant systems<span class="cite">Wang 2012, p.29</span><span class="cite">Marsh 2015, p.5</span>.</p>
+
+  <p>Why this matters operationally: RMS's post-mortem of the 2004–2005 Atlantic hurricane seasons concluded that data quality issues contributed up to 45% of the gap between modeled and actual incurred losses<span class="cite">RMS Guide 2008, p.12</span>. A single beachfront-hotel case study showed that re-coding a property's location from ZIP-code-level to street-level, plus correcting construction type, occupancy, and number of stories, increased the modeled hurricane Charley loss by over 400%<span class="cite">RMS Guide 2008, p.13</span>. Marsh's six-step CatDQ process — natural hazard data management, "pre-modeling" assessment, initial assessment, engineering review, secondary assessment, and site visit — is one industry response to this; in one Marsh case study a US restaurant chain reduced its modeled portfolio AAL by approximately 25% through better data alone<span class="cite">Marsh 2015, p.6</span><span class="cite">Marsh 2015, p.6 sidebar</span>.</p>
+
+  <h3>2.5 Settings the user actually controls</h3>
+  <p>Even within a chosen vendor and version, the user faces a meaningful choice set. Sigona's deck lists settings the analyst typically toggles<span class="cite">Sigona 2019, pp.28–32</span>: long-term vs near-term hurricane frequency catalog (more on this in Chapter 6); demand-surge / loss-amplification (RMS's Post-Loss Amplification combines economic demand surge with claims inflation and super-cat adjustments; AIR uses economic demand surge alone)<span class="cite">Sigona 2019, p.30</span>; storm-surge defaults (RMS assumes a 20% wind-policy leakage factor and state-and-flood-zone-dependent take-up rates; AIR assumes a flat 5% take-up for residential and small commercial, 100% for autos and large commercial)<span class="cite">Sigona 2019, p.31</span>; secondary uncertainty switch; fire-following-earthquake; business interruption; loss adjustment factors. NAIC's regulator-question list (Section VII of the 2011 Handbook) includes "What switches are in the model? Will any of the following 'switches' be turned on?"<span class="cite">NAIC 2011, §VII Q35</span>. The answer to that question is part of the model run; the answer is not always disclosed alongside the headline number.</p>
+
+  <h3>2.6 What is and is not modeled</h3>
+  <p>An honest reading of any cat-model output requires knowing the boundary of the model. Sigona's deck makes the boundary explicit<span class="cite">Sigona 2019, p.10 &amp; p.31</span>:</p>
+
+  <table class="tbl">
+    <thead><tr><th>Modeled perils (typical)</th><th>Non-modeled perils (typical)</th></tr></thead>
+    <tbody>
+      <tr><td>Hurricane (wind, with secondary peril of storm surge)</td><td>Inland flood (outside Europe)</td></tr>
+      <tr><td>Tornado, hail, severe convective storm wind</td><td>Volcanic hazards</td></tr>
+      <tr><td>Earthquake (with secondary perils of liquefaction, tsunami in some models)</td><td>Landslide hazards</td></tr>
+      <tr><td>Terrorism (incl. CBRN)</td><td>Tsunami (as primary peril)</td></tr>
+      <tr><td>Infectious disease / pandemic</td><td>Major earthquake aftershocks (commonly excluded from headline)</td></tr>
+      <tr><td>Crop / agriculture</td><td>Loss adjustment expense (often a separate load)</td></tr>
+      <tr><td>Flood (Europe), winter storm</td><td>Wind-driven rain, tree damage, supplemental coverages</td></tr>
+      <tr><td>California wildfire</td><td>Other wildfire (variable coverage)</td></tr>
+    </tbody>
+  </table>
+
+  <p>Wang's AIR deck makes the same point inside the hurricane peril alone: AIR's hurricane model includes wind (with implicit damage from wind-debris, wind-driven rain, and tree failure) and storm surge, but explicitly excludes riverine or hurricane-induced inland flooding, levee or dam failures, loss adjustment expenses, hazardous waste removal, and "loss inflation due to political pressure"<span class="cite">Wang 2012, p.35</span>. The 2017 Atlantic season — Harvey, Irma, Maria — drove home that hurricane-induced inland flooding is a meaningful gap; some of the biggest losses in Harvey were not from wind at all.</p>
+
+  <div class="rule">
+    <div class="label">Reader's rule · Chapter 2</div>
+    <p>The model output you're looking at is one slice of a five-perspective stack and one peril of a multi-peril event. Always know which: which vendor, which version, which peril, which financial perspective, which switch settings, and which inputs were defaulted because the data was unavailable.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 3 ============ -->
+<section id="ch3" class="card">
+  <div class="card-eyebrow">Chapter 3 · ~10 min</div>
+  <h2>Reading the outputs: AAL, EP curves, PML, TVaR — and why they don't all add up</h2>
+  <p class="lede">Every cat-model number you see is a summary statistic over the event loss table. Knowing which statistic answers which question — and which questions it cannot answer — is the difference between a model used well and a model used as theater.</p>
+
+  <h3>3.1 Average Annual Loss (AAL): the workhorse</h3>
+  <p>AAL is the simplest cat-model output and the most useful. It is the sum of <em>(probability of event × loss given event)</em> across the entire event catalog<span class="cite">AAA 2018, p.13</span><span class="cite">RMS Guide 2008, p.8</span>. Operationally, it is the long-run expected annual loss for a portfolio for the peril modeled. RMS calls it the "pure premium" or "burn cost"<span class="cite">RMS Guide 2008, p.8</span>; AAA writes the same identity inside the premium formula<span class="cite">AAA 2018, p.12</span>:</p>
+
+  <div class="exhibit" style="background:var(--surface-3)">
+    <div style="text-align:center;font-size:18px;font-weight:600;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">
+      Premium = AAL + Expense Load + Risk Load
+    </div>
+    <div class="exhibit-caption" style="text-align:center">Source: AAA Monograph 2018, p.12. The risk load depends on volatility (standard deviation or coefficient of variation) and provides a return on the capital exposed to catastrophic loss. It can be a multiple of AAL.</div>
+  </div>
+
+  <p>The single most important property of AAL is that it is <strong>additive</strong>. AALs across geographies sum; AALs across lines of business sum; AALs across perils sum<span class="cite">Sigona 2019, p.25</span><span class="cite">AAA 2018, p.27</span>. That property is what makes AAL the right metric for ratemaking, for portfolio analysis, and for territorial relativities. AAA's Florida hurricane example: Monroe County hurricane-wind AAL is $13.82 per $1,000 of building coverage; Broward is $5.54; statewide is $2.64<span class="cite">AAA 2018, p.14 Table 1</span>. Translating to a $207.5K policy: Monroe premium $11,788; Broward $4,724; statewide $2,254<span class="cite">AAA 2018, p.14 Table 1</span>. The variation is enormous and entirely the point — historical-data methods could not produce this kind of granularity defensibly.</p>
+
+  <p>AAL has clear limits. It is the mean of a heavily right-skewed distribution; the modal annual loss is much smaller, and the catastrophic-tail loss is much larger. AAL by itself does not tell you anything about volatility, and so it does not tell you what capital you need to hold or what reinsurance to buy.</p>
+
+  <h3>3.2 Exceedance Probability (EP) curves: the full picture</h3>
+  <p>The richer answer is the EP curve. It shows the annual probability of exceeding any specified loss amount. The curve is built directly from the event loss table: simulate many years, rank the annual losses by size, and the relative frequency of exceeding any threshold is its exceedance probability<span class="cite">Carter 2016, p.2</span>. In a 1,000-year simulation, the largest loss has an EP of 1/1,000 (0.1%); the second largest has 2/1,000 (0.2%), and so on<span class="cite">Carter 2016, p.2</span>.</p>
+
+  <p>Two different EP curves are commonly used and are easy to confuse<span class="cite">Sigona 2019, p.24</span>:</p>
+
+  <ul>
+    <li><strong>Occurrence Exceedance Probability (OEP)</strong>: the probability that <em>any single occurrence</em> in the year will exceed the threshold.</li>
+    <li><strong>Aggregate Exceedance Probability (AEP)</strong>: the probability that <em>one or more occurrences</em> combined in a year will exceed the threshold.</li>
+  </ul>
+
+  <p>For the same threshold, AEP is always at least as large as OEP — multiple events combining is at least as likely as any single event being big enough. Sigona's worked example: an OEP of 1% at $200M means there is a 1% annual chance of a single occurrence at or above $200M; an AEP of 0.4% at $520M means there is a 0.4% annual chance of one-or-more aggregate-year losses at or above $520M<span class="cite">Sigona 2019, p.24</span>. Reinsurance contracts and risk appetite statements need to be explicit about which.</p>
+
+  <p>Carter helpfully links the four names this object goes by in four different contexts: "Exceedance Probability is also known as Value at Risk or VaR, from the original JP Morgan Risk Metrics way of looking at risk. These are also known to mathematicians as quantiles or, more precisely, quantile estimates"<span class="cite">Carter 2016, p.3</span>. (The note's worked example contains a typo readers should mentally correct: it labels the 1-in-200-year VaR as "an annual loss EP of 0.05%," but 1/200 = 0.5%, not 0.05%. The point about vocabulary stands; the percentage is a slip.) The literacy gap across actuarial, reinsurance, finance, and mathematical settings is real and worth naming.</p>
+
+  <h3>3.3 Probable Maximum Loss / Return Period Loss</h3>
+  <p>A PML or Return Period Loss is the inverse statement of an EP curve point: an amount at a given probability. AAA defines it precisely: "It is an amount that is expected to be exceeded with a given probability by an event or in a year. For example, a 100-year occurrence PML of $6 million ($6M) means that there is a 1-in-100 (1 percent) chance of a loss of at least $6M"<span class="cite">AAA 2018, p.11</span>. For solvency purposes the NAIC's Risk-Based Capital formula requires PMLs at specified levels, and ORSA filings rely on them<span class="cite">AAA 2018, p.7</span>.</p>
+
+  <p>The single most important property of PML is that it is <strong>not additive across perils</strong>. AAA's Florida portfolio illustrates the point<span class="cite">AAA 2018, p.27 Table 16</span>:</p>
+
+  <div class="exhibit">
+    <div class="exhibit-title">Exhibit 3 · PMLs are not additive across perils</div>
+    <div class="exhibit-headline">For the AAA's hypothetical 100,000-policy Florida portfolio, the all-causes 100-year PML is materially lower than the sum of the single-peril 100-year PMLs.</div>
+    <table class="tbl">
+      <thead>
+        <tr><th>Return period</th><th>Probability</th><th>HU wind ($M)</th><th>Inland flood ($M)</th><th>Storm surge ($M)</th><th>Tornado/SLW ($M)</th><th>All causes combined ($M)</th><th>Sum of singles ($M)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>100-year</td><td>1.0%</td><td>1,315</td><td>202</td><td>97</td><td>37</td><td><strong>1,458</strong></td><td>1,651</td></tr>
+        <tr><td>250-year</td><td>0.4%</td><td>1,902</td><td>384</td><td>157</td><td>52</td><td><strong>2,031</strong></td><td>2,495</td></tr>
+      </tbody>
+    </table>
+    <div class="exhibit-caption">Source: AAA Monograph 2018, p.27 Table 16. The "All causes combined" column is the directly-computed PML, not a sum. The "Sum of singles" column (computed for this synthesis from the same row data) shows what the additive shortcut would have given. Naïve summation overstates the 100-year PML by roughly 13% and the 250-year PML by roughly 23% in this portfolio. The reason: the probability that a 1-in-100-year hurricane, a 1-in-100-year inland flood, a 1-in-100-year storm surge, and a 1-in-100-year tornado all hit in the same year is far less than 1%.</div>
+  </div>
+
+  <p>Reinsurance pricing happens in <em>layers</em> defined by these PMLs. AAA's worked example: a layer attaching at the 100-year PML and limited at the 250-year PML — for hurricane wind only, this produces an in-layer AAL of about $3,412 thousand and a coefficient of variation of 11.6; for all causes combined, in-layer AAL is $3,821 thousand at CV 11.4<span class="cite">AAA 2018, p.27 Table 17</span>. The CV is high because the layer is, by definition, conditional on a tail event. The AAA's Table 18 extends to a 250-to-500-year layer, where the CV jumps to 17.7 for hurricane wind alone — "layers with less frequent occurrences are less predictable, thus, volatility is higher"<span class="cite">AAA 2018, p.28</span>.</p>
+
+  <h3>3.4 Tail Value at Risk (TVaR / TCE)</h3>
+  <p>Where PML asks "what is the loss at a given probability?", TVaR asks "given that we are above that probability, what is the average loss?". Sigona defines it as "the conditional expectation of losses that are greater than or equal to a specified return period loss"<span class="cite">Sigona 2019, p.38</span>. Operationally it is the average of all simulated event losses beyond a specified probability threshold<span class="cite">Wang 2012, p.40</span>. TVaR is what regulators and rating agencies increasingly use because it is sensitive to the shape of the tail in a way PML is not — two portfolios can share a PML at one probability but have very different TVaRs.</p>
+
+  <h3>3.5 Coefficient of Variation: putting volatility on a comparable scale</h3>
+  <p>The CV — the standard deviation divided by the mean (AAL) — gives a normalised measure of relative volatility<span class="cite">RMS Guide 2008, p.8</span>. RMS's worked example illustrates why this matters in underwriting. Distribution A has values 20, 25, 30 — mean 25, narrow spread; Distribution B has 0, 25, 50 — same mean, much wider spread. Both have AAL of 25 but the CVs differ: 0.2 versus 1.0<span class="cite">RMS Guide 2008, p.8</span>. AAL alone does not tell the underwriter the difference. RMS extends the example to two real submissions<span class="cite">RMS Guide 2008, p.9</span>:</p>
+
+  <div class="exhibit">
+    <div class="exhibit-title">Exhibit 4 · Volatility comparison — why an underwriter prefers the higher-AAL account</div>
+    <div class="exhibit-headline">When AAL alone would steer one way and CV-aware pricing steers the opposite, the CV-aware decision is usually right.</div>
+    <table class="tbl">
+      <thead><tr><th>Account</th><th>AAL (pure premium)</th><th>Standard deviation</th><th>CV</th><th>15% expense load</th><th>+ 20% × std-dev "technical price"</th></tr></thead>
+      <tbody>
+        <tr><td>A — lower AAL, higher volatility</td><td>$24,000</td><td>$135,000</td><td><span class="tbl-tier high">5.6</span></td><td>$27,600</td><td>$54,600</td></tr>
+        <tr><td>B — higher AAL, lower volatility</td><td>$30,000</td><td>$86,000</td><td><span class="tbl-tier mid">2.9</span></td><td>$34,500</td><td>$51,700</td></tr>
+      </tbody>
+    </table>
+    <div class="exhibit-caption">Source: RMS Guide 2008, p.9. With only AAL plus a 15% expense load, Account A looks cheaper. Once a 20% load on the standard deviation (a proxy for capital cost) is included, Account B is the cheaper risk to write — Account A is almost twice as volatile. Both calculations are defensible for the underwriter; the CV-aware one is the one that takes capital seriously.</div>
+  </div>
+
+  <h3>3.6 Other commonly seen metrics</h3>
+
+  <h4>Loss costs and AAL/TIV ratios</h4>
+  <p>Loss costs are AAL divided by an exposure unit (e.g., $1,000 of coverage). NAIC notes loss costs are "often used as the basis of ratemaking" because they normalise away portfolio scale<span class="cite">NAIC 2011, §V</span>. AAL/TIV (Total Insured Value) at a single location gives the long-term risk per dollar of value at that location and is useful for comparing geographically-close locations with very different exposures<span class="cite">AAA 2018, p.21</span>. PML/TIV at a return period is the analog for the tail.</p>
+
+  <h4>Marginal and portfolio metrics</h4>
+  <p>The contribution of a candidate property to the existing book's PML is often more decision-relevant than its standalone AAL. AAA's framing: "A property could have a relatively high AAL, but if it's in an area with low concentration in the current book, and doesn't impact the total book's PML and resulting reinsurance costs, the property could still be acceptable to an insurer"<span class="cite">AAA 2018, p.23</span>. Portfolio optimization extends this to the inverse problem: given a budget of capital, design a geographically distributed portfolio that minimizes a chosen return-period PML<span class="cite">AAA 2018, p.23</span>.</p>
+
+  <h4>Individual event and historical event losses</h4>
+  <p>Underneath the EP curves and PMLs, the ELT exposes individual stochastic events with characteristics (Class-3 hurricane, MW-7.4 earthquake, etc.) and modeled losses. Wang's AIR deck shows a sample of stochastic events ranked by loss<span class="cite">Wang 2012, p.37</span>: the highest-loss events typically include Class-3+ Atlantic hurricanes affecting the Gulf or the Mid-Atlantic, and MW-6.6+ earthquakes near Los Angeles or San Francisco. Historical event analyses run a particular past event (Andrew, Northridge, Sandy) against today's exposure to ask: "what loss would we take if it happened now?"<span class="cite">NAIC 2011, §V</span>.</p>
+
+  <h3>3.7 What each metric is for, in one frame</h3>
+
+  <div class="exhibit">
+    <div class="exhibit-title">Exhibit 5 · Which metric, for which question</div>
+    <div class="exhibit-headline">A practical mapping of cat-model outputs to the decisions they support.</div>
+    <table class="tbl">
+      <thead><tr><th>Metric</th><th>What it answers</th><th>Decisions it supports</th><th>What it cannot tell you</th></tr></thead>
+      <tbody>
+        <tr><td><strong>AAL</strong></td><td>Long-run expected annual loss</td><td>Pricing, territorial relativities, ratemaking, portfolio mix</td><td>Tail risk, capital adequacy, reinsurance buying</td></tr>
+        <tr><td><strong>OEP curve</strong></td><td>Annual probability of any single event ≥ threshold</td><td>Single-event reinsurance design (per-occurrence XOL)</td><td>Year-aggregate exposure when multiple events combine</td></tr>
+        <tr><td><strong>AEP curve</strong></td><td>Annual probability of aggregate-year losses ≥ threshold</td><td>Aggregate XOL, capital, ORSA</td><td>How the year's losses split between events</td></tr>
+        <tr><td><strong>PML / RPL</strong></td><td>Loss at a given probability</td><td>Capital adequacy (RBC), reinsurance attachment/limit selection</td><td>Conditional severity beyond that probability; not additive across perils</td></tr>
+        <tr><td><strong>TVaR / TCE</strong></td><td>Average loss given exceedance of a probability</td><td>Tail-sensitive capital and rating analyses</td><td>Frequency of exceedance below the threshold</td></tr>
+        <tr><td><strong>CV</strong></td><td>Volatility on a comparable scale</td><td>Underwriting choice between risks; risk loading</td><td>Absolute scale; is dimensionless</td></tr>
+        <tr><td><strong>AAL / TIV</strong></td><td>Long-term risk per dollar of value at a location</td><td>Geographic granularity, individual risk selection</td><td>How the location interacts with the portfolio</td></tr>
+        <tr><td><strong>Marginal PML</strong></td><td>Change in book's PML from adding a risk</td><td>Risk selection in the portfolio context</td><td>Standalone economic merit of the risk</td></tr>
+      </tbody>
+    </table>
+    <div class="exhibit-caption">Synthesis based on AAA Monograph 2018 §§Use Cases-Reinsurance, RMS Guide 2008 ch.1, Sigona 2019 §Output, Wang 2012 §How Output is Used, and Carter 2016. Tiers are qualitative; precise interpretation depends on portfolio composition and on which switches were active in the model run.</div>
+  </div>
+
+  <div class="rule">
+    <div class="label">Reader's rule · Chapter 3</div>
+    <p>AAL is additive; PML isn't. Use AAL to <em>price</em>, PML and TVaR to <em>manage capital</em>, EP curves (specifying OEP vs AEP) to <em>design reinsurance</em>, and CV to <em>compare</em> risks. A point estimate without its companion volatility measure is half a number.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 4 ============ -->
+<section id="ch4" class="card">
+  <div class="card-eyebrow">Chapter 4 · ~12 min · the chapter to budget extra time for</div>
+  <h2>Uncertainty: the heart of the matter</h2>
+  <p class="lede">If Chapter 1 is the past and Chapter 2 is the mechanics, this is the chapter that tells you how to read every other number in the deck honestly. The corpus's strongest consensus, and its sharpest disagreements, both live here.</p>
+
+  <h3>4.1 The taxonomy: four kinds of uncertainty in one event-based model</h3>
+  <p>Carter's three-page Oasis course note is the cleanest taxonomy in the corpus and worth reading in its own right. It distinguishes four sources of uncertainty in any event-based catastrophe loss model<span class="cite">Carter 2016, pp.1–2</span>:</p>
+
+  <div class="taxonomy">
+    <div>
+      <h5>Model uncertainty</h5>
+      <p>Uncertainty arising from the choice of model itself. Different vendors' models, parameterised on the same exposure, can produce materially different loss estimates. Carter: "different models can produce very different outcomes."</p>
+    </div>
+    <div>
+      <h5>Parameter uncertainty</h5>
+      <p>Within a chosen model, free parameters can take a range of values. The financial-modeling community's term for the resulting uncertainty in output. Carter: "uncertainties due to choices of particular parameters which can be chosen for free variables within a model."</p>
+    </div>
+    <div>
+      <h5>Primary uncertainty</h5>
+      <p>Uncertainty about the events: their definition, frequency, and time correlation (clustering). Carter: "the assignment of events to years (that is to say, their frequency and correlation) is the most important of all the assumptions in the event-based catastrophe loss modelling paradigm."</p>
+    </div>
+    <div>
+      <h5>Secondary uncertainty</h5>
+      <p>Given an event has occurred, uncertainty in the loss it causes. Captured probabilistically through distributions of hazard intensity and damageability. Sigona summarises it as "when an event occurs, there is a range of possible loss values."</p>
+    </div>
+  </div>
+
+  <p>Sigona's deck, working from the same definitions on behalf of Guy Carpenter, frames primary and secondary uncertainty as the two columns of a typical Event Loss Table: each event has a rate (primary) and a per-event mean and standard deviation (secondary)<span class="cite">Sigona 2019, pp.42–43</span>. RMS's ELT uses a beta distribution for the secondary uncertainty around each event's mean loss<span class="cite">Sigona 2019, p.43</span>; AIR's default ELT does not include a per-event standard deviation, which itself is a non-trivial implementation difference<span class="cite">Sigona 2019, p.44</span>.</p>
+
+  <p>A useful additional cut, drawn from the broader risk-science literature rather than from Carter directly, is the <em>aleatory vs epistemic</em> distinction:</p>
+  <ul>
+    <li><strong>Aleatory</strong> uncertainty — irreducible randomness in the natural process. The physics of where a hurricane will turn next, or which fault will rupture, are aleatory at the timescales we care about.</li>
+    <li><strong>Epistemic</strong> uncertainty — reducible knowledge gaps. We do not know the precise vulnerability curve for a particular construction class because we do not have enough claims data; in principle, more data can shrink it.</li>
+  </ul>
+  <p>The distinction matters operationally: aleatory uncertainty is what you must <em>insure against</em>; epistemic uncertainty is what you should <em>invest to reduce</em>. As an interpretive overlay on Carter's taxonomy — not a claim Carter herself makes — primary and secondary uncertainties are largely aleatory in character, while model and parameter uncertainties are largely epistemic. The mapping is not airtight (a poorly chosen event-frequency assumption is also epistemic, for example), but the <em>insure-against vs invest-to-reduce</em> reflex is worth carrying into every model evaluation.</p>
+
+  <h3>4.2 Just how wide is the band?</h3>
+  <p>The cleanest empirical answer in the corpus is from the NAIC handbook, which reproduces a partial table of expected loss costs per $1,000 of insurance from multiple models — all of which had been provided the same Florida exposure inputs and subjected to the same standards by the Florida Commission<span class="cite">NAIC 2011, §I</span>:</p>
+
+  <div class="exhibit">
+    <div class="exhibit-title">Exhibit 6 · Multi-vendor spread on identical inputs (Florida hurricane)</div>
+    <div class="exhibit-headline">For the same county and the same exposure, modeled loss costs spanned almost a factor of seven across vendors.</div>
+    <table class="tbl">
+      <thead><tr><th>Florida county</th><th>Model A (per $1,000)</th><th>Model B (per $1,000)</th><th>Model C (per $1,000)</th><th>Other vendors observed (range)</th></tr></thead>
+      <tbody>
+        <tr><td>Dade</td><td>2.20</td><td>1.71</td><td>1.69</td><td>1.69 – 2.86</td></tr>
+        <tr><td>DeSoto</td><td>0.21</td><td>0.53</td><td>0.32</td><td>0.14 – 0.53</td></tr>
+        <tr><td>Dixie</td><td>0.36</td><td>0.26</td><td>0.13</td><td>—</td></tr>
+        <tr><td>Duval</td><td>0.20</td><td>0.31</td><td>0.08</td><td>—</td></tr>
+        <tr><td>Escambia</td><td>0.038</td><td>—</td><td>0.49</td><td>0.82 (high)</td></tr>
+      </tbody>
+    </table>
+    <div class="exhibit-caption">Source: NAIC <em>Catastrophe Computer Modeling Handbook</em> 2011, §I (table reproduced from the Florida Commission on Hurricane Loss Projection Methodology). The handbook summarises the spread as: "the highest modeled loss costs were almost seven times as high as the lowest within a county." Some county/vendor cells had no published estimate; OCR rendering of the original table was reconstructed for this synthesis from the recovered text.</div>
+  </div>
+
+  <p>Milliman 2022 gives the qualitative version of the same picture: hurricane catastrophe models, after three-plus decades of development and validation, will produce results "in the same ballpark" in aggregate, although individual-risk estimates can still vary widely<span class="cite">Milliman 2022, p.2</span>. Less mature peril models — flood, wildfire — diverge much more. Milliman's Figure 1 shows illustrative ranges of flood AALs for a single beach house across multiple vendor models that span roughly an order of magnitude<span class="cite">Milliman 2022, p.2</span>. Figure 2 shows four flood vendors' AALs on the same set of single-family homes in Carteret County, North Carolina; the four agree on the broad geographic pattern but diverge significantly on a southern barrier island<span class="cite">Milliman 2022, p.4</span>.</p>
+
+  <p>Even within a single, mature, well-validated vendor model, the size of the uncertainty band is large enough that the most-quoted line in the corpus is the one from Sigona's 2019 deck, attributed to a Guy Carpenter briefing by John Major<span class="cite">Sigona 2019, p.34</span>:</p>
+
+  <div class="pq">
+    "When a cat model says 'Your 100 year return period loss is $1,117,243,572,' what it really means is that your 100 year return period loss is about a billion dollars but it could be 600 million dollars or maybe two billion dollars… or something like that."
+    <cite>— John Major, Guy Carpenter, "Managing Catastrophe Model Uncertainty," December 2011, as cited in Sigona/Guy Carpenter 2019, p.33</cite>
+  </div>
+
+  <p>That is the right scale of honesty for any cat-model output that is reported to four or more significant figures.</p>
+
+  <h3>4.3 Where the uncertainty enters, by module</h3>
+  <p>Sigona's deck attributes specific uncertainty sources to specific modules<span class="cite">Sigona 2019, p.34</span>:</p>
+
+  <ul>
+    <li><strong>Hazard module</strong> — limited historical data on hurricane, earthquake, tornado/hail events; unreliable data quality for old records; lack of understanding of physical phenomena underlying hurricane and earthquake behavior.</li>
+    <li><strong>Vulnerability module</strong> — limited claims data for model calibration; valuation errors; improper coding of risk characteristics; lack of understanding of structural behavior under severe loads.</li>
+    <li><strong>Financial module</strong> — real-life application of complex policy and reinsurance terms; model limitations relative to the level at which reinsurance applies vs the level the model represents.</li>
+  </ul>
+
+  <p>NAIC's 2011 Handbook organises the same content into validation criteria — accuracy, comparison to historical, convergence, expert/peer review, input data, logical relationship to risk, model updates, probabilistic range, real-time predictions, sensitivity, and stability — each of which is, in effect, a different test for a different uncertainty source<span class="cite">NAIC 2011, §VI</span>.</p>
+
+  <h3>4.4 Four operational responses to uncertainty</h3>
+
+  <h4>Response 1 — Multi-model and blending</h4>
+  <p>If different vendors disagree, the right reaction is not always to pick one. Sigona's deck notes that "model vendors differ in interpretation of the historical record, interpretation of detailed scientific data, sources of vulnerability, and site conditions data"; using multiple models and blending results "can help to narrow the uncertainty band, smooth impact of individual model version changes, better estimate risk and control uncertainty, and diversify error sources"<span class="cite">Sigona 2019, p.35</span>. Milliman frames blending as "especially useful when more than one model appears acceptable" — weighting the models together is more reasonable than choosing one<span class="cite">Milliman 2022, p.5</span>. The simplest blend — average the AALs from each model for each exposure — is often a defensible starting point. Blending exceedance probabilities is harder; the curves are non-linear in the relevant region.</p>
+
+  <h4>Response 2 — Sensitivity, mapping, outlier analysis</h4>
+  <p>Milliman 2022 catalogs four practical evaluation techniques<span class="cite">Milliman 2022, pp.3–5</span>:</p>
+  <ul>
+    <li><strong>Reasonability</strong>: do the results make sense? Storm-surge damage that increases with distance from the coast warrants further investigation. Zero-dollar AALs in known-exposed areas signal a systemic issue.</li>
+    <li><strong>Mapping</strong>: plot results on a map to spot consistencies and irregularities. Discontinuities at administrative boundaries — e.g., AALs sharply different on either side of a county line — may reflect real differences in building-code enforcement, or may be modeling artifacts.</li>
+    <li><strong>Sensitivity</strong>: change one input at a time and watch the output. Do losses decrease with distance to coast? At what rate? Two reasonable models can show different sensitivities; understanding the difference matters.</li>
+    <li><strong>Outlier analysis</strong>: when three or more models are compared, define a rule for outliers (e.g., the difference between the highest model and the maximum of the others) and map the result.</li>
+  </ul>
+  <p>Guy Carpenter's Model Suitability Analysis (MSA®), described in Sigona's deck, is one industry framework for organising these tests<span class="cite">Sigona 2019, p.37</span>.</p>
+
+  <h4>Response 3 — Validation against history and against experts</h4>
+  <p>Wang's deck distinguishes <em>bottom-up</em> validation (check each module against the relevant scientific literature and against history) from <em>top-down</em> validation (check the full-pipeline output against industry-level historical losses and company-level historical losses)<span class="cite">Wang 2012, p.11</span>. Both are necessary; Wang notes "equally great emphasis on evaluating the tail events" because statistical extrapolation from short histories has large uncertainties — explicitly, "does the exceedance probability distribution contain large loss events; are these events physically realistic; are the average loss ratio and average claim count and size reasonable?"<span class="cite">Wang 2012, p.12</span>.</p>
+
+  <p>ASOP 38 (the 2021 revision) codifies this for actuarial practice. Section 3.5 lists four output-validation methods: comparison to alternative model outputs; comparison to historical observations; consistency and reasonableness of relationships within the output; and reasonableness of changes in output due to variations in user input<span class="cite">ASOP 38 (2021), §3.5</span>. Section 3.4 requires the actuary to "evaluate whether the catastrophe model is appropriate for the intended purpose," considering the adequacy of historical data and developments in relevant fields<span class="cite">ASOP 38 (2021), §3.4</span>. The same standard's Section 3.2 requires the actuary, when relying on a model developed by experts, to consider whether they are experts in the applicable field, the extent of independent review, and whether industry/regulatory standards apply<span class="cite">ASOP 38 (2021), §3.2</span>.</p>
+
+  <h4>Response 4 — Communicating uncertainty</h4>
+  <p>Geneva 2018 makes this its fifth recommendation under "Further leverage and enhance current Cat modelling methodologies": "Improve risk communication of model outputs and related model uncertainty among users. Risk metrics are not necessarily intuitive and can be badly presented, creating scope for misunderstanding and the potential for poor decision-making"<span class="cite">Geneva 2018, §6 Recommendation 1(v)</span>. The recommendation is not rhetorical: as cat-model outputs migrate from the narrow community that built them to financial-sector and public-sector users, the failure mode of <em>communicating a number to four significant figures and being believed</em> is no longer hypothetical.</p>
+
+  <h4>Sequencing the four responses as a governance loop</h4>
+  <p>The four responses above are usually presented as parallel options. They work better as a loop, run in order on every material model output before it leaves the building:</p>
+  <ol>
+    <li><strong>Input audit.</strong> Geocoding, occupancy, year, construction, secondary modifiers — what fraction is real data versus default-coded? <span class="cite">NAIC 2011, §VII.A–C; RMS Guide 2008, p.13</span></li>
+    <li><strong>Multi-model comparison.</strong> Run the same exposure through two (or more) vendor models and compare AAL, EP, and PML at the relevant return periods. <span class="cite">Sigona 2019, p.35; Milliman 2022, p.5</span></li>
+    <li><strong>Reasonability + outlier mapping.</strong> Plot results spatially; flag discontinuities, zero-dollar results in known-exposed areas, and outliers. <span class="cite">Milliman 2022, pp.3–5</span></li>
+    <li><strong>Sensitivity tests.</strong> Vary each major input one at a time and document how the answer moves. <span class="cite">NAIC 2011, §VI Sensitivity</span></li>
+    <li><strong>Expert / peer challenge.</strong> External review of methodology and outputs against current science. <span class="cite">ASOP 38 (2021), §3.2; NAIC 2011, §VI</span></li>
+    <li><strong>Selection and (where appropriate) blending.</strong> Document which model(s) you used and why, and the weights if blended. <span class="cite">Milliman 2022, p.5</span></li>
+    <li><strong>Disclosure.</strong> Per ASOP 38 §4.1: model used, intended purpose, validation methodology, reliance on experts, user input, output adjustments, reliance on other actuaries' work. <span class="cite">ASOP 38 (2021), §4.1</span></li>
+  </ol>
+  <p>Skipping any step in this sequence is how a model output becomes a number that survives review without anyone having tested it. The cumulative effect of these seven steps — not any one of them in isolation — is the governance the regulator framework is asking for when it says "evaluate the model."</p>
+
+  <h3>4.5 Two structural truths to keep in view</h3>
+
+  <h4>Models change; the world doesn't always</h4>
+  <p>AAA's Limitation #4 of catastrophe models is sometimes underappreciated: "Model changes with software update can cause stability concerns. As science continues to evolve, and more data becomes available, modeling vendors have opportunities to incorporate new sciences and learnings into the models. As a result, the industry may experience large swings in the estimates from year to year"<span class="cite">AAA 2018, p.34</span>. AAA's punchline: those changes are still smaller than the swings produced by relying on historical experience. But they are not zero, and they need to be communicated, especially to regulators and rate-payers, who can — with some justice — see successive vendor releases producing different rates and ask whether the underlying risk really changed.</p>
+
+  <h4>Multi-disciplinary models are not transparent by default</h4>
+  <p>AAA's Limitation #6: "While the technical documentation of the models is available to users for their general knowledge, some core assumptions are considered proprietary and are not readily accessible to users. A catastrophe model is developed by a group of scientists … with specialized knowledge in different fields. It is not an easy task for model users to develop even a basic understanding of the model, as required by U.S. actuaries' standards of practice"<span class="cite">AAA 2018, p.34</span>. The 2011 NAIC Handbook devotes Section VIII to the same balance: <em>proprietary information vs public access</em>. The handbook describes site visits, multi-state cooperation, and non-disclosure agreements as practical work-arounds, while acknowledging that the regulator's understanding gained behind an NDA "cannot be replicated at the regulators' offices for the public," which can in turn fuel criticism from those who believe they have a right to view the underlying data<span class="cite">NAIC 2011, §VIII</span>.</p>
+
+  <p>Geneva makes the same point structurally: "Greater transparency is essential to enable buy-in, review and challenge by other interested parties, and perceptions of 'black box' models must be actively countered by increased disclosure"<span class="cite">Geneva 2018, §6 Recommendation 1(iv)</span>. Geneva proposes that ensembles of model runs and inter-comparison projects (analogous to those conducted with climate models) "would drive innovation in model development by highlighting areas for improvement"<span class="cite">Geneva 2018, §6 Recommendation 1(iv)</span>.</p>
+
+  <h3>4.6 The practical bottom line</h3>
+  <p>AAA's Limitation #7 captures the working stance the corpus collectively endorses: "Catastrophe models are tools to help insurers assess and understand catastrophe risks. Like other tools, catastrophe models have limitations. Due to the uncertainties discussed above, it is impossible and unrealistic to expect a catastrophe model to produce perfect answers. However, this is not a reason to discredit a modeling approach, as relying solely on historical records is less reliable"<span class="cite">AAA 2018, p.34</span>.</p>
+
+  <p>Carter's Oasis note articulates the constructive flip: "the simulation method of Oasis allows the probability distributions of given metrics… one could use Oasis to calculate the level of confidence in taking a particular price or capital estimate so that users are aware of the 'spread' of values"<span class="cite">Carter 2016, p.1</span>. The honest output of a cat model is not a number; it is a distribution accompanied by a description of which sources of uncertainty are quantified inside it and which are still on the cutting-room floor.</p>
+
+  <div class="rule">
+    <div class="label">Reader's rule · Chapter 4</div>
+    <p>A point estimate is a fiction. The honest output is a distribution with named, quantified sources of uncertainty: model, parameter, primary, and secondary, plus the residue you couldn't quantify. Treat any catastrophe-model number reported to four significant figures as performance art. Treat the spread, not the headline, as the data.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 5 ============ -->
+<section id="ch5" class="card">
+  <div class="card-eyebrow">Chapter 5 · ~12 min</div>
+  <h2>Putting models to work: ratemaking, underwriting, reinsurance, ERM</h2>
+  <p class="lede">A model that produces excellent outputs and never reaches a decision is wasted. The corpus is rich on the operational use cases — what model output supports which decision, and through what calculation chain.</p>
+
+  <h3>5.1 Ratemaking</h3>
+
+  <h4>The core formula and the role of ASOP 39</h4>
+  <p>The ratemaking formula is, at its core, three terms — AAL (the expected annual loss), an expense load, and a risk load — assembled to produce an indicated premium<span class="cite">AAA 2018, p.12</span>. Cat models are essential to calculate AAL and the risk load because the volatility (standard deviation or CV) of catastrophic losses is a function of the model output, not a function of recent claims experience<span class="cite">AAA 2018, p.13</span>. The risk load can be a substantial multiple of AAL — the higher the volatility, the higher the likelihood of insolvency, and therefore the higher the risk load required to compensate the capital exposed to that volatility<span class="cite">AAA 2018, p.13</span>.</p>
+
+  <p>ASOP 39 is the procedural standard for treatment of catastrophe losses in P/C ratemaking. Adopted in June 2000 in the wake of Andrew and Northridge, it directs the actuary to "identify the perils or events that have the potential to generate catastrophe losses that differ materially from the expected aggregate losses"<span class="cite">ASOP 39, §3.1</span> — perils that either display contagion (lack of independence between losses among different entities) or occur infrequently. Section 3.3.1 enumerates six considerations when using historical insurance data: evaluating the data, applicability for the insured coverage, adjustments to reflect future conditions, stability of outcomes, differing trends in loss data, and consistent definition of a catastrophe<span class="cite">ASOP 39, §3.3.1</span>. Section 3.3.2 gives the actuary three options when historical insurance data does not sufficiently represent the catastrophe exposure: use noninsurance data to adjust the historical insurance data; use noninsurance data (including models based thereon) as input to ratemaking procedures; or use models combining historical insurance and noninsurance data<span class="cite">ASOP 39, §3.3.2</span>. Section 3.5 addresses loss adjustment expense, noting that "the relationship of loss adjustment expense to incurred loss can be significantly different for catastrophe losses and for noncatastrophe losses"<span class="cite">ASOP 39, §3.5</span>.</p>
+
+  <h4>Worked example: AAA's Florida portfolio</h4>
+  <p>The AAA's 2018 monograph constructs a hypothetical 100,000-policy single-residential portfolio in Florida — distributed by ZIP-code population, with a $207,500 building value, 10% appurtenant structures, 50% contents coverage, and a 2% blanket deductible — and runs CoreLogic's RQE model on it for four perils: hurricane wind, tornado/straight-line wind, inland flood, and storm surge<span class="cite">AAA 2018, App.1</span>. The result is a complete worked ratemaking example<span class="cite">AAA 2018, p.14 Tables 1–4</span>:</p>
+
+  <div class="exhibit">
+    <div class="exhibit-title">Exhibit 7 · Hurricane wind premium by Florida county</div>
+    <div class="exhibit-headline">Modeled hurricane-wind premium per $207.5K home varies from $210 (Duval) to $11,788 (Monroe) — a ratio of more than 50× across Florida.</div>
+    <table class="tbl">
+      <thead><tr><th>County</th><th>Modeled gross HW loss per $1,000</th><th>Selected risk load (std dev, per $1,000)</th><th>HW premium per $1,000</th><th>HW premium for $207.5K home</th></tr></thead>
+      <tbody>
+        <tr><td>Monroe</td><td>$13.82</td><td>$27.65</td><td>$56.81</td><td>$11,788</td></tr>
+        <tr><td>Miami-Dade</td><td>$7.60</td><td>$15.21</td><td>$31.25</td><td>$6,485</td></tr>
+        <tr><td>Broward</td><td>$5.54</td><td>$11.08</td><td>$22.77</td><td>$4,724</td></tr>
+        <tr><td>Palm Beach</td><td>$5.26</td><td>$10.51</td><td>$21.60</td><td>$4,482</td></tr>
+        <tr><td>Okeechobee</td><td>$1.91</td><td>$3.81</td><td>$7.83</td><td>$1,625</td></tr>
+        <tr><td>Sarasota</td><td>$1.74</td><td>$3.48</td><td>$7.14</td><td>$1,482</td></tr>
+        <tr><td>Hillsborough</td><td>$0.75</td><td>$1.51</td><td>$3.09</td><td>$642</td></tr>
+        <tr><td>Orange</td><td>$0.36</td><td>$0.72</td><td>$1.48</td><td>$306</td></tr>
+        <tr><td>Duval</td><td>$0.25</td><td>$0.49</td><td>$1.01</td><td>$210</td></tr>
+        <tr><td><strong>Statewide</strong></td><td><strong>$2.64</strong></td><td><strong>$5.29</strong></td><td><strong>$10.86</strong></td><td><strong>$2,254</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="exhibit-caption">Source: AAA Monograph 2018, p.14 Table 1, applying a 27% expense load and the standard deviation as the selected risk load. The full premium is loaded for expenses as <em>(B+C)/0.73</em>. The variation across Florida counties is a function of distance to coast, hurricane track exposure, and local building stock.</div>
+  </div>
+
+  <p>Storm-surge rates show even more concentration: Monroe County's storm-surge premium is $1,457, while inland counties have no storm-surge exposure at all<span class="cite">AAA 2018, p.15 Table 4</span>. The same modeling framework supports rating factors and rating relativities for construction, year built, occupancy, and territory<span class="cite">AAA 2018, p.16</span>; deductible relativities (the loss elimination ratio, defined as <em>1 − Gross Loss / Ground-Up Loss</em>) which for a 2% hurricane deductible runs from about 20% in Monroe to about 73% in Orange<span class="cite">AAA 2018, p.17 Table 5</span>; and individual-risk metrics such as AAL/TIV and PML/TIV<span class="cite">AAA 2018, pp.20–22</span>.</p>
+
+  <h3>5.2 Underwriting and risk selection</h3>
+  <p>Cat models shifted underwriting from a binary accept/decline tool toward a priced-risk-in-portfolio-context tool<span class="cite">AAA 2018, p.20</span>. The classical metrics are AAL/TIV and PML/TIV at chosen return periods, evaluated both standalone and in marginal contribution to the existing book. AAA's example: two locations in different parts of the state with similar AALs (about $98 and $92 in ZIPs 32053 and 32311 respectively) but PML/AAL ratios of 51 and 66 — the second has a 250-year tail that is roughly 20% higher despite a slightly lower expected loss<span class="cite">AAA 2018, p.22 Table 14</span>. RMS's worked example in Chapter 3 (Account A vs Account B) is the same pattern at the account level: Account A's AAL is lower but its CV is higher, so its all-in technical price is higher than Account B's even at a 15% expense load plus a 20% load on standard deviation<span class="cite">RMS Guide 2008, p.9</span>.</p>
+
+  <p>Portfolio optimisation extends the logic to the inverse problem. Given a binding constraint — capital allocated to a state, premium budget, return-period PML target — design a geographically distributed portfolio that minimises the chosen metric subject to the constraint<span class="cite">AAA 2018, p.23</span>. AIR markets explicit "portfolio optimization techniques with respect to catastrophe loss potential" that integrate growth objectives by geography with non-catastrophe profitability and other lines of business<span class="cite">NAIC 2011, App.3 (AIR)</span>. Wang's deck pictures the same workflow as cat-model output feeding a TVaR-management decision<span class="cite">Wang 2012, pp.40–42</span>.</p>
+
+  <h3>5.3 Mitigation and the cost-benefit calculus</h3>
+  <p>Models also let you ask <em>what would the loss be if this property were mitigated?</em> AAA's example: a hurricane shutter discount on the same Florida portfolio reduces hurricane-wind AAL by 13.7% in Monroe County, 17.1% in Palm Beach, 28.9% in Orange, and 17.7% statewide<span class="cite">AAA 2018, p.24 Table 15</span>. The effect is larger in inland counties because more of the wind damage there comes through openings — the same physical reason that deductibles eliminate a larger share of inland losses.</p>
+
+  <p>At the community scale, the RMS Guide 2008 reproduces a sensitivity analysis of the Florida building stock: applying the IBHS Fortified Home standard reduces the modeled 100-year loss to single-family homes by approximately $49 billion, or 77% of the baseline<span class="cite">RMS Guide 2008, p.16</span>. The post-Andrew literature treats this kind of finding as central; AAA notes that "a significant amount of the damage from Hurricane Andrew could have been avoided if the building codes in effect had been more rigorously enforced"<span class="cite">AAA 2018, p.30</span>. Models in turn feed the building-code standards that flow back into model vulnerability functions.</p>
+
+  <h3>5.4 Reinsurance and capital markets</h3>
+
+  <h4>Layer pricing</h4>
+  <p>Reinsurance pricing for catastrophe layers relies heavily on model outputs, and the standard language and metrics that vendors produce make negotiation possible<span class="cite">AAA 2018, p.26</span>. Pricing typically begins with the AAL inside the layer plus a factor times the standard deviation of losses in the layer. A reinsurer selling $1,902M − $1,315M of cover above the all-causes 100-year PML attaches at a 1.0% probability of triggering and exhausts at 0.4% probability — both numbers come straight off the EP curve<span class="cite">AAA 2018, p.26</span>. The pricing factor varies with market conditions, but for a given layer at a given point in time, comparable companies and similar market conditions provide useful benchmarks.</p>
+
+  <h4>Florida Hurricane Catastrophe Fund</h4>
+  <p>Following Hurricane Andrew, the state of Florida created the Florida Hurricane Catastrophe Fund (FHCF) in a special legislative session, to provide "a stable and ongoing source of reimbursement to insurers for a portion of their catastrophic hurricane losses"<span class="cite">AAA 2018, p.29</span>. The Fund operates as an independent state-run reinsurer; participation is mandatory for residential property insurers in Florida. Statewide capacity was originally set at $17 billion for a hurricane season, and was later amended to include an additional $17 billion for a subsequent season<span class="cite">AAA 2018, p.29</span>. The FHCF is required to use FCHLPM-approved models in determining the premiums it charges to participants — a structural lock between cat-model approval and rate-setting.</p>
+
+  <h4>Cat bonds and capital markets transfer</h4>
+  <p>The 2008 RMS Guide chapter on capital markets enumerates the four canonical cat-bond trigger types<span class="cite">RMS Guide 2008, pp.18–20</span>:</p>
+  <ul>
+    <li><strong>Indemnity</strong> — pays on the sponsor's actual claim experience. Maximum match to the sponsor's exposure but slow to settle (extension periods can last over two years).</li>
+    <li><strong>Industry loss</strong> — pays on a published estimate of total industry insured loss in a region. Settles faster; works well when the sponsor's portfolio resembles the industry; carries basis risk when it doesn't.</li>
+    <li><strong>Parametric</strong> — pays on physical event parameters (peak wind speed at a defined location, magnitude at an epicenter). Fast to settle and intuitive to investors, but the basis risk for the sponsor can be material.</li>
+    <li><strong>Modeled loss</strong> — uses a model run on a notional portfolio at trigger time. A more complex and less transparent version of a parametric structure.</li>
+  </ul>
+  <p>RMS's 2008 chapter notes that less than 12% of natural-catastrophe risk was transferred to the capital markets at time of writing, and argues that institutional barriers (time and expense to issue) keep ILS economically less attractive than reinsurance at many scales<span class="cite">RMS Guide 2008, p.20</span>. Geneva 2018 records cat-bond market growth and notes that "since the launch of what many consider to be the first successful Cat bond, George Town Re in 1996," cat bonds have become "increasingly part of risk transfer strategies employed by insurers, reinsurers, corporate entities and public agencies"<span class="cite">Geneva 2018, §2.2 fn 9</span>. Geneva goes further: open-source cat models have begun being used by hedge funds trading these instruments and by central banks and rating agencies<span class="cite">Geneva 2018, §2.2 fn 10</span>.</p>
+
+  <p>The Guy Carpenter compilation deck (2024) flags a recent direction: parametric (re)insurance with triggered, indexed-based payouts as one example of "innovative insurance structures" responding to climate-related complexity. It cites the New York MTA's MetroCat parametric cat bond as a worked example of public-sector adoption<span class="cite">GC 2024 (Denike), p.32</span>.</p>
+
+  <h3>5.5 Enterprise Risk Management and capital</h3>
+  <p>ERM is, in AAA's words, "the discipline by which an organization in any industry assesses, controls, exploits, finances and monitors risks from all sources for the purpose of increasing the organization's short- and long-term value to its stakeholders"<span class="cite">AAA 2018, p.8</span>. For property/casualty insurers, ERM evaluations rely heavily on cat models because catastrophe risk is, as Wang's deck states bluntly, "the greatest threat to solvency" and is also highly correlated with operational and asset disruptions<span class="cite">Wang 2012, p.39</span>.</p>
+
+  <p>Three governance frames intersect here:</p>
+  <ul>
+    <li><strong>NAIC's Risk-Based Capital (RBC) formula</strong> requires PMLs at specified levels as input. The 2017 introduction of an RCAT charge for hurricane and earthquake formalized this. A wildfire RCAT charge became effective 12/31/2023; a convective-storm charge became effective 12/31/2023 for informational purposes only<span class="cite">GC 2024 (Jenson), p.19</span>.</li>
+    <li><strong>Own Risk and Solvency Assessment (ORSA)</strong> — a key part of ERM — uses model output to evaluate solvency under stress<span class="cite">AAA 2018, p.7</span>.</li>
+    <li><strong>Solvency II</strong> in Europe requires "in-depth validation and stress testing of models to prove that the individual model used by a (re)insurer properly reflects a company's individual risk profile"<span class="cite">Geneva 2018, §3.7</span>. Comparable Solvency-II-style regimes are being adopted elsewhere, China explicitly named<span class="cite">Geneva 2018, §3.7</span>.</li>
+  </ul>
+
+  <h3>5.6 Total Cost of Risk → Economic Cost of Risk</h3>
+  <p>Marsh's 2015 paper introduces a useful reframing for how organizations think about the value of risk transfer. Traditionally, organizations measured Total Cost of Risk (TCOR) as the sum of insurance premium spend, retained loss costs, broker fees, taxes, and other administrative expenses<span class="cite">Marsh 2015, p.7</span>. TCOR assumes all losses are known and ignores volatility — the very reason companies buy insurance in the first place.</p>
+
+  <p>Economic Cost of Risk (ECOR) replaces "expected" with "expected plus implied" and adds an explicit volatility cost<span class="cite">Marsh 2015, p.8</span>:</p>
+  <div class="exhibit" style="background:var(--surface-3)">
+    <div style="text-align:center;font-size:17px;font-weight:600;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">
+      ECOR = Expected retained losses + Premiums + Implied risk charge + Other expenses
+    </div>
+    <div class="exhibit-caption" style="text-align:center">Source: Marsh 2015, p.8. The implied risk charge represents the cost of capital exposed to unexpected losses — for example, catastrophic losses from a major hurricane that exceed insurance coverage limits, plus interest charges if borrowing is required to cover the shortfall.</div>
+  </div>
+
+  <p>Marsh's case study of an organization splitting itself into two companies with different exposure profiles is instructive: cat modeling plus risk-finance optimization (RFO) drove the split companies to materially different retention levels, with one taking less than 50% of the combined organization's historical retention because of its higher volatility profile<span class="cite">Marsh 2015, p.9 sidebar</span>. The number you want for retention selection is closer to ECOR than to TCOR.</p>
+
+  <h3>5.7 The full operational picture</h3>
+
+  <div class="exhibit">
+    <div class="exhibit-title">Exhibit 8 · Cat-model output across the insurance value chain</div>
+    <div class="exhibit-headline">Each function uses a different combination of metrics, and each combination has its own model-version sensitivities.</div>
+    <table class="tbl">
+      <thead><tr><th>Function</th><th>Primary metrics used</th><th>Decision supported</th><th>Standards / governance</th></tr></thead>
+      <tbody>
+        <tr><td>Pricing / ratemaking</td><td>AAL by territory + risk load (std dev or CV)</td><td>Indicated rate, territorial relativities, deductible relativities</td><td>ASOP 39 §§3.1–3.5; FCHLPM in Florida; rate filings in other states</td></tr>
+        <tr><td>Underwriting / risk selection</td><td>AAL/TIV, PML/TIV, marginal PML</td><td>Accept/decline, priced acceptance, portfolio mix</td><td>Rating-agency requirements; internal underwriting guidelines</td></tr>
+        <tr><td>Mitigation</td><td>AAL with vs without mitigation feature; secondary modifier sensitivities</td><td>Mitigation discounts; cost-benefit on building-code investment</td><td>FCHLPM mitigation form V-2; ISO BCEGS</td></tr>
+        <tr><td>Reinsurance buying</td><td>Layer AAL, layer std dev, OEP at attachment, AEP for aggregate covers</td><td>Attachment, limit, structure (per-occ vs aggregate); ILS triggers</td><td>Industry standard contracts; ILS prospectuses</td></tr>
+        <tr><td>Capital / ERM / ORSA</td><td>PMLs at multiple return periods, TVaR, full EP curve, climate stress scenarios</td><td>Capital adequacy, RBC RCAT charges, ORSA, rating-agency capital</td><td>NAIC RBC; ORSA; Solvency II in Europe; ASOP 38 §§3.2–3.6</td></tr>
+        <tr><td>Real-time event response</td><td>Live event characterisation against current portfolio</td><td>Reserving, claims-team deployment, communications</td><td>NAIC validation criteria — real-time predictions</td></tr>
+      </tbody>
+    </table>
+    <div class="exhibit-caption">Synthesis based on AAA Monograph 2018 §§Use Cases-Reinsurance, Wang 2012 pp.38–45, Marsh 2015 pp.4–8, Sigona 2019 p.13, GC 2024 pp.20–22.</div>
+  </div>
+
+  <div class="rule">
+    <div class="label">Reader's rule · Chapter 5</div>
+    <p>The model serves the decision, not the other way around. Premium adequacy, capital adequacy, reinsurance adequacy, and counterparty trust are all downstream of how you use AAL, EP curves, and PML/TVaR — not of which vendor logo is on the deck. If the metric is wrong for the decision, the model can only fail more efficiently.</p>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 6 ============ -->
+<section id="ch6" class="card">
+  <div class="card-eyebrow">Chapter 6 · ~10 min</div>
+  <h2>The next decade: climate change, governance, and the limits of stationarity</h2>
+  <p class="lede">Three things the corpus collectively flags as the unfinished work — and the order in which they need to be confronted is non-negotiable.</p>
+
+  <h3>6.1 Stationarity is dead</h3>
+  <p>The historical record's value as a parameter source for cat models is decaying as climate non-stationarity proceeds. Geneva 2018 puts it as the central technical issue: "non-stationarity in the peril is a key challenge for risk assessment. Specifically, this refers to changes in the characteristics of hazards (e.g. frequency, severity and location) caused by natural climate variability or climate change within the time horizons of concern to the insurance industry"<span class="cite">Geneva 2018, §3.1</span>.</p>
+
+  <p>The industry's first response was to offer two hurricane catalogs. Sigona's deck contrasts them<span class="cite">Sigona 2019, p.29</span>:</p>
+  <ul>
+    <li><strong>Long-term frequency</strong> — based on the historical landfall record of over 100 years. AIR's Standard Catalog. RMS's analog.</li>
+    <li><strong>Near-term (or medium-term) frequency</strong> — known variously as "Warm SST Catalog" (AIR), introduced in 2006 hurricane models following the active 2004–2005 seasons. RMS uses a rolling 5-year time horizon expressed as expected average annual landfall rates along the Atlantic and Gulf coastlines.</li>
+  </ul>
+  <p>Guy Carpenter's deck states the firm's recommendation explicitly: long-term frequency as a more reliable and stable view of risk<span class="cite">Sigona 2019, p.29</span>. Geneva's review goes further: "the reliability of these approaches for (re)insurance placement and risk transfer is hotly debated within the industry, given the large uncertainties associated with the climate change scenarios, limited data and enhanced scientific understanding"<span class="cite">Geneva 2018, §3.1</span>. The two catalogs do not exhaust the choices a non-stationary climate forces; they are the ones the industry has converged on first.</p>
+
+  <p>Geneva's Recommendation 2 — "embed latest climate science in Cat models and explore opportunities for improving modelling of physical climate risk with a forward-looking approach" — names the perils that need this conditioning most: wildfire, large-scale hail, agricultural crop yields, drought, coastal surge flooding (via sea-level rise), and extreme precipitation events including cloudburst<span class="cite">Geneva 2018, §6 Recommendation 2</span>. The proposed methodology is to integrate Global Climate Model (GCM) outputs with cat-model frameworks — using nested high-resolution models and synthetic event sets generated from physical climate simulations rather than parameterised entirely on history. Kerry Emanuel's downscaling work on tropical cyclones is the canonical example<span class="cite">Geneva 2018, §5.1</span>.</p>
+
+  <p>Guy Carpenter's 2024 "Back to Basics" deck describes the practical state of the art<span class="cite">GC 2024 (Denike), p.31</span>: vendors have released scenario files allowing users to apply model adjustments with a specific focus on changing climate; users can adjust frequency and severity for future climate-change projections at various time horizons. Most cat-model climate adjustments still focus on North Atlantic hurricane, but tools also exist for quantifying potential increased severity and frequency of flooding, wildfire, severe storms (including hail), and winter storms.</p>
+
+  <h3>6.2 Governance is catching up</h3>
+
+  <h4>Actuarial standards</h4>
+  <p>ASOP 38 was extensively revised in 2021. The original 2000 ASOP 38, "Using Models Outside the Actuary's Area of Expertise," was P/C-only and addressed the role of catastrophe modeling in casualty ratemaking<span class="cite">ASOP 38 (2021), history</span>. The 2021 revision broadens the standard to apply to all practice areas — life, health, property/casualty, and enterprise risk management — and to all forms of catastrophe models, "including natural catastrophes such as hurricanes, earthquakes, and severe convective storms, and other catastrophes such as terrorist acts and pandemics"<span class="cite">ASOP 38 (2021), transmittal</span>. The revision was made consistent with ASOP No. 56, "Modeling," adopted by the ASB in December 2019, which provides general modeling guidance across actuarial practice<span class="cite">ASOP 38 (2021), history</span>.</p>
+
+  <p>The substantive shift in ASOP 38's 2021 revision is from "using" to "selecting, using, reviewing, or evaluating" a catastrophe model<span class="cite">ASOP 38 (2021), §1.2</span> — the actuary's professional responsibility now extends to model selection and to evaluating models built by others. The five-step framework in §3.1 is, in effect, a checklist the standard requires the actuary to be able to defend: determine the appropriate level of reliance on experts; have a basic understanding of the model; evaluate appropriateness for the intended purpose; determine appropriate validation has occurred; determine appropriate use<span class="cite">ASOP 38 (2021), §3.1</span>.</p>
+
+  <p>The ASOP 38 appendix, written in 2021 with COVID-19 fresh in mind, is striking on the trajectory: "due to the evolution of enterprise risk management (ERM) practices and regulations, there has been increased use of catastrophe modeling as part of insurer stress testing and risk management across all practice areas. This trend is likely to continue to evolve and heighten in light of the emergence of the novel coronavirus and the COVID-19 pandemic"<span class="cite">ASOP 38 (2021), App.1</span>. Pandemic and infectious-disease modeling, treated as a frontier in the 2008 RMS Guide<span class="cite">RMS Guide 2008, ch.6</span>, is now squarely inside the standard's scope.</p>
+
+  <h4>NAIC and regulatory infrastructure</h4>
+  <p>The Guy Carpenter compilation deck (2024) reproduces, via Bruce Jenson's NAIC slides, the recent NAIC timeline that an actuary or analyst should keep close to hand<span class="cite">GC 2024 (Jenson), pp.19–20</span>:</p>
+
+  <table class="tbl">
+    <thead><tr><th>Year</th><th>NAIC action</th></tr></thead>
+    <tbody>
+      <tr><td>2010</td><td>Initial NAIC Climate Risk Disclosure Survey launched</td></tr>
+      <tr><td>2013</td><td>Climate change guidance added to NAIC Examiners Handbook</td></tr>
+      <tr><td>2017</td><td>RCAT charge added to RBC formula for hurricane and earthquake</td></tr>
+      <tr><td>2020</td><td>NAIC Climate &amp; Resiliency (EX) Task Force established (with Solvency Workstream)</td></tr>
+      <tr><td>2022</td><td>NAIC adopts updated Climate Risk Disclosure Survey aligned with TCFD</td></tr>
+      <tr><td>2022</td><td>NAIC establishes new Center of Excellence for CAT Modeling to support regulators</td></tr>
+      <tr><td>2023</td><td>NAIC adopts updated guidance for Financial Analysis and Examination handbooks; wildfire RCAT charge effective 12/31/23; convective-storm RCAT effective 12/31/23 for informational purposes only</td></tr>
+    </tbody>
+  </table>
+
+  <p>The pending agenda items Jenson described are arguably more important than the historical timeline: a Property/Casualty Data Call seeking ZIP-code-level data on Homeowners policies; a Climate Scenario Analysis with a medium-term scenario proposed for collection alongside RCAT; and a Cat Reinsurance Program Description proposed as an RBC RCAT interrogatory<span class="cite">GC 2024 (Jenson), p.20</span>. Each of these is a request for information that the cat-modeling enterprise is uniquely positioned to supply — and each is likely to surface, by sheer aggregation, the model-spread issues we covered in Chapter 4.</p>
+
+  <p>The 2018 AAA monograph anticipated this trajectory. It reports a 2015 Florida statute allowing private insurers to write flood insurance, with the 2025 deadline that companies are required to submit details of their models<span class="cite">AAA 2018, p.7</span>. The Florida Commission on Hurricane Loss Projection Methodology (FCHLPM), originally created in 1995 to evaluate hurricane models for residential rate filings, had its remit expanded in 2014 to include the flood peril<span class="cite">AAA 2018, p.6</span> — model approval for new perils now leads, rather than follows, regulatory authority.</p>
+
+  <h3>6.3 The model frontier expands</h3>
+
+  <h4>Business interruption, supply chains, and critical infrastructure</h4>
+  <p>Cat models traditionally compute business-interruption losses largely as a function of the material damage. Geneva 2018 argues this is increasingly inadequate, especially for contingent business interruption (CBI), where losses arise from damage at suppliers or distribution channels rather than at the insured's own facilities<span class="cite">Geneva 2018, §4.1</span>. Geneva's "poster child" example: 2011 began with the Tohoku earthquake and tsunami in Japan; component-manufacturing supply chains shifted some production to industrial parks in Thailand, which then flooded later that year, disrupting computer hard-drive and automotive supply chains globally; meanwhile a major nanotechnology supplier of pearlescent pigments was within the initial evacuation zone of the Fukushima Daiichi reactor meltdowns<span class="cite">Geneva 2018, §4.1 Box 4</span>. The Geneva report calls for fundamentally new techniques and "some dependency on the disclosure around business continuity planning"<span class="cite">Geneva 2018, §4.1</span>.</p>
+
+  <p>Critical-infrastructure modelling is a related frontier. Geneva 2018 identifies infrastructure damage as the source of a significant portion of economic losses from weather-related extremes, particularly in middle- and high-income countries: Katrina (2005), the 2007 UK flood, the 2011 Thailand floods, Sandy (2012), Maria in Puerto Rico (2017), and Cyclone Gita (2018) are all named examples<span class="cite">Geneva 2018, §4.1</span>. The challenge is access to high-quality data across the full project life cycle — design, construction, operation, maintenance — and the modeling of how infrastructure failure cascades into secondary catastrophic consequences (overtopping levees in New Orleans during Katrina; the Herbert Hoover dike around Lake Okeechobee in a repeat of the 1928 hurricane)<span class="cite">Geneva 2018, §4.1</span>.</p>
+
+  <h4>"Models of models" and systems-based thinking</h4>
+  <p>Geneva's third overarching recommendation is to "consider 'models of models' and embrace a systems-based thinking for development of the next generation of Cat models"<span class="cite">Geneva 2018, §6 Recommendation 3</span>. The application areas where this is most urgent: critical-infrastructure cascades; economic models linked to cat output (so that post-disaster currency, interest-rate, and energy-price moves are inside the calculation); national-security-grade global food-system modelling. Geneva specifically cites the 2010 Russian drought as a global supply-chain event whose cascading effects through commodity prices contributed to civil unrest in 2010–2011 — a teaching example for the kind of multi-system risk that current cat models do not capture<span class="cite">Geneva 2018, §4.4</span>.</p>
+
+  <h4>Cyber, pandemic, and emerging perils</h4>
+  <p>Cyber and pandemic modeling are at very different stages. Pandemic modelling has roots in the mid-2000s — RMS began modelling pandemics in 2004 and developed a probabilistic pandemic influenza model in 2006–2007, partly in response to H5N1 bird flu activity, expanded after SARS to a wider range of infectious-disease outbreaks<span class="cite">RMS Guide 2008, p.21</span>. The 2008 RMS Guide already included a vector-style chart of infectiousness vs virulence, with reference points for the 1918 flu pandemic and for the 1349 Black Death<span class="cite">RMS Guide 2008, p.21</span>. Geneva 2018 notes that vendors are now developing cyber models both deterministically and probabilistically<span class="cite">Geneva 2018, §2.1 fn 8</span>.</p>
+
+  <h4>Public-private and parametric structures</h4>
+  <p>Geneva's catalog of regional risk pools — the Caribbean Catastrophe Risk Insurance Facility (CCRIF), the Pacific Disaster Risk Financing and Insurance Program (PCRAFI), the African Risk Capacity (ARC) — frames cat models as the underpinning for development-finance instruments<span class="cite">Geneva 2018, §2.2</span>. The Insurance Development Forum's Risk Modelling and Mapping Group, OASIS Loss Modelling Framework, the Global Earthquake Model, and the World Bank's Global Facility for Disaster Risk Reduction and Recovery (GFDRR) are part of the architecture<span class="cite">Geneva 2018, Table 1</span>. Parametric (re)insurance is the financial-instrument analog: indexed, triggered structures with rapid settlement that lower the friction for sponsors who can tolerate basis risk in exchange for liquidity<span class="cite">GC 2024 (Denike), p.32</span>.</p>
+
+  <h3>6.4 Geneva's recommendations as a roadmap</h3>
+  <p>Geneva 2018 ends with a programmatic call to action structured under three recommendations<span class="cite">Geneva 2018, §6</span>:</p>
+  <ol>
+    <li><strong>Further leverage and enhance current Cat modelling methodologies and tools.</strong> Specific priorities: drive interoperability among Cat models; scale ambition for global coverage of natural-peril models for every country; extend existing models to address current limitations (BI/CBI, supply chain, economic demand surge, loss adjustment expenses); set expectations of transparency and uncertainty quantification; improve risk communication; and develop a uniform international exposure-data standard.</li>
+    <li><strong>Embed latest climate science in Cat models</strong> and explore forward-looking modelling under climate-change scenarios (1.5°/2°/3°/4°C). Integrate Earth-system simulations and nested models within Global Climate Models.</li>
+    <li><strong>Consider "models of models"</strong> and embrace systems-based thinking — coupling cat models to economics, food, energy, water management, and critical-infrastructure models to better understand feedback loops and cascading effects.</li>
+  </ol>
+
+  <p>The pattern is hard to miss: every recommendation is about expanding the boundary of what the model is asked to do — temporally (forward-looking), geographically (low-income countries), structurally (across sectors), and in terms of disclosure (transparency on uncertainty). Each expansion is also a place where the current commercial cat-modeling paradigm has a financial incentive to move slowly. Geneva's framing — "models make markets, but markets are also needed to stimulate investment in the current commercially driven catastrophe model paradigm"<span class="cite">Geneva 2018, executive summary</span> — is a careful description of that tension.</p>
+
+  <div class="rule">
+    <div class="label">Reader's rule · Chapter 6</div>
+    <p>The biggest model errors of the next decade will not come from inside any single model. They will come from what the modeling paradigm currently treats as out of scope: non-stationarity in climate, peril correlation, supply-chain cascades, and the gap between the regulator-approved scope of a model and the real-world risk it is being asked to describe. Plan for the gap, not the model.</p>
+  </div>
+</section>
+
+<!-- ============ EPILOGUE ============ -->
+<section id="epilogue" class="card">
+  <div class="card-eyebrow">Epilogue</div>
+  <h2>A 10-question diagnostic for any cat-model output you're handed</h2>
+  <p class="lede">Distilled from NAIC's regulator-question lists, ASOP 38's five-step framework, Milliman's four evaluation techniques, and the Sigona/Guy Carpenter Model Suitability Analysis. Not exhaustive; designed to surface the things that are most likely to matter.</p>
+
+  <ol>
+    <li><strong>Which vendor(s)? Single model or blended?</strong> If blended, what weights, and why those weights? <span class="cite">Sigona 2019, p.35; Milliman 2022, p.5</span></li>
+    <li><strong>Which version? When was it last recalibrated?</strong> Material recalibrations have caused industry-wide swings (e.g., the 2009 US earthquake update incorporating NGA relationships<span class="cite">Marsh 2015, p.4</span>; the 2008 Ike-driven inland-wind and storm-surge updates<span class="cite">Marsh 2015, p.3</span>).</li>
+    <li><strong>What perils are <em>modeled</em> and <em>not modeled</em>?</strong> Inland flood from a hurricane is often outside the hurricane model<span class="cite">Wang 2012, p.35</span>. Loss-adjustment expense is typically a separate load. Aftershocks may be excluded from earthquake headline loss.</li>
+    <li><strong>Which financial perspective is shown?</strong> Ground-up, gross, net of fac, net pre-cat, or net post-cat<span class="cite">Sigona 2019, p.11</span>.</li>
+    <li><strong>Long-term or near-term frequency catalog?</strong> For hurricane, the answer materially changes the rate — Guy Carpenter recommends long-term as the more stable view<span class="cite">Sigona 2019, p.29</span>.</li>
+    <li><strong>Demand surge / loss amplification: which switches are on?</strong> RMS's Post-Loss Amplification combines economic demand surge with claims inflation and super-cat adjustments; AIR uses economic demand surge alone<span class="cite">Sigona 2019, p.30</span>.</li>
+    <li><strong>Exposure data quality.</strong> What percentage of locations are coded to street-level geocoding vs ZIP vs city/county? What percentage of construction types, year built, height, and secondary modifiers are actual data vs default-coded?<span class="cite">NAIC 2011, §VII.A–C</span> Material defaults can move loss estimates by orders of magnitude<span class="cite">RMS Guide 2008, p.13</span>.</li>
+    <li><strong>What return periods has this been validated at, and against what history?</strong> Bottom-up validation by module + top-down validation against industry-level and company-level historical losses, including for tail events<span class="cite">Wang 2012, pp.11–12</span>.</li>
+    <li><strong>What does the EP curve look like, not just the point estimate?</strong> Where is the tail? Are the largest events in the catalog physically realistic? What is the TVaR at the relevant probability?<span class="cite">Wang 2012, p.12; Sigona 2019, p.38</span></li>
+    <li><strong>What's the stated uncertainty range, and what input or assumption would change the answer most?</strong> Sensitivity analysis is the cheapest way to know how much weight any number can carry<span class="cite">Milliman 2022, pp.4–5</span>. Per Geneva 2018: "ensembles of model runs could be more widely used to reveal uncertainty"<span class="cite">Geneva 2018, §6 Rec 1(iv)</span>.</li>
+  </ol>
+
+  <p style="margin-top:24px"><strong>If the answer to any one of these ten is "I'm not sure" or "the report doesn't say,"</strong> that's the question to chase before you act on the number.</p>
+</section>
+
+<!-- ============ SOURCES ============ -->
+<section id="sources" class="card">
+  <div class="card-eyebrow">Source-attribution log</div>
+  <h2>Sources &amp; corpus inventory</h2>
+  <p class="lede">12 sources, 349 pages, all with full-text access (GREEN). Each source's role in the synthesis is recorded; every in-text citation in the chapters resolves to an entry below.</p>
+
+  <h3>Corpus inventory by stratum</h3>
+  <table class="tbl">
+    <thead><tr><th>Stratum</th><th>Count</th><th>Sources</th></tr></thead>
+    <tbody>
+      <tr><td>Anchor seed</td><td>1</td><td>Carter / Oasis 2016 [#1]</td></tr>
+      <tr><td>Industry primers</td><td>3</td><td>RMS Guide 2008 [#3], Marsh 2015 [#2], AAA Monograph 2018 [#8]</td></tr>
+      <tr><td>Vendor / educational decks</td><td>3</td><td>Wang/AIR CASE 2012 [#4], Sigona/GC LAS 2019 [#12], GC "Back to Basics" 2024 [#7]</td></tr>
+      <tr><td>Vendor whitepaper</td><td>1</td><td>Milliman (Dietzen &amp; Chamberlain) 2022 [#9]</td></tr>
+      <tr><td>Regulator / standard / handbook</td><td>3</td><td>NAIC Handbook 2011 [#10], ASOP 38 (rev. 2021) [#5], ASOP 39 (2000/2011) [#6]</td></tr>
+      <tr><td>Climate-risk research</td><td>1</td><td>Geneva Association 2018 [#11]</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>12</strong></td><td>1 + 3 + 3 + 1 + 3 + 1 = 12. Counts reconcile.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Source-attribution log (12 entries)</h3>
+  <table class="tbl sources-table">
+    <thead><tr><th>#</th><th>Citation</th><th>Access</th><th>Role in synthesis</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Carter, Johanna.</strong> "Uncertainty." Course note, Oasis Loss Modelling Framework Ltd. (Oasis LMF), in conjunction with Imperative Space and the Institute for Environmental Analytics. © Oasis LMF, 2016. 3pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Anchor seed. Source of the model / parameter / primary / secondary uncertainty taxonomy used in Ch.4. Also frames AAL, std-dev loading, EP curves / VaR equivalence, Oasis representation of uncertainty.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>Marsh Global Analytics</strong> (named contacts: Nicholas Durant, Cheryl Fanelli, Michael Brill, Michael Ducey). <em>A Decade of Advances In Catastrophe Modeling and Risk Financing — INSIGHTS</em>. Marsh (Marsh &amp; McLennan), October 2015. 12pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Post-Katrina-decade industry primer. Source for the historical-loss table, evolution-of-modules narrative, post-Katrina/Ike recalibrations, data-quality CatDQ process, ECOR vs TCOR framing, and a restaurant-chain case study reducing AAL ~25% via better data.</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>The Review</strong> (ed. Ruth Lythe), in association with RMS Inc.; introduction by Hemant Shah, CEO of RMS; chapter authors include Patricia Grossi, Cheryl TeHennepe, Josh Ellingson, Matthew Novak, Sahar Safaie, Chesley Williams, Maria Lomelo, Ajay Lavakare, Kenna Mawk, Celine Herweijer, Nicola Patmore, Bob Ward, Michael Young, John Stroughair, Ben Brookes, Robert Muir-Wood. <em>A Guide to Catastrophe Modelling</em>, 2008/09 edition. Informa UK Ltd. 24pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Industry primer. Authoritative source for the canonical 4-module structure, the AAL/CV worked example (Account A vs B), data-quality framework, IBHS Florida 100-yr loss reduction (~$49B / 77%), capital-markets ILS chapter (4 trigger types), and emerging-perils horizons (terrorism, pandemic, longevity, liability).</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>Wang, Heidi (FCAS).</strong> "Catastrophe Modeling." Presentation, 2012 CASE Spring Meeting, Boca Raton, FL, March 28, 2012. AIR Worldwide. 46pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Vendor (AIR) educational deck. Source of AIR's history-of-modeling timeline, modeling-questions framing, top-down + bottom-up validation, the modeled vs non-modeled-perils table for hurricane, the ERM cat-models-feed-capital-requirements diagram, TVaR definition, and the rating-algorithm formula.</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>Actuarial Standards Board, Catastrophe Modeling Task Force</strong> (Shawna S. Ackerman, chair). <em>Actuarial Standard of Practice No. 38 — Catastrophe Modeling (for All Practice Areas).</em> Revised, adopted July 2021. Effective for work performed on or after December 1, 2021. 12pp (web printout).</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Governing actuarial standard. Source for the actuary's five-step duty (§3.1), reliance-on-experts requirements (§3.2), output-validation methods (§3.5), required disclosures (§4.1), and the post-COVID extension of cat modeling for stress testing across all practice areas (App.1).</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><strong>Actuarial Standards Board, Subcommittee on Ratemaking of the Casualty Committee</strong> (Patrick B. Woods, chair). <em>Actuarial Standard of Practice No. 39 — Treatment of Catastrophe Losses in Property/Casualty Insurance Ratemaking</em> (Doc. No. 156). Adopted June 2000. Effective December 15, 2000. Updated for deviation language effective May 1, 2011. 20pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Governing actuarial standard for P/C ratemaking. Source for definitions of catastrophe, contagion, demand surge; six-point check on historical insurance data (§3.3.1); options for using noninsurance data and models (§3.3.2); LAE handling (§3.5); and the historical narrative of how Andrew + Northridge changed the standard (App.1).</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td><strong>Guy Carpenter</strong> (a business of Marsh McLennan). <em>"Back to Basics": Climate Risk &amp; Financial Resilience.</em> Multi-author webinar materials. Sections by (i) Dr. Randy Dumm, USF — Overview of Catastrophe Modeling (pp. 2–17); (ii) Bruce Jenson, Assistant Director Solvency Policy, NAIC — Key NAIC Nat Cat and Climate Related Solvency Activities (pp. 18–26); (iii) Susan Denike, Guy Carpenter, January 23, 2024 — Industry Efforts to Strengthen Financial Resilience (pp. 27–35). 35pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Multi-author 2024 compilation. Source for: Dumm's post-Andrew lessons; Jenson's NAIC timeline of cat-modeling-related solvency actions including the Climate &amp; Resiliency Task Force, RCAT charges, and the NAIC CAT Modeling Center of Excellence; Denike's framing of climate-stress scenarios for cat models, and parametric (re)insurance examples (NY MTA MetroCat).</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td><strong>American Academy of Actuaries, Extreme Events and Property Lines Committee</strong> (Kay Cleary, chair; Stuart Mathewson and Andy Tran, vice-chairs; et al.). <em>Uses of Catastrophe Model Output.</em> American Academy of Actuaries, July 2018. 44pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Profession monograph and the most thorough single source for ratemaking. Source of the CoreLogic-RQE-modeled Florida 100,000-policy worked example (Tables 1–4 premium tables, Table 5 deductible relativities, Table 9 territory relativities, Tables 14–18 PML and layer statistics, Table 15 hurricane-shutter discount). Also primary source on FHCF, the 8 limitations of historical data, the 7 limitations of cat models, and ASOP / FCHLPM / NAIC governance.</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td><strong>Dietzen, Greg, and Matt Chamberlain.</strong> <em>Taking catastrophe models out of the black box: Understanding, evaluating, and using the best tools available for predicting risk from natural disasters.</em> Milliman, 25 July 2022. 7pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Vendor whitepaper. Source for the Andrew-vs-Katrina insolvency comparison, the historical-vs-cat-models distinction, mature-vs-immature peril-model maturity argument (hurricane vs flood/wildfire), the four model evaluation techniques (reasonability, mapping, sensitivity, outlier), the multi-vendor flood-AAL spread for a beach house, and the case for blending.</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td><strong>National Association of Insurance Commissioners, Catastrophe Insurance (C) Working Group / Catastrophe Modeling Subgroup.</strong> <em>Catastrophe Computer Modeling Handbook.</em> NAIC, © 2011. 50pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Regulator handbook. Source for the four-stakeholder framing (insurers, modelers, consumers, regulators), the FCHLPM-table example showing ~7× multi-vendor spread for the same Florida inputs, the 3-module description, the 11-criterion validation framework (§VI), the 79 regulator questions (§VII), the proprietary-information balancing discussion (§VIII), and the AIR/RMS/ToPCat technical-detail appendices.</td>
+      </tr>
+      <tr>
+        <td>11</td>
+        <td><strong>Golnaraghi, Maryam (lead);</strong> Paul Nunn, Robert Muir-Wood, Jayanta Guin, Dickie Whitaker, Julia Slingo, Ghassem Asrar, Ian Branagan, Gerry Lemcke, Claire Souch, Michel Jean, Alexandre Allmann, Molly Jahn, David N. Bresch, Patrick Khalil, Michael Beck. <em>Managing Physical Climate Risk: Leveraging Innovations in Catastrophe Risk Modelling.</em> The Geneva Association, November 2018. 48pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Think-tank research report. Source for: 2017 loss totals ($337B economic / $144B insured); 1980–2017 weather-extreme statistics; the 5-module framing (with explicit Exposure module in Box 1); the Figure 4 evolution-by-peril/geography/application/provider taxonomy; non-stationarity discussion; BI/CBI / supply chain / critical infrastructure frontiers; the 3 overarching recommendations; and the proprietary-vs-open-framework dialectic.</td>
+      </tr>
+      <tr>
+        <td>12</td>
+        <td><strong>Sigona</strong> (presenter), <strong>Guy Carpenter.</strong> "Catastrophe Modeling Overview." Presented at LAS Reinsurance Bootcamp, August 2019. 48pp.</td>
+        <td><span class="access-tag access-green">GREEN</span></td>
+        <td>Bootcamp deck (Guy Carpenter). Source for: the 3-component model description, the worked single-event walkthrough (steps 1–6), the financial-perspective stack (5 layers ground-up → net post-cat), the modeled-vs-non-modeled perils table, the OEP/AEP distinction with worked example, the long-term-vs-near-term hurricane catalog discussion, demand-surge defaults by vendor, storm-surge defaults by vendor, the John Major / GC quote on point-estimate honesty, the uncertainty-sources-by-module mapping, the model-blending argument, and the Guy Carpenter MSA® framework.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Disambiguation and similar-name guards</h3>
+  <ul>
+    <li><strong>ASOP 38 vs ASOP 39</strong>: distinct standards. ASOP 38 (revised 2021) governs cat modeling across all practice areas; ASOP 39 (2000/2011) governs treatment of cat losses in P/C ratemaking. Complementary, not interchangeable.</li>
+    <li><strong>ASOP 38 editions</strong>: original 2000 ASOP 38 was P/C-only ("Using Models Outside the Actuary's Area of Expertise"); the 2021 revision broadens scope to all practice areas. The corpus contains the 2021 revision.</li>
+    <li><strong>Two presentations both titled "Catastrophe Modeling Overview"</strong>: Wang/AIR (2012, Boca Raton) and Sigona/Guy Carpenter (2019, LAS Reinsurance Bootcamp). Different organizations, different years.</li>
+    <li><strong>Guy Carpenter</strong> appears as publisher of both the 2019 Sigona/LAS bootcamp deck [#12] <em>and</em> the 2024 "Back to Basics" compilation [#7]. Different documents.</li>
+    <li><strong>AIR Worldwide</strong> appears as Wang's 2012 affiliation [#4] <em>and</em> as a Geneva-2018 co-author affiliate [#11]. Different sources.</li>
+    <li><strong>RMS</strong> appears as the 2008 Guide host [#3] <em>and</em> as a Geneva-2018 co-author affiliate [#11]. Different sources.</li>
+    <li><strong>OASIS</strong> appears as the 2016 Carter publisher [#1] <em>and</em> as a Geneva-2018 co-author affiliate [#11]. Different sources.</li>
+  </ul>
+
+  <h3>Access audit</h3>
+  <p>All 12 sources resolve to GREEN access — full text obtained for the entire document. Three sources required OCR; their text reliability for direct quotation is slightly lower than for the native-text PDFs, which is reflected in the synthesis by a preference for paraphrase over direct quotation in those three.</p>
+
+  <table class="tbl">
+    <thead><tr><th>#</th><th>Source</th><th>Pages</th><th>Access path</th><th>Quote-level reliability</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Carter / Oasis 2016</td><td>3</td><td>Native PDF text (pdftotext -layout)</td><td>High</td></tr>
+      <tr><td>2</td><td>Marsh 2015</td><td>12</td><td>Native PDF text</td><td>High</td></tr>
+      <tr><td>3</td><td>RMS Guide 2008</td><td>24</td><td>Native PDF text</td><td>High</td></tr>
+      <tr><td>4</td><td>Wang / AIR CASE 2012</td><td>46</td><td>Native PDF text</td><td>High</td></tr>
+      <tr><td>5</td><td>ASOP 38 (rev. 2021)</td><td>12</td><td>OCR (Tesseract 4.1.1, 100 DPI, --psm 1 on sparse pages)</td><td>Paraphrase-preferred</td></tr>
+      <tr><td>6</td><td>ASOP 39 (2000/2011)</td><td>20</td><td>Native PDF text</td><td>High</td></tr>
+      <tr><td>7</td><td>GC "Back to Basics" 2024</td><td>35</td><td>Native PDF text</td><td>High</td></tr>
+      <tr><td>8</td><td>AAA Monograph 2018</td><td>44</td><td>Native PDF text</td><td>High</td></tr>
+      <tr><td>9</td><td>Milliman 2022</td><td>7</td><td>OCR</td><td>Paraphrase-preferred</td></tr>
+      <tr><td>10</td><td>NAIC Handbook 2011</td><td>50</td><td>OCR</td><td>Paraphrase-preferred</td></tr>
+      <tr><td>11</td><td>Geneva 2018</td><td>48</td><td>Native PDF text</td><td>High</td></tr>
+      <tr><td>12</td><td>Sigona / GC LAS 2019</td><td>48</td><td>Native PDF text</td><td>High</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td><strong>349</strong></td><td>9 native / 3 OCR</td><td></td></tr>
+    </tbody>
+  </table>
+
+  <h3>OCR detail</h3>
+  <p>The three OCR sources (ASOP 38 web printout; Milliman 2022; NAIC 2011 Handbook) were processed with Tesseract 4.1.1 at 100 DPI, with sparse pages re-OCRed at <span class="kbd">--psm 1</span> (orientation + script detection) for layout-heavy headers. Light typos remain in the OCR text — the most visible is "Gimitliman" at the head of Milliman 2022 page 1. Where exact wording matters for an attributed claim, this synthesis cross-checks the OCR against neighbouring page context and prefers paraphrase to direct quotation. One known source-side typo flagged in the body: Carter 2016 page 3 labels the 1-in-200-year VaR as "EP of 0.05%"; the arithmetic is 1/200 = 0.5%. The synthesis cites the underlying point and notes the slip in Chapter 3 §3.2.</p>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="glossary" class="card">
+  <div class="card-eyebrow">Glossary</div>
+  <h2>Glossary</h2>
+  <p class="lede">Working definitions assembled from the corpus — primarily the RMS Guide 2008 chapter introductions, NAIC 2011 Appendix 1, Sigona 2019 Appendix 1, ASOP 39 §2 and ASOP 38 §2, and the Geneva 2018 Glossary. Where definitions differ, the regulatory definition is given precedence.</p>
+
+  <table class="tbl">
+    <tbody>
+      <tr><th>AAL — Average Annual Loss</th><td>The mean of the EP distribution. Long-run expected loss per year, additive across LOBs and geographies. Often used as the "pure premium" or "burn cost." Source: <span class="cite">RMS Guide 2008, p.8; AAA 2018, p.13; Geneva 2018, glossary</span>.</td></tr>
+      <tr><th>AEP — Aggregate Exceedance Probability</th><td>Annual probability that one or more occurrences combined will exceed a threshold. <span class="cite">Sigona 2019, p.39</span></td></tr>
+      <tr><th>AMO — Atlantic Multi-decadal Oscillation</th><td>Climate cycle affecting North Atlantic sea-surface temperatures on multi-decadal timescales. Underpins "near-term" or "warm SST" hurricane catalogs. <span class="cite">Geneva 2018, glossary; Sigona 2019, p.29</span></td></tr>
+      <tr><th>Attenuation</th><td>The decay of seismic ground-motion intensity (or other hazard) with distance from the source. Captured empirically in attenuation relationships. <span class="cite">NAIC 2011, App.1; RMS Guide 2008, p.10</span></td></tr>
+      <tr><th>Bulk coding</th><td>The assignment of a predetermined or default value to a required data field when the actual value is unknown or missing. <span class="cite">NAIC 2011, App.1</span></td></tr>
+      <tr><th>Catastrophe (ASOP 39)</th><td>"A relatively infrequent event or phenomenon that produces unusually large aggregate losses." <span class="cite">ASOP 39, §2.1</span></td></tr>
+      <tr><th>Catastrophe model (ASOP 38, 2021)</th><td>"A model of low-frequency events with high-severity or widespread potential effects." <span class="cite">ASOP 38 (2021), §2.2</span></td></tr>
+      <tr><th>CV — Coefficient of Variation</th><td>Standard deviation divided by the mean (AAL). A normalised measure of relative volatility. <span class="cite">RMS Guide 2008, p.8</span></td></tr>
+      <tr><th>Contagion</th><td>"A lack of independence between the occurrence of losses among different entities." A hallmark of catastrophic perils. <span class="cite">ASOP 39, §2.3</span></td></tr>
+      <tr><th>Demand surge</th><td>A sudden and usually temporary increase in the cost of materials, services, and labor due to increased post-event demand. AIR's "EDS"; RMS's "Post-Loss Amplification" extends EDS with claims inflation and super-cat adjustments. <span class="cite">ASOP 39, §2.4; Sigona 2019, p.30</span></td></tr>
+      <tr><th>Dip-slip / Strike-slip</th><td>Earthquake fault classifications: dip-slip describes mostly vertical movement; strike-slip describes side-by-side movement. <span class="cite">NAIC 2011, App.1</span></td></tr>
+      <tr><th>EP — Exceedance Probability</th><td>The annual probability of exceeding a specified loss threshold. Equivalent to the JP Morgan-style "Value at Risk" and to a quantile estimate. <span class="cite">Carter 2016, p.3; RMS Guide 2008, p.8</span></td></tr>
+      <tr><th>Event Loss Table (ELT)</th><td>The data structure underneath every cat-model output: each simulated event with its probability of occurrence, mean loss, and (in some vendors) standard deviation. <span class="cite">Sigona 2019, p.42</span></td></tr>
+      <tr><th>FCHLPM — Florida Commission on Hurricane Loss Projection Methodology</th><td>Florida statutory body created in 1995 to evaluate hurricane models for residential property insurance rate filings. Remit expanded to flood in 2014. <span class="cite">AAA 2018, p.6</span></td></tr>
+      <tr><th>FHCF — Florida Hurricane Catastrophe Fund</th><td>State-run reinsurer for Florida residential property insurers; created post-Andrew. Statewide capacity originally $17B, later expanded. <span class="cite">AAA 2018, p.29</span></td></tr>
+      <tr><th>Loss adjustment expense (LAE)</th><td>Expenses associated with investigating and settling claims. Often modelled as a separate load; relationship to incurred loss differs significantly between catastrophe and non-catastrophe. <span class="cite">ASOP 39, §3.5; Geneva 2018, glossary</span></td></tr>
+      <tr><th>Mean Damage Ratio (MDR)</th><td>Loss as a fraction of replacement value at a given hazard intensity, for a structure with given characteristics. Output of the vulnerability module. <span class="cite">RMS Guide 2008, p.7; AAA 2018, p.10</span></td></tr>
+      <tr><th>Modes of climate variability</th><td>Recurrent patterns within the earth's climate system: ENSO, NAO, PDO, MJO, AMO, and others. Drivers of natural climate variability that bear on cat-model frequency assumptions. <span class="cite">Geneva 2018, §5.1</span></td></tr>
+      <tr><th>OEP — Occurrence Exceedance Probability</th><td>Annual probability that any single occurrence will exceed the threshold. <span class="cite">Sigona 2019, p.39</span></td></tr>
+      <tr><th>ORSA — Own Risk and Solvency Assessment</th><td>Insurer-level forward-looking assessment of risks and capital, central to ERM and supervised by NAIC. <span class="cite">AAA 2018, p.7</span></td></tr>
+      <tr><th>PML / RPL — Probable Maximum Loss / Return Period Loss</th><td>"An amount that is expected to be exceeded with a given probability by an event or in a year." Not additive across perils. <span class="cite">AAA 2018, p.11; NAIC 2011, App.1</span></td></tr>
+      <tr><th>Primary uncertainty</th><td>Uncertainty in event definition, frequency, and time correlation (clustering). The most consequential modeling choice. <span class="cite">Carter 2016, p.1; Sigona 2019, p.38</span></td></tr>
+      <tr><th>RBC / RCAT</th><td>NAIC's Risk-Based Capital formula and its catastrophe (RCAT) charge for hurricane and earthquake (added 2017); wildfire RCAT effective 12/31/2023; convective-storm RCAT effective 12/31/2023 informationally. <span class="cite">GC 2024 (Jenson), p.19</span></td></tr>
+      <tr><th>Return period</th><td>The expected length of time between recurrences of two events with similar characteristics; often referenced for specific levels of loss. <span class="cite">Sigona 2019, p.40</span></td></tr>
+      <tr><th>Secondary modifiers</th><td>Building features beyond primary attributes that adjust vulnerability curves: roof characteristics, wall type, foundation, glass, soft story, etc. <span class="cite">Wang 2012, p.29; Marsh 2015, p.5</span></td></tr>
+      <tr><th>Secondary uncertainty</th><td>Given an event has occurred, uncertainty in the loss it causes. Captured probabilistically in the ELT (commonly via beta distributions in RMS). <span class="cite">Carter 2016, p.2; Sigona 2019, p.43</span></td></tr>
+      <tr><th>Stochastic event set / catalog</th><td>Database of simulated events (often tens of thousands) parameterised on historical hazard data plus physical principles. <span class="cite">RMS Guide 2008, p.7; Wang 2012, p.24</span></td></tr>
+      <tr><th>Time-dependent / time-independent</th><td>Modeling approaches that, respectively, do and do not consider prior historical-rupture information when assessing future earthquake likelihood. <span class="cite">NAIC 2011, App.1</span></td></tr>
+      <tr><th>TVaR / TCE — Tail Value at Risk / Tail Conditional Expectation</th><td>Conditional expectation of losses greater than or equal to a specified return-period loss. The expected value given that a loss at least that large has occurred. <span class="cite">Sigona 2019, p.38; Wang 2012, p.40</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var html = document.documentElement;
+  var meta = document.getElementById('theme-color-meta');
+  function setTheme(t){
+    html.setAttribute('data-theme', t);
+    if (t === 'light'){
+      html.style.background = '#f5efe2';
+      html.style.color = '#1c1a14';
+      if (meta) meta.setAttribute('content', '#f5efe2');
+    } else {
+      html.style.background = '#15151b';
+      html.style.color = '#e6e3da';
+      if (meta) meta.setAttribute('content', '#15151b');
+    }
+    try { localStorage.setItem('cm_theme', t); } catch(e){}
+  }
+  var btn = document.getElementById('themeToggle');
+  if (btn){
+    btn.addEventListener('click', function(){
+      var current = html.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    });
+  }
+
+  var sidebar = document.getElementById('sidebar');
+  var hamburger = document.getElementById('hamburger');
+  var overlay = document.getElementById('overlay');
+  function openSidebar(){ sidebar.classList.add('open'); overlay.classList.add('show'); }
+  function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+  if (hamburger){ hamburger.addEventListener('click', openSidebar); }
+  if (overlay){ overlay.addEventListener('click', closeSidebar); }
+
+  var navButtons = document.querySelectorAll('.nav button[data-target]');
+  navButtons.forEach(function(b){
+    b.addEventListener('click', function(){
+      var id = b.getAttribute('data-target');
+      var el = document.getElementById(id);
+      if (el){
+        el.scrollIntoView({ behavior:'smooth', block:'start' });
+        if (window.matchMedia('(max-width: 1023.98px)').matches){
+          closeSidebar();
+        }
+        navButtons.forEach(function(x){ x.classList.remove('active'); });
+        b.classList.add('active');
+      }
+    });
+  });
+
+  var sections = Array.from(navButtons).map(function(b){
+    return { id: b.getAttribute('data-target'), button: b };
+  });
+  function updateActive(){
+    var bestId = null, bestTop = -Infinity;
+    sections.forEach(function(s){
+      var el = document.getElementById(s.id);
+      if (\!el) return;
+      var rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight / 3 && rect.top > bestTop){
+        bestTop = rect.top; bestId = s.id;
+      }
+    });
+    if (bestId){
+      sections.forEach(function(s){ s.button.classList.toggle('active', s.id === bestId); });
+    }
+  }
+  window.addEventListener('scroll', function(){
+    window.requestAnimationFrame(updateActive);
+  }, { passive:true });
+  updateActive();
+})();
+</script>
+
+</body>
+</html>
