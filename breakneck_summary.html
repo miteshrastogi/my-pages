@@ -1,0 +1,1644 @@
+<!doctype html>
+<html lang="en" data-theme="dark" style="background:#15130f;color:#ece6d8">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="color-scheme" content="dark light" />
+<meta name="theme-color" id="meta-theme" content="#15130f" />
+<title>Breakneck — Dan Wang · summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Public+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ====================================================================
+   Breakneck reader — dark-first with cream light mode
+   v1 · May 15 2026
+   ==================================================================== */
+
+html:not([data-theme="light"]) {
+  background:#15130f;
+  color:#ece6d8;
+}
+html[data-theme="light"] {
+  background:#f5efe2;
+  color:#1c1a14;
+}
+
+:root {
+  /* Dark (default) palette */
+  --bg:#15130f;
+  --bg-elev:#1d1a14;
+  --bg-card:#1f1c15;
+  --bg-soft:#252118;
+  --text:#ece6d8;
+  --text-muted:#a39c8b;
+  --text-dim:#7d7765;
+  --rule:#33301f;
+  --rule-strong:#4a4530;
+  --accent:#c79956;            /* warm copper */
+  --accent-soft:#8d6c3a;
+  --accent-bg:#3a2d18;
+  --link:#d4a86a;
+  --link-hover:#e8c082;
+
+  /* Traffic-light semantics — actual hues, not the accent */
+  --green-fg:#7ec38b;
+  --green-bg:#1c3624;
+  --green-ring:#2e6a40;
+  --amber-fg:#dbb35f;
+  --amber-bg:#3a2e15;
+  --amber-ring:#7a5d20;
+  --red-fg:#e8847a;
+  --red-bg:#3a1c1a;
+  --red-ring:#7a2e2a;
+
+  --serif: "Cormorant Garamond", "EB Garamond", Georgia, "Times New Roman", serif;
+  --sans:  "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono:  "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  --radius:20px;
+  --radius-sm:12px;
+  --shadow-card: 0 1px 0 rgba(255,255,255,0.04) inset, 0 4px 16px rgba(0,0,0,0.25);
+  --shadow-pop:  0 8px 32px rgba(0,0,0,0.35);
+}
+
+html[data-theme="light"]{
+  --bg:#f5efe2;
+  --bg-elev:#fbf6ea;
+  --bg-card:#fbf6ea;
+  --bg-soft:#efe7d3;
+  --text:#1c1a14;
+  --text-muted:#5d5644;
+  --text-dim:#857e6a;
+  --rule:#d8cdb1;
+  --rule-strong:#bdb094;
+  --accent:#8a6322;
+  --accent-soft:#a8854a;
+  --accent-bg:#ecdfbf;
+  --link:#7c5215;
+  --link-hover:#a06d20;
+
+  --green-fg:#1f6a2e;
+  --green-bg:#dceedf;
+  --green-ring:#2e8b40;
+  --amber-fg:#85601b;
+  --amber-bg:#f0e2bd;
+  --amber-ring:#9a7a25;
+  --red-fg:#992219;
+  --red-bg:#f4d6d2;
+  --red-ring:#a3372d;
+
+  --shadow-card: 0 1px 0 rgba(255,255,255,0.5) inset, 0 4px 18px rgba(60,40,10,0.07);
+  --shadow-pop:  0 8px 32px rgba(60,40,10,0.12);
+}
+
+*,*::before,*::after { box-sizing:border-box; }
+html,body { margin:0; padding:0; }
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:16.5px;
+  line-height:1.62;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+
+/* ====== Layout shell ====== */
+.shell { display:flex; min-height:100dvh; min-height:100vh; }
+
+/* ====== Sidebar (≥1024 sticky, <1024 off-canvas) ====== */
+.sidebar {
+  width:300px;
+  flex:0 0 300px;
+  background:var(--bg-elev);
+  border-right:1px solid var(--rule);
+  position:sticky;
+  top:0;
+  align-self:flex-start;
+  height:100dvh;
+  height:100vh;
+  overflow-y:auto;
+  padding:
+    calc(env(safe-area-inset-top) + 22px)
+    18px
+    calc(env(safe-area-inset-bottom) + 24px)
+    calc(env(safe-area-inset-left) + 18px);
+  transition: transform 280ms ease, margin-left 280ms ease, width 280ms ease;
+  z-index:30;
+}
+.sidebar .eyebrow {
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--text-dim);
+  letter-spacing:0.02em;
+  margin:0 0 24px 0;
+  /* sit side-by-side with the fixed hamburger; left padding clears it horizontally,
+     and the vertical center of this row aligns with the hamburger button center */
+  padding-left:46px;
+  min-height:40px;
+  display:flex;
+  align-items:center;
+}
+.sidebar h1.brand {
+  font-family:var(--serif);
+  font-style:italic;
+  font-weight:500;
+  font-size:24px;
+  line-height:1.15;
+  margin:0 0 4px 0;
+  letter-spacing:-0.005em;
+}
+.sidebar h1.brand em { font-style:normal; color:var(--accent); }
+.sidebar .author {
+  font-family:var(--sans);
+  font-size:13px;
+  color:var(--text-muted);
+  margin:0 0 20px 0;
+}
+.sidebar nav { display:flex; flex-direction:column; gap:2px; }
+.sidebar nav a {
+  display:block;
+  padding:9px 12px;
+  border-radius:10px;
+  color:var(--text-muted);
+  text-decoration:none;
+  font-size:14px;
+  line-height:1.35;
+  font-family:var(--sans);
+  cursor:pointer;
+  border:1px solid transparent;
+}
+.sidebar nav a:hover {
+  background:var(--bg-soft);
+  color:var(--text);
+}
+.sidebar nav a.active {
+  background:var(--accent-bg);
+  color:var(--accent);
+  border-color:var(--accent-soft);
+}
+.sidebar nav a .nav-num {
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--text-dim);
+  margin-right:8px;
+}
+.sidebar nav a.active .nav-num { color:var(--accent); opacity:0.85; }
+
+.sidebar .nav-section-label {
+  font-family:var(--mono);
+  font-size:10.5px;
+  color:var(--text-dim);
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  padding:14px 12px 6px 12px;
+}
+
+/* ====== Main content column ====== */
+.main { flex:1; min-width:0; }
+.main-inner {
+  max-width:960px;
+  margin:0 auto;
+  padding:
+    calc(env(safe-area-inset-top) + 64px)
+    clamp(20px, 4vw, 56px)
+    calc(env(safe-area-inset-bottom) + 80px)
+    clamp(20px, 4vw, 56px);
+}
+
+/* ====== Fixed control groups ====== */
+.controls {
+  position:fixed;
+  top:0;
+  z-index:50;
+  padding-top:env(safe-area-inset-top);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.controls.left  { left:0;  padding-left:env(safe-area-inset-left);  padding:14px 0 0 14px; padding-top:calc(14px + env(safe-area-inset-top)); }
+.controls.right { right:0; padding-right:env(safe-area-inset-right); padding:14px 14px 0 0; padding-top:calc(14px + env(safe-area-inset-top));}
+
+.ctrl-btn {
+  width:40px; height:40px;
+  border-radius:12px;
+  background:var(--bg-elev);
+  border:1px solid var(--rule);
+  color:var(--text);
+  display:inline-flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  padding:0;
+  box-shadow:var(--shadow-card);
+  transition:background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+.ctrl-btn:hover { background:var(--bg-soft); border-color:var(--rule-strong); color:var(--accent); }
+.ctrl-btn svg { width:20px; height:20px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+
+/* ====== Overlay for off-canvas sidebar ====== */
+.overlay {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.5);
+  opacity:0; pointer-events:none;
+  transition:opacity 220ms ease;
+  z-index:25;
+}
+.overlay.show { opacity:1; pointer-events:auto; }
+
+/* ====== Cover ====== */
+.cover {
+  background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-elev) 100%);
+  border:1px solid var(--rule);
+  border-radius:var(--radius);
+  padding:clamp(28px,5vw,56px);
+  margin-bottom:36px;
+  box-shadow:var(--shadow-card);
+  position:relative;
+  overflow:hidden;
+}
+.cover::after {
+  content:"";
+  position:absolute; right:-80px; top:-80px;
+  width:280px; height:280px;
+  background:radial-gradient(circle at center, var(--accent-bg), transparent 70%);
+  opacity:0.6; pointer-events:none;
+}
+.cover-eyebrow {
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--text-dim);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+.cover h1 {
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:clamp(38px, 6.5vw, 64px);
+  line-height:1.02;
+  letter-spacing:-0.015em;
+  margin:0 0 8px 0;
+  color:var(--text);
+}
+.cover h1 em {
+  font-style:italic;
+  font-weight:500;
+  color:var(--accent);
+}
+.cover .subtitle {
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:clamp(19px, 2.2vw, 24px);
+  font-weight:400;
+  color:var(--text-muted);
+  margin:0 0 22px 0;
+  max-width:60ch;
+  line-height:1.35;
+}
+.cover .byline {
+  font-family:var(--sans);
+  font-size:14px;
+  color:var(--text-muted);
+  margin-bottom:24px;
+}
+.cover .byline strong { color:var(--text); font-weight:600; }
+.cover .chip-row {
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin-top:24px;
+}
+.chip {
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.04em;
+  padding:6px 11px;
+  border-radius:999px;
+  background:var(--bg-soft);
+  color:var(--text-muted);
+  border:1px solid var(--rule);
+  white-space:nowrap;
+}
+
+/* ====== Section card ====== */
+.card {
+  background:var(--bg-card);
+  border:1px solid var(--rule);
+  border-radius:var(--radius);
+  padding:clamp(24px, 4vw, 44px);
+  margin-bottom:32px;
+  box-shadow:var(--shadow-card);
+}
+.card-eyebrow {
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--text-dim);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+.card h2.section-title {
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:clamp(28px, 4vw, 40px);
+  line-height:1.1;
+  letter-spacing:-0.01em;
+  margin:0 0 6px 0;
+  color:var(--text);
+}
+.card h2.section-title em { color:var(--accent); font-style:italic; font-weight:500; }
+.card .section-deck {
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:18px;
+  color:var(--text-muted);
+  line-height:1.4;
+  margin:0 0 24px 0;
+  max-width:62ch;
+}
+
+.card h3 {
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:22px;
+  line-height:1.25;
+  color:var(--text);
+  margin:34px 0 10px 0;
+  letter-spacing:-0.005em;
+}
+.card h4 {
+  font-family:var(--sans);
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin:24px 0 8px 0;
+}
+.card p {
+  margin:0 0 14px 0;
+  font-size:16.5px;
+  line-height:1.65;
+  max-width:68ch;
+}
+.card p strong { color:var(--text); font-weight:600; }
+.card p em { color:var(--text); font-style:italic; }
+
+/* Inline page citations */
+cite.pg {
+  font-family:var(--mono);
+  font-style:normal;
+  font-size:10.5px;
+  letter-spacing:0.02em;
+  color:var(--text-dim);
+  background:var(--bg-soft);
+  border:1px solid var(--rule);
+  border-radius:6px;
+  padding:1px 6px;
+  margin-left:4px;
+  white-space:nowrap;
+  vertical-align:1px;
+}
+
+/* ====== Anecdote card ====== */
+.anec {
+  background:var(--bg-soft);
+  border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);
+  border-radius:var(--radius-sm);
+  padding:18px 20px;
+  margin:18px 0;
+}
+.anec .anec-title {
+  font-family:var(--sans);
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:6px;
+}
+.anec p {
+  font-family:var(--serif);
+  font-size:16.5px;
+  font-style:italic;
+  line-height:1.55;
+  color:var(--text);
+  margin:0;
+}
+
+/* ====== Reader's rule ====== */
+.rule-box {
+  background:var(--accent-bg);
+  border:1px solid var(--accent-soft);
+  border-radius:var(--radius-sm);
+  padding:18px 22px;
+  margin:32px 0 8px 0;
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  break-inside:avoid;
+}
+.rule-box .label {
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--accent);
+  flex:0 0 auto;
+  padding-top:2px;
+}
+.rule-box .text {
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:17px;
+  line-height:1.45;
+  color:var(--text);
+  margin:0;
+}
+
+/* ====== Exhibit / table ====== */
+.exhibit {
+  margin:30px 0;
+  break-inside:avoid;
+}
+.exhibit-label {
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+.exhibit table {
+  width:100%;
+  border-collapse:collapse;
+  font-family:var(--sans);
+  font-size:14.5px;
+  background:var(--bg-soft);
+  border:1px solid var(--rule);
+  border-radius:var(--radius-sm);
+  overflow:hidden;
+}
+.exhibit th, .exhibit td {
+  text-align:left;
+  padding:11px 14px;
+  border-bottom:1px solid var(--rule);
+  vertical-align:top;
+}
+.exhibit thead th {
+  background:var(--bg-elev);
+  font-weight:600;
+  font-size:12.5px;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--accent);
+  break-inside:avoid;
+}
+.exhibit tbody tr:last-child td { border-bottom:none; }
+.exhibit-caption {
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:14px;
+  color:var(--text-muted);
+  line-height:1.45;
+  margin-top:10px;
+  max-width:68ch;
+}
+.exhibit-caption strong { font-style:normal; color:var(--text); }
+.exhibit svg.diagram { width:100%; height:auto; display:block; background:var(--bg-soft); border:1px solid var(--rule); border-radius:var(--radius-sm); padding:14px; }
+
+/* Frame-note for epistemic-tier marker */
+.frame-note {
+  background:var(--bg-elev);
+  border:1px dashed var(--rule-strong);
+  border-radius:var(--radius-sm);
+  padding:14px 18px;
+  margin:18px 0 28px 0;
+  font-family:var(--sans);
+  font-size:14px;
+  color:var(--text-muted);
+  line-height:1.5;
+}
+.frame-note strong { color:var(--accent); font-weight:600; font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; }
+
+/* Access tags */
+.tag {
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:10.5px;
+  font-weight:500;
+  letter-spacing:0.08em;
+  padding:2px 8px;
+  border-radius:999px;
+  border:1px solid;
+}
+.tag.green {
+  color:var(--green-fg);
+  background:var(--green-bg);
+  border-color:var(--green-ring);
+}
+.tag.amber {
+  color:var(--amber-fg);
+  background:var(--amber-bg);
+  border-color:var(--amber-ring);
+}
+.tag.red {
+  color:var(--red-fg);
+  background:var(--red-bg);
+  border-color:var(--red-ring);
+}
+
+/* ====== Bar chart (CSS-only) ====== */
+.bars { display:grid; gap:10px; margin:14px 0 8px 0; }
+.bar-row { display:grid; grid-template-columns:130px 1fr 90px; align-items:center; gap:14px; font-family:var(--sans); font-size:13.5px; }
+.bar-row .label { color:var(--text); }
+.bar-row .track {
+  background:var(--bg-elev);
+  border:1px solid var(--rule);
+  height:18px;
+  border-radius:9px;
+  overflow:hidden;
+  position:relative;
+}
+.bar-row .fill {
+  height:100%;
+  background:linear-gradient(90deg, var(--accent-soft), var(--accent));
+  border-radius:9px 0 0 9px;
+}
+.bar-row .val { font-family:var(--mono); font-size:12px; color:var(--text-muted); text-align:right; }
+
+/* ====== Misc ====== */
+.colophon {
+  margin-top:40px;
+  padding-top:20px;
+  border-top:1px solid var(--rule);
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:14px;
+  color:var(--text-dim);
+  max-width:62ch;
+}
+hr.sep { border:none; border-top:1px solid var(--rule); margin:30px 0; }
+
+/* ====== Responsive ≥1024 ====== */
+@media (max-width:1023px) {
+  .sidebar {
+    position:fixed;
+    top:0; left:0;
+    height:100dvh; height:100vh;
+    width:80%; max-width:340px;
+    transform:translateX(-100%);
+    z-index:60;
+    box-shadow:var(--shadow-pop);
+  }
+  .sidebar.open { transform:translateX(0); }
+  .main { width:100%; }
+}
+
+/* desktop collapsed state */
+@media (min-width:1024px) {
+  .shell.sidebar-collapsed .sidebar {
+    width:0;
+    flex-basis:0;
+    border-right-color:transparent;
+    overflow:hidden;
+    padding-left:0;
+    padding-right:0;
+  }
+}
+
+/* phone-portrait tighter ≤520 */
+@media (max-width:520px) {
+  body { font-size:16px; }
+  .cover { padding:24px 20px; }
+  .cover h1 { font-size:34px; }
+  .card { padding:22px 18px; }
+  .card h2.section-title { font-size:26px; }
+  .card p { font-size:15.5px; line-height:1.6; }
+  .anec { padding:14px 16px; }
+  .anec p { font-size:15px; }
+  .rule-box { padding:14px 16px; flex-direction:column; gap:6px; }
+  .exhibit th, .exhibit td { padding:9px 10px; font-size:13px; }
+  .bar-row { grid-template-columns:100px 1fr 70px; gap:10px; font-size:12.5px; }
+}
+
+/* short landscape (iPhone landscape sidebar fit) */
+@media (max-height:540px) and (orientation:landscape) {
+  .sidebar { padding-top:calc(env(safe-area-inset-top) + 50px); }
+  .sidebar nav a { padding:6px 10px; font-size:13px; }
+  .sidebar .eyebrow { font-size:10.5px; margin-bottom:8px; min-height:28px; }
+  .sidebar h1.brand { font-size:20px; }
+}
+
+/* ====== Print pagination ====== */
+@media print {
+  html, body { background:#fff !important; color:#000 !important; }
+  @page { margin: 0.65in 0.65in 0.8in 0.65in; }
+  @page { @bottom-center { content: counter(page); font-family:Georgia, serif; font-size:10pt; color:#666; } }
+  body { counter-reset: page 1; }
+  .sidebar, .controls, .overlay { display:none !important; }
+  .main, .main-inner { padding:0 !important; margin:0 !important; max-width:none !important; width:100% !important; }
+  .cover, .card, .exhibit, .rule-box, .anec, .frame-note { box-shadow:none !important; background:#fff !important; border:1px solid #ccc !important; color:#000 !important; }
+  .cover h1, .card h2.section-title, .card h3, .card h4 { color:#000 !important; break-after:avoid; }
+  .card h2.section-title em, .cover h1 em { color:#5a3e10 !important; }
+  .card p, .anec p, .rule-box .text, .exhibit-caption { color:#000 !important; }
+  cite.pg { background:#f0f0f0 !important; color:#333 !important; border-color:#ccc !important; }
+  .rule-box, .anec, .frame-note, .exhibit-caption, .exhibit thead, .exhibit-label { break-inside:avoid; }
+  .tag.green { color:#1f6a2e !important; background:#dceedf !important; border-color:#2e8b40 !important; }
+  .tag.amber { color:#85601b !important; background:#f0e2bd !important; border-color:#9a7a25 !important; }
+  .tag.red   { color:#992219 !important; background:#f4d6d2 !important; border-color:#a3372d !important; }
+  .bar-row .fill { background:#8a6322 !important; }
+  a { color:#000 !important; text-decoration:none !important; }
+}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay"></div>
+<div class="controls left">
+  <button class="ctrl-btn" id="sidebar-toggle" aria-label="Toggle navigation sidebar" title="Toggle sidebar">
+    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+</div>
+<div class="controls right">
+  <button class="ctrl-btn" id="theme-toggle" aria-label="Switch to light theme" title="Switch theme">
+    <svg id="theme-ico" viewBox="0 0 24 24"></svg>
+  </button>
+</div>
+
+<div class="shell" id="shell">
+  <aside class="sidebar" id="sidebar" aria-label="Reader navigation">
+    <p class="eyebrow">May 15 2026, 6:54am GMT</p>
+    <h1 class="brand"><em>Breakneck</em></h1>
+    <p class="author">Dan Wang · W. W. Norton, 2025</p>
+    <div class="nav-section-label">Reader</div>
+    <nav>
+      <a data-target="cover"><span class="nav-num">·</span>Cover</a>
+      <a data-target="how-to-read"><span class="nav-num">·</span>How to read this</a>
+      <a data-target="corpus-map"><span class="nav-num">·</span>Corpus map</a>
+      <a data-target="framework"><span class="nav-num">·</span>Framework</a>
+    </nav>
+    <div class="nav-section-label">Book</div>
+    <nav>
+      <a data-target="intro"><span class="nav-num">0</span>Introduction</a>
+      <a data-target="ch1"><span class="nav-num">1</span>Engineers vs. Lawyers</a>
+      <a data-target="ch2"><span class="nav-num">2</span>Building Big</a>
+      <a data-target="ch3"><span class="nav-num">3</span>Tech Power</a>
+      <a data-target="ch4"><span class="nav-num">4</span>One Child</a>
+      <a data-target="ch5"><span class="nav-num">5</span>Zero-Covid</a>
+      <a data-target="ch6"><span class="nav-num">6</span>Fortress China</a>
+      <a data-target="ch7"><span class="nav-num">7</span>Learning to Love Engineers</a>
+    </nav>
+    <div class="nav-section-label">Reference</div>
+    <nav>
+      <a data-target="anecdotes"><span class="nav-num">·</span>Anecdote highlights</a>
+      <a data-target="sources"><span class="nav-num">·</span>Source log</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ===================== COVER ===================== -->
+      <section id="cover" class="cover">
+        <p class="cover-eyebrow">Reading · 224 pages · 7 chapters · GREEN access</p>
+        <h1><em>Breakneck</em></h1>
+        <p class="subtitle">A reading of Dan Wang's 2025 book on the engineering state versus the lawyerly society — what each does well, what each breaks, and what each could learn from the other.</p>
+        <p class="byline"><strong>Source:</strong> Dan Wang, <em>Breakneck: China's Quest to Engineer the Future</em>, W. W. Norton &amp; Company, First Edition 2025 (ISBN 978-1-324-10603-6).</p>
+        <div class="chip-row">
+          <span class="chip">7 chapters + Intro</span>
+          <span class="chip">~20,000 words</span>
+          <span class="chip">9 exhibits</span>
+          <span class="chip">PDF-page citations</span>
+          <span class="chip"><span class="tag green">GREEN</span> full text</span>
+          <span class="chip">May 15 2026</span>
+        </div>
+      </section>
+
+      <!-- ===================== HOW TO READ ===================== -->
+      <section id="how-to-read" class="card">
+        <p class="card-eyebrow">Reader · orientation</p>
+        <h2 class="section-title">How to read this summary</h2>
+        <p class="section-deck">This is a paraphrase of Wang's book, organized chapter by chapter, with his examples and figures preserved and his arguments framed as his arguments — not as consensus.</p>
+
+        <p>Wang's <em>Breakneck</em> is an analytical book with a strong central thesis: that China is an <strong>engineering state</strong> which cannot stop itself from building, while the United States is a <strong>lawyerly society</strong> which blocks almost everything it can. Wang argues that each model has produced characteristic triumphs and characteristic disasters, and that each country could borrow something useful from the other.</p>
+
+        <p>This summary preserves that frame but flags it where it matters. Where Wang reports facts that are widely accepted — bridge counts, plant counts, growth rates — the summary reports them as Wang does, with a PDF-page citation so readers can verify. Where Wang makes contested or prescriptive arguments — the engineers-vs-lawyers thesis itself, the "60 percent correct" jab at Xi, the diagnosis of American proceduralism — the summary marks them as Wang's argument rather than settled finding.</p>
+
+        <p>The numbers in the exhibits are Wang's numbers, drawn from inside the book and cited to their pages. They have not been independently fact-checked against PRC statistics offices or third-party datasets; readers who want primary verification should follow the page citations into the source. The book itself is a piece of synthesis, and what follows is a reading of that synthesis.</p>
+
+        <p>The sidebar timestamp (top-left of the sidebar) records when this document was generated. Page citations refer to the PDF pagination of the W. W. Norton 2025 hardcover edition.</p>
+      </section>
+
+      <!-- ===================== CORPUS MAP ===================== -->
+      <section id="corpus-map" class="card">
+        <p class="card-eyebrow">Exhibit 1 · Corpus map</p>
+        <h2 class="section-title">What each chapter is for</h2>
+        <p class="section-deck">If you are reading with a specific question in mind, this maps the question to the chapter that answers it.</p>
+
+        <div class="exhibit">
+          <table>
+            <thead><tr><th>Chapter</th><th>Reader's decision problem</th><th>Pages</th></tr></thead>
+            <tbody>
+              <tr><td>Introduction</td><td>Should I care about US–China comparison at all? Wang's answer: yes, because the world's biggest changes are being shaped by these two messy superpowers, and seeing China clearly also helps you see America clearly.</td><td>5–11</td></tr>
+              <tr><td>1 · Engineers vs. Lawyers</td><td>What is the book's thesis and where does it come from? Why does China move fast and the US move slow? Where did the lawyerly society come from?</td><td>12–26</td></tr>
+              <tr><td>2 · Building Big</td><td>What does the engineering state actually build, and what is the bill for it? When does building help, when does it hurt, when does it turn into stadiums for no one in the world's poorest provinces?</td><td>27–55</td></tr>
+              <tr><td>3 · Tech Power</td><td>Why is China a manufacturing superpower? How did Apple help build Shenzhen, and what did Shenzhen take from Apple? What is process knowledge, and why does it explain Boeing and Intel as much as it explains BYD?</td><td>56–85</td></tr>
+              <tr><td>4 · One Child</td><td>What happened when an engineer was put in charge of demography? Where does the one-child policy fit in the longer pattern of the engineering state turning people into numbers?</td><td>86–113</td></tr>
+              <tr><td>5 · Zero-Covid</td><td>What does the engineering state look like when it locks down a city of 25 million? Why did people accept it for so long, and what happened when they stopped?</td><td>114–147</td></tr>
+              <tr><td>6 · Fortress China</td><td>Where is Xi taking the country in his third term? Why are rich and creative Chinese leaving? What will Chinese tech and military capacity look like in 2030?</td><td>148–178</td></tr>
+              <tr><td>7 · Learning to Love Engineers</td><td>What should the United States actually do? What should the lawyerly society borrow from the engineering state without becoming it?</td><td>179–199</td></tr>
+            </tbody>
+          </table>
+          <p class="exhibit-caption"><strong>Exhibit 1.</strong> Source: book's table of contents (PDF p. 4) and chapter openings throughout. Page ranges refer to PDF pagination of the W. W. Norton 2025 edition.</p>
+        </div>
+      </section>
+
+      <!-- ===================== FRAMEWORK ===================== -->
+      <section id="framework" class="card">
+        <p class="card-eyebrow">Exhibit 2 · Wang's framework</p>
+        <h2 class="section-title">The engineering state and the lawyerly society</h2>
+        <p class="section-deck">Wang's two-column comparison runs through the whole book. The table is his frame, not a consensus model — it is a heuristic he uses to make a case.</p>
+
+        <div class="frame-note">
+          <strong>Frame note</strong> &nbsp; The engineers-vs-lawyers framing is Wang's analytic invention, designed to displace older labels like "capitalist," "socialist," or "neoliberal" <cite class="pg">PDF p. 13</cite>. He treats it as a heuristic, not a complete theory; he himself notes the lawyerly society "also includes a commitment to proceduralism and protecting wealth" beyond just lawyers <cite class="pg">PDF p. 24</cite>. Read the framework as a useful simplification by an interested author, not as a settled finding in political science.
+        </div>
+
+        <div class="exhibit">
+          <table>
+            <thead><tr><th>Dimension</th><th>Engineering state (China)</th><th>Lawyerly society (US)</th></tr></thead>
+            <tbody>
+              <tr><td>Composition of elite</td><td>All 9 Politburo Standing Committee members trained as engineers by 2002; Xi studied chemical engineering at Tsinghua; third-term Politburo stacked with aerospace and weapons executives <cite class="pg">PDF p. 13</cite></td><td>5 of last 10 presidents went to law school; every Dem presidential / VP nominee from 1984–2020 went to law school; only 2 US presidents worked as engineers (Hoover, Carter) <cite class="pg">PDF p. 14</cite></td></tr>
+              <tr><td>Default move</td><td>Build. Public works, manufacturing capacity, new cities. Pour concrete.</td><td>Litigate. File suit. Layer on procedure. "Sue the bastards!" as the rallying cry of 1970s environmentalism <cite class="pg">PDF p. 21</cite></td></tr>
+              <tr><td>Failure mode</td><td>"Goes hard in one direction"; treats social issues as math problems; targets are in the policy name (one-child, zero-Covid) <cite class="pg">PDF p. 16</cite></td><td>"Elevation of process over outcomes"; "systematic bias toward the well-off"; agencies "tie themselves down with mountains of procedure" <cite class="pg">PDF p. 22</cite></td></tr>
+              <tr><td>Treatment of people</td><td>Aggregates. "Look at people as aggregates, not individuals" <cite class="pg">PDF p. 16</cite></td><td>Bearers of rights and process. Lawyers help wealthy clients, but the procedural system also protects civil liberties</td></tr>
+              <tr><td>What it produces well</td><td>Subway track, high-speed rail, ports, factories, low-cost manufactures, solar, EV batteries, nuclear plants, urbanization at scale</td><td>Civil rights protections, scientific innovation, capital-light tech firms, due process, plural political voice</td></tr>
+              <tr><td>What it breaks</td><td>One-child policy, zero-Covid lockdowns, tech crackdowns, Xinjiang detentions, "tofu houses," demographic collapse</td><td>Infrastructure rot, slow construction, housing scarcity, deindustrialization, $128B Central-Valley-to-nowhere rail</td></tr>
+              <tr><td>Lawyers per 100k</td><td>(US comparator) — China figure not given</td><td>~400 lawyers per 100k people, 3× the average of European countries <cite class="pg">PDF p. 23</cite></td></tr>
+            </tbody>
+          </table>
+          <p class="exhibit-caption"><strong>Exhibit 2.</strong> Wang's engineering-state-vs-lawyerly-society framework, drawn from Chapter 1. Page citations point to the passages where each row's claim originates. This is a paraphrase of Wang's frame, not a verified description of either political system.</p>
+        </div>
+      </section>
+
+
+      <!-- ===================== INTRODUCTION ===================== -->
+      <section id="intro" class="card">
+        <p class="card-eyebrow">Chapter 0 · pp. 5–11</p>
+        <h2 class="section-title">Introduction · <em>two messy superpowers</em></h2>
+        <p class="section-deck">Wang opens by insisting that no two peoples in the world are more alike than Americans and Chinese — and that the world will not be understood if it is not understood through them.</p>
+
+        <p>Wang begins on a contrarian note. Each time he sees a headline about US–China conflict, he writes, the spectacle strikes him as "more than just tragic; it is comical, too, because I am sure that no two peoples are more alike than Americans and Chinese" <cite class="pg">PDF p. 5</cite>. Both countries, in his telling, share a strain of crass materialism, a get-it-done pragmatism, a hustle for shortcuts to health and wealth, an appreciation for "the technological sublime: the awe of grand projects pushing physical limits," and a popular faith that theirs is a uniquely powerful nation entitled to push smaller ones around <cite class="pg">PDF p. 5</cite>. He compares both countries unfavorably to Canada — "Canada is tidy. I sometimes find myself relaxing as soon as I cross into its borders" — and to Europe, which he calls a "mausoleum economy . . . stuck in their . . . past" <cite class="pg">PDF pp. 5–6</cite>.</p>
+
+        <p>His credentials for the comparison are biographical. Wang emigrated from China to Canada at age seven, grew up in suburban Ottawa and then suburban Philadelphia, went to college in New York and to work in Silicon Valley, then moved back to China in 2017 as the technology analyst at Gavekal Dragonomics, an investment research firm whose clients were hedge funds and endowments hungry for China macro analysis <cite class="pg">PDF p. 7</cite>. He lived in Hong Kong, Beijing, and Shanghai over six years. The hedge fund managers' habit of "Socratic beatings" — sharpen the thesis or get nothing — pushed him, he says, to read every Xi Jinping speech in <em>Seeking Truth</em>, the Party's flagship theory magazine, and to travel constantly to obscure smaller cities most outsiders never see <cite class="pg">PDF pp. 7–8</cite>.</p>
+
+        <p>This experience produced what he calls an "uncomfortable" pair of simultaneous truths about China: that "things are getting better and getting worse" <cite class="pg">PDF p. 7</cite>. The state builds gleaming public works <em>and</em> locks up ethnic minorities. It has strong entrepreneurs <em>and</em> a strong government. Wang summarizes the tension with a phrase that recurs throughout the book: the Chinese state "both moves fast and breaks things and moves fast and breaks people" <cite class="pg">PDF p. 7</cite>.</p>
+
+        <p>The introduction also notes the souring of the relationship Wang himself lived inside. In 2022, Beijing's Great Firewall blocked his personal website, where he publishes an annual letter about China. The Great Firewall normally targets large platforms like the New York Times rather than small personal sites; Wang took the block as a signal serious enough that he sought out the Canadian consul general to ask whether he needed to plan his departure, having watched two Canadians get detained in retaliation for Canada's arrest of a Chinese businesswoman <cite class="pg">PDF p. 9</cite>. The block didn't force him out, but it marked a shift.</p>
+
+        <p>The "big idea" of the book is then stated plainly: "The starkest contrast between the two countries is the competition that will define the twenty-first century: an American elite, made up of mostly lawyers, excelling at obstruction, versus a Chinese technocratic class, made up of mostly engineers, that excels at construction. That's the big idea behind this book. It's time for a new lens to understand the two superpowers: China is an engineering state, building big at breakneck speed, in contrast to the United States' lawyerly society, blocking everything it can, good and bad" <cite class="pg">PDF p. 10</cite>.</p>
+
+        <p>Wang also names the stakes. The two superpowers are "uneasily circling each other, reorienting their economies and national security apparatuses to prepare for conflict" <cite class="pg">PDF p. 9</cite>. The book's hedge against escalation, he writes, is "mutual curiosity": the more informed Americans are about Chinese, and the more Chinese about Americans, "the more likely we are to stay out of trouble" <cite class="pg">PDF p. 10</cite>. The voice throughout is comparative and self-aware; Wang is a Canadian-Chinese writer who lived inside both systems and was punished by one of them.</p>
+
+        <div class="rule-box">
+          <div class="label">Reader's<br>rule</div>
+          <p class="text">Reading the rest of the book usefully means holding two ideas in the mind at the same time: that China's transformation has been real and impressive, and that the state which delivered it can also break the people it claims to be lifting up.</p>
+        </div>
+      </section>
+
+
+      <!-- ===================== CHAPTER 1 ===================== -->
+      <section id="ch1" class="card">
+        <p class="card-eyebrow">Chapter 1 · pp. 12–26</p>
+        <h2 class="section-title">Engineers vs. Lawyers · <em>the thesis</em></h2>
+        <p class="section-deck">Chapter 1 is the load-bearing chapter of the book. It states the central claim, traces both halves of it to specific historical decisions, and gives the comparative numbers Wang returns to throughout.</p>
+
+        <h3>Why Silicon Valley felt wrong to him</h3>
+
+        <p>Wang opens the chapter inside Silicon Valley itself, which he describes as "an amazingly drab place" of corporate parking lots, surrounded by a Bay Area "dynamo in America's richest state" that "can feel awfully dysfunctional" — homeless populations the city cannot serve, wealthy households running their own generators because the state cannot keep the lights on <cite class="pg">PDF p. 12</cite>. The image he carried out of California in 2017 was that "China was building the future, America had become physically static, its innovations mostly bound up in the virtual and financial worlds" <cite class="pg">PDF pp. 12–13</cite>.</p>
+
+        <p>From there he advances his core diagnostic claim: that twentieth-century labels — capitalist, socialist, neoliberal — no longer describe the two countries usefully. "Capitalist America intrudes upon the free market with a dense program of regulation and taxation while providing substantial (albeit imperfect) redistributive policies. Socialist China detains union organizers, levies light taxes, and provides a threadbare social safety net" <cite class="pg">PDF p. 13</cite>. Wang's verdict on China's marketing problem is biting: "The greatest trick that the Communist Party ever pulled off is masquerading as leftist." Mouthing Marxist pieties while "enacting a right-wing agenda that Western conservatives would salivate over: administering limited welfare, erecting enormous barriers to immigration, and enforcing traditional gender roles" <cite class="pg">PDF p. 13</cite>.</p>
+
+        <h3>How thoroughly engineers run China</h3>
+
+        <p>Wang's count is the one most readers remember. "By 2002, all nine members of the Politburo's standing committee — the apex of the Communist Party — had trained as engineers. General Secretary Hu Jintao studied hydraulic engineering and spent a decade building dams. His eight other colleagues could have run a Soviet heavy-industry conglomerate" <cite class="pg">PDF p. 13</cite>. Xi Jinping studied chemical engineering at Tsinghua, China's top science university, and for his third term in 2022 filled the Politburo with executives from the country's aerospace and weapons ministries — a structural commitment that prioritizes both engineering and defense <cite class="pg">PDF pp. 13–14</cite>.</p>
+
+        <p>The chapter's analogy makes the comparison concrete. "In the United States, it would be as if the CEO of Boeing became the governor of Alaska, the chief of Lockheed Martin became the secretary of energy, and the head of NASA was governor of a state as large as Georgia" <cite class="pg">PDF p. 13</cite>. China's ruling elite, Wang notes, has practical experience managing megaprojects.</p>
+
+        <p>And what do engineers do? They build. Since Deng's 1980 reforms, Wang writes, China has built highways equal to twice the length of US interstates, a high-speed rail network twenty times more extensive than Japan's, and almost as much wind and solar capacity as the rest of the world combined <cite class="pg">PDF p. 14</cite>. "A rough rule of thumb is that China produces one-third to one-half of nearly any manufactured product" <cite class="pg">PDF p. 14</cite>.</p>
+
+        <h3>How thoroughly lawyers run America</h3>
+
+        <p>The mirror-image count is just as striking. Five of the last ten US presidents went to law school. In any given year, at least half of Congress has law degrees. From 1984 to 2020, every single Democratic presidential and vice-presidential nominee went to law school. Only two American presidents have worked as engineers — Herbert Hoover (mining) and Jimmy Carter (engineering officer on a nuclear submarine) — and both are remembered for political failures <cite class="pg">PDF p. 14</cite>. The United States, Wang argues, is "unusual among Western countries for having so many lawyers: four hundred lawyers per hundred thousand people, which is three times higher than the average in European countries" <cite class="pg">PDF p. 23</cite>.</p>
+
+        <p>The chapter traces the lawyerly society to a specific moment. America, Wang writes, used to be an engineering state. In the 1960s the country had become "a frightful place" — oil platforms leaking petroleum, rivers combusting from chemical waste, urban planners ramming highways through neighborhoods, legal segregation everywhere <cite class="pg">PDF p. 21</cite>. The 1960s reckoning was necessary. But the legal corrective curdled. Students at Yale and Harvard law schools formed environmental organizations around the rallying cry "Sue the bastards!" Ralph Nader declared himself a watchdog of government. Ronald Reagan returned the favor: "Government is the problem, not the solution." Through the 1970s, Wang writes, "both the American left and the right worked harmoniously to constrain government effectiveness" <cite class="pg">PDF p. 21</cite>.</p>
+
+        <h3>The 2008 head-to-head</h3>
+
+        <p>Wang's signature comparison is the 2008 high-speed rail bet. That year California voters approved a state proposition to fund a high-speed rail link between San Francisco and Los Angeles; the same year, China began construction of its Beijing–Shanghai high-speed rail line. Both lines would be around 800 miles upon completion <cite class="pg">PDF p. 19</cite>.</p>
+
+        <p>China opened the Beijing–Shanghai line in 2011 at a cost of $36 billion. In its first decade of operation, it completed 1.35 billion passenger trips. California has built, seventeen years after the ballot proposition, "a small stretch of rail to connect two cities in the Central Valley, neither of which are close to San Francisco or Los Angeles" <cite class="pg">PDF p. 20</cite>. The latest cost estimate for the California line is $128 billion. The first segment is projected to open between 2030 and 2033. Wang's punchline: "the margin of error for estimating when a partial leg of California's high-speed rail will open is the same as the time it took China to build the entire Beijing–Shanghai line" <cite class="pg">PDF p. 20</cite>.</p>
+
+        <div class="exhibit" id="exhibit-3">
+          <p class="exhibit-label">Exhibit 3 · pp. 19–20</p>
+          <table>
+            <thead><tr><th>Item</th><th>Beijing–Shanghai HSR</th><th>California HSR (SF–LA)</th></tr></thead>
+            <tbody>
+              <tr><td>Construction approved / started</td><td>2008</td><td>2008 (ballot prop)</td></tr>
+              <tr><td>Length</td><td>~800 miles</td><td>~800 miles</td></tr>
+              <tr><td>Opened (full line)</td><td>2011</td><td>not opened; first segment 2030–2033 (Central Valley only)</td></tr>
+              <tr><td>Cost</td><td>$36 billion</td><td>$128 billion latest estimate</td></tr>
+              <tr><td>Cost per mile (Wang's figures)</td><td>~$33 million</td><td>~$192 million (~5.8× China)</td></tr>
+              <tr><td>First-decade passenger trips</td><td>1.35 billion</td><td>(line does not yet exist)</td></tr>
+            </tbody>
+          </table>
+          <p class="exhibit-caption"><strong>Exhibit 3.</strong> Wang's head-to-head from Chapter 1, with cost-per-mile from Chapter 2 (PDF p. 37). All figures are as Wang reports them; not independently verified against state or PRC ministry data. The point of the exhibit is Wang's argument that the same year produced wildly different outcomes under the two political models he is comparing.</p>
+        </div>
+
+        <h3>The two pathologies of the lawyerly society</h3>
+
+        <p>Wang diagnoses the lawyerly society with two specific failure modes <cite class="pg">PDF p. 22</cite>. The first is "an elevation of process over outcomes." Lawyers, he writes, "envision procedures" the way engineers envision bridges. He cites University of Michigan law professor Nicholas Bagley's paper "The Procedure Fetish," which describes how the federal government requires agencies to "conduct every conceivable study, ventilate every option, engage every identifiable stakeholder, and weather the most stringent judicial review before any of its actions, however trivial, could take effect" <cite class="pg">PDF p. 22</cite>. Before a US agency can build anything — bike lane or California high-speed rail — "it ties itself down with mountains of procedure" because a lawsuit could derail any of it <cite class="pg">PDF pp. 22–23</cite>.</p>
+
+        <p>The second pathology is "a systematic bias toward the well-off." Lawyers, Wang argues, are too often servants of the rich. "Lawyers aren't just defenders of the rich; many of them <em>are</em> the rich" <cite class="pg">PDF p. 23</cite>. He cites two headlines that capture the moment: the Wall Street Journal's 2023 "On Wall Street, Lawyers Make More Than Bankers Now," and the New York Times's 2024 "Pay for Lawyers Is So High People Are Comparing It to the NBA" <cite class="pg">PDF p. 23</cite>. The poor, Wang notes — "those buried under paperwork trying to apply for SNAP benefits, who have to take dilapidated public transit and who would most benefit from new construction — are the ones who suffer most from the lawyerly society's failures" <cite class="pg">PDF p. 23</cite>.</p>
+
+        <p>An older and quieter quotation gives the diagnosis historical depth. Wang cites Tocqueville from 1833: "American aristocracy is not composed of the rich . . . but occupies the judicial bench and the bar" <cite class="pg">PDF p. 21</cite>. The lawyerly society, in this telling, isn't new. What's new is how completely it has crowded out the engineering instinct.</p>
+
+        <h3>The 1949-vs-1959 thought experiment</h3>
+
+        <p>One of the chapter's most memorable passages is a thought experiment that captures the engineering state's "peculiarly jerky rhythms" — Wang's phrase for how decade of birth, in modern China, "might determine whether a person stumbles into great wealth or a mass grave" <cite class="pg">PDF p. 19</cite>.</p>
+
+        <div class="anec">
+          <div class="anec-title">The two China-born lives</div>
+          <p>A woman born in 1949 — call her Lu — would live through Mao's Great Leap Forward as a child (foraging tree bark amid mass starvation), miss college as Mao shut down higher education for the Cultural Revolution, then encounter the one-child policy at age thirty. Her child, if she had one at twenty, would be a student during Tiananmen. As she entered her seventies, she would suffer zero-Covid lockdowns. A man born just ten years later — Yao — would have no memory of famine, would catch Deng's reopening of the universities at eighteen, capitalize on China's WTO accession in his forties, and ride housing privatization to potentially substantial wealth. "Not everyone born in 1949 suffered terribly and not everyone born in 1959 lived comfortably," Wang writes. "But the engineering state is characterized by peculiarly jerky rhythms" <cite class="pg">PDF pp. 17–19</cite>.</p>
+        </div>
+
+        <h3>What the chapter is honest about</h3>
+
+        <p>Wang is careful, in a way easy to miss on first reading, not to claim more than the framework can carry. The lawyerly society, he writes, "doesn't have such dramatic shifts. It is made up of democracy, pluralism, vetocracy, and not only these things. The lawyerly society also includes a commitment to proceduralism and protecting wealth" <cite class="pg">PDF p. 24</cite>. He does not propose killing all the lawyers: "the system of checks and balances has been, and is, fundamental to the success of the United States" <cite class="pg">PDF p. 24</cite>. He notes that engineers in China "are part of the reason that the state skirted so close to apocalypse — in the case of the Cultural Revolution — before it achieved a growth miracle" <cite class="pg">PDF p. 24</cite>.</p>
+
+        <p>The chapter closes with a paired observation that runs through the rest of the book. "As best as I can tell, the United States and China are both racing to erode their governance capabilities." Xi has centered decision-making on himself; the American government is "mired in ineffectualness," the right wanting to drown it in a bathtub, the left strangling it with rules and lawsuits <cite class="pg">PDF p. 26</cite>. The book's project is to ask whether either country can stop.</p>
+
+        <div class="rule-box">
+          <div class="label">Reader's<br>rule</div>
+          <p class="text">The engineer-vs-lawyer dichotomy is Wang's heuristic, not a settled finding. Use it to organize what the rest of the book says; do not use it to predict outcomes the book does not establish.</p>
+        </div>
+      </section>
+
+
+      <!-- ===================== CHAPTER 2 ===================== -->
+      <section id="ch2" class="card">
+        <p class="card-eyebrow">Chapter 2 · pp. 27–55</p>
+        <h2 class="section-title">Building Big · <em>what the construction actually looks like</em></h2>
+        <p class="section-deck">Chapter 2 is Wang's tour of the engineering state on the ground. He cycles 400 miles across Guizhou, China's fourth-poorest province, and uses the trip to show what the building gets right, where it goes wrong, and why even the wrong cases still buy political legitimacy.</p>
+
+        <h3>The Guizhou bike trip</h3>
+
+        <p>"My most vivid encounter with the engineering state occurred, in classic Chinese fashion, on a bicycle" <cite class="pg">PDF p. 27</cite>. In the summer of 2021, Wang traveled with two friends — Christian Shepherd, a Financial Times journalist, and Teng Bao, a Florida-raised tech founder in Shanghai — nearly 400 miles over five days from Guizhou's capital, Guiyang, to Chongqing <cite class="pg">PDF pp. 27–28</cite>. They rode on a just-built highway not yet open to cars, slept in roadside hostels, washed their clothes in sinks, and ate Guizhou pickle-laced noodles by the side of the road. The province had previously been so cut off that a nineteenth-century Qing cartographer complained that its mountains were "vexingly numerous and ill-disciplined" <cite class="pg">PDF p. 28</cite>.</p>
+
+        <p>The point of the trip is that Wang found this poor, ethnically Miao-settled province better-infrastructured than the United States. Guizhou has the income of Botswana — roughly $8,000 per capita, 40 percent below China's national average and less than a third that of Beijing or Shanghai <cite class="pg">PDF p. 32</cite>. And yet:</p>
+
+        <ul style="font-family:var(--sans);font-size:15px;line-height:1.55;color:var(--text);margin:0 0 14px 22px;padding:0;">
+          <li>Guizhou hosts 45 of the world's 100 highest bridges <cite class="pg">PDF p. 32</cite>.</li>
+          <li>Eleven airports operating, with three more under construction (five of the eleven have fewer than a dozen flights per week) <cite class="pg">PDF p. 41</cite>.</li>
+          <li>5,000 miles of expressways — fourth-most of any Chinese province <cite class="pg">PDF p. 32</cite>.</li>
+          <li>Roughly 1,000 miles of high-speed rail track <cite class="pg">PDF p. 32</cite>.</li>
+          <li>Three times the highway length of New York State, in a region with one-fifteenth the household income <cite class="pg">PDF p. 33</cite>.</li>
+          <li>2010 high school attendance rate: 50 percent — the lowest in China <cite class="pg">PDF p. 33</cite>.</li>
+        </ul>
+
+        <p>Wang also catches an unexpected moment of industrial specialization. On the third day of the ride, Teng yells "Guitars!" and Wang looks up to find streetlamps decorated with guitar ornaments — they have ridden into Zheng'an County, the self-styled guitar capital of the world, which produces, according to state media, one of every seven guitars made anywhere <cite class="pg">PDF pp. 29–30</cite>. The State Council had recommended Guizhou pursue aerospace or EVs; the locals built a Guitar Culture Industrial Park instead, suited to their actual skill base.</p>
+
+        <h3>The numbers behind the building boom</h3>
+
+        <p>Chapter 2 contains most of the book's load-bearing infrastructure numbers. Wang frames China's modern building spree as starting in the 1990s and accelerating after the 2008 financial crisis stimulus.</p>
+
+        <div class="exhibit" id="exhibit-4">
+          <p class="exhibit-label">Exhibit 4 · pp. 33–34, 50, 53</p>
+          <table>
+            <thead><tr><th>Item</th><th>Wang's figure</th><th>Comparison</th></tr></thead>
+            <tbody>
+              <tr><td>Automobiles in China</td><td>500,000 in 1990 → 435 million in 2024</td><td>~870× increase over 34 years</td></tr>
+              <tr><td>Shanghai subway buildout 2003–2013</td><td>added as much track as in the entire NYC system</td><td>10 years vs. NYC's century-plus accumulation</td></tr>
+              <tr><td>Chinese cities with subway lines (2025)</td><td>51, of which 11 longer than NYC's</td><td>—</td></tr>
+              <tr><td>HSR network</td><td>longer than rest of world combined; 10× Spain's; 10× Japan's; ~2B passenger trips per year</td><td>—</td></tr>
+              <tr><td>Container traffic, Shanghai 2022</td><td>more than all US ports combined</td><td>—</td></tr>
+              <tr><td>Nuclear plants 2025 (US vs China)</td><td>54 vs 55 operating; 1 vs 31 under construction</td><td>only US 21st-century plant: 15 yrs, $30B; China's Aug 2024 approval of 11 reactors costs the same $30B</td></tr>
+              <tr><td>Urban population growth</td><td>+16 million people per year average since 1978</td><td>"a new city the size of greater NYC + greater Boston every year for 35 years"</td></tr>
+              <tr><td>Cement output, China 2018–2019</td><td>4.4 billion tons</td><td>"nearly equals the amount of cement the United States produced over the entire twentieth century" (Vaclav Smil)</td></tr>
+              <tr><td>Renewable buildout, 2023</td><td>US added 6 GW wind; China added 76 GW; China built 2/3 of world wind+solar</td><td>"four times more than the rest of the G-7 combined"</td></tr>
+              <tr><td>US offshore wind, 2024</td><td>42 MW operational, 932 MW under construction, 20,978 MW in permitting review</td><td>most stuck in environmental review</td></tr>
+              <tr><td>Coal</td><td>China burns more coal than the rest of the world combined <cite class="pg">PDF p. 48</cite></td><td>—</td></tr>
+              <tr><td>Infrastructure spend as % GDP</td><td>China 13.5% (2016) vs US ~3% (three-decade avg)</td><td>—</td></tr>
+            </tbody>
+          </table>
+          <p class="exhibit-caption"><strong>Exhibit 4.</strong> A selection of the construction numbers Wang offers in Chapter 2. All figures are as Wang reports them; he does not always source them to specific datasets, and they have not been independently verified. They establish the rough magnitude of the comparison he is making, not its precision.</p>
+        </div>
+
+        <h3>Three Liupanshui-grade cautionary tales</h3>
+
+        <p>The chapter's most-discussed material is what the engineering state gets wrong. Wang devotes long passages to three specific cases that illustrate the failure modes.</p>
+
+        <div class="anec">
+          <div class="anec-title">Li Zaiyong and the world's highest bridge</div>
+          <p>Liupanshui, in westernmost Guizhou, hosts the world's highest bridge. As party secretary, Li Zaiyong "authorized twenty-three tourism projects, including elegant Chinese temples and replicas of European town squares, which looked pretty from a distance but poorly painted up close" <cite class="pg">PDF p. 42</cite>. He tried to turn the city into a ski destination using artificial snowmakers, in a region that gets a few inches of snow a year. He planted hillsides with chestnut rose orchards. The European squares were taken over by local black goats. The chestnut roses died. "All that the city got for its troubles was $21 billion of new debt" <cite class="pg">PDF p. 43</cite>. The Central Commission for Discipline Inspection denounced the projects as "vanity projects." Li was given the death sentence with a two-year reprieve. On television he explained: "It was the nation's money, not mine" <cite class="pg">PDF p. 43</cite>.</p>
+        </div>
+
+        <div class="anec">
+          <div class="anec-title">Tianjin Binhai — the Dutch library with no books</div>
+          <p>Tianjin spent heavily in the 2000s to build a financial district called "China's Manhattan." Its centerpiece is the Binhai Library, designed by Dutch architects around a bright white sphere with undulating shelves. When Wang got close enough, he saw the shelves "had only digital prints of book spines." People were taking selfies, not browsing. Tianjin was forced in 2018 to revise down its GDP by nearly 20 percent, acknowledging data fraud <cite class="pg">PDF pp. 44–45</cite>. Wang's verdict: "Tianjin's library [is] a metaphor for China's economy: great hardware that looks impressive from a distance, not filled with the softer stuff that actually matters" <cite class="pg">PDF p. 45</cite>.</p>
+        </div>
+
+        <div class="anec">
+          <div class="anec-title">Tofu houses, Sichuan 2008</div>
+          <p>The 2008 Sichuan earthquake collapsed thousands of schoolrooms built from cheap materials, killing 5,000 children (official figure). Parents called the collapsed schools "tofu houses" for their fragility. Parents who tried to investigate official corruption afterward were detained <cite class="pg">PDF p. 50</cite>. Wang's line: "Building big, in other words, does not always mean building well."</p>
+        </div>
+
+        <h3>Why the building still buys legitimacy</h3>
+
+        <p>The chapter is careful not to collapse into a litany of failures. Wang argues that the construction strategy works as policy because it delivers material benefits widely. "For Chinese who have experienced economic growth rates of 10 percent a year, it would feel like their country was reborn roughly every seven years" — the doubling time at that growth rate <cite class="pg">PDF p. 36</cite>. The villagers Wang met in Guizhou told him they were thrilled with the new bridges and trains, even if the bonds will never be repaid.</p>
+
+        <p>This is the chapter's most distinctively Wang move: a willingness to credit unprofitable infrastructure as redistribution by another name. "Infrastructure that cannot recoup its revenue might upset bondholders and banks. But they represent subsidies to social benefits enjoyed by regular people" <cite class="pg">PDF p. 54</cite>. He quotes Keynes — "Anything we can actually do we can afford" — as a corrective to American Wall Street orthodoxy on efficiency <cite class="pg">PDF p. 54</cite>.</p>
+
+        <p>The chapter closes on the inverse: a story about the Cape Wind project, an attempt to build offshore turbines off Massachusetts. Wealthy residents of Nantucket Sound, including the Kennedy family, "banded together, formed a nonprofit, and enlisted lawyers that included one of Harvard's best-known constitutional law professors to challenge the development. After sixteen years of lawsuits, the developer abandoned the project" <cite class="pg">PDF p. 53</cite>. That is one bookend. The other, on the same page, is China adding 76 GW of new wind capacity in 2023, against America's 6.</p>
+
+        <p>Wang's central contradiction is that both halves of this comparison are real. "China would be better off if it built less and built better. But we should also resist judging it by the standards of the United States, which is frankly underprovisioned in public infrastructure. Because there is perhaps one thing worse than an overactive state that can't stop moving — and that is a state that can't move at all" <cite class="pg">PDF p. 52</cite>.</p>
+
+        <div class="rule-box">
+          <div class="label">Reader's<br>rule</div>
+          <p class="text">When evaluating the engineering state, ask both whether the project pencils out financially <em>and</em> whether ordinary people in the affected region treat the change as progress. Wang argues both questions matter; the second one is what holds the political model together.</p>
+        </div>
+      </section>
+
+
+      <!-- ===================== CHAPTER 3 ===================== -->
+      <section id="ch3" class="card">
+        <p class="card-eyebrow">Chapter 3 · pp. 56–85</p>
+        <h2 class="section-title">Tech Power · <em>process knowledge as the hidden asset</em></h2>
+        <p class="section-deck">Chapter 3 is Wang's most distinctive intellectual contribution. He argues that China's technology power lives not in patents or shiny products but in process knowledge — tacit, embodied, hard to write down — held in the workforce of communities like Shenzhen.</p>
+
+        <h3>Shenzhen as a community of engineering practice</h3>
+
+        <p>Shenzhen in 1980 was best known for oysters. Villagers set cages along the coast where tidal waters met cool mountain streams to produce especially succulent mollusks <cite class="pg">PDF p. 56</cite>. By 2020, Shenzhen had grown from 300,000 people to 18 million; the oyster beds, industrialized out of existence, were gone. The city's slogan, still on billboards, reads: "You're a Shenzhen local the moment you're here" — a poke at Beijing and Shanghai, where older families maintain exclusivity <cite class="pg">PDF p. 56</cite>.</p>
+
+        <p>The chapter's central image is the Foxconn Shenzhen campus, where Apple's iPhones are made. Five hundred acres. At peak, 300,000 workers — a population about the size of Pittsburgh or St. Louis — across three eight-hour shifts a day, "never a minute that factories aren't producing iPhones" <cite class="pg">PDF p. 58</cite>. A 2009 Chinese report estimated the campus consumed forty tons of rice, twenty tons of pork, ten tons of flour, and five hundred barrels of cooking oil per day. Foxconn's founder Terry Gou used to do laps in the company pool, then drive a golf cart with a bicycle bell around the facility late into the night. In 2019 he claimed the Buddhist goddess of the sea had appeared to him in a dream to tell him to run for president of Taiwan; he finished second in his party's primary <cite class="pg">PDF pp. 58–59</cite>.</p>
+
+        <div class="anec">
+          <div class="anec-title">The 2010 suicides and the meaning of Foxconn</div>
+          <p>"We would know far less about Foxconn if over a dozen workers in Shenzhen had not attempted suicide by jumping from factory dormitories in 2010" <cite class="pg">PDF p. 59</cite>. The crisis forced Foxconn and Apple into emergency management; the dormitories were subsequently strung with three million square meters of mesh netting. Wang notes the dark joke that circulated in Chengdu when a local bureaucrat was reassigned to the assembly lines after failing her labor-recruitment quota: "Don't leap off any buildings while you're there" <cite class="pg">PDF p. 60</cite>.</p>
+        </div>
+
+        <h3>What Apple actually got from Shenzhen</h3>
+
+        <p>The chapter's most quotable line is Tim Cook's: "In the US, you could have a meeting of tooling engineers and I'm not sure we could fill the room. In China, you could fill multiple football fields" <cite class="pg">PDF p. 63</cite>. A 2012 New York Times story reported Apple needed to hire about 9,000 industrial engineers; in the US the recruitment would have taken nine months. In China it took two weeks <cite class="pg">PDF p. 63</cite>.</p>
+
+        <p>Helen Wang, an Apple procurement executive (no relation to the author), told him her first thought when assigned a sourcing project was: "I need to build a city" <cite class="pg">PDF p. 60</cite>. Local officials in Shenzhen would level mountains to create factory land. One former Apple engineer told Wang that a grassy field he visited from Cupertino had, four months later, become a six-floor industrial building installing equipment <cite class="pg">PDF p. 60</cite>. United Airlines bragged in 2019 that Apple alone booked fifty business-class seats per day from San Francisco to Shanghai, generating $35 million a year for the airline <cite class="pg">PDF p. 63</cite>.</p>
+
+        <p>The technical case for proximity, drawn from the same engineer: "Almost always, we found someone in Shenzhen by asking a guy who knows a guy whose cousin might be able to produce a few hundred thousand new screws" <cite class="pg">PDF p. 63</cite>. Wang's metaphor: an American hardware entrepreneur told him, "If you have a gas leak, you can go borrow a neighbor's kit and give it back the next day" <cite class="pg">PDF p. 64</cite>. The iPhone embodies the climb: in 2007, China's contribution to the device was roughly 4 percent of final value (mostly assembly labor). By the iPhone X in 2017, China's share of the final value had reached about 25 percent <cite class="pg">PDF p. 65</cite>.</p>
+
+        <h3>Wang's three categories of technology</h3>
+
+        <p>The chapter's organizing distinction is worth pausing on:</p>
+
+        <div class="exhibit">
+          <p class="exhibit-label">Wang's typology · p. 67</p>
+          <table>
+            <thead><tr><th>Type</th><th>What it is</th><th>Where it lives</th></tr></thead>
+            <tbody>
+              <tr><td>Tools</td><td>Pots, pans, knives, ovens. Physical apparatus.</td><td>Workshops, factories.</td></tr>
+              <tr><td>Explicit instruction</td><td>Recipes, blueprints, patents. Things that can be written down.</td><td>Books, files, databases.</td></tr>
+              <tr><td>Process knowledge</td><td>Proficiency from practical experience. "Isn't easily communicated."</td><td>People's heads and the patterns of their relationships.</td></tr>
+            </tbody>
+          </table>
+          <p class="exhibit-caption">Wang's three-tier model from p. 67. The argument is that the third tier is the hardest to transfer, the easiest to lose, and the most consequential. American policy, he claims, has been obsessed with tools and instructions and blind to process knowledge.</p>
+        </div>
+
+        <p>To illustrate, Wang offers two passages that recur in reviews of the book. The first is the Ise Grand Shrine in Japan, rebuilt every twenty years since 690 AD using seventh-century techniques (no nails, only dowels and wood joints). "Eternity should not inhabit the building," the Belgian sinologist Simon Leys wrote of Chinese architectural philosophy. "It should inhabit the builder" <cite class="pg">PDF p. 68</cite>. The shrine maintains a two-hundred-year cypress-planting roadmap to ensure the forest can supply the next rebuilds <cite class="pg">PDF p. 68</cite>.</p>
+
+        <p>The second is the National Nuclear Security Administration's loss of "Fogbank," a classified material used to detonate hydrogen bombs. The NNSA could no longer produce it because nobody had kept records of the production process, and everyone who knew how had retired. The agency spent $69 million relearning how to make it <cite class="pg">PDF p. 69</cite>. The Notre Dame fire in 2019, Wang adds, revealed how little cathedral-construction knowledge survived in the world. Process knowledge is what gets lost when the people leave.</p>
+
+        <h3>The American collapse the same lens makes visible</h3>
+
+        <p>US manufacturing employment peaked at 19 million workers in 1980. In 2000 it was still 17 million. Then, "over the next decade, in part due to China, in part due to technology changes, and especially after the global financial crisis," it collapsed to 11 million by 2010. In 2025, Wang reports, the US has around 13 million manufacturing workers — against China's roughly 100 million <cite class="pg">PDF pp. 71, 74</cite>.</p>
+
+        <p>In 1993, the chief economic adviser to George H. W. Bush, Michael Boskin, famously quipped, "Computer chips, potato chips, what's the difference?" <cite class="pg">PDF p. 71</cite>. By 2010, Andy Grove of Intel had concluded the opposite: that the US needed to focus less on "the mythical moment of creation" and more on "scaling up" of products <cite class="pg">PDF p. 70</cite>. Wang's lineup of names from the same era is grim: Detroit's automakers limping into the EV transition; US Steel, GE, IBM as shadows; Intel falling behind TSMC; Boeing's 737 MAX crashes followed by a 2024 door-blowout-in-flight; US Navy reporting every class of ships and submarines one to three years behind schedule <cite class="pg">PDF pp. 71–72</cite>.</p>
+
+        <p>The chapter then ties this to the German solar story: Bell Labs invented the first solar cell, German companies built the production equipment, Chinese firms bought the German tooling, competed fiercely, and by the mid-2010s had taken over the whole value chain. "The plunge in solar power costs over the last decade has been driven less by breakthroughs in science . . . than by efficient production" <cite class="pg">PDF p. 75</cite>.</p>
+
+        <div class="exhibit" id="exhibit-5">
+          <p class="exhibit-label">Exhibit 5 · pp. 71, 78</p>
+          <div class="bars">
+            <div class="bar-row"><span class="label">China</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">28% of GDP</span></div>
+            <div class="bar-row"><span class="label">Germany</span><span class="track"><span class="fill" style="width:75%"></span></span><span class="val">21% of GDP</span></div>
+            <div class="bar-row"><span class="label">Japan</span><span class="track"><span class="fill" style="width:71%"></span></span><span class="val">20% of GDP</span></div>
+            <div class="bar-row"><span class="label">United States</span><span class="track"><span class="fill" style="width:36%"></span></span><span class="val">~10% of GDP</span></div>
+            <div class="bar-row"><span class="label">United Kingdom</span><span class="track"><span class="fill" style="width:36%"></span></span><span class="val">~10% of GDP</span></div>
+          </div>
+          <p class="exhibit-caption"><strong>Exhibit 5.</strong> Manufacturing as a share of GDP, as Wang reports the figures on p. 78. The Fourteenth Five-Year Plan (2021) demands that China's manufacturing share remain constant — Xi has declared the country "must never deindustrialize" <cite class="pg">PDF p. 78</cite>. Bars are scaled to China's 28% as the visual maximum. Figures are Wang's; he does not cite the underlying source dataset in the text.</p>
+        </div>
+
+        <h3>Tesla, BYD, and "catfishing"</h3>
+
+        <p>In 2018, in a move Wang calls unprecedented, Beijing let Tesla fully own its Shanghai plant, breaking from the rule that foreign automakers had to partner with a domestic state-owned firm. The Chinese business community coined a term for what Tesla was doing: "catfishing" — introducing a powerful new creature to make the domestic species swim faster. When Tesla Shanghai's Gigafactory started rolling out cars in 2019, BYD's sales fell 11 percent and its profits 42 percent. BYD raised its game, reported record profits in 2023, and became the world's largest electric vehicle maker <cite class="pg">PDF p. 73</cite>. Even the Party's main newspaper credited Tesla with producing the "catfish effect." Wang quotes Grace Wang, founder of Luxshare (one of Apple's newer contract manufacturers): "Flying with phoenixes will nurture outstanding birds" <cite class="pg">PDF p. 74</cite>.</p>
+
+        <h3>The Industrial Party</h3>
+
+        <p>One of the chapter's most striking sections is on a loose intellectual movement Wang has spent months reading: the Industrial Party (gongye dang), a set of online Chinese writers united by the view that nation-states ruthlessly compete, that science and technology are decisive, and that the Communist Party is the world's best-suited political organization for that pursuit <cite class="pg">PDF p. 79</cite>. The founders include Wang Xiaodong (author of the 1990s bestseller <em>China Is Unhappy</em>) and Zhong Qing (a Japan-trained electrical engineer whose 2005 book <em>Wash Dishes or Study?</em> called for full technocratic control). The most active recent contributor is the pseudonymous Shenzhen Ningnanshan, who may work with a state-affiliated think tank <cite class="pg">PDF p. 80</cite>.</p>
+
+        <p>The movement's canonical text is the science-fiction trilogy <em>The Three-Body Problem</em> by Liu Cixin, in which "humanity's total subordination to technocratic authorities" is depicted as the only viable response to existential threat <cite class="pg">PDF p. 82</cite>. Wang asks his uncomfortable question directly: "Are they simply reinventing fascism? The Industrial Party wants to depoliticize society to enable rule by technocrats . . . . They are a heavily male group that mocks pluralism. They are not advocating conquest, but they do pine for a future in which China is stronger than any other nation . . . It is a worship of strength through technology" <cite class="pg">PDF p. 81</cite>.</p>
+
+        <p>Xi's officials make the connection structurally. The minister of industry boasted in 2024 that China has a "comprehensive" industrial chain, producing something in each of the 419 UN industrial product categories <cite class="pg">PDF p. 78</cite>. The Fourteenth Five-Year Plan (2021) demands manufacturing's share of GDP stay constant. Xi has insisted: "We must never deindustrialize" <cite class="pg">PDF p. 78</cite>.</p>
+
+        <h3>What the trade war actually did</h3>
+
+        <p>Wang's verdict on the Trump-Biden tech war is dry. The Trump administration's sanctions on Huawei, DJI, SMIC and others "throttled Chinese companies" — but in doing so "[made] American companies (especially those selling semiconductors) unreliable vendors." Chinese tech companies that had previously bought American chips because they wanted to ship globally competitive products were forced, against their preference, to use Chinese domestic vendors. The US government inadvertently aligned every reluctant Chinese tech leader behind Beijing's self-sufficiency push <cite class="pg">PDF p. 76</cite>. "Rather than realizing its own Sputnik moment, the United States triggered one in China" <cite class="pg">PDF p. 169</cite>.</p>
+
+        <p>"Knowledge travels at the speed of beer," Wang quotes Silicon Valley engineers as saying — meaning engineers diffuse what they know in casual conversation. "Over the longer run, it's difficult for countries to monopolize their dominance over any technology" <cite class="pg">PDF p. 76</cite>. China's goods exports to the US in 2022 hit roughly the same level as in 2018, before Trump's tariffs took effect <cite class="pg">PDF p. 83</cite>.</p>
+
+        <p>The chapter closes on a small ironic image. On Wang's last visit to Huaqiangbei, Shenzhen's famous electronics bazaar, in 2021, vendors were selling more cosmetics than cables and capacitors. One state-media headline captured the moment: "Huaqiangbei Trades Computer Chips for Lipsticks." A few years later, when Wang returned, the eye creams had been pushed back out and the components had returned. "Overinvestment and an insistence against deindustrialization has protected China, for now, from suffering the unhappy fate of the American Rust Belt" <cite class="pg">PDF p. 85</cite>.</p>
+
+        <div class="rule-box">
+          <div class="label">Reader's<br>rule</div>
+          <p class="text">When evaluating a country's technological capability, count people and process knowledge, not just patents and product launches. The hardest assets to replicate are the ones that live in workforces, and they are the easiest to let evaporate by accident.</p>
+        </div>
+      </section>
+
+
+      <!-- ===================== CHAPTER 4 ===================== -->
+      <section id="ch4" class="card">
+        <p class="card-eyebrow">Chapter 4 · pp. 86–113</p>
+        <h2 class="section-title">One Child · <em>what an engineer did to demography</em></h2>
+        <p class="section-deck">Chapter 4 is the book's most harrowing chapter and the clearest indictment of the engineering state. Wang traces the one-child policy to its architect, a missile scientist who applied cybernetics to demography, and follows the consequences forward to Xi's frantic pronatalism today.</p>
+
+        <div class="frame-note">
+          <strong>Content note</strong> &nbsp; This chapter contains material on forced abortions, forced sterilizations, female infanticide, and child trafficking — the historical record Wang is recounting. Wang's discussion of mass-coercive enforcement is largely drawn from secondary scholarship (Susan Greenhalgh's <em>Just One Child</em>, Kay Ann Johnson's <em>China's Hidden Children</em>) and contemporary reporting by Nicholas Kristof, Michael Weisskopf, and others he names. Where Wang assigns specific magnitudes — "321 million abortions," "108 million women sterilized" — the figures are cited to Chinese state media or official health yearbooks; Wang notes that "any effort to determine the number of births prevented by the one-child policy is made difficult by patchy data" <cite class="pg">PDF p. 107</cite>. Read the chapter as faithfully transmitting the historical record assembled by these named scholars and journalists, not as an independent empirical study.
+        </div>
+
+        <h3>The architect: Song Jian</h3>
+
+        <p>Song Jian was a missile scientist who designed China's submarine-launched ballistic missiles. Born in 1931 to a rural Shandong family, he joined the Communist Eighth Route Army as a teen, was selected to study in the Soviet Union in 1953, and at Moscow State University was exposed to cybernetics — Norbert Wiener's 1948 discipline whose subtitle promised "Control and Communication in the Animal and Machine" <cite class="pg">PDF pp. 90–91</cite>. Cybernetics, Wang notes drily, has occupied "an intellectual sweet spot: electrifying in its premise . . . and constructed with an inherent vagueness that affords it the theoretical space to wriggle out of refutation" <cite class="pg">PDF p. 90</cite>.</p>
+
+        <p>Wang's physical sketch of Song is unsparing. "Song Jian was a man of considerable girth, his bulbous nose framed by full jowls under a combover . . . a high-pitched lisp, his remarks punctuated by smiles and energetic sweeps of his meaty hands" <cite class="pg">PDF p. 90</cite>. The political part of the sketch matters more. As a military scientist, Song was a member of "a politically privileged class," able to engage in scholarly exchange with the outside world and granted access to one of China's few advanced computers — privileges denied to social scientists, who had been bullied into silence by Mao over the 1950s <cite class="pg">PDF p. 91</cite>.</p>
+
+        <p>In 1978, Song flew to Helsinki for a cybernetics conference and "grew 'extremely excited'" listening to the fashionable Western anxieties about overpopulation — Paul Ehrlich's <em>The Population Bomb</em> (1968), the Club of Rome's <em>Limits to Growth</em> (1972), and their forecasts of apocalypse for populous poor countries <cite class="pg">PDF pp. 91–92</cite>. He returned to Beijing, gathered colleagues from the missile ministry, and produced two determinations that would shape policy:</p>
+
+        <ol style="font-family:var(--sans);font-size:15px;line-height:1.6;color:var(--text);margin:0 0 14px 22px;padding:0;">
+          <li>If China's fertility rate remained at 3.0, the population would reach 3 billion by 2050 and 4 billion by 2080 <cite class="pg">PDF p. 92</cite>.</li>
+          <li>China's "optimal" population, derived from a systems-analysis model of arable land, water, and projected growth in agriculture, industry, and services, was no more than 700 million <cite class="pg">PDF p. 92</cite>.</li>
+        </ol>
+
+        <p>Wang's verdict on this analysis is direct: "Today, these propositions read as bunk. Everything about them was flawed . . . Only an engineer might have believed in this sort of straight-line analysis, as if population can grow at an unvarying rate. Song had no awareness that fertility rates might fall as economic growth and educational levels rise — as neighboring East Asian countries had already realized" <cite class="pg">PDF p. 92</cite>.</p>
+
+        <p>Yet Song presented his work on graph paper produced by China's most sophisticated computers, while skeptics drew uneven squiggles by hand using abacuses and handheld calculators. The anthropologist Susan Greenhalgh, in her 2008 book <em>Just One Child</em>, documented the policy-conference asymmetry: "It was never a fair fight. The military scientists outclassed their intellectual opponents in every possible way" <cite class="pg">PDF p. 93</cite>.</p>
+
+        <p>Beijing adopted the one-child policy in 1980. Song was given the honor of writing the first draft of the open letter the Party would publish in the <em>People's Daily</em>. He was so arrogant in his draft that propaganda officials threw it out and rewrote it themselves <cite class="pg">PDF p. 94</cite>.</p>
+
+        <h3>The implementation: Qian Xinzhong</h3>
+
+        <p>The enforcer was Qian Xinzhong, a former PLA general designated to head the State Family Planning Commission. Qian planned the opening phase as a military campaign. He called on roving teams to be "shock brigades" employing "man-on-man tactics." Hospitals were ordered to be ready to carry out the "four procedures": IUD insertions, tubal ligations, vasectomies, and abortions <cite class="pg">PDF p. 95</cite>.</p>
+
+        <p>At peak enforcement in 1983, the state performed 16 million sterilizations and 14 million abortions in a single year — against pre-policy 1975 figures of 3 million and 5 million respectively <cite class="pg">PDF p. 96</cite>.</p>
+
+        <div class="exhibit" id="exhibit-6">
+          <p class="exhibit-label">Exhibit 6 · pp. 96, 103</p>
+          <div class="bars">
+            <div class="bar-row"><span class="label">Sterilizations, 1975</span><span class="track"><span class="fill" style="width:18.75%"></span></span><span class="val">3.0 million</span></div>
+            <div class="bar-row"><span class="label">Sterilizations, 1983 (peak)</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">16.0 million</span></div>
+            <div class="bar-row"><span class="label">Abortions, 1975</span><span class="track"><span class="fill" style="width:31%"></span></span><span class="val">5.0 million</span></div>
+            <div class="bar-row"><span class="label">Abortions, 1983 (peak)</span><span class="track"><span class="fill" style="width:88%"></span></span><span class="val">14.0 million</span></div>
+          </div>
+          <p class="exhibit-caption"><strong>Exhibit 6.</strong> Wang cites China's official health yearbooks for these counts. Lifetime totals over the 35-year policy era: 321 million abortions ("not far off from the present population of the United States"), 108 million women sterilized, 26 million men sterilized <cite class="pg">PDF p. 103</cite>. Wang explicitly notes that data is patchy and that demographers still debate the policy's actual contribution to fertility decline.</p>
+        </div>
+
+        <h3>What enforcement looked like on the ground</h3>
+
+        <p>Wang relays the texture of enforcement from named contemporary reporting. Nicholas Kristof reported on a woman seven months pregnant whose officials needed to hit their birth-cap quotas; they induced early birth against doctors' objections, the child died, the woman nearly hemorrhaged to death and was left physically disabled <cite class="pg">PDF p. 97</cite>. Michael Weisskopf reported in the Washington Post in 1985 that doctors sometimes injected formaldehyde into the heads of babies born alive during forced late-term abortions, or crushed skulls with forceps. He described expectant mothers being "trussed, handcuffed, herded into hog cages and delivered by the truckload to the operating tables of rural clinics" <cite class="pg">PDF p. 98</cite>.</p>
+
+        <div class="anec">
+          <div class="anec-title">The "childless hundred days," Guan County, 1991</div>
+          <p>Song Jian's home province of Shandong saw the most notorious incident. Zeng Zhaoqi, newly appointed party secretary of Guan County, was humiliated his county ranked last in family-planning enforcement. He demanded zero births between May 1 and August 10. Toughs were brought in from neighboring counties — locals were reluctant to hurt their own. Every pregnant woman in the county was forced to abort. The incident is remembered as the "childless hundred days" or the "slaughter of the lambs," since 1991 was the year of the sheep. Zeng was promoted, later to deputy head of the provincial committee on Caring for Future Generations <cite class="pg">PDF p. 97</cite>.</p>
+        </div>
+
+        <div class="anec">
+          <div class="anec-title">The Feng Jianmei photograph, 2012</div>
+          <p>Feng Jianmei, twenty-three years old, in rural Shaanxi, failed to pay a fine for her second pregnancy. Birth-planning officials shoved her into a van, blindfolded her, made her sign a document she could not see, and induced a stillbirth. Her husband uploaded a photo to social media of her exhausted face beside the stillborn fetus. The post went viral. One commenter wrote that the family-planning system had been "openly killing people for years in the name of national policy" <cite class="pg">PDF pp. 102–103</cite>.</p>
+        </div>
+
+        <p>Female infanticide rose. By the early 1990s, ultrasound machines were in widespread use, enabling sex-selective abortions. China's official sex ratio at birth reached 120 boys per 100 girls in 1999 <cite class="pg">PDF p. 100</cite>. The ratio has since declined to 111:100, but "demographers estimate that around forty million women are 'missing'" <cite class="pg">PDF p. 101</cite>. Wang relays Kay Ann Johnson's account of birth parents leaving baby girls on doorsteps after setting off firecrackers for attention, and of out-of-plan children as young as three saying "I should never have been born" when they learned of their legal status <cite class="pg">PDF p. 101</cite>. International adoptions sent over 150,000 children abroad, around half to the United States, before Beijing ended them in 2024 <cite class="pg">PDF p. 103</cite>.</p>
+
+        <h3>The state apparatus, the about-face, the irony</h3>
+
+        <p>The State Family Planning Commission ran on 500,000 workers, 1.2 million local enforcers, and 6 million village officials. It collected $200 billion in fines over its lifetime <cite class="pg">PDF p. 103</cite>. Even when the 2010 census revealed fertility had collapsed, the bureaucracy resisted dissolution. The one-child policy became a two-child policy in 2015, then a three-child policy in 2021 <cite class="pg">PDF p. 103</cite>.</p>
+
+        <p>And the about-face. Xi's 2023 speech to the All-China Women's Federation declared, "We should cultivate a new culture of marriage and childbirth" — the Economist headlined the meeting "China wants women to stay home and bear children" <cite class="pg">PDF p. 87</cite>. The Politburo, which previously always seated at least one woman, was shrunk to twenty-four members for Xi's third term, removing the seat <cite class="pg">PDF p. 87</cite>. By 2025, China is expected to sell more adult diapers than baby diapers; by 2100, the country's population is projected to halve to 700 million — the "optimal" population Song Jian had calculated <cite class="pg">PDF p. 109</cite>. Births fell from 15 million in 2019 to 9 million four years later. Lifetime fertility is now 1.0 per woman, far below the 2.1 needed for stability <cite class="pg">PDF p. 87</cite>. Half of Chinese women born after 1995, asked in the 2021 general social survey, said they want one or zero children <cite class="pg">PDF p. 111</cite>.</p>
+
+        <p>The state's pivot is desperate. Wang documents a 2021 state-media editorial demanding all Communist Party members have three children — "It must be every party member's responsibility to have three children!" — that was deleted after backlash <cite class="pg">PDF p. 111</cite>. Vasectomies in China collapsed from 181,000 in 2014 to fewer than 5,000 by 2019 as hospitals turned away men who could not prove they already had children <cite class="pg">PDF p. 112</cite>.</p>
+
+        <h3>Wang's verdict</h3>
+
+        <p>Wang's most direct claim of the book sits in this chapter: "The one-child policy could only have been formulated by the engineering state. No other country would have let a missile scientist anywhere near the design of demographic policy" <cite class="pg">PDF p. 104</cite>. And: "It represents what can go wrong when a country views members of its population as aggregates that can be manipulated rather than individuals who have desires, goals, or rights" <cite class="pg">PDF p. 105</cite>.</p>
+
+        <p>The chapter's most striking historical comparison: "Perhaps I was wrong to compare Song Jian to Albert Einstein . . . The more apt comparison for Song might be to Trofim Lysenko, the agronomist who aligned himself with Soviet orthodoxy and helped perpetuate famines in the Soviet Union" <cite class="pg">PDF pp. 108–109</cite>. Wang concludes with Winston Churchill's quip that scientists should be "on tap, not on top" <cite class="pg">PDF p. 109</cite>.</p>
+
+        <p>The chapter is also unexpectedly personal. While writing it in 2024, Wang's wife Silvia suffered a first-trimester miscarriage. "As we grieved, I returned to writing about these mass sterilization and abortion campaigns. If anything, it became more difficult to imagine how the state dragged away so many women to forced abortions in their third trimester" <cite class="pg">PDF p. 103</cite>. Wang notes the symmetry he wants the reader to keep: "Neither forced nor prohibited abortions are humane . . . which means the state should leave families, and especially women, with a choice."</p>
+
+        <div class="rule-box">
+          <div class="label">Reader's<br>rule</div>
+          <p class="text">Beware the policy whose target is in its name. "One-child" and "zero-Covid" share an architecture: a single number presented as a scientific certainty, with everything else — including the lives of the people the number is supposed to govern — treated as a residual.</p>
+        </div>
+      </section>
+
+
+      <!-- ===================== CHAPTER 5 ===================== -->
+      <section id="ch5" class="card">
+        <p class="card-eyebrow">Chapter 5 · pp. 114–147</p>
+        <h2 class="section-title">Zero-Covid · <em>three acts of the same play</em></h2>
+        <p class="section-deck">Chapter 5 is the longest in the book and the closest to memoir. Wang lived through all three years of zero-Covid in Beijing, Shanghai, and Yunnan, and structures the chapter as a three-act play: fury, pride, desperation.</p>
+
+        <h3>Act I: fury, 2020</h3>
+
+        <p>The doctor Li Wenliang died on February 7, 2020, after Wuhan police had reprimanded him for trying to warn colleagues of a new respiratory virus. "That night, my WeChat feed was dominated by tributes to Doctor Li, accompanied by immense fury at how the police had treated him. I wouldn't see my WeChat feed be so dominated by a single event until 'Voices of April' two years later" <cite class="pg">PDF p. 129</cite>. Wuhan officials had suppressed virus news to ensure smooth operation of an annual political meeting and refused to cancel a community feast that drew 100,000 people six miles from the Huanan Seafood Market <cite class="pg">PDF p. 129</cite>.</p>
+
+        <p>The chapter records the pre-pandemic boast that aged worst: George Gao, China's top disease-control official, declared in 2019 that "SARS-like outbreaks will not occur again because the infectious disease surveillance system network of our country is well established" <cite class="pg">PDF p. 131</cite>. Wang's drily observed gap: China had built impressive technical surveillance, but its political system kept local officials suppressing whistleblowers.</p>
+
+        <h3>Act II: pride, 2020–2021</h3>
+
+        <p>The first year of pandemic controls felt like vindication for China and bewilderment for the rest of the world. Donald Trump speculated that the virus might disappear or could be tackled by injecting disinfectants <cite class="pg">PDF p. 132</cite>. "Three months later, Xi declared that China had 'turned the tide on the virus.' Subsequently . . . People's Daily declared that pandemic controls were a demonstration of the superiority of China's socialist political system" <cite class="pg">PDF p. 132</cite>. Wang moved from Beijing to Shanghai in late 2020 to escape the political temperament of the capital. Restaurants reopened; he read Dickens's <em>Bleak House</em> and Tolstoy's <em>War and Peace</em>; he met his now-wife Silvia, a University of Michigan ethnographer of technology cultures on sabbatical at NYU-Shanghai <cite class="pg">PDF p. 117</cite>.</p>
+
+        <p>The first cracks appeared with the Xi'an lockdown at the end of 2021. "A woman who was eight months pregnant felt pains and wanted to be admitted to a hospital but was refused entry by staff until she took a PCR test — which could take several hours to process — and provide a negative result. Two hours later, she started bleeding heavily. She miscarried outside the hospital while pleading to be let in. Her story went viral until censors deleted it" <cite class="pg">PDF p. 119</cite>.</p>
+
+        <h3>Act III: Shanghai, March–June 2022</h3>
+
+        <p>The Shanghai lockdown is the chapter's center of gravity. On March 26, the day before lockdown was announced, Shanghai health official Wu Fan declared: "The city of Shanghai does not belong only to the people of Shanghai. It is a driving force for the global economy, and a lockdown here would shake the world" <cite class="pg">PDF pp. 120–121</cite>. The next day Shanghai announced what it called a "partial pause" entering a "quiet period" of eight days. It lasted eight weeks <cite class="pg">PDF p. 121</cite>.</p>
+
+        <p>One of the most-shared press lines of the period, Wang notes, was the China Daily headline "Shanghai Has No Plans for City Lockdown" — read first as a denial, later as a description of what actually happened. The city had made no plans for confining 25 million people to their homes for eight weeks <cite class="pg">PDF p. 121</cite>.</p>
+
+        <p>The chapter's anecdote machine is at full throttle here.</p>
+
+        <div class="anec">
+          <div class="anec-title">The drone</div>
+          <p>Shanghai's top mental health official declared at an otherwise drab press conference that Shanghainese should "repress your soul's yearning for freedom." Social media made it a meme. Then one night in April, a megaphone-equipped drone with a blinking light flew between apartment buildings full of huddled residents, looping the phrase: "Repress your soul's yearning for freedom. Do not open your windows to sing, which can spread the virus." Wang: "The phrase stopped being amusing" <cite class="pg">PDF pp. 121–122</cite>.</p>
+        </div>
+
+        <div class="anec">
+          <div class="anec-title">Owen and the WeChat handle</div>
+          <p>Wang's friend Owen — an American in his thirties, living above a noodle shop in Puxi — taped his WeChat handle outside his door so passing neighbors taking Covid tests could add him. Soon all 36 households were in a group chat. As a tall blue-eyed foreigner Owen became the unofficial representative of his all-Chinese building. He organized bulk orders directly from a wholesaler, including, one frustrated day, paying $40 for a single loaf of good bread from a home baker across town. He told Wang: "After my neighbors added me, their attitude was 'what's the plan, bro?'" <cite class="pg">PDF p. 124</cite>.</p>
+        </div>
+
+        <div class="anec">
+          <div class="anec-title">The trucker with the bottles</div>
+          <p>Truckers attempting to deliver food into Shanghai had to wait in their cabs at provincial borders until their PCR results came back. One viral video showed a driver holding up bottles of his own excrement, exploding in frustration that the controls made him feel like "an animal in captivity" <cite class="pg">PDF p. 123</cite>. By mid-April, trucking activity in Shanghai had fallen to 15 percent of normal levels.</p>
+        </div>
+
+        <div class="anec">
+          <div class="anec-title">The medical collapse alongside the food collapse</div>
+          <p>An asthmatic 49-year-old nurse was denied treatment at the hospital where she worked before she collapsed and died <cite class="pg">PDF p. 127</cite>. A colleague's uncle with diabetes died because he could not access dialysis. Shanghai initially separated babies and infants from parents even when both tested positive, until photos of crying infants in metal cribs prompted enough outrage that the policy was reversed <cite class="pg">PDF pp. 126–127</cite>.</p>
+        </div>
+
+        <p>Wang carefully notes the censorship dynamics. When residents posted en masse the first line of China's national anthem — "Arise, you who refuse to be slaves" — their posts were removed. Social media platforms briefly blocked the word "Shanghai" from search results <cite class="pg">PDF p. 128</cite>. One six-minute audio montage, "Voices of April," circulated widely enough that people put it on the blockchain to preserve it past censorship <cite class="pg">PDF p. 128</cite>.</p>
+
+        <h3>Why people did not protest sooner</h3>
+
+        <p>One of the chapter's most thoughtful sections asks a question that puzzled Wang in real time. The US under "much milder" lockdown standards produced mass unrest in 2020. Why did Shanghai not erupt sooner? His friends' answers, condensed: most Chinese were genuinely afraid of the virus after two years of state messaging; controls had been layered gradually; nobody believed the lockdown would last eight weeks <cite class="pg">PDF p. 139</cite>. A constitutional law professor, Tong Zhiwei, did publish an essay pointing out the lockdowns had no legal basis. The state's response was to censor his essay and erase his social media profile <cite class="pg">PDF pp. 137–138</cite>.</p>
+
+        <h3>The protests, finally</h3>
+
+        <p>In November 2022, after a fire in Urumqi killed ten people whose evacuation was reportedly obstructed by pandemic barricades, protests broke out across the country. Foxconn workers in Henan threw bricks at riot police outside the iPhone plant. A man in Chongqing shouted "Give me liberty, or give me death!" <cite class="pg">PDF p. 141</cite>. In Shanghai's bar district, on a road that happened to be named for Urumqi, an impromptu vigil turned into a chant Wang heard with his own ears: "Down with the Communist Party! Xi Jinping step down!" <cite class="pg">PDF p. 141</cite>.</p>
+
+        <p>The Beijing "Bridge Man" hung two banners over a busy highway one October morning, burned a tire to draw attention, and listed a set of demands that included: "End the tests, we have to eat / Stop with curfew, we want to be free / Enough with lies, we demand dignity . . . We don't need a great leader, but a free election / We are citizens, not slaves." The second banner: "Remove the national traitor Xi Jinping." The bridge, Sitong, has since been removed from Chinese mapping services <cite class="pg">PDF p. 142</cite>. Young people in several cities held up blank sheets of A4 paper to symbolize what could not be said — and so the wave became known as the "white paper protests" <cite class="pg">PDF p. 142</cite>.</p>
+
+        <h3>The reversal</h3>
+
+        <p>On December 23, 2022, Wang caught Covid. "The timing was nonsensical: The state had dropped all restrictions during the worst of winter. China hadn't meaningfully accelerated its vaccinations of the population beforehand; it remains mystifying why they didn't give people shots in any of the dozens of times it forced people to take PCR tests" <cite class="pg">PDF p. 143</cite>. The detail Wang says sticks with him most is the lack of fever medication. For three years, China made it difficult to buy ibuprofen or other fever reducers, lest people disguise their illness. Now everyone had Covid, and the pharmacies were empty. "China is the only country that denied its people fever medications during a fever-producing pandemic" <cite class="pg">PDF pp. 143–144</cite>.</p>
+
+        <p>The state mouthpiece Xinhua claimed in January that "all decisions were made after scientific analysis and shrewd calculation" — "by no means impulsive decisions" <cite class="pg">PDF p. 145</cite>. Wang has a quiet line: "The reversal felt too abrupt to be shrewd, but no matter." Li Qiang, Shanghai's party secretary during the lockdown, was elevated to premier — China's head of government <cite class="pg">PDF p. 145</cite>. "In authoritarian China, the politician who oversaw the largest lockdown was elevated to the second-highest office."</p>
+
+        <div class="exhibit" id="exhibit-7">
+          <p class="exhibit-label">Exhibit 7 · zero-Covid timeline · pp. 129–145</p>
+          <table>
+            <thead><tr><th>Date</th><th>Event</th><th>Where</th></tr></thead>
+            <tbody>
+              <tr><td>Dec 2019 – Jan 2020</td><td>Local Wuhan officials suppress news of a new respiratory virus to protect an annual political meeting; community feast for 100,000 held near Huanan Seafood Market <cite class="pg">PDF p. 129</cite></td><td>Wuhan</td></tr>
+              <tr><td>Feb 7, 2020</td><td>Li Wenliang dies; WeChat tributes flood timelines; foreign press calls it a "Chernobyl moment" <cite class="pg">PDF pp. 129, 132</cite></td><td>Wuhan</td></tr>
+              <tr><td>Spring 2020</td><td>Engineering state stomps out the virus while the West stumbles; <em>People's Daily</em> declares the result a vindication of socialism <cite class="pg">PDF p. 132</cite></td><td>nationwide</td></tr>
+              <tr><td>Late 2021</td><td>Xi'an lockdown; pregnant woman miscarries outside hospital, refused entry without PCR result <cite class="pg">PDF p. 119</cite></td><td>Xi'an</td></tr>
+              <tr><td>Mar 26, 2022</td><td>Wu Fan: "Shanghai is too important to lock down" <cite class="pg">PDF p. 120</cite></td><td>Shanghai</td></tr>
+              <tr><td>Mar 27 – Jun 1, 2022</td><td>Shanghai lockdown: 25 million people, 8 weeks (announced as 8 days). Drones broadcast "repress your soul's yearning for freedom." Trucking falls to 15% of normal <cite class="pg">PDF pp. 121–123</cite></td><td>Shanghai</td></tr>
+              <tr><td>Sep – Nov 2022</td><td>Sichuan earthquake (residents barred from leaving trembling buildings); Guizhou bus crash (27 killed in transit to quarantine); Urumqi fire (10 dead, fire trucks obstructed by barricades) <cite class="pg">PDF pp. 140, 141</cite></td><td>Sichuan, Guizhou, Xinjiang</td></tr>
+              <tr><td>Oct 13, 2022</td><td>Sitong Bridge protest in Beijing — "We are citizens, not slaves" <cite class="pg">PDF p. 142</cite></td><td>Beijing</td></tr>
+              <tr><td>Nov 2022</td><td>Foxconn Henan riots; Urumqi Road protest in Shanghai chants "Xi Jinping step down"; white paper protests spread <cite class="pg">PDF pp. 141–142</cite></td><td>multiple cities</td></tr>
+              <tr><td>Dec 2022</td><td>Zero-Covid abruptly abandoned; ibuprofen unavailable; crematoriums operate nonstop <cite class="pg">PDF pp. 143–144</cite></td><td>nationwide</td></tr>
+              <tr><td>Jan 2023</td><td>Xinhua: "all decisions were made after scientific analysis and shrewd calculation." Li Qiang promoted to premier <cite class="pg">PDF p. 145</cite></td><td>Beijing</td></tr>
+            </tbody>
+          </table>
+          <p class="exhibit-caption"><strong>Exhibit 7.</strong> Zero-Covid timeline as constructed from Chapter 5. The chapter records ~125,000 official Covid deaths in China against scholarly estimates of nearly 2 million excess deaths, and notes that testing alone cost 1.8% of GDP in 2022 (Nomura estimate) <cite class="pg">PDF pp. 144, 146</cite>.</p>
+        </div>
+
+        <h3>Wang's verdict</h3>
+
+        <p>Back at Yale Law School, Wang was struck by a yard sign reading "In this home we believe science is real." His irritation: "The Communist Party 'followed the science' of zero-Covid to its logical conclusion: barring people from their homes, testing people on a near-daily basis . . . Four decades ago, it 'followed the science' to forcibly prevent many pregnancies in the pursuit of the one-child policy. We can agree that 'science is real.' But we have to keep in mind that there is a political determination involved with how to interpret the science" <cite class="pg">PDF p. 145</cite>.</p>
+
+        <p>The chapter closes on the institutional continuity. The neighborhood committees that enforced Covid lockdowns "haven't been disbanded; they are now being used to call up recently married women to ask about their menstrual cycles and whether they wouldn't like to have a few children" <cite class="pg">PDF p. 147</cite>.</p>
+
+        <div class="rule-box">
+          <div class="label">Reader's<br>rule</div>
+          <p class="text">"Following the science" is not an answer to a political question. The political question — whose pain counts, whose rights are conditional, who decides when to stop — always returns, regardless of whether the policy carries scientific framing.</p>
+        </div>
+      </section>
+
+
+      <!-- ===================== CHAPTER 6 ===================== -->
+      <section id="ch6" class="card">
+        <p class="card-eyebrow">Chapter 6 · pp. 148–178</p>
+        <h2 class="section-title">Fortress China · <em>Xi's third term and the next decade</em></h2>
+        <p class="section-deck">Chapter 6 looks forward. Wang asks what happens when an engineering state stops trying to copy America, starts trying to insulate itself from America, and doubles down on engineers as the dominant political caste.</p>
+
+        <h3>"Rùn"</h3>
+
+        <p>The chapter opens on a new piece of Chinese slang that emerged during the pandemic: <em>rùn</em>, originally meaning "to moisten," repurposed for the English word "run" to express the desire to flee — from a locked-down city, or from China altogether <cite class="pg">PDF p. 148</cite>. The chapter is in part a tour of Chinese diaspora.</p>
+
+        <p>Wang spent a month in late 2023 in Thailand's Chiang Mai with younger Chinese who had emigrated. He meets Yiju, a software developer in his thirties who fled in the wake of the white paper protests when police sought him for questioning. Yiju's line on what drove him out: "China feels like a space in which the ceiling keeps getting lower. To stay means that we have to walk around with our heads lowered and our backs hunched" <cite class="pg">PDF pp. 149–150</cite>. The creative diaspora has built parallel institutions abroad — Nowhere Books (in Taiwan and Chiang Mai), Mandarin-language feminist standup nights in Manhattan that sell out instantly, Chinese bookstores in New York and Washington <cite class="pg">PDF pp. 151–152</cite>.</p>
+
+        <p>Wealthier Chinese have voted with assets. UK emigration firms estimate nearly 14,000 Chinese millionaires emigrated in 2023 and over 15,000 in 2024 <cite class="pg">PDF p. 152</cite>. The number of Chinese investor-residency approvals in Canada doubled from 2,000 to 4,000 between 2019 and 2023; in the US, from 3,900 to 7,500 between 2019 and 2024. And US border-crossing data captures the desperate end: from 450 Chinese nationals apprehended at the southwest border in 2021 to 38,000 in 2024, many via the Darién Gap after flying to Ecuador <cite class="pg">PDF p. 152</cite>.</p>
+
+        <h3>"Sixty percent correct on everything"</h3>
+
+        <p>The chapter's most-quoted line is Wang's analytical generalization of Xi: "The trouble with Xi Jinping is that he is perhaps 60 percent correct on everything" <cite class="pg">PDF p. 158</cite>. The footnote is the joke: Deng Xiaoping famously decreed Mao was "70 percent correct and 30 percent wrong," and Wang assigns Xi a slightly lower score on the assumption that Xi would never claim to be greater than Mao <cite class="pg">PDF p. 178n</cite>.</p>
+
+        <p>The substance behind the joke matters. Each of Xi's signature targets is roughly right as diagnosis, Wang argues, and roughly wrong as solution. Big tech had accumulated too much power — but stomping out their businesses traumatized entrepreneurs and erased $1 trillion of market value. Housing developers had taken on too much debt — but driving them toward default triggered a homebuyer-confidence collapse that prolonged the slump. Bureaucratic corruption was real — but Xi has "terrorized the bureaucracy to the point of paralysis" <cite class="pg">PDF p. 158</cite>. Wang's summary: "Sometimes, the only thing scarier than China's problems are Beijing's solutions" <cite class="pg">PDF p. 158</cite>.</p>
+
+        <h3>Xi's "tech crackdown" that wasn't</h3>
+
+        <p>Wang's careful reframing: he refuses to call Xi's 2020–2021 regulatory wave a "tech crackdown." Beijing simultaneously disciplined digital platforms and showered favor on harder technologies. The intent, as Wang reads it, was reorientation — pulling the best graduates of Tsinghua and Peking from consumer internet platforms toward semiconductors, aerospace, and other strategic industries <cite class="pg">PDF p. 172</cite>. Yao Yang, a Peking University dean, observed with satisfaction after a $400,000 salary cap was placed on Chinese financial professionals that the goal was "to reduce the attractiveness of finance and to increase the development of manufacturing" <cite class="pg">PDF p. 173</cite>.</p>
+
+        <p>The cost: Ant Financial's IPO derailed; Didi investigated; New Oriental lost 90 percent of its market cap and laid off 60 percent of employees; Alibaba fell from $800 billion to a quarter of that within two years; Jack Ma disappeared from public view for months <cite class="pg">PDF pp. 156–157</cite>. Xi's reported May 2024 question to entrepreneurs — "Why are we producing fewer and fewer unicorns?" — produced (briefly) the wry online retort: "But sir, you are the cause" <cite class="pg">PDF pp. 154–155</cite>.</p>
+
+        <h3>The fortress</h3>
+
+        <p>By 2018, Wang found himself telling friends that China would close its doors by 2049, the centenary of the People's Republic. "It turned out that I was off by a centenary: China had been mostly shut in 2021, a hundred years after the founding of the Communist Party" <cite class="pg">PDF p. 160</cite>. After the pandemic, "Xi has doubled down on self-reliance." The renminbi accounts for 3 percent of global payments and that share "has barely grown over a decade" — capital controls remain too strict for the currency to be globally attractive <cite class="pg">PDF p. 164</cite>.</p>
+
+        <p>Wang's metaphor: "I envision China becoming something like a more successful East Germany, a state that combines surveillance and political controls with strong outcomes in science and technology" <cite class="pg">PDF p. 172</cite>. Chinese chips will be good enough for EVs and drones, even if not for the latest iPhone; Chinese planes will be good enough for Bangkok–Shanghai, even if not as efficient as the latest Airbus. The lifestyle question that drives diaspora — can a creative person live freely here — is separate from the industrial question of whether the country builds.</p>
+
+        <h3>The hardware shock the US should worry about</h3>
+
+        <p>The chapter's most-quoted strategic comparison is the disparity in defense industrial capacity:</p>
+
+        <div class="exhibit">
+          <p class="exhibit-label">Hardware contest · pp. 165, 168, 175–176</p>
+          <table>
+            <thead><tr><th>Item</th><th>China</th><th>United States</th></tr></thead>
+            <tbody>
+              <tr><td>Ships under construction (2022)</td><td>~1,800</td><td>5</td></tr>
+              <tr><td>Munitions production (Ukraine baseline)</td><td>(China not engaged but has the manufacturing scale-up record)</td><td>Ukraine fires in 2 days what US makes in 1 month</td></tr>
+              <tr><td>Industrial capacity, 2030 forecast (UNIDO)</td><td>45% of world</td><td>US + EU + Japan + South Korea + Taiwan combined = 38%</td></tr>
+              <tr><td>STEM PhD graduates, 2025</td><td>more than 2× US (Wang)</td><td>many are Chinese nationals likely to repatriate</td></tr>
+              <tr><td>Coal-burning capacity added, 2023</td><td>20× rest of world combined</td><td>—</td></tr>
+              <tr><td>Manufacturing workforce</td><td>~100 million</td><td>~13 million</td></tr>
+            </tbody>
+          </table>
+          <p class="exhibit-caption">Figures as Wang reports them on pp. 165–168, 175–176. Jake Sullivan's late-Biden-administration line: the US will experience "exhaustion of munition stockpiles very rapidly" if it ever faced the Chinese military <cite class="pg">PDF p. 175</cite>. Wang's summary on AI: "Even if the United States achieves artificial general intelligence, it will need to be able to actually manufacture drones or munitions; algorithms alone will never win a battle" <cite class="pg">PDF p. 175</cite>.</p>
+        </div>
+
+        <h3>Belt and Road, then and now</h3>
+
+        <p>One image Wang relays: two photographs of the Belt and Road Forum, one from 2017 with Xi surrounded by 120 world leaders, one from 2023 with only three dozen <cite class="pg">PDF p. 165</cite>. The BRI's flagship Jakarta–Bandung high-speed rail line came in $1 billion over budget and four years late <cite class="pg">PDF p. 165</cite>. The World Bank found in 2024 that BRI projects have generated a positive return for Chinese lenders, "though it is small" <cite class="pg">PDF p. 165</cite>. China has financed roughly $1 trillion in loans across 150 countries, becoming the single largest financier of infrastructure in Africa.</p>
+
+        <h3>Why science survives autocracy</h3>
+
+        <p>Wang notes the common contention that China cannot innovate because it lacks free speech — and pushes back. "Free thought is essential for the humanities and the social sciences. But I'm not so sure that it's a necessary condition for the natural sciences" <cite class="pg">PDF p. 170</cite>. He cites Nazi Germany's Nobel laureates, the Soviet Union's hydrogen-bomb scientists working through Stalin's gulags, Prussia's invention of the modern research university under Bismarck's autocracy. "Mostly, I believe, because the precondition for science is that abundant funds are far more critical to science than free speech, and that is something dictators can deliver" <cite class="pg">PDF p. 171</cite>.</p>
+
+        <p>Scientists of Chinese descent leaving the United States: fewer than 1,000 in 2010; more than 2,500 in 2021 <cite class="pg">PDF p. 170</cite>. Wang has interviewed more than two dozen scientists in China, most trained in the United States, who told him it is easier to receive funding in Chinese universities than in American ones — "Their money comes without many strings attached, whereas a grant application to the National Science Foundation demands fastidiousness on formatting, endless reporting requirements, and the threat of jail if they don't make a proper disclosure" <cite class="pg">PDF p. 171</cite>.</p>
+
+        <h3>What the fortress is for</h3>
+
+        <p>The chapter ends with Wang's clearest articulation of the central contradiction he believes the reader has to hold: the rich, the creative, and the desperate are fleeing; meanwhile, the manufacturing sector goes from strength to strength. "The reckless interventions that engineers have dealt to economy and society have left many people seriously disgruntled, spurring them to move their wealth or themselves abroad. Meanwhile, China has embarked on a quest to build a technologically powerful country. On that, I believe it might succeed" <cite class="pg">PDF p. 162</cite>.</p>
+
+        <p>Xi will not, in Wang's read, fully displace the United States. "The control neurosis of the engineers is the fundamental limit to China's power." But the engineering state will push China to be an advanced manufacturer with dominant positions in many high-tech supply chains, with military capacity to match, and a good chance to challenge US hegemony in Asia <cite class="pg">PDF p. 162</cite>.</p>
+
+        <div class="rule-box">
+          <div class="label">Reader's<br>rule</div>
+          <p class="text">Two things can be true at once: Chinese consumers and creatives are voting with their feet, and Chinese manufacturers are widening their lead in clean-tech, EVs, batteries, and many heavy industries. Don't let either fact erase the other.</p>
+        </div>
+      </section>
+
+
+      <!-- ===================== CHAPTER 7 ===================== -->
+      <section id="ch7" class="card">
+        <p class="card-eyebrow">Chapter 7 · pp. 179–199</p>
+        <h2 class="section-title">Learning to Love Engineers · <em>Wang's prescription</em></h2>
+        <p class="section-deck">Chapter 7 is the prescriptive chapter. It is the most personal — Wang tells the story of his own family's emigration — and the most contested, since prescription is where consensus thins.</p>
+
+        <div class="frame-note">
+          <strong>Epistemic note</strong> &nbsp; Chapter 7 is Wang's argument, not consensus political science. It is where the engineers-vs-lawyers frame is asked to do prescriptive work — to recommend specific changes to American political culture. Read his prescriptions as the considered view of an informed observer pressing a thesis, not as findings.
+        </div>
+
+        <h3>The Kunming family album</h3>
+
+        <p>Both of Wang's parents were born in Kunming, the capital of southwestern Yunnan, in 1959 — what he called in Chapter 1 the lucky birth year. The chapter is the only place in the book where the family history comes forward. His father's family, the Zhus, were Yunnan's most prominent merchants — a sprawling residence with elegant gardens, a business of tin and copper mining (with possible adjacencies in the opium trade) before they kept "siding with political losers" through the late Qing and the Nationalist defeats <cite class="pg">PDF p. 180</cite>. His paternal grandmother's father was a secretary to Chiang Kai-shek; she was sent to labor in the countryside in the 1960s when her Nationalist family connection became politically disqualifying, separated from Wang's father for six years <cite class="pg">PDF p. 180</cite>. His maternal grandfather barely survived the 1942 Henan famine that killed both his brothers and was selected as an officer in Deng Xiaoping's Second Field Army <cite class="pg">PDF p. 181</cite>. "Soldier, landlord, traitor, capitalist. Each of my grandparents suffered through Mao's political convulsions" <cite class="pg">PDF p. 182</cite>.</p>
+
+        <p>Wang's parents emigrated to Canada in 2000 with seven-year-old Wang. The timing was poor: the dot-com bubble burst three months later, his father's programming skills became unmarketable, his mother — a former Yunnan provincial radio anchor — took on odd jobs in Ottawa as a janitor, garment worker, and massage therapist <cite class="pg">PDF p. 184</cite>. They moved to suburban Philadelphia after his father found an IT job. Wang went to the University of Rochester because it was one of the few schools that offered substantial financial aid to Canadian citizens; he worked through college to cover expenses <cite class="pg">PDF p. 184</cite>.</p>
+
+        <p>The chapter's most affecting passage is the counterfactual ledger his parents now keep. If they had stayed in Kunming, they would have been allocated state housing, would now own perhaps two or three apartments, would be near family and lifelong friends, would be retired with pensions. "'Of course, I wish we never left,' my mom sometimes said to my dad and me." His father's counter: "'Most of our classmates would trade places with us, you know.' Yes, my mom knows" <cite class="pg">PDF pp. 185–186</cite>. The trade is between a richer texture of community and family on one side, and on the other a quieter life less exposed to political weather.</p>
+
+        <h3>Sunset Park, Brooklyn</h3>
+
+        <p>Wang's wish for his parents is that they move to Sunset Park in Brooklyn — Latino businesses along Fifth Avenue, Chinese stores on Sixth, Seventh, and Eighth, mitten crabs in the autumn just like Shanghai. The neighborhood's signature is the Sunset Play Center, one of eleven swimming pools that Parks Commissioner Robert Moses opened in 1936. "Chinese would recognize something in Robert Moses. He was an American urban planner who built at breakneck speed" <cite class="pg">PDF pp. 187–188</cite>.</p>
+
+        <p>The Moses chapter argument is one of the book's most provocative. Robert Caro's 1974 biography <em>The Power Broker</em> — Wang calls it "monumental . . . 1,300 pages" — was, alongside Rachel Carson's <em>Silent Spring</em> and Ralph Nader's <em>Unsafe at Any Speed</em>, "one of the books that played a part in the consolidation of the lawyerly society. . . . It taught Americans to fear and loathe engineers" <cite class="pg">PDF p. 189</cite>. In Caro's most vivid chapter, Sunset Park appears as an irredeemable slum whose heart Moses tore out by punching an elevated expressway through its commercial street.</p>
+
+        <p>"Stroll around Sunset Park's restaurants that peddle empanadas and noodles today, and its residents would be bewildered to learn that their neighborhood had had its heart torn out" <cite class="pg">PDF p. 190</cite>. The expressway is still there. So are the immigrants. The Sunset Play Center Moses built is still in use. New York didn't fall. "The Power Broker has become a dated book . . . The city walked itself back from the precipice in a way that industrial cities like Detroit, St. Louis, and Cleveland have not. These cities have lost two-thirds of their population since the 1950s, while New York has grown" <cite class="pg">PDF p. 190</cite>.</p>
+
+        <p>Wang's argument is not to rehabilitate Moses. He concedes Moses's racism, his elitism, his vengefulness, his arrogance, his bulldozing of poor neighborhoods. The argument is that the American left has fought a 1960s adversary so thoroughly that it has lost the capacity to fight current problems. "I bring up Moses to suggest that the American left needs to rouse itself to deal with the problems of the present day rather than the problems of the previous midcentury" <cite class="pg">PDF p. 191</cite>.</p>
+
+        <p>The right gets its own treatment. Wang wants the American right to remember Admiral Hyman Rickover, "the father of the nuclear navy" who launched the USS Nautilus in 1954 — an engineer who built world-leading capability through patient decades of work within the US government <cite class="pg">PDF p. 191</cite>. Rickover, like Moses, "delivered projects on time and under budget, year after year, while avoiding corruption charges" <cite class="pg">PDF p. 192</cite>. Both Jewish, both subject to genteel prejudice, both with sharp elbows, both who built. Today, Wang argues, the right's preferred figure is Elon Musk and the Department of Government Efficiency: "The Department of Government Efficiency has brought contempt for government, lopping off core institutions and services. . . . DOGE would be more effective if it targeted reductions in <em>process</em> rather than personnel" <cite class="pg">PDF p. 192</cite>.</p>
+
+        <h3>The slow-build problem</h3>
+
+        <p>The chapter offers a small catalogue of specific American slow-build embarrassments. New York City's subway: it costs five times as much to build a kilometer there as in Paris <cite class="pg">PDF p. 194</cite>. The Biden administration allocated $42 billion in 2021 to expand broadband to rural communities under the Internet for All program; four years later, no household had been connected <cite class="pg">PDF p. 194</cite>. Two years after Congress allocated $7.5 billion for EV charging stations, seven stations were operational <cite class="pg">PDF p. 194</cite>. "After winning the 2024 election, President Trump will be either able to reap the political benefits of naming many new bridges for himself or cancel some of these projects" <cite class="pg">PDF p. 194</cite>.</p>
+
+        <p>Half of American renters are cost-burdened (more than 30% of pretax income on rent). New York, San Francisco, and Boston — the cities with the most job creation — have "perversely done the most to block new housing" <cite class="pg">PDF p. 193</cite>. Wang's amendment to the progressive slogan "every billionaire is a policy failure": "Every rise in housing prices is a policy failure" <cite class="pg">PDF p. 193</cite>.</p>
+
+        <p>Wang quotes a line from Yale Law professor Grant Gilmore that he calls a useful warning to first-year law students: "The worse the society, the more law there will be. In hell there will be nothing but law, and due process will be meticulously observed" <cite class="pg">PDF p. 195</cite>.</p>
+
+        <h3>What Wang actually recommends</h3>
+
+        <p>The chapter's prescriptive close has two parts.</p>
+
+        <p>First, Americans need to remember that they have a heritage of engineering. The world's first skyscrapers in Chicago, the Brooklyn Bridge, the New York subway, nuclear submarines, the moon landing — these came from a culture that knew how to build <cite class="pg">PDF p. 196</cite>. The lesson is not to copy China's means of construction; Wang is explicit that "the engineering state's approach has wrought horrors and is no longer fit for purpose even in China" <cite class="pg">PDF p. 195</cite>. The countries to study are Spain, Germany, and Japan, which "strike a better balance between public consultation and environmental review on the one hand and getting stuff built on the other" <cite class="pg">PDF p. 195</cite>.</p>
+
+        <p>Second, the United States needs to elevate a greater diversity of voices among its elites — not eliminate lawyers, but join them with engineers, economists, and humanists. He echoes Nicholas Bagley: "Lawyers should consider whether they could achieve more by stepping out of the way" <cite class="pg">PDF p. 177</cite>. And he wants both countries to keep calling themselves "developing": "Isn't it better than to be a 'developed' one, which implies that you're done, finished, at the end of the road? Leave 'developed' status, I say, to Europe's beautiful mausoleum economy" <cite class="pg">PDF p. 197</cite>.</p>
+
+        <p>The book's last pages return to optimism. "The ultimate reason to be hopeful for the United States is that it can look to its own history to see the path forward. You can see the musculature of the engineering state amid the mighty industrial works scattered all over the country. There's a natural legacy it has to draw on to stage this next act of transformation" <cite class="pg">PDF p. 199</cite>. The closing image is the family memory: not the Chiang Mai kids who fled in 2022, but "two people in their mid-thirties [who] emigrated from Yunnan" two decades earlier, with their seven-year-old son in tow, for the same reasons — "feeling disappointment in the country's direction and willing to roll the dice on a better life abroad" <cite class="pg">PDF p. 178</cite>.</p>
+
+        <div class="rule-box">
+          <div class="label">Reader's<br>rule</div>
+          <p class="text">The useful conclusion of <em>Breakneck</em> is not "be more like China." It is: the US has a heritage of engineering to recover, and the question is whether the lawyerly society can make room for it without losing the protections that the lawyerly society was built to provide.</p>
+        </div>
+      </section>
+
+
+      <!-- ===================== ANECDOTE HIGHLIGHTS ===================== -->
+      <section id="anecdotes" class="card">
+        <p class="card-eyebrow">Exhibit 8 · Anecdote highlights</p>
+        <h2 class="section-title">Eighteen images to keep</h2>
+        <p class="section-deck">The book is built on specific scenes. These are the ones most likely to survive a reading.</p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:18px;">
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">The 2008 bet · Ch 1</div>
+            <p>California: 17 years, $128B, no train. China: 3 years, $36B, 1.35 billion trips in the first decade. Same year, same length, different governance.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Lu and Yao · Ch 1</div>
+            <p>Born 1949: famine at ten, no college at eighteen, one-child policy at thirty, zero-Covid at seventy. Born 1959: Deng reopens schools just in time, then WTO entry, then a Shanghai apartment.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">The guitar capital · Ch 2</div>
+            <p>One of every seven guitars in the world is made in Zheng'an County, Guizhou — a place locals don't play the instrument. The State Council suggested aerospace. Locals built the Guitar Culture Industrial Park instead.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Liupanshui · Ch 2</div>
+            <p>23 vanity projects, faux European squares grazed by goats, a ski resort with snowmakers in a no-snow region. $21 billion of debt. Party secretary Li Zaiyong: "It was the nation's money, not mine." Death sentence with two-year reprieve.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">The Binhai library · Ch 2</div>
+            <p>Tianjin's Dutch-designed photogenic library — selfies all day, but the beautiful shelves hold digital prints of book spines, not actual books. Wang's metaphor for the whole economy.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Tofu houses · Ch 2</div>
+            <p>2008 Sichuan earthquake collapsed schools built from cheap materials, killing 5,000 children. Parents who investigated were detained. "Building big does not always mean building well."</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Foxconn · Ch 3</div>
+            <p>500-acre campus, 300,000 workers at peak (a Pittsburgh's worth), 40 tons of rice a day. Three million square meters of mesh netting installed after 2010 suicides. Founder Terry Gou did pool laps each morning and drove a golf cart with a bicycle bell.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Tooling engineers · Ch 3</div>
+            <p>Tim Cook: "In the US, you could have a meeting of tooling engineers and I'm not sure we could fill the room. In China, you could fill multiple football fields."</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Ise Jingu · Ch 3</div>
+            <p>Japan's holiest shrine, rebuilt every 20 years since 690 AD using seventh-century joinery — no nails, only dowels. 200-year cypress-planting plan. "Eternity should not inhabit the building. It should inhabit the builder."</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Fogbank · Ch 3</div>
+            <p>The US National Nuclear Security Administration forgot how to make Fogbank, a classified bomb-detonation material, because the people who knew had retired. Cost to relearn: $69 million.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Song Jian's Helsinki trip · Ch 4</div>
+            <p>The missile scientist's 1978 visit to a Western cybernetics conference. He grew "extremely excited" by Western apocalyptic forecasts, came home, ran a few systems-analysis calculations, and proposed the one-child policy.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">The childless hundred days · Ch 4</div>
+            <p>Guan County, Shandong, 1991: Party secretary Zeng Zhaoqi, humiliated his county ranked last in family planning, demanded zero births May 1–Aug 10. He was later promoted to deputy head of the provincial committee on Caring for Future Generations.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Feng Jianmei's photo · Ch 4</div>
+            <p>2012, Shaanxi. A 23-year-old mother of one was shoved into a van, blindfolded, and made to sign for a forced third-trimester abortion. Her husband's photo of her exhausted face beside the stillborn fetus went viral on Chinese social media.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">The Shanghai drone · Ch 5</div>
+            <p>April 2022. A megaphone drone with a blinking light flew between high-rises full of huddled residents, looping: "Repress your soul's yearning for freedom. Do not open your windows to sing, which can spread the virus."</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Owen and the bolognese · Ch 5</div>
+            <p>An American above a noodle shop, his WeChat handle taped to his door, became the unofficial representative of 36 households in lockdown. He paid $40 for a single loaf of good bread.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">The trucker's bottles · Ch 5</div>
+            <p>Stuck at a provincial border, a delivery driver held up bottles of his own excrement on camera, shouting that he had become "an animal in captivity."</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Sitong Bridge · Ch 5</div>
+            <p>A man burned a tire on a Beijing highway to draw eyes to two banners listing protest demands ending: "We are citizens, not slaves" and "Remove the national traitor Xi Jinping." The bridge has since been deleted from Chinese maps.</p>
+          </div>
+
+          <div class="anec" style="margin:0;">
+            <div class="anec-title">Yiju in Chiang Mai · Ch 6</div>
+            <p>A crypto developer in his thirties who fled after the white paper protests: "China feels like a space in which the ceiling keeps getting lower. To stay means that we have to walk around with our heads lowered and our backs hunched."</p>
+          </div>
+
+        </div>
+        <p class="exhibit-caption" style="margin-top:14px;"><strong>Exhibit 8.</strong> Eighteen scenes from Wang's reporting and chosen secondary sources, indexed back to chapter. Several rely on contemporary reporting Wang cites (Kristof, Weisskopf, FT, NYT); others are Wang's first-person observations. Treat the personal observations as one informed observer's account, not as canonical history.</p>
+      </section>
+
+      <!-- ===================== SOURCE LOG ===================== -->
+      <section id="sources" class="card">
+        <p class="card-eyebrow">Exhibit 9 · Source attribution log</p>
+        <h2 class="section-title">What this summary is built on</h2>
+        <p class="section-deck">A single primary corpus, accessed in full. Secondary sources are cited as Wang cites them, not independently verified.</p>
+
+        <div class="exhibit">
+          <table>
+            <thead><tr><th>Section of this summary</th><th>Source in Breakneck</th><th>Access</th><th>Pages</th></tr></thead>
+            <tbody>
+              <tr><td>Cover, How to read, Corpus map, Framework</td><td>Wang (2025), Contents and Introduction</td><td><span class="tag green">GREEN</span></td><td>PDF pp. 1–11; framework drawn from Ch 1 (pp. 13–24)</td></tr>
+              <tr><td>Introduction · two messy superpowers</td><td>Wang (2025), Introduction</td><td><span class="tag green">GREEN</span></td><td>PDF pp. 5–11</td></tr>
+              <tr><td>Chapter 1 · Engineers vs. Lawyers</td><td>Wang (2025), Ch 1</td><td><span class="tag green">GREEN</span></td><td>PDF pp. 12–26</td></tr>
+              <tr><td>Chapter 2 · Building Big</td><td>Wang (2025), Ch 2</td><td><span class="tag green">GREEN</span></td><td>PDF pp. 27–55</td></tr>
+              <tr><td>Chapter 3 · Tech Power</td><td>Wang (2025), Ch 3</td><td><span class="tag green">GREEN</span></td><td>PDF pp. 56–85</td></tr>
+              <tr><td>Chapter 4 · One Child</td><td>Wang (2025), Ch 4</td><td><span class="tag green">GREEN</span></td><td>PDF pp. 86–113</td></tr>
+              <tr><td>Chapter 5 · Zero-Covid</td><td>Wang (2025), Ch 5</td><td><span class="tag green">GREEN</span></td><td>PDF pp. 114–147</td></tr>
+              <tr><td>Chapter 6 · Fortress China</td><td>Wang (2025), Ch 6</td><td><span class="tag green">GREEN</span></td><td>PDF pp. 148–178</td></tr>
+              <tr><td>Chapter 7 · Learning to Love Engineers</td><td>Wang (2025), Ch 7</td><td><span class="tag green">GREEN</span></td><td>PDF pp. 179–199</td></tr>
+              <tr><td>Anecdote highlights</td><td>Wang (2025), Chs 1–6 (consolidated)</td><td><span class="tag green">GREEN</span></td><td>page-cited inside each card</td></tr>
+            </tbody>
+          </table>
+          <p class="exhibit-caption"><strong>Exhibit 9.</strong> All sections of this summary are built from the same primary source: Dan Wang, <em>Breakneck: China's Quest to Engineer the Future</em>, W. W. Norton &amp; Company, First Edition 2025 (ISBN 978-1-324-10603-6, e-pub ISBN 978-1-324-10604-3). Access was GREEN throughout: the full 224-page PDF was extracted to a page-indexed corpus and read in its entirety. Secondary sources named by Wang in the body — Susan Greenhalgh's <em>Just One Child</em> (UC Press, 2008), Kay Ann Johnson's <em>China's Hidden Children</em> (U Chicago, 2017), Leta Hong Fincher's <em>Leftover Women</em>, Nicholas Kristof's reporting, Michael Weisskopf's 1985 Washington Post pieces, Robert Caro's <em>The Power Broker</em> (1974), Nicholas Bagley's "The Procedure Fetish," James C. Scott's <em>The Art of Not Being Governed</em>, Vaclav Smil's cement figures, Simon Leys's <em>The Hall of Uselessness</em>, Liu Cixin's <em>Three-Body Problem</em> trilogy, and others — are cited as Wang quotes or describes them, with no claim that they were independently verified for this summary. Inline page citations refer to the PDF pagination of the W. W. Norton 2025 edition.</p>
+        </div>
+
+        <p class="colophon">Summary of Dan Wang, <em>Breakneck: China's Quest to Engineer the Future</em> · W. W. Norton &amp; Company, 2025 · generated May 15 2026.</p>
+      </section>
+
+    </div><!-- /main-inner -->
+  </main><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var meta = document.getElementById('meta-theme');
+  var icoEl = document.getElementById('theme-ico');
+  var themeBtn = document.getElementById('theme-toggle');
+  var sidebarBtn = document.getElementById('sidebar-toggle');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  var shell = document.getElementById('shell');
+
+  // ----- Theme persistence -----
+  try {
+    var saved = localStorage.getItem('breakneck.theme');
+    if (saved === 'light' || saved === 'dark') {
+      root.setAttribute('data-theme', saved);
+      if (saved === 'light') {
+        // remove inline dark on html so cream renders cleanly
+        root.style.background = '';
+        root.style.color = '';
+      }
+    }
+  } catch(e) {}
+
+  var SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 3v1.5M12 19.5V21M3 12h1.5M19.5 12H21M5.6 5.6l1.1 1.1M17.3 17.3l1.1 1.1M5.6 18.4l1.1-1.1M17.3 6.7l1.1-1.1"/>';
+  var MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+
+  function paintTheme(){
+    var t = root.getAttribute('data-theme') || 'dark';
+    if (t === 'light') {
+      icoEl.innerHTML = MOON; // light mode shows moon (switch-to-dark)
+      themeBtn.setAttribute('aria-label','Switch to dark theme');
+      meta.setAttribute('content','#f5efe2');
+    } else {
+      icoEl.innerHTML = SUN;  // dark mode shows sun (switch-to-light)
+      themeBtn.setAttribute('aria-label','Switch to light theme');
+      meta.setAttribute('content','#15130f');
+    }
+  }
+  paintTheme();
+
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') || 'dark';
+    var next = current === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    if (next === 'light') {
+      root.style.background = '';
+      root.style.color = '';
+    } else {
+      // restore inline dark protection
+      root.style.background = '#15130f';
+      root.style.color = '#ece6d8';
+    }
+    try { localStorage.setItem('breakneck.theme', next); } catch(e){}
+    paintTheme();
+  });
+
+  // ----- Sidebar persistence -----
+  function isDesktop(){ return window.matchMedia('(min-width:1024px)').matches; }
+  try {
+    var collapsed = localStorage.getItem('breakneck.sidebar.collapsed');
+    if (collapsed === '1' && isDesktop()) {
+      shell.classList.add('sidebar-collapsed');
+    }
+  } catch(e){}
+
+  function openMobile(){
+    sidebar.classList.add('open');
+    overlay.classList.add('show');
+  }
+  function closeMobile(){
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+
+  sidebarBtn.addEventListener('click', function(){
+    if (isDesktop()) {
+      shell.classList.toggle('sidebar-collapsed');
+      try { localStorage.setItem('breakneck.sidebar.collapsed', shell.classList.contains('sidebar-collapsed') ? '1' : '0'); } catch(e){}
+    } else {
+      if (sidebar.classList.contains('open')) closeMobile(); else openMobile();
+    }
+  });
+  overlay.addEventListener('click', closeMobile);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && sidebar.classList.contains('open')) closeMobile();
+  });
+
+  // ----- In-document scrolling via data-target -----
+  var navLinks = document.querySelectorAll('.sidebar nav a[data-target]');
+  navLinks.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = a.getAttribute('data-target');
+      var el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+        if (!isDesktop()) closeMobile();
+      }
+    });
+  });
+
+  // ----- Active nav highlight via IntersectionObserver -----
+  var sections = Array.from(document.querySelectorAll('section[id]'));
+  var idToLink = {};
+  navLinks.forEach(function(a){ idToLink[a.getAttribute('data-target')] = a; });
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var id = entry.target.id;
+        var link = idToLink[id];
+        if (!link) return;
+        if (entry.isIntersecting) {
+          navLinks.forEach(function(a){ a.classList.remove('active'); });
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+    sections.forEach(function(s){ io.observe(s); });
+  }
+
+  // Resize handler — close mobile drawer on jump to desktop
+  window.addEventListener('resize', function(){
+    if (isDesktop() && sidebar.classList.contains('open')) {
+      closeMobile();
+    }
+  });
+})();
+</script>
+</body>
+</html>
