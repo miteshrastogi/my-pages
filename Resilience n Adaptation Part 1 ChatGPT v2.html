@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="color-scheme" content="dark light" />
+<meta name="theme-color" content="#0e1116" id="metaTheme" />
+<title>Resilience &amp; Adaptation — chapter summaries by topic</title>
+<script>
+  (function(){
+    try {
+      var t = localStorage.getItem('ra_theme');
+      if (t === "light") {
+        document.documentElement.setAttribute('data-theme','light');
+        document.documentElement.style.background = '#f5efe2';
+        var m = document.getElementById('metaTheme'); if (m) m.setAttribute('content','#f5efe2');
+      } else {
+        document.documentElement.setAttribute('data-theme','dark');
+        document.documentElement.style.background = '#0e1116';
+      }
+    } catch(e){}
+  })();
+</script>
+<style>
+
+  /* ---------- Reset & base ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { background: #0e1116; }
+  html:not([data-theme="light"]) { background: #0e1116; color-scheme: dark; }
+  html[data-theme="light"] { background: #f5efe2; color-scheme: light; }
+  body { margin: 0; font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+
+  /* ---------- Theme variables ---------- */
+  :root {
+    --bg:        #0e1116;
+    --bg-2:      #161b22;
+    --bg-card:   #181d25;
+    --bg-elev:   #1f2630;
+    --text:      #e6e1d3;
+    --text-dim:  #a8a294;
+    --rule:      #2a323d;
+    --accent:    #c9a96a;
+    --accent-2:  #6fbf91;
+    --link:      #d8b97a;
+    --code-bg:   #0a0d12;
+    --quote-bd:  #c9a96a;
+    --shadow:    0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.28);
+    --tier-green:  #2f8a45;
+    --tier-green-bg: rgba(47,138,69,.14);
+    --tier-amber:  #d49b22;
+    --tier-amber-bg: rgba(212,155,34,.14);
+    --tier-red:    #c54330;
+    --tier-red-bg: rgba(197,67,48,.14);
+  }
+  html[data-theme="light"] {
+    --bg:        #f5efe2;
+    --bg-2:      #ece3cf;
+    --bg-card:   #fbf6e9;
+    --bg-elev:   #fffaee;
+    --text:      #1c1a14;
+    --text-dim:  #57523f;
+    --rule:      #d8cfb8;
+    --accent:    #7a5418;
+    --accent-2:  #2f6f4a;
+    --link:      #7a5418;
+    --code-bg:   #efe7d2;
+    --quote-bd:  #7a5418;
+    --shadow:    0 1px 2px rgba(60,40,10,.06), 0 6px 20px rgba(60,40,10,.10);
+    --tier-green:  #1f6b31;
+    --tier-green-bg: rgba(31,107,49,.10);
+    --tier-amber:  #a37514;
+    --tier-amber-bg: rgba(163,117,20,.10);
+    --tier-red:    #9b2c1c;
+    --tier-red-bg: rgba(155,44,28,.10);
+  }
+  body { background: var(--bg); color: var(--text); }
+
+  /* ---------- Layout ---------- */
+  .layout { display: block; min-height: 100vh; }
+  .sidebar {
+    position: fixed; inset: 0 auto 0 0;
+    width: 304px; height: 100dvh; height: 100vh;
+    background: var(--bg-2); border-right: 1px solid var(--rule);
+    transform: translateX(-100%); transition: transform .25s ease;
+    z-index: 60; overflow-y: auto;
+    padding: calc(env(safe-area-inset-top) + 64px) 20px calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 20px);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar .eyebrow {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--text-dim); margin: 0 0 18px;
+  }
+  .sidebar nav { display: flex; flex-direction: column; gap: 2px; }
+  .sidebar nav a {
+    display: block; padding: 9px 10px; border-radius: 8px;
+    color: var(--text); text-decoration: none;
+    font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px;
+    line-height: 1.3;
+  }
+  .sidebar nav a:hover { background: var(--bg-elev); color: var(--accent); }
+  .sidebar nav .grp {
+    margin-top: 18px; margin-bottom: 4px; padding: 0 10px;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 55; }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+  .controls-left { position: fixed; top: calc(env(safe-area-inset-top) + 14px); left: calc(env(safe-area-inset-left) + 14px); z-index: 70; display: flex; gap: 8px; }
+  .controls-right { position: fixed; top: calc(env(safe-area-inset-top) + 14px); right: calc(env(safe-area-inset-right) + 14px); z-index: 70; display: flex; gap: 8px; }
+  .ctrl { width: 40px; height: 40px; border-radius: 10px; background: var(--bg-elev); border: 1px solid var(--rule); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: var(--shadow); }
+  .ctrl:hover { color: var(--accent); }
+  .ctrl svg { width: 18px; height: 18px; }
+  .ctrl .icon-sun, .ctrl .icon-moon { display: none; }
+  html[data-theme="light"] .ctrl .icon-moon { display: inline; }
+  html:not([data-theme="light"]) .ctrl .icon-sun { display: inline; }
+  .main { padding: calc(env(safe-area-inset-top) + 76px) 22px 80px; max-width: 760px; margin: 0 auto; }
+
+  @media (min-width: 1024px) {
+    .sidebar { transform: translateX(0); position: sticky; top: 0; height: 100vh; height: 100dvh; padding-top: 88px; }
+    .layout { display: grid; grid-template-columns: 304px 1fr; }
+    .layout.sb-collapsed { grid-template-columns: 0 1fr; }
+    .layout.sb-collapsed .sidebar { transform: translateX(-100%); pointer-events: none; }
+    .overlay { display: none !important; }
+    .main { margin-left: auto; margin-right: auto; max-width: 960px; padding: 96px 48px 120px; }
+  }
+  @media (max-width: 520px) {
+    .main { padding: calc(env(safe-area-inset-top) + 70px) 16px 60px; font-size: 15.5px; }
+    .card { padding: 18px 16px; border-radius: 16px; }
+    h1.cover-title { font-size: clamp(28px, 8vw, 40px) !important; }
+    .corpus-map td, .corpus-map th, .source-log td, .source-log th { padding: 8px 6px; font-size: 12.5px; }
+    .meta-chip { font-size: 10.5px; padding: 4px 9px; }
+  }
+  @media (max-height: 540px) and (orientation: landscape) {
+    .sidebar { padding-top: calc(env(safe-area-inset-top) + 50px); }
+    .sidebar nav a { padding: 6px 10px; font-size: 13px; }
+    .sidebar .grp { margin-top: 10px; }
+  }
+
+  /* ---------- Typography ---------- */
+  h1, h2, h3, h4 { font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif; color: var(--text); line-height: 1.18; letter-spacing: -.01em; }
+  h2 { font-size: clamp(24px, 3.6vw, 32px); margin: 0 0 14px; }
+  h3 { font-size: clamp(18px, 2.6vw, 22px); margin: 26px 0 10px; color: var(--text); }
+  h4 { font-size: 15px; margin: 18px 0 8px; color: var(--accent); font-family: ui-sans-serif, system-ui, sans-serif; letter-spacing: .02em; }
+  p { margin: 0 0 14px; }
+  ul { margin: 0 0 16px 20px; padding: 0; }
+  li { margin-bottom: 8px; }
+  a { color: var(--link); }
+  .lede { font-size: 1.07em; color: var(--text-dim); }
+
+  /* ---------- Cover ---------- */
+  .cover { text-align: left; padding: 8px 0 30px; border-bottom: 1px solid var(--rule); margin-bottom: 36px; }
+  .cover-eyebrow { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; }
+  h1.cover-title { font-size: clamp(34px, 5.5vw, 52px); margin: 0 0 14px; letter-spacing: -.015em; line-height: 1.05; }
+  .cover-sub { color: var(--text-dim); font-size: 1.05em; margin: 0 0 22px; max-width: 70ch; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+  .meta-chip { display: inline-block; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11.5px; letter-spacing: .04em; background: transparent; }
+
+  /* ---------- Cards / sections ---------- */
+  .card { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 22px; padding: 28px 28px; box-shadow: var(--shadow); margin-bottom: 28px; }
+  .card-eyebrow { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--text-dim); margin: 0 0 6px; }
+  .readseq { background: var(--bg-elev); border: 1px solid var(--rule); border-radius: 14px; padding: 12px 14px; margin: 14px 0 22px; font-size: .96rem; color: var(--text-dim); }
+  .readseq strong { color: var(--accent); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+  .chip { display: inline-block; font-family: ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-size: 11px; letter-spacing: .04em; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 2px 7px; border-radius: 999px; margin-left: 5px; }
+  .cite { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; font-weight: 700; text-decoration: none; color: var(--accent); background: var(--bg-elev); border: 1px solid var(--rule); border-radius: 999px; padding: 2px 7px; white-space: nowrap; }
+  .cite:hover { color: var(--text); border-color: var(--accent); }
+
+  /* ---------- Corpus map exhibit ---------- */
+  .table-wrap { overflow-x: auto; }
+  .corpus-map { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .corpus-map th, .corpus-map td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; font-size: 14px; }
+  .corpus-map th { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); font-weight: 600; }
+  .corpus-map td:first-child { font-weight: 600; color: var(--accent); }
+
+  /* ---------- Reader's rule ---------- */
+  .rule-box { margin-top: 22px; padding: 16px 18px; background: var(--bg-elev); border-left: 3px solid var(--accent); border-radius: 10px; }
+  .rule-box .rule-label { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .rule-box p { margin: 0; font-style: italic; }
+
+  /* ---------- Tier badges ---------- */
+  .tier { display: inline-block; padding: 2px 8px; border-radius: 4px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+  .tier-G { background: var(--tier-green-bg); color: var(--tier-green); border: 1px solid var(--tier-green); }
+  .tier-Y { background: var(--tier-amber-bg); color: var(--tier-amber); border: 1px solid var(--tier-amber); }
+  .tier-R { background: var(--tier-red-bg);   color: var(--tier-red);   border: 1px solid var(--tier-red); }
+
+  /* ---------- Source log table ---------- */
+  .source-log { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 12px; }
+  .source-log th, .source-log td { padding: 10px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; text-align: left; }
+  .source-log th { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); font-weight: 600; }
+  .source-log .sid { display:inline-flex; width: 42px; height: 42px; align-items:center; justify-content:center; border-radius: 12px; background: var(--bg-elev); color: var(--accent); border: 1px solid var(--rule); font-family: ui-sans-serif, system-ui, sans-serif; font-weight: 800; }
+  .source-log .source-title { color: var(--text); font-weight: 700; }
+  .source-log .source-meta { color: var(--text-dim); font-size: 13px; margin-top: 3px; }
+
+  blockquote { margin: 18px 0; padding: 10px 18px; border-left: 3px solid var(--quote-bd); color: var(--text-dim); font-style: italic; }
+
+  /* ---------- Print pagination ---------- */
+  @media print {
+    @page { size: A4; margin: 1.8cm 1.8cm 2.2cm; @bottom-center { content: counter(page); font-family: serif; font-size: 10pt; color: #555; } }
+    html, body { background: #fff !important; color: #000 !important; }
+    body, p, li, td, th, .cover-sub, .lede, .card, .readseq, .rule-box, .source-log .source-meta { color: #000 !important; }
+    h1, h2, h3, h4, .cover-title, .source-log .source-title { color: #111 !important; }
+    .cover-eyebrow, .card-eyebrow, .sidebar .eyebrow, .source-log th, .corpus-map th { color: #555 !important; }
+    .controls-left, .controls-right, .sidebar, .overlay { display: none !important; }
+    .main { max-width: none; padding: 0; margin: 0; }
+    .cover { border-bottom-color: #777 !important; }
+    .card, .readseq, .rule-box { background: #fff !important; box-shadow: none; border-color: #ccc !important; }
+    .card { border: 1px solid #ccc; break-inside: auto; page-break-inside: auto; }
+    .rule-box { border-left: 3px solid #555 !important; }
+    .rule-box .rule-label, .readseq strong { color: #333 !important; }
+    .rule-box, .chip-row, .corpus-map thead, .source-log thead, .readseq { break-inside: avoid; page-break-inside: avoid; }
+    .meta-chip, .chip, .cite { border-color: #555 !important; color: #333 !important; background: transparent !important; }
+    h2, h3 { break-after: avoid; }
+    a { color: #333; text-decoration: none; }
+    .tier-G { background: #e9f3ec !important; color: #1f6b31 !important; border-color: #1f6b31 !important; }
+    .tier-Y { background: #fbf2dc !important; color: #a37514 !important; border-color: #a37514 !important; }
+    .tier-R { background: #f6e4e0 !important; color: #9b2c1c !important; border-color: #9b2c1c !important; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="controls-left">
+  <button class="ctrl" id="sbToggle" aria-label="Toggle navigation sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+  </button>
+</div>
+<div class="controls-right">
+  <button class="ctrl" id="themeToggle" aria-label="Toggle color theme">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="6.92" y2="6.92"/><line x1="17.08" y1="17.08" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="6.92" y2="17.08"/><line x1="17.08" y1="6.92" x2="19.07" y2="4.93"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="layout" id="layout">
+
+<aside class="sidebar" id="sidebar">
+  <div class="eyebrow">May 18 2026, 10:52pm GMT</div>
+  <nav>
+    <a href="#" data-target="cover">Cover</a>
+    <a href="#" data-target="how-to-read">How to read</a>
+    <a href="#" data-target="corpus">Corpus map</a>
+    <div class="grp">Chapters</div>
+    <a href="#" data-target="ch1">1 · The adaptation gap</a>
+    <a href="#" data-target="ch2">2 · A vocabulary for resilience</a>
+    <a href="#" data-target="ch3">3 · How resilience is measured</a>
+    <a href="#" data-target="ch4">4 · The economics of resilience</a>
+    <a href="#" data-target="ch5">5 · Incentives</a>
+    <a href="#" data-target="ch6">6 · Housing, insurability and the true monthly cost of shelter</a>
+    <a href="#" data-target="ch7">7 · Adaptation portfolios</a>
+    <a href="#" data-target="ch8">8 · Flood and sea-level rise</a>
+    <a href="#" data-target="ch9">9 · Who pays for adaptation</a>
+    <a href="#" data-target="ch10">10 · Data, AI and actuarial practice</a>
+    <a href="#" data-target="ch11">11 · The implementation playbook</a>
+    <div class="grp">Apparatus</div>
+    <a href="#" data-target="method">Method and evidence weight</a>
+    <a href="#" data-target="log">Source log</a>
+  </nav>
+</aside>
+
+<main class="main">
+
+  <section id="cover" class="cover">
+    <div class="cover-eyebrow">Synthetic reader · multi-source resilience archive</div>
+    <h1 class="cover-title">Resilience &amp; Adaptation</h1>
+    <p class="cover-sub">Chapter summaries by topic, arranged as if the archive were one multi-author book: starting with the adaptation gap, then moving through measurement, economics, incentives, housing, flood pathways, finance, data and implementation.</p>
+    <div class="chip-row">
+      <span class="meta-chip">13 PDFs from supplied zip</span>
+      <span class="meta-chip">11 topic chapters</span>
+      <span class="meta-chip">resilience · adaptation · finance</span>
+      <span class="meta-chip"><span class="tier tier-G">GREEN</span> full text · <span class="tier tier-Y">YELLOW</span> long-report scope</span>
+      <span class="meta-chip">Source IDs + PDF pages</span>
+    </div>
+  </section>
+
+  <section id="how-to-read" class="card">
+    <div class="card-eyebrow">Orientation</div>
+    <h2>How to read this synthesis</h2>
+    
+
+<p>This is not a replacement for the PDFs. It is a guided companion for an uninitiated reader who wants the conceptual benefit of reading one coherent book assembled from the archive. Each chapter summary identifies the best source sequence, then synthesizes what the sources contribute to that topic.</p>
+<p>Evidence weight is deliberately uneven. The World Bank methodology and IAA paper are treated as formal frameworks; NIBS, SOA sea-level and McKinsey are treated as substantive analytical reports; the SOA prize essays are used for conceptual illustration; the two SOA calls for essays are used as agenda-setting context, not as evidence of empirical results.</p>
+<div class="badges"><span class="meta-chip">GREEN: full text available</span><span class="meta-chip">YELLOW: long-report selective read</span><span class="meta-chip">Internal page citations</span><span class="meta-chip">No external web verification</span></div>
+
+  </section>
+
+  <section id="corpus" class="card">
+    <div class="card-eyebrow">Corpus map · what each chapter helps you understand</div>
+    <h2>What each chapter does for you</h2>
+    <p>The reader is arranged as a teachable sequence: first the adaptation gap, then vocabulary, measurement, economics, incentives, sector applications, financing, data and implementation.</p>
+    <div class="table-wrap">
+    <table class="corpus-map">
+      <thead><tr><th>If you want to understand…</th><th>Read</th><th>Primary source sequence</th></tr></thead>
+      <tbody>
+        <tr><td>Why resilience belongs at the front of economic planning</td><td>Ch 1</td><td>S06, S05, S12, S11, S07</td></tr>
+<tr><td>What the core terms mean before ratings and finance appear</td><td>Ch 2</td><td>S06, S09, S03, S12</td></tr>
+<tr><td>How resilience is rated, measured and evidenced</td><td>Ch 3</td><td>S09, S03, S10, S06</td></tr>
+<tr><td>How benefit-cost, avoided loss and option value change decisions</td><td>Ch 4</td><td>S07, S11, S02, S13</td></tr>
+<tr><td>Which incentives move resilience from aspiration to adoption</td><td>Ch 5</td><td>S08, S04, S06, S12</td></tr>
+<tr><td>How resilience, insurance, energy and housing affordability interact</td><td>Ch 6</td><td>S04, S08, S07, S06</td></tr>
+<tr><td>How to build adaptation portfolios instead of single-solution lists</td><td>Ch 7</td><td>S12, S07, S11, S09</td></tr>
+<tr><td>How flood and sea-level-rise decisions become staged pathways</td><td>Ch 8</td><td>S13, S02, S12, S09</td></tr>
+<tr><td>Who pays, who benefits and how private capital fits</td><td>Ch 9</td><td>S12, S03, S09, S06, S08</td></tr>
+<tr><td>How AI, data and actuarial models support decision rules</td><td>Ch 10</td><td>S01, S02, S06, S13, S10</td></tr>
+<tr><td>How the whole implementation cycle fits together</td><td>Ch 11</td><td>S09, S06, S08, S12, S13</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>Read the archive as one decision cycle: define the risk, identify who is exposed, choose interventions, test residual risk, finance implementation, and monitor whether resilience actually improves.</p>
+    </div>
+  </section>
+
+  <section id="ch1" class="card">
+    <div class="card-eyebrow">Chapter 1</div>
+    <h2>The adaptation gap: why resilience is now a first-order economic problem</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S06</span><span class="chip">S05</span><span class="chip">S12</span><span class="chip">S11</span><span class="chip">S07</span></div>
+    
+<p>The cleanest opening chapter begins with the IAA’s framing: mitigation reduces the source of future climate change, adaptation reduces the damage from climate already underway or expected, and loss recovery deals with what remains. The IAA places adaptation between mitigation and disaster recovery as the second line of defense; this matters because it changes the reader’s mental model from “respond after disaster” to “design systems so the same hazard produces less loss.” <a class="cite" data-target="source-s06" href="#" title="IAA three-lines-of-defense framing and adaptation definition">S06, pp. 7-8</a></p>
+<p>The central problem is an implementation gap. The IAA says adaptation progress has been slow, siloed and incremental relative to the level likely to be needed under warming, while adaptation itself is not a one-time project but a continuing risk-management process. That gives the book its spine: resilience is not a product category; it is a governance cycle of exposure identification, vulnerability analysis, financing, implementation and monitoring. <a class="cite" data-target="source-s06" href="#" title="IAA executive summary and purpose">S06, pp. 5-6</a></p>
+<p>The SOA call for essays is useful here not as evidence of a method but as a professional prompt: before launching an adaptation initiative, decision-makers are asked to estimate direct costs, offsetting savings and impacts on the target population, and after implementation to assess performance against expectations. That sequence foreshadows the measurement, valuation and governance chapters that follow. <a class="cite" data-target="source-s05" href="#" title="SOA call identifies ex ante and ex post evaluation questions">S05, p. 1</a></p>
+<p>McKinsey’s recent synthesis broadens the frame from professional practice to macroeconomic exposure. It treats adaptation as a portfolio problem under climate volatility: physical risks are local, adaptation levers are sector-specific, and the payer is often not the same actor who receives the full benefit. That split between who pays and who benefits explains why adaptation often underdelivers even where the benefit-cost logic is strong. <a class="cite" data-target="source-s12" href="#" title="McKinsey pages on adaptation portfolio and payment questions">S12, pp. 20-23</a></p>
+<p>The empirical anchor for the chapter is the mitigation literature. NIBS reports that federal hazard-mitigation grants, modern building codes and private-sector building retrofits each produce benefits greater than costs, with headline national benefit-cost ratios that become recurring evidence in later chapters. The reader should not treat these ratios as universal constants; they are averages over modeled hazards, geographies and measures. Their value is pedagogical: they prove that resilience can be priced, compared and financed rather than merely praised. <a class="cite" data-target="source-s07" href="#" title="NIBS executive findings and benefit-cost summary">S07, pp. 39-43</a></p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>open the book by separating three questions: What risk is changing? Who is exposed? Which intervention reduces damage at a cost worth paying?</p>
+    </div>
+  </section>
+  <section id="ch2" class="card">
+    <div class="card-eyebrow">Chapter 2</div>
+    <h2>A vocabulary for resilience: exposure, vulnerability, adaptive capacity and maladaptation</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S06</span><span class="chip">S09</span><span class="chip">S03</span><span class="chip">S12</span></div>
+    
+<p>The second chapter should slow down and define the terrain. The IAA warns that climate terms such as exposure and sensitivity do not always map neatly onto ordinary actuarial usage, so readers need a shared vocabulary before they can interpret ratings, benefit-cost ratios or insurance signals. Its framework makes adaptation an adjustment to actual or expected climate effects and emphasizes that future outcomes are uncertain at the heart of the problem. <a class="cite" data-target="source-s06" href="#" title="IAA purpose, glossary warning, adaptation definition">S06, pp. 6-7</a></p>
+<p>The World Bank’s Resilience Rating System then supplies a crucial distinction: <em>resilience of the project</em> is the confidence that the project itself will perform despite climate and disaster risk; <em>resilience through the project</em> is the project’s contribution to the resilience of people, networks, systems or economies. A road designed to survive floods is one kind of resilience; a transport project that changes zoning, evacuation capacity or institutional rules is another. <a class="cite" data-target="source-s09" href="#" title="World Bank distinction between resilience of and through a project">S09, pp. 10-15</a></p>
+<p>This distinction prevents a common novice error: assuming that a “resilience project” is automatically resilient, or that a climate-resilient asset automatically improves community resilience. The World Bank explicitly says a high “resilience of the project” rating does not mean a project has no climate risk; it means those risks have been assessed, managed and found not to threaten viability or value. <a class="cite" data-target="source-s09" href="#" title="World Bank explanation of high project-resilience rating">S09, pp. 11-12</a></p>
+<p>ARIC’s investor framework adds the impact-investing language needed for private capital: adaptation and resilience investments should be assessed by the benefits they confer to people, planet and the economy, using impact pathways and the Five Dimensions of Impact—what, who, how much, contribution and risk. That gives the uninitiated reader a bridge from climate science to investment memos. <a class="cite" data-target="source-s03" href="#" title="ARIC executive summary and five dimensions">S03, p. 9</a></p>
+<p>The chapter should end with maladaptation. The World Bank warns that all projects should manage climate risk and prevent maladaptation, while McKinsey’s portfolio perspective implies that a poorly sequenced or poorly located intervention can lock in exposure or shift costs to others. The novice reader learns that adaptation is not synonymous with “doing something”; the wrong something can harden vulnerability. <a class="cite" data-target="source-s09" href="#" title="World Bank overview noting all projects should manage risk and prevent maladaptation">S09, p. 10</a> <a class="cite" data-target="source-s12" href="#" title="McKinsey adaptation portfolio discussion">S12, pp. 36-42</a></p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>ask for every intervention: Is it resilient <em>of itself</em>, resilient <em>through its effects</em>, both, or neither?</p>
+    </div>
+  </section>
+  <section id="ch3" class="card">
+    <div class="card-eyebrow">Chapter 3</div>
+    <h2>How resilience is measured: ratings, metrics and evidence thresholds</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S09</span><span class="chip">S03</span><span class="chip">S10</span><span class="chip">S06</span></div>
+    
+<p>This chapter is the technical hinge of the book. The World Bank’s rating methodology gives the reader a ladder. For resilience of the project, a C rating begins with basic climate and disaster risk screening; B requires multi-model risk assessment and consideration of adaptation options; A requires economic or financial stress testing of residual risks; and a plus rating adds systematic uncertainty exploration or contingent planning. <a class="cite" data-target="source-s09" href="#" title="World Bank project-resilience rating levels">S09, pp. 11-13</a></p>
+<p>For resilience through the project, the World Bank uses a parallel but different ladder. C captures broad development benefits such as poverty reduction or improved services; B requires targeted resilience-building activities that reduce identified vulnerabilities; A is transformational, affecting institutions, policies, incentives, capacities or systems; and a plus rating requires at least one climate or disaster indicator embedded in monitoring. <a class="cite" data-target="source-s09" href="#" title="World Bank resilience-through-project rating levels">S09, pp. 14-17</a></p>
+<p>ARIC complements the rating ladder with an investor measurement model. It argues that private investors lack the same clarity on adaptation finance that exists for mitigation finance, and therefore need a practical way to define qualifying investments, assess the impact pathway, and report outcomes. Its metric logic separates output-level scale from outcome-level depth and warns that aggregation is easier for some metrics than others. <a class="cite" data-target="source-s03" href="#" title="ARIC problem statement and measurement blueprint">S03, p. 9</a> <a class="cite" data-target="source-s03" href="#" title="ARIC aggregation cautions for people, planet and economy metrics">S03, pp. 28-30</a></p>
+<p>One important exposition choice is to put ratings before metrics. Ratings tell a decision-maker how much confidence to place in the climate-risk analysis of a project. Metrics then tell the investor, lender or public agency what changed because of the intervention. A C-rated project with many impressive outputs may still be vulnerable if residual risk is not stress-tested. Conversely, a high-quality stress test without outcome indicators may prove viability but not public benefit.</p>
+<p>The SOA’s risk-management call reinforces the professional agenda: actuaries and risk managers are being asked to integrate climate risks into identifying, quantifying, reporting and managing financial impacts. The IAA supplies the reason: more extensive adaptation-related data and information are preconditions for better decisions and disclosures. <a class="cite" data-target="source-s10" href="#" title="SOA risk-management call agenda">S10, p. 1</a> <a class="cite" data-target="source-s06" href="#" title="IAA conclusion on data, information and risk management">S06, pp. 38-39</a></p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>distinguish <em>assessment quality</em> from <em>outcome impact</em>. A resilience report should show both.</p>
+    </div>
+  </section>
+  <section id="ch4" class="card">
+    <div class="card-eyebrow">Chapter 4</div>
+    <h2>The economics of resilience: benefit-cost, avoided loss and the value of waiting</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S07</span><span class="chip">S11</span><span class="chip">S02</span><span class="chip">S13</span></div>
+    
+<p>The fourth chapter should be where resilience stops sounding aspirational and becomes economic. NIBS reports national average benefit-cost ratios for several mitigation classes, including federal mitigation grants, adopting up-to-date model building codes and private-sector building retrofits. The safest exposition is to teach these as modeled averages that vary by hazard and measure, not as promises for every project. <a class="cite" data-target="source-s07" href="#" title="NIBS national benefit-cost findings">S07, pp. 39-43</a></p>
+<p>The Chamber/Allstate report translates a similar idea into a public-facing preparedness argument: investment before disaster can reduce later property damage, economic disruption and job loss. Its highest value in the book is not a new theory but a communication bridge for civic and business audiences—preparedness produces returns because it avoids both physical losses and cascading local-economic losses. <a class="cite" data-target="source-s11" href="#" title="Preparedness Payoff summary findings and state/city analysis">S11, pp. 4-12</a></p>
+<p>Hu’s real-options essay then corrects the simplest benefit-cost story. Traditional DCF asks whether expected discounted benefits exceed costs today; real option theory asks whether decision flexibility—deferring, staging, expanding, contracting or abandoning—has value under uncertainty. This is indispensable for climate adaptation because risk evolves, information improves, and many measures are at least partly irreversible. <a class="cite" data-target="source-s02" href="#" title="Hu on limits of DCF and real option framing">S02, pp. 1-3</a></p>
+<p>The SOA sea-level-rise report provides the deeper actuarial version. It models high-water marks, insurance premium reductions, loss curves and real options to estimate when flood-proofing, dikes or barriers become worth implementing. In its NYC analysis, the barrier/dike project has negative NPV without climate change but positive NPV under climate-change and exposure-growth scenarios; optionality changes the timing and value of action. <a class="cite" data-target="source-s13" href="#" title="SOA sea-level report methodology and NYC barrier/dike results">S13, pp. 43-56</a></p>
+<p>The key lesson is that benefit-cost and real-options methods are not rivals. Benefit-cost analysis tells whether an intervention is socially or economically worthwhile under assumptions. Real-options analysis tells whether to act now, stage the intervention, or preserve flexibility until a trigger is reached. For an uninitiated reader, this is the moment when “adaptation pathway” becomes a finance concept rather than a planning slogan.</p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>use benefit-cost for “is this worth doing?” and real options for “when and in what sequence should we do it?”</p>
+    </div>
+  </section>
+  <section id="ch5" class="card">
+    <div class="card-eyebrow">Chapter 5</div>
+    <h2>Incentives: why good resilience investments do not happen automatically</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S08</span><span class="chip">S04</span><span class="chip">S06</span><span class="chip">S11</span><span class="chip">S12</span></div>
+    
+<p>This chapter explains the market-failure machinery behind the adaptation gap. The NIBS roadmap is the right lead source because it treats pre-disaster resilience as a problem of incentives. Owners, developers, insurers, lenders, utilities, governments and occupants often face different time horizons and capture different portions of the benefit. Incentives must therefore be designed to align private decisions with public risk reduction. <a class="cite" data-target="source-s08" href="#" title="NIBS roadmap on incentivization and resilience planning">S08, pp. 8-15</a></p>
+<p>The housing action plan makes the incentive failure concrete. It argues that housing supply strategies often overlook long-term costs—insurance, disaster exposure, maintenance and utilities—even though these costs shape affordability and mortgage viability. It lists state and local levers such as density bonuses, tax abatements, expedited permitting, revolving funds, surplus land, utility programs and streamlined approvals for proven high-performance designs. <a class="cite" data-target="source-s04" href="#" title="Housing action plan summary and policy levers">S04, pp. 2-5</a></p>
+<p>The IAA adds insurance logic. Insurance can price risk, communicate risk and incentivize risk reduction through underwriting restrictions or premium discounts, but it can also reveal affordability and protection gaps. If insurance prices fully reflect rising risk without complementary adaptation finance, households and communities may face unaffordable coverage rather than safer assets. <a class="cite" data-target="source-s06" href="#" title="IAA on insurance as price signal and incentive mechanism">S06, p. 37</a></p>
+<p>The Chamber/Allstate report is useful here because it speaks to business and local-government coalitions: preparedness investment produces benefits beyond the avoided repair bill, including reduced economic disruption. That wider benefit pool is why public incentives are often justified; individual property owners may not capture all gains from a more resilient local economy. <a class="cite" data-target="source-s11" href="#" title="Preparedness Payoff discussion of resilience actions and economic effects">S11, pp. 20-24</a></p>
+<p>McKinsey closes the chapter by asking “who pays?” Its adaptation portfolio framing makes clear that adaptation measures differ by whether costs and benefits fall to private asset owners, public authorities, consumers, insurers or broader society. This is where the book should teach that financing design is part of resilience design, not an afterthought. <a class="cite" data-target="source-s12" href="#" title="McKinsey who-pays and financing discussion">S12, pp. 45-55</a></p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>every resilience measure needs a payer, a beneficiary, and a mechanism that connects the two.</p>
+    </div>
+  </section>
+  <section id="ch6" class="card">
+    <div class="card-eyebrow">Chapter 6</div>
+    <h2>Housing, insurability and the true monthly cost of shelter</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S04</span><span class="chip">S07</span><span class="chip">S08</span><span class="chip">S11</span></div>
+    
+<p>Housing deserves its own chapter because it is where climate risk enters household budgets. The housing action plan argues that affordability is not just rent or purchase price: insurance premiums, utility bills, repairs, disaster exposure and maintenance determine the real cost of occupying a home. That reframes resilient construction and retrofit as affordability infrastructure. <a class="cite" data-target="source-s04" href="#" title="Housing action plan on long-term housing costs">S04, pp. 2-4</a></p>
+<p>The same source connects building performance to mortgage and insurance markets. It warns that insurance availability can affect mortgage access and that insurance-market retreat can destabilize housing supply beyond the highest-risk neighborhoods. This should be presented carefully as the source’s policy argument, but it is essential for exposition: insurability is becoming a housing-supply constraint. <a class="cite" data-target="source-s04" href="#" title="Housing action plan on insurance, mortgage and supply constraints">S04, pp. 2-3</a></p>
+<p>NIBS supplies the technical-economic backbone. Its mitigation report supports the claim that modern codes and retrofits can produce benefits exceeding costs, with major avoided-loss categories across natural hazards. This is the evidence base behind the housing guide’s claim that resilient and energy-efficient construction can make sense over the life of the home. <a class="cite" data-target="source-s07" href="#" title="NIBS mitigation saves findings">S07, pp. 39-43</a></p>
+<p>The NIBS roadmap then translates that evidence into policy instruments: codes, grants, tax incentives, financial products, insurance incentives and disclosure tools. For the reader, this turns a housing-resilience chapter from “build stronger homes” into a layered program: avoid risky sites, require current codes, finance retrofits, stack utility and public funds, and reward verified risk reduction. <a class="cite" data-target="source-s08" href="#" title="NIBS roadmap incentive categories and stakeholder actions">S08, pp. 13-23</a></p>
+<p>The housing guide’s local examples—such as Philadelphia’s Built to Last and Phoenix repair/weatherization programs—show how program design matters. A single intake point, stacked funding, whole-home assessment and coordinated implementation reduce the burden on residents who otherwise cannot navigate fragmented programs. <a class="cite" data-target="source-s04" href="#" title="Housing action plan local retrofit examples and scaling lessons">S04, pp. 12-14</a></p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>define housing affordability as purchase/rent plus energy, insurance, maintenance, disaster recovery and health-protection costs.</p>
+    </div>
+  </section>
+  <section id="ch7" class="card">
+    <div class="card-eyebrow">Chapter 7</div>
+    <h2>Adaptation portfolios: matching hazards to measures</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S12</span><span class="chip">S07</span><span class="chip">S11</span><span class="chip">S09</span></div>
+    
+<p>After definitions, economics and incentives, the reader is ready for adaptation portfolios. McKinsey is the best organizing source because it surveys many levers—protective infrastructure, heat adaptation, water management, nature-based solutions, early warning, operational adaptation and relocation or land-use decisions—and asks which measures fit which hazards, locations and institutions. <a class="cite" data-target="source-s12" href="#" title="McKinsey adaptation levers and cases">S12, pp. 27-32</a></p>
+<p>NIBS helps keep the portfolio grounded in engineering and hazard categories. Its mitigation analysis spans building codes, retrofits, lifeline infrastructure and hazard-specific measures, reminding readers that resilience is not a single technology. A hurricane roof connection, seismic retrofit, flood elevation, wildfire defensible space and utility hardening are different interventions with different costs, beneficiaries and failure modes. <a class="cite" data-target="source-s07" href="#" title="NIBS mitigation categories and modeled benefits">S07, pp. 39-43</a></p>
+<p>The Chamber/Allstate report is valuable for community-scale exposition because it brings prepared places into view: mitigation is not only asset hardening but also the preservation of local economic activity after shocks. When readers understand this, they can see why business groups, chambers of commerce and municipal leaders care about resilience even when they do not own the damaged assets. <a class="cite" data-target="source-s11" href="#" title="Preparedness Payoff on resilience actions and broader economic benefits">S11, pp. 16-24</a></p>
+<p>The World Bank rating system should be used as the chapter’s discipline: each measure in the portfolio must show risk screening, option assessment, residual-risk stress testing and, where uncertainty is deep, contingent planning. A portfolio is not a shopping list; it is a set of measures whose performance is tested against plausible futures. <a class="cite" data-target="source-s09" href="#" title="World Bank project-resilience rating and stress-testing requirements">S09, pp. 11-13</a></p>
+<p>The most useful exposition sequence is hazard → exposure → vulnerability → intervention → residual risk → monitoring. That prevents the reader from leaping from a visible hazard, such as flooding, to a preferred solution, such as a wall, without asking whether land use, warning systems, drainage, insurance, nature-based measures, household retrofits or managed retreat would reduce risk more effectively.</p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>never teach an adaptation measure without naming the hazard, the exposed asset or population, and the residual risk after implementation.</p>
+    </div>
+  </section>
+  <section id="ch8" class="card">
+    <div class="card-eyebrow">Chapter 8</div>
+    <h2>Flood and sea-level rise: the case for pathways rather than one-shot decisions</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S13</span><span class="chip">S02</span><span class="chip">S12</span><span class="chip">S09</span></div>
+    
+<p>This is the book’s technical case study chapter. The SOA sea-level-rise report begins with a fundamental planning problem: coastal flood risk is driven by water-level distributions, exposure growth, loss curves, insurance pricing and uncertain sea-level trajectories. It builds a model that connects high-water marks to losses and uses insurance-premium reduction as a measure of adaptation benefit. <a class="cite" data-target="source-s13" href="#" title="SOA sea-level methodology: water levels, insurance and loss curves">S13, pp. 43-46</a></p>
+<p>The report’s NYC analysis is especially teachable. Barrier/dike investment, wet flood-proofing and investment sequences are compared under different sea-level-rise, exposure-growth and discount-rate assumptions. Flood-proofing can have positive NPV even when large protective infrastructure is not yet justified, but dynamic pathway analysis can still prefer waiting for or prioritizing a larger barrier/dike strategy depending on assumptions. <a class="cite" data-target="source-s13" href="#" title="SOA NYC results for barrier/dike, flood-proofing and dynamic pathways">S13, pp. 55-59</a></p>
+<p>Hu’s real-options essay gives the intuitive version: under uncertainty, a staged strategy can outperform a single all-at-once investment because it preserves the ability to expand if risk escalates and avoid unnecessary cost if it does not. This is the conceptual key that makes the sea-level report accessible to non-specialists. <a class="cite" data-target="source-s02" href="#" title="Hu examples and methods for staged real-option analysis">S02, pp. 6-8</a></p>
+<p>McKinsey’s report broadens the chapter from NYC to global adaptation cases, reinforcing that coastal defenses, early warning, land-use controls and nature-based buffers belong in a portfolio. The expensive visible measure is not always the first or only move. <a class="cite" data-target="source-s12" href="#" title="McKinsey coastal and portfolio adaptation discussion">S12, pp. 36-42</a></p>
+<p>The World Bank rating system provides the governance overlay: where climate uncertainty could make a project uneconomic under plausible futures, project documents should expose those failure scenarios and explain why residual risk is acceptable or how contingent plans will respond. That is the practical meaning of “adaptive pathways.” <a class="cite" data-target="source-s09" href="#" title="World Bank stress testing and contingent planning">S09, pp. 11-13</a></p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>for sea-level rise, ask not “wall or no wall?” but “what trigger, sequence and fallback plan?”</p>
+    </div>
+  </section>
+  <section id="ch9" class="card">
+    <div class="card-eyebrow">Chapter 9</div>
+    <h2>Who pays for adaptation: public finance, private capital and blended incentives</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S12</span><span class="chip">S03</span><span class="chip">S09</span><span class="chip">S06</span><span class="chip">S08</span></div>
+    
+<p>This chapter should begin with McKinsey’s financing question. Adaptation measures can protect private assets, public infrastructure, households, supply chains, ecosystems or entire local economies, but the payer and beneficiary often diverge. That divergence is a core reason adaptation finance lags need: social value may be larger than private cash flow. <a class="cite" data-target="source-s12" href="#" title="McKinsey who-pays and financing discussion">S12, pp. 45-55</a></p>
+<p>ARIC gives private investors a way to participate without greenwashing. It argues that private adaptation and resilience investment needs clearer definitions and measurable impact pathways, then proposes metrics across people, planet and economy. This chapter should teach investors to document not just capital deployed but the resilience outcome supported by the investment. <a class="cite" data-target="source-s03" href="#" title="ARIC executive summary on private A&amp;R finance and metrics">S03, p. 9</a> <a class="cite" data-target="source-s03" href="#" title="ARIC metric aggregation limits">S03, pp. 28-30</a></p>
+<p>The World Bank RRS is useful for development finance and project finance because it converts climate-risk quality into a rating-like language. It can support portfolio steering: projects should be resilient of themselves, and some projects should also build resilience through their outcomes. <a class="cite" data-target="source-s09" href="#" title="World Bank two-dimensional rating overview">S09, pp. 10-17</a></p>
+<p>The IAA adds a public-policy point: adaptation costs and benefits can fall to different stakeholders over different time horizons, and public-private partnerships can share finance, capabilities and risk. Actuaries can help quantify direct and indirect costs and benefits, uncertainty and time profiles. <a class="cite" data-target="source-s06" href="#" title="IAA on stakeholder split, PPPs and actuarial role">S06, p. 37</a></p>
+<p>NIBS’s roadmap then turns the financing chapter into an implementation menu: grants, loans, tax incentives, insurance incentives, code adoption, disclosure, and public-private coordination. The most important synthesis is that finance alone is not enough; finance has to be tied to verified risk reduction, otherwise it may subsidize exposure rather than resilience. <a class="cite" data-target="source-s08" href="#" title="NIBS roadmap on incentive mechanisms">S08, pp. 13-23</a></p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>adaptation finance needs two ledgers: cash-flow return to the payer and avoided-loss/social return to the system.</p>
+    </div>
+  </section>
+  <section id="ch10" class="card">
+    <div class="card-eyebrow">Chapter 10</div>
+    <h2>Data, AI and actuarial practice: from risk maps to decision rules</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S01</span><span class="chip">S02</span><span class="chip">S06</span><span class="chip">S13</span><span class="chip">S10</span></div>
+    
+<p>The AI chapter should be disciplined. Atetwe’s SOA essay proposes a three-stage framework: risk identification, program selection and quantitative evaluation. It uses XGBoost and actuarial evaluation as an illustrative architecture for mapping risk, ranking interventions and estimating outcomes such as ROI or risk reduction. Because the essay labels its Dhaka case study and performance figures as illustrative rather than observed, the book should treat them as design examples, not empirical findings. <a class="cite" data-target="source-s01" href="#" title="Atetwe framework and illustrative caveat">S01, pp. 2-4</a></p>
+<p>Hu supplies the actuarial valuation layer: stochastic scenarios, decision trees, binomial lattices, Monte Carlo simulation and dynamic programming can help value staged adaptation. This is where machine-learning prediction meets actuarial decision analysis. A risk map says where losses may occur; a real-options model says what to do, when to do it and how much flexibility is worth. <a class="cite" data-target="source-s02" href="#" title="Hu on actuarial modeling methods for real options">S02, pp. 7-8</a></p>
+<p>The IAA keeps the chapter anchored in governance. Climate adaptation decisions are made under uncertainty, so actuaries can add value by communicating uncertainty, applying scenario analysis and linking risk management to insurance, pensions, investments, social security and disclosure. <a class="cite" data-target="source-s06" href="#" title="IAA executive summary on actuarial roles and uncertainty">S06, pp. 5-6</a></p>
+<p>The sea-level-rise report is the example of model architecture done rigorously: it links physical hazard distributions, loss curves, premium reductions and option valuation. The AI lesson is not that every locality needs the same model; it is that data tools must connect to a decision rule, not just a dashboard. <a class="cite" data-target="source-s13" href="#" title="SOA model architecture for sea-level-rise adaptation">S13, pp. 43-49</a></p>
+<p>The SOA risk-management call closes by showing that the profession sees climate risk as a broad operational and financial-management issue, not a niche catastrophe-modeling topic. The chapter should therefore end with a warning: models that do not change underwriting, capital allocation, codes, financing, evacuation, retrofit or land-use decisions are not yet resilience tools. <a class="cite" data-target="source-s10" href="#" title="SOA call on climate risk management integration">S10, p. 1</a></p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>an AI resilience tool should output an intervention priority, a confidence range and a monitoring trigger—not merely a colored hazard map.</p>
+    </div>
+  </section>
+  <section id="ch11" class="card">
+    <div class="card-eyebrow">Chapter 11</div>
+    <h2>The implementation playbook: a practical sequence for resilient adaptation</h2>
+    <div class="readseq"><strong>Best reading sequence:</strong> <span class="chip">S06</span><span class="chip">S09</span><span class="chip">S03</span><span class="chip">S07</span><span class="chip">S08</span><span class="chip">S12</span></div>
+    
+<p>The final chapter should read like a field manual. Step one is to identify exposure and vulnerability, not to select a favored intervention. Step two is to screen the project for climate and disaster risk. Step three is to assess adaptation options using multiple models where appropriate. Step four is to stress-test residual risk and economic viability. Step five is to embed monitoring indicators and contingent plans. This sequence is directly aligned with the IAA risk-management framing and the World Bank rating ladder. <a class="cite" data-target="source-s06" href="#" title="IAA risk-management and lines-of-defense framing">S06, pp. 5-8</a> <a class="cite" data-target="source-s09" href="#" title="World Bank rating ladder and implementation arrangements">S09, pp. 11-17</a></p>
+<p>Step six is to measure impact. ARIC’s five dimensions—what, who, how much, contribution and risk—should become the standard questions in the investment memo, grant application or public project note. This keeps resilience from becoming a vague label and forces clarity about beneficiaries, depth of change and contribution beyond what would have happened anyway. <a class="cite" data-target="source-s03" href="#" title="ARIC five-dimensions impact framework">S03, p. 9</a></p>
+<p>Step seven is to value the intervention. Use NIBS and Chamber/Allstate-type benefit-cost evidence for the initial case that preparedness can pay, but then apply project-specific economics. Use real options where uncertainty, irreversibility and staging matter. Use distributional and equity analysis where benefits or affordability pressures fall unevenly. <a class="cite" data-target="source-s07" href="#" title="NIBS benefit-cost findings">S07, pp. 39-43</a> <a class="cite" data-target="source-s11" href="#" title="Preparedness Payoff economic-benefit framing">S11, pp. 4-12</a> <a class="cite" data-target="source-s02" href="#" title="Hu on DCF limits and real-option need">S02, pp. 1-3</a></p>
+<p>Step eight is to design incentives and finance. The NIBS roadmap and McKinsey synthesis show that codes, grants, tax abatements, insurance pricing, loans, public-private partnerships, disclosure and technical assistance all belong in the toolbox. The right package depends on whether the decision-maker is a homeowner, developer, utility, city, insurer, lender, sovereign or investor. <a class="cite" data-target="source-s08" href="#" title="NIBS incentive roadmap">S08, pp. 13-23</a> <a class="cite" data-target="source-s12" href="#" title="McKinsey financing and payer analysis">S12, pp. 45-55</a></p>
+<p>Step nine is to govern adaptively. A resilience program is never “done” at ribbon-cutting. Ratings can be reviewed during implementation, metrics can be refined as evidence accumulates, and triggers can activate the next stage of an adaptation pathway. That is the pleasant surprise in the corpus: the best work is not about predicting the future perfectly; it is about building institutions that can learn before losses become irreversible. <a class="cite" data-target="source-s09" href="#" title="World Bank on rating review and monitoring">S09, pp. 14-16</a> <a class="cite" data-target="source-s13" href="#" title="SOA dynamic adaptation pathways">S13, pp. 58-59</a></p>
+
+    <div class="rule-box">
+      <div class="rule-label">Reader's rule</div>
+      <p>the whole book can be reduced to one cycle: screen → assess → stress-test → finance → implement → monitor → adapt.</p>
+    </div>
+  </section>
+
+  <section id="method" class="card">
+    <div class="card-eyebrow">Method</div>
+    <h2>Method and evidence weight</h2>
+    
+
+<p><strong>Sequence design.</strong> The chapter order moves from why adaptation matters, to language, to measurement, to valuation, to incentives, to sectoral and hazard-specific applications, to financing, data and implementation. That order is intentional: readers should not evaluate incentives before they understand residual risk, and should not build finance mechanisms before they know what outcome is being measured.</p>
+<p><strong>Access language.</strong> GREEN means the PDF text was accessible in the workspace and used directly. YELLOW means the source was accessible but too long or broad to claim exhaustive page-by-page synthesis; the relevant pages were read for the topic at hand. The major YELLOW source is the 658-page NIBS mitigation report, for which this reader uses the executive findings and key mitigation/incentive sections rather than every technical appendix.</p>
+<p><strong>Claim discipline.</strong> Numeric claims are attributed to the source reporting them. Where a source is an essay or policy guide rather than a peer-reviewed technical report, the synthesis uses it for framing and examples rather than as standalone empirical proof.</p>
+<div class="table-wrap">
+<table class="corpus-map">
+<thead><tr><th>Layer</th><th>Best sources</th><th>Use in the reader</th></tr></thead>
+<tbody>
+<tr><td>Frameworks</td><td>S06, S09, S03</td><td>Definitions, rating logic, impact metrics and professional practice.</td></tr>
+<tr><td>Economics</td><td>S07, S11, S02, S13</td><td>Benefit-cost, avoided loss, DCF limits and real-option timing.</td></tr>
+<tr><td>Incentives and policy</td><td>S08, S04, S06, S12</td><td>Codes, finance, insurance, housing affordability, public-private coordination.</td></tr>
+<tr><td>Applications</td><td>S12, S13, S04, S01</td><td>Adaptation portfolios, flood pathways, housing retrofits and AI-enabled decision support.</td></tr>
+</tbody>
+</table>
+</div>
+
+  </section>
+
+  <section id="log" class="card">
+    <div class="card-eyebrow">Source-attribution log</div>
+    <h2>Sources used in this reader</h2>
+    <p>Access labels follow the reader's own scope note: GREEN means the PDF text was available and used directly; YELLOW means a very long source was used selectively for task-relevant pages rather than read appendix-by-appendix.</p>
+    <div class="table-wrap">
+    <table class="source-log">
+      <thead><tr><th>ID</th><th>Source</th><th>Access</th><th>Use in reader</th></tr></thead>
+      <tbody>
+        <tr id="source-s01">
+      <td><span class="sid">S01</span></td>
+      <td><div class="source-title">Leveraging Artificial Intelligence and Actuarial Techniques to Strengthen Climate Change Resilience and Adaptation Programs</div><div class="source-meta"><strong>Atetwe, Jeniffer Nasike</strong> · Society of Actuaries Research Institute essay; 3rd Place Award Winner · 2026</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>SOA essay: useful for framing AI + actuarial workflow; illustrative case-study figures are treated as illustrative, not observed outcomes.</td>
+    </tr>
+<tr id="source-s02">
+      <td><span class="sid">S02</span></td>
+      <td><div class="source-title">Applying Real Option Theory to the Evaluation of Climate Adaptation Investments</div><div class="source-meta"><strong>Hu, Xinyi (Cindy)</strong> · Society of Actuaries Research Institute essay; 1st Place Award Winner · 2026</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>Conceptual/technical essay explaining why static DCF can misprice staged adaptation under uncertainty.</td>
+    </tr>
+<tr id="source-s03">
+      <td><span class="sid">S03</span></td>
+      <td><div class="source-title">Adaptation &amp; Resilience Impact: A measurement framework for investors</div><div class="source-meta"><strong>Adaptation &amp; Resilience Investors Collaborative / UNEP FI / Cadlas</strong> · Investor measurement guidance · April 2024</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>Practical impact-management framework for private investment; strongest for metrics logic, not benefit-cost estimation.</td>
+    </tr>
+<tr id="source-s04">
+      <td><span class="sid">S04</span></td>
+      <td><div class="source-title">Building for Insurability, Resilience, Energy Efficiency, &amp; Housing Affordability: Addressing the True Cost of Housing</div><div class="source-meta"><strong>Wright, Jay, Clark &amp; Schlegel</strong> · State and Local Housing Action Plan / nationalhousingcrisis.org · Undated PDF; content references 2025 events</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>Policy guide linking resilience, housing cost, insurance and utility costs; use as policy-practice guidance.</td>
+    </tr>
+<tr id="source-s05">
+      <td><span class="sid">S05</span></td>
+      <td><div class="source-title">Climate Change Resilience and Adaptation Initiatives and Programs: Call for Essays</div><div class="source-meta"><strong>Society of Actuaries Research Institute</strong> · Call for essays · 2026</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>Not a substantive paper; useful as a signal of the questions actuaries are being asked to answer.</td>
+    </tr>
+<tr id="source-s06">
+      <td><span class="sid">S06</span></td>
+      <td><div class="source-title">The Climate Change Adaptation Gap: An Actuarial Perspective</div><div class="source-meta"><strong>International Actuarial Association Climate Risk Task Force</strong> · IAA paper · 2023</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>Foundational actuarial framing: adaptation gap, risk-management process, insurance incentives, vulnerability and disclosure.</td>
+    </tr>
+<tr id="source-s07">
+      <td><span class="sid">S07</span></td>
+      <td><div class="source-title">Natural Hazard Mitigation Saves: 2019 Report</div><div class="source-meta"><strong>National Institute of Building Sciences / Multi-Hazard Mitigation Council</strong> · Large technical/economic report · 2019</div></td>
+      <td><span class="tier tier-Y">YELLOW</span></td>
+      <td>Long technical report; task-relevant pages used for headline BCRs, avoided losses, codes, retrofit and lifeline findings.</td>
+    </tr>
+<tr id="source-s08">
+      <td><span class="sid">S08</span></td>
+      <td><div class="source-title">Developing Pre-Disaster Resilience Based on Public and Private Incentivization</div><div class="source-meta"><strong>National Institute of Building Sciences / Multi-Hazard Mitigation Council</strong> · Roadmap report · 2020</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>Practical roadmap on incentives, stakeholder alignment, codes, grants, financing and insurance mechanisms.</td>
+    </tr>
+<tr id="source-s09">
+      <td><span class="sid">S09</span></td>
+      <td><div class="source-title">Resilience Rating System: A methodology for building and tracking resilience to climate change</div><div class="source-meta"><strong>World Bank Group</strong> · Methodology note · February 2021</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>Most formal rating methodology in the corpus; strong for project screening, stress testing, and resilience-through-project rating.</td>
+    </tr>
+<tr id="source-s10">
+      <td><span class="sid">S10</span></td>
+      <td><div class="source-title">Risk Management and Climate Risk</div><div class="source-meta"><strong>Society of Actuaries Research Institute</strong> · Call for essays · 2026</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>Not a substantive paper; useful as a professional-practice agenda for climate-risk integration.</td>
+    </tr>
+<tr id="source-s11">
+      <td><span class="sid">S11</span></td>
+      <td><div class="source-title">The Preparedness Payoff: The Economic Benefits of Investing in Climate Resilience</div><div class="source-meta"><strong>U.S. Chamber of Commerce / Allstate / U.S. Chamber of Commerce Foundation</strong> · Economic-benefits report · 2024</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>High-level benefit-cost and employment/output analysis; use as advocacy-grade synthesis, not project design manual.</td>
+    </tr>
+<tr id="source-s12">
+      <td><span class="sid">S12</span></td>
+      <td><div class="source-title">Effective adaptation in the age of climate volatility</div><div class="source-meta"><strong>McKinsey Global Institute</strong> · Global adaptation report · December 2025</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>Recent broad synthesis on adaptation portfolios, costs, who pays, and hazard-specific cases.</td>
+    </tr>
+<tr id="source-s13">
+      <td><span class="sid">S13</span></td>
+      <td><div class="source-title">Deciding Now on How to Adapt to Sea Level Rise</div><div class="source-meta"><strong>Society of Actuaries Research Institute</strong> · Research report · 2022</div></td>
+      <td><span class="tier tier-G">GREEN</span></td>
+      <td>Technical flood/sea-level report; strongest for real options, insurance-premium proxy benefits, and dynamic adaptation pathways.</td>
+    </tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+  var sb = document.getElementById('sidebar');
+  var sbToggle = document.getElementById('sbToggle');
+  var overlay = document.getElementById('overlay');
+  var layout = document.getElementById('layout');
+  var themeToggle = document.getElementById('themeToggle');
+  var metaTheme = document.getElementById('metaTheme');
+
+  function isDesktop() { return window.matchMedia('(min-width: 1024px)').matches; }
+  function applySidebarState(state) {
+    if (isDesktop()) {
+      if (state === 'collapsed') {
+        layout.classList.add('sb-collapsed');
+        localStorage.setItem('ra_sb','collapsed');
+      } else {
+        layout.classList.remove('sb-collapsed');
+        localStorage.setItem('ra_sb','open');
+      }
+    } else {
+      if (state === 'open') {
+        sb.classList.add('open');
+        overlay.classList.add('show');
+      } else {
+        sb.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+    }
+  }
+  if (isDesktop()) {
+    var saved = localStorage.getItem('ra_sb');
+    if (saved === 'collapsed') layout.classList.add('sb-collapsed');
+  }
+  sbToggle.addEventListener('click', function(){
+    if (isDesktop()) {
+      applySidebarState(layout.classList.contains('sb-collapsed') ? 'open' : 'collapsed');
+    } else {
+      applySidebarState(sb.classList.contains('open') ? 'closed' : 'open');
+    }
+  });
+  overlay.addEventListener('click', function(){ applySidebarState('closed'); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') applySidebarState(isDesktop() ? 'collapsed' : 'closed'); });
+
+  document.querySelectorAll('[data-target]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = a.getAttribute('data-target');
+      var el = document.getElementById(id);
+      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      if (!isDesktop()) applySidebarState('closed');
+    });
+  });
+
+  themeToggle.addEventListener('click', function(){
+    var current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    var next = current === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    document.documentElement.style.background = next === 'light' ? '#f5efe2' : '#0e1116';
+    if (metaTheme) metaTheme.setAttribute('content', next === 'light' ? '#f5efe2' : '#0e1116');
+    try { localStorage.setItem('ra_theme', next); } catch(e){}
+  });
+
+  window.addEventListener('resize', function(){
+    if (isDesktop()) {
+      sb.classList.remove('open');
+      overlay.classList.remove('show');
+      var saved = localStorage.getItem('ra_sb');
+      if (saved === 'collapsed') layout.classList.add('sb-collapsed');
+      else layout.classList.remove('sb-collapsed');
+    } else { layout.classList.remove('sb-collapsed'); }
+  });
+</script>
+
+</body>
+</html>
