@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#14130f;">
+<!-- Resilience & Adaptation: A Synthesis -->
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="color-scheme" content="dark light" />
+<meta name="theme-color" content="#14130f" id="meta-theme-color" />
+<title>Resilience &amp; Adaptation — A Synthesis</title>
+<script>
+/* Early theme application before first paint (rule 16/17) */
+(function () {
+  try {
+    var t = localStorage.getItem('ra_theme');
+    if (t === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.style.background = '#f5efe2';
+      var m = document.getElementById('meta-theme-color');
+      if (m) m.setAttribute('content', '#f5efe2');
+    }
+  } catch (e) {}
+})();
+</script>
+<style>
+/* ============ THEME TOKENS ============ */
+:root{
+  --maxw: 960px;
+  --radius: 20px;
+  --gap: clamp(18px, 3vw, 30px);
+  --font-serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+/* Dark-first: applies whenever not explicitly light (triple-layer protection) */
+html:not([data-theme="light"]){
+  --bg:#14130f; --bg2:#1b1914; --card:#1d1b16; --card2:#211f19;
+  --text:#ece6d8; --muted:#a8a08e; --faint:#7d765f;
+  --border:#2f2c24; --border2:#3a362c;
+  --accent:#e0a35c; --accent-soft:#3a2e1c; --accent-line:#7a5a30;
+  --tl-green:#46b878; --tl-amber:#e3a72b; --tl-red:#df6052;
+  --tl-green-bg:#16321f; --tl-amber-bg:#332700; --tl-red-bg:#3a1714;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 28px rgba(0,0,0,.34);
+  --quote-bg:#1a1813;
+}
+html[data-theme="light"]{
+  --bg:#f5efe2; --bg2:#efe7d6; --card:#fdfaf2; --card2:#f8f1e2;
+  --text:#1c1a14; --muted:#6b6354; --faint:#94896f;
+  --border:#e4dbc8; --border2:#d8ccb3;
+  --accent:#b9692a; --accent-soft:#f3e6d2; --accent-line:#dcc09a;
+  --tl-green:#2f9d5b; --tl-amber:#c98a06; --tl-red:#c2483a;
+  --tl-green-bg:#e4f1e6; --tl-amber-bg:#f7eccf; --tl-red-bg:#f6e1dc;
+  --shadow: 0 1px 2px rgba(60,45,20,.06), 0 10px 30px rgba(80,60,25,.10);
+  --quote-bg:#f8f1e2;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:var(--font-serif);
+  font-size:18px; line-height:1.68;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  transition:background .25s ease, color .25s ease;
+}
+/* ============ FIXED CONTROLS (two separate groups; rule 17) ============ */
+.controls{position:fixed; top:0; z-index:60; display:flex; gap:8px;}
+.controls.left{ left:0; padding:max(12px, env(safe-area-inset-top)) 0 0 max(12px, env(safe-area-inset-left)); }
+.controls.right{ right:0; padding:max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 0 0; }
+.ctrl-btn{
+  width:42px; height:42px; border-radius:12px; cursor:pointer;
+  background:var(--card); color:var(--text); border:1px solid var(--border2);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--shadow); transition:background .2s, transform .12s, border-color .2s;
+}
+.ctrl-btn:hover{ border-color:var(--accent-line); }
+.ctrl-btn:active{ transform:scale(.94); }
+.ctrl-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.ctrl-btn svg{ width:21px; height:21px; display:block; }
+/* ============ SIDEBAR ============ */
+#sidebar{
+  position:fixed; top:0; left:0; z-index:50;
+  width:288px; height:100dvh; height:100vh;
+  background:var(--bg2); border-right:1px solid var(--border);
+  display:flex; flex-direction:column;
+  padding:max(16px, env(safe-area-inset-top)) 14px max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  overflow-y:auto; transition:transform .28s ease, width .28s ease;
+}
+.sb-eyebrow{
+  font-family:var(--font-sans); font-size:11.5px; letter-spacing:.04em;
+  color:var(--faint); margin:2px 0 16px 52px; line-height:1.4; /* clears hamburger */
+}
+.sb-title{ font-size:17px; font-weight:700; margin:0 0 3px; letter-spacing:.01em; }
+.sb-sub{ font-family:var(--font-sans); font-size:12px; color:var(--muted); margin:0 0 18px; }
+.sb-nav{ display:flex; flex-direction:column; gap:1px; }
+.sb-sec{ font-family:var(--font-sans); text-transform:uppercase; font-size:10.5px; letter-spacing:.13em;
+  color:var(--faint); margin:16px 0 6px 10px; }
+.nav-item{
+  font-family:var(--font-sans); font-size:13.5px; text-align:left; cursor:pointer;
+  background:none; border:none; color:var(--muted); border-radius:9px;
+  padding:8px 11px; line-height:1.35; transition:background .15s, color .15s;
+}
+.nav-item:hover{ background:var(--card2); color:var(--text); }
+.nav-item.active{ background:var(--accent-soft); color:var(--accent); font-weight:600; }
+.nav-item:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+.nav-num{ display:inline-block; width:20px; color:var(--faint); font-weight:700; }
+.nav-item.active .nav-num{ color:var(--accent); }
+#overlay{ position:fixed; inset:0; z-index:45; background:rgba(0,0,0,.5);
+  opacity:0; visibility:hidden; transition:opacity .25s; }
+/* ============ LAYOUT ============ */
+#wrap{ transition:padding-left .28s ease; padding-left:288px; }
+#main{ max-width:var(--maxw); margin:0 auto;
+  padding: clamp(56px,8vw,92px) clamp(16px,4vw,40px) 120px; }
+body.sb-collapsed #wrap{ padding-left:0; }
+body.sb-collapsed #sidebar{ width:0; transform:translateX(-100%); border-right:none; }
+/* < 1024px : off-canvas */
+@media (max-width:1023.98px){
+  #wrap{ padding-left:0 !important; }
+  #sidebar{ transform:translateX(-100%); box-shadow:var(--shadow); }
+  body.sb-open #sidebar{ transform:translateX(0); }
+  body.sb-open #overlay{ opacity:1; visibility:visible; }
+}
+/* ============ TYPE & SECTIONS ============ */
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding: clamp(22px,3.4vw,40px); margin: var(--gap) 0; box-shadow:var(--shadow);
+}
+.card.tight{ padding: clamp(18px,2.6vw,28px); }
+section{ scroll-margin-top:70px; }
+h1.book-title{ font-size:clamp(31px,6vw,52px); line-height:1.08; margin:0 0 14px; letter-spacing:-.015em; font-weight:800; }
+.book-sub{ font-size:clamp(17px,2.4vw,21px); color:var(--muted); font-style:italic; margin:0 0 26px; line-height:1.45; }
+.ch-eyebrow{ font-family:var(--font-sans); font-size:12.5px; font-weight:700; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--accent); margin:0 0 8px; }
+h2.ch-title{ font-size:clamp(24px,4.2vw,36px); line-height:1.14; margin:0 0 6px; letter-spacing:-.012em; font-weight:800; }
+.ch-tag{ font-family:var(--font-sans); font-size:13px; color:var(--muted); margin:0 0 20px; }
+h3{ font-size:clamp(18px,2.6vw,22px); margin:30px 0 8px; line-height:1.25; font-weight:700; letter-spacing:-.005em; }
+p{ margin:0 0 16px; }
+a{ color:var(--accent); }
+strong{ color:var(--text); font-weight:700; }
+em.term{ font-style:italic; color:var(--text); font-weight:600; }
+.lede{ font-size:clamp(18px,2.5vw,21px); line-height:1.55; color:var(--text); }
+.lede:first-letter{ }
+/* chips / pills */
+.chips{ display:flex; flex-wrap:wrap; gap:9px; margin:22px 0 6px; }
+.chip{ font-family:var(--font-sans); font-size:12.5px; font-weight:600; color:var(--text);
+  background:var(--card2); border:1px solid var(--border2); border-radius:999px; padding:6px 13px; }
+.chip b{ color:var(--accent); }
+/* callout / frame note */
+.frame{ background:var(--accent-soft); border:1px solid var(--accent-line); border-left-width:4px;
+  border-radius:14px; padding:16px 18px; margin:22px 0; font-size:15.5px; line-height:1.55; }
+.frame .lbl{ font-family:var(--font-sans); font-size:11px; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--accent); display:block; margin-bottom:5px; }
+/* reader's rule box */
+.rule-box{ background:var(--card2); border:1px solid var(--border2); border-radius:16px;
+  padding:18px 20px; margin:28px 0 4px; display:flex; gap:14px; align-items:flex-start; }
+.rule-box .mark{ font-family:var(--font-sans); font-size:11px; font-weight:800; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--accent); white-space:nowrap; padding-top:3px; }
+.rule-box p{ margin:0; font-style:italic; font-size:16.5px; line-height:1.5; }
+/* tag (epistemic) */
+.etag{ font-family:var(--font-sans); font-size:11px; font-weight:700; letter-spacing:.02em;
+  padding:1px 7px; border-radius:6px; vertical-align:middle; white-space:nowrap;
+  border:1px solid var(--border2); color:var(--muted); background:var(--card2); }
+.etag.illus{ color:var(--tl-amber); border-color:var(--tl-amber); background:var(--tl-amber-bg); }
+.etag.model{ color:var(--accent); border-color:var(--accent-line); background:var(--accent-soft); }
+.etag.verif{ color:var(--tl-green); border-color:var(--tl-green); background:var(--tl-green-bg); }
+/* exhibits: tables */
+.exhibit{ margin:26px 0; }
+.exhibit .cap{ font-family:var(--font-sans); font-size:13px; color:var(--muted); margin:0 0 10px; }
+.exhibit .cap b{ color:var(--text); font-weight:700; }
+.exhibit .src{ font-family:var(--font-sans); font-size:11.5px; color:var(--faint); margin:8px 0 0; }
+table{ width:100%; border-collapse:collapse; font-family:var(--font-sans); font-size:13.5px; line-height:1.4; }
+th,td{ text-align:left; padding:9px 11px; border-bottom:1px solid var(--border); vertical-align:top; }
+thead th{ font-size:11.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--faint);
+  border-bottom:1px solid var(--border2); }
+tbody tr:last-child td{ border-bottom:none; }
+td.num,th.num{ font-variant-numeric:tabular-nums; white-space:nowrap; }
+td .big{ font-family:var(--font-serif); font-weight:800; font-size:17px; color:var(--accent); }
+.matrix td:first-child{ font-weight:600; color:var(--text); }
+/* traffic light dots */
+.tl{ display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+.dot{ width:11px; height:11px; border-radius:50%; display:inline-block; flex:none; }
+.dot.g{ background:var(--tl-green); } .dot.a{ background:var(--tl-amber); } .dot.r{ background:var(--tl-red); }
+.tl-legend{ display:flex; flex-wrap:wrap; gap:14px; font-family:var(--font-sans); font-size:12.5px; margin:6px 0 0; }
+.tl-legend span{ display:inline-flex; align-items:center; gap:7px; color:var(--muted); }
+/* corpus map */
+.cmap{ display:grid; grid-template-columns:1fr; gap:10px; margin:14px 0 2px; }
+.cmap a{ text-decoration:none; }
+.cmap .row{ display:grid; grid-template-columns:46px 1fr; gap:14px; align-items:center;
+  background:var(--card2); border:1px solid var(--border); border-radius:13px; padding:13px 15px;
+  cursor:pointer; transition:border-color .15s, transform .12s; }
+.cmap .row:hover{ border-color:var(--accent-line); transform:translateX(2px); }
+.cmap .n{ font-family:var(--font-sans); font-weight:800; font-size:20px; color:var(--accent);
+  border:1px solid var(--accent-line); border-radius:10px; height:40px; display:flex; align-items:center; justify-content:center; }
+.cmap .q{ font-size:15px; line-height:1.32; }
+.cmap .q b{ display:block; font-family:var(--font-sans); font-size:12.5px; color:var(--muted); font-weight:600; margin-top:3px; }
+/* mini stat grid */
+.stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:20px 0; }
+.stat{ background:var(--card2); border:1px solid var(--border); border-radius:14px; padding:15px 16px; }
+.stat .v{ font-weight:800; font-size:25px; color:var(--accent); line-height:1.05; letter-spacing:-.01em; }
+.stat .l{ font-family:var(--font-sans); font-size:12.5px; color:var(--muted); margin-top:5px; line-height:1.35; }
+ul.clean{ margin:6px 0 16px; padding-left:22px; }
+ul.clean li{ margin:0 0 8px; }
+hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
+.foot{ font-family:var(--font-sans); font-size:12.5px; color:var(--faint); text-align:center; margin-top:40px; line-height:1.6; }
+/* ============ RESPONSIVE ============ */
+@media (max-width:520px){
+  body{ font-size:16.5px; line-height:1.62; }
+  #main{ padding:clamp(52px,14vw,60px) 14px 90px; }
+  .card{ padding:18px 16px; border-radius:16px; }
+  th,td{ padding:7px 8px; font-size:12.5px; }
+  .stat .v{ font-size:21px; }
+  #sidebar{ width:86vw; }
+  .sb-eyebrow{ margin-left:50px; }
+}
+@media (max-height:540px) and (orientation:landscape){
+  #sidebar{ padding-top:8px; }
+  .sb-eyebrow{ margin-bottom:9px; }
+  .sb-sub{ margin-bottom:10px; }
+  .sb-sec{ margin:9px 0 4px 10px; }
+  .nav-item{ padding:5px 11px; }
+}
+/* ============ PRINT (rule 18) ============ */
+@media print{
+  @page{ margin:0.7in; }
+  @page{ @bottom-center{ content: counter(page); } }
+  html,body{ background:#fff !important; color:#111 !important; }
+  .controls, #sidebar, #overlay{ display:none !important; }
+  #wrap{ padding-left:0 !important; }
+  #main{ max-width:none; padding:0; }
+  .card{ box-shadow:none; border:1px solid #ccc; background:#fff; break-inside:auto; }
+  .rule-box, .frame, .exhibit .cap, .chips, thead th, .stat, .cmap .row{ break-inside:avoid; }
+  a{ color:#111; }
+  body{ counter-reset:page 1; }
+}
+</style>
+</head>
+<body>
+<!-- CONTROLS -->
+<div class="controls left">
+  <button class="ctrl-btn" id="btn-sidebar" aria-label="Toggle navigation sidebar" aria-expanded="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</div>
+<div class="controls right">
+  <button class="ctrl-btn" id="btn-theme" aria-label="Switch color theme"></button>
+</div>
+<div id="overlay"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar" aria-label="Table of contents">
+  <div class="sb-eyebrow" id="sb-eyebrow">Generated May 23 2026, 10:48am GMT</div>
+  <div class="sb-title">Resilience &amp; Adaptation</div>
+  <div class="sb-sub">A synthesis of eleven reports</div>
+  <div class="sb-nav" id="navlist">
+    <div class="sb-sec">Front matter</div>
+    <button class="nav-item" data-target="cover"><span class="nav-num">·</span>Cover</button>
+    <button class="nav-item" data-target="howto"><span class="nav-num">·</span>How to read this book</button>
+    <div class="sb-sec">Chapters</div>
+    <button class="nav-item" data-target="ch1"><span class="nav-num">1</span>The Adaptation Gap</button>
+    <button class="nav-item" data-target="ch2"><span class="nav-num">2</span>Does Adaptation Pay?</button>
+    <button class="nav-item" data-target="ch3"><span class="nav-num">3</span>Valuing Under Deep Uncertainty</button>
+    <button class="nav-item" data-target="ch4"><span class="nav-num">4</span>AI, Data &amp; Actuarial Technique</button>
+    <button class="nav-item" data-target="ch5"><span class="nav-num">5</span>Measuring &amp; Rating Resilience</button>
+    <button class="nav-item" data-target="ch6"><span class="nav-num">6</span>Closing the Gap</button>
+    <div class="sb-sec">Back matter</div>
+    <button class="nav-item" data-target="coda"><span class="nav-num">·</span>Coda: One arc</button>
+    <button class="nav-item" data-target="sources"><span class="nav-num">·</span>Source log &amp; methods</button>
+  </div>
+</nav>
+
+<div id="wrap"><main id="main">
+<section id="cover">
+  <div class="card">
+    <div class="ch-eyebrow">A synthesis for the uninitiated reader</div>
+    <h1 class="book-title">Resilience &amp; Adaptation</h1>
+    <p class="book-sub">How a changing climate is forcing us to value, measure, and pay for protection — assembled, in sequence, from eleven reports by actuaries, engineers, banks, and builders.</p>
+    <p class="lede">Mitigation tries to slow climate change. <em class="term">Adaptation</em> deals with the change we can no longer avoid — the floods, fires, heat, and storms already arriving. This book braids eleven separate documents into a single argument, read front to back. It begins with a problem (we are dangerously under-prepared), establishes that fixing it is one of the highest-return investments available, then works through the harder questions that follow: how do you value protection when the future is deeply uncertain? How do you see risk before it arrives? How do you measure resilience well enough that money flows to it? And why, given returns this good, does so little get built — until you fix the incentives?</p>
+    <div class="chips">
+      <span class="chip"><b>6</b> chapters</span>
+      <span class="chip"><b>11</b> source reports</span>
+      <span class="chip"><b>2019–2026</b> publications</span>
+      <span class="chip"><b>~10,000</b> words</span>
+      <span class="chip"><b>OCR-derived</b> corpus</span>
+      <span class="chip">Read <b>front to back</b></span>
+    </div>
+  </div>
+</section>
+<section id="howto">
+  <div class="card">
+    <div class="ch-eyebrow">Front matter</div>
+    <h2 class="ch-title">How to read this book</h2>
+    <p class="ch-tag">Where the sources came from · how figures are handled · which chapter answers which question</p>
+
+    <p>The eleven reports behind this book were not written together. They include two prize-winning actuarial essays, a McKinsey Global Institute cost study, an International Actuarial Association concept paper, two National Institute of Building Sciences benefit-cost studies, a U.S. Chamber of Commerce economic analysis, a UN-convened investor framework, a World Bank rating methodology, and a U.S. housing-policy toolkit. Read in isolation, each answers a narrow question. Read in the sequence below, they compose a single course on adaptation — from the scale of the problem to the mechanics of solving it.</p>
+
+    <div class="frame">
+      <span class="lbl">Why two chapters sound like exam answers</span>
+      Two of the sources are essays submitted to a 2026 Society of Actuaries call that <em>explicitly</em> invited work on “the use of AI in the decision-making process” and on quantitative techniques including “the XGBoost model, the pre/post method, the participant/non-participant method, and discounted cash flow analysis using real option theory.” That single prompt is why Chapters 3 and 4 converge so neatly on real options and machine learning: their sources were answering the same question.
+    </div>
+
+    <div class="frame">
+      <span class="lbl">A note on the figures</span>
+      Every source reached this book as scanned or text-dumped pages run through optical character recognition (OCR). Numbers are therefore <strong>paraphrased and reported as published</strong>, never presented as exact verbatim quotation. Where a worked calculation could be checked, it was re-derived by hand <span class="etag verif">arithmetic-verified</span>; where a result is a model output it is marked <span class="etag model">modeled</span>; where a case is hypothetical it is marked <span class="etag illus">illustrative</span>. The source log at the end rates each document’s transcription confidence on a green/amber/red scale.
+    </div>
+
+    <h3>The corpus map</h3>
+    <p class="ch-tag" style="margin-top:-6px">Start with the decision you are facing; it points to a chapter.</p>
+    <div class="cmap">
+      <div class="row" data-go="ch1"><div class="n">1</div><div class="q">“Are we actually under-prepared, and by how much?”<b>The Adaptation Gap — the size and shape of the shortfall</b></div></div>
+      <div class="row" data-go="ch2"><div class="n">2</div><div class="q">“Is spending on protection even worth it?”<b>Does Adaptation Pay? — the benefit-cost evidence</b></div></div>
+      <div class="row" data-go="ch3"><div class="n">3</div><div class="q">“How do I value a project when the future is so uncertain?”<b>Valuing Under Deep Uncertainty — real options &amp; staging</b></div></div>
+      <div class="row" data-go="ch4"><div class="n">4</div><div class="q">“How do I see and prioritize risk before disaster strikes?”<b>AI, Data &amp; Actuarial Technique — the computational layer</b></div></div>
+      <div class="row" data-go="ch5"><div class="n">5</div><div class="q">“How do I measure resilience so capital recognizes it?”<b>Measuring &amp; Rating Resilience — metrics and ratings</b></div></div>
+      <div class="row" data-go="ch6"><div class="n">6</div><div class="q">“Why isn’t this getting built, and how do we fix that?”<b>Closing the Gap — incentives, insurance &amp; housing</b></div></div>
+    </div>
+  </div>
+</section>
+<section id="ch1">
+  <div class="card">
+    <div class="ch-eyebrow">Chapter 1 · The problem</div>
+    <h2 class="ch-title">The Adaptation Gap</h2>
+    <p class="ch-tag">Sources: International Actuarial Association · McKinsey Global Institute · NIBS/CFIRE · National Housing Crisis Task Force · Atetwe (SOA)</p>
+
+    <p class="lede">In 2024 the United States alone absorbed 27 separate weather and climate disasters that each crossed a billion dollars in losses; Hurricane Helene, the year’s costliest, killed 219 people and caused on the order of $80 billion in damage. The same year, climate-driven property damage in U.S. housing reached an estimated $182.7 billion. These are not anomalies to be waited out. They are the leading edge of a widening shortfall between the protection we have built and the protection a warming world now demands.</p>
+
+    <p>That shortfall has a name. The International Actuarial Association, in its task-force paper on the subject, calls it the <em class="term">adaptation gap</em>: “a substantial gap relative to the level of adaptation likely to be needed given predicted levels of global warming.” The IAA’s diagnosis is blunt — progress on adaptation has been “slow, siloed and incremental,” with little evidence of the deeper, transformative change that serious hazards require. The gap, in other words, is not primarily a gap in knowledge. We largely know what to build. It is a gap in action.</p>
+
+    <h3>Two words that are easy to confuse</h3>
+    <p>Before measuring the gap, it helps to separate two ideas that public conversation routinely blurs. <em class="term">Mitigation</em> attacks the <em>cause</em> of climate change by cutting greenhouse-gas emissions. <em class="term">Adaptation</em> attacks the <em>consequences</em> by reducing how much harm a given hazard does — elevating a house, cooling a city, hardening a grid. The two are complements, not substitutes: even aggressive emissions cuts leave decades of locked-in warming to be lived through. This book is about the second word.</p>
+
+    <p>The IAA offers a useful mental model borrowed from risk management: <em class="term">lines of defense</em>. Picture the chain that runs from emissions to hazard to exposure to vulnerability to loss, and imagine a defensive measure standing at each link — ecosystems that blunt a storm surge, codes that strengthen a roof, insurance that absorbs the residual blow. Adaptation is the work of reinforcing those lines. A second piece of vocabulary, drawn from the investor framework examined in Chapter 5, sorts resilience into three capacities: <strong>absorptive</strong> (the ability to withstand a shock), <strong>adaptive</strong> (the ability to adjust and learn), and <strong>transformative</strong> (the ability to change a system fundamentally). The IAA’s complaint is precisely that the world has invested in the first capacity and neglected the third.</p>
+
+    <h3>How big is the gap?</h3>
+    <p>The McKinsey Global Institute put numbers to the shortfall in a 2025 study mapping the cost of adaptation hazard by hazard <span class="etag model">modeled</span>. Its central finding reframes the whole problem. The world already spends roughly <strong>$190 billion a year</strong> defending against extreme weather — but that spending protects only about <strong>1.2 billion people</strong> to the standards normal in developed economies. The number of people living in places exposed to climate hazards today is <strong>4.1 billion</strong>. Extending today’s level of protection to all of them would cost about <strong>$540 billion a year</strong>, nearly three times current spending. That difference — between who is protected and who is exposed — is the adaptation gap rendered as a dollar figure.</p>
+
+    <p>It does not stay still. On the current emissions trajectory, McKinsey’s scenarios have the world warming to about 1.5°C above pre-industrial levels around 2030 and roughly 2°C around 2050. As the thermometer climbs, exposure climbs with it, and unevenly: heat and drought spread fastest. The study estimates that 2°C of warming would expose an additional <strong>2.2 billion people</strong> to heat stress and <strong>1.1 billion</strong> more to drought, while coastal flooding — the hazard that dominates the public imagination — would reach only about 40 million more. Protecting against that hotter world to developed-economy standards is projected to cost <strong>$1.2 trillion a year by 2050</strong>, of which more than half would go to just two measures: air conditioning and irrigation.</p>
+
+    <div class="exhibit">
+      <p class="cap"><b>Exhibit 1.1 — The cost of the gap, and how it grows.</b> The arc from what the world spends today to what a 2°C world would require, to developed-economy protection standards. Figures are modeled annual averages (operating plus amortized capital), in 2020 dollars.</p>
+      <div class="card tight" style="margin:0">
+      <table class="matrix">
+        <thead><tr><th>Benchmark</th><th class="num">Annual cost</th><th>What it buys</th></tr></thead>
+        <tbody>
+          <tr><td>Spending today</td><td class="num"><span class="big">~$190B</span></td><td>Protects ~1.2 billion people to developed-economy standards</td></tr>
+          <tr><td>Close today’s gap</td><td class="num"><span class="big">~$540B</span></td><td>Extends that protection to all 4.1 billion exposed now</td></tr>
+          <tr><td>At 1.5°C (~2030)</td><td class="num"><span class="big">~$800B</span></td><td>Holds the standard as exposure widens</td></tr>
+          <tr><td>At 2°C (~2050)</td><td class="num"><span class="big">~$1.2T</span></td><td>~0.8% of global GDP; &gt;half to cooling and irrigation</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="src">Source: McKinsey Global Institute, <em>Advancing adaptation</em> (2025), modeled on CMIP6, NASA NEX-GDDP, Fathom, ISIMIP2b. <span class="tl"><span class="dot a"></span> amber-confidence transcription</span></p>
+    </div>
+
+    <p>Those averages conceal sharp concentration. The mix of hazards a place must defend against depends on where it sits: McKinsey estimates that in Sub-Saharan Africa, the Middle East and North Africa, and India, more than 70% of adaptation spending would go toward heat alone, while the largest <em>relative</em> protection gap anywhere is against wildfire — only about a tenth of the world’s wildfire-exposed land is protected to developed-economy standards today. The study also offers a quietly important reassurance and a warning in the same breath. Increasing adaptation spending in line with normal economic growth could cover roughly 60% of the total bill on its own; the remaining 40% is the genuinely hard part, and it falls disproportionately on places that cannot grow their way to it. And adaptation has limits: beyond some level of warming, certain hazards — non-survivable heat, the permanent loss of low-lying land — outrun any defense, which is why the IAA insists adaptation and mitigation must advance together rather than as alternatives.</p>
+
+    <h3>The gap is not shared equally</h3>
+    <p>Both the IAA and McKinsey stress that the burden falls hardest on those least able to carry it. McKinsey finds the cost of closing today’s gap is highest in low-income places — about $200 billion, roughly 2.7 times the figure for middle- or high-income places — because those places start with the least protection. The IAA frames the same fact in human terms: climate impacts fall disproportionately on low-income countries and on poor people within wealthy ones. A resiliency gap is therefore also an equity gap, and any honest accounting of adaptation has to treat the two together.</p>
+
+    <p>The unfairness is sharpened by how affordable many individual measures actually are where incomes are high. McKinsey observes that a $130 adaptation measure is the equivalent of less than four hours of average U.S. wages — about a sixth of a minimum car-insurance premium — a trivial sum for a wealthy household and an impossible one for a poor community facing the same hazard. The point is not that adaptation is cheap but that the same protection is wildly different in difficulty depending on who must buy it. The IAA’s own case studies trace both ends of that spectrum: a successful boardwalk-and-coastal-defense project on the southwest coast of Barbados, nature-based flood management drawing on India’s Cauvery River, and a national costing of climate adaptation in Canada. The engineering is rarely the obstacle. The capacity to finance it is.</p>
+
+    <h3>Why the gap persists</h3>
+    <p>If the case for adaptation is so strong — and the next chapter shows it is overwhelming — why does the shortfall endure? The National Institute of Building Sciences, in its roadmap on resilience incentives, supplies a sobering frame: U.S. disaster losses have been growing about 6% a year, roughly ten times faster than the population. Despite better building codes and steady federal mitigation funding, losses keep rising for four structural reasons. People keep moving into higher-hazard areas. Public mitigation spending stays tiny — on the order of $1 billion a year — against a prize the same body estimates at more than $2.2 trillion in avoidable losses. The nation keeps adding roughly five times as much new building area as it removes. And too many of those new buildings are simply not built to be resilient. The gap, in short, is being manufactured faster than it is being closed.</p>
+
+    <div class="rule-box">
+      <span class="mark">Reader’s rule</span>
+      <p>The adaptation gap is a gap in action, not knowledge — and it widens fastest exactly where the capacity to pay is lowest. Measure it in both dollars and people, or you will mis-measure it.</p>
+    </div>
+  </div>
+</section>
+<section id="ch2">
+  <div class="card">
+    <div class="ch-eyebrow">Chapter 2 · The economic case</div>
+    <h2 class="ch-title">Does Adaptation Pay?</h2>
+    <p class="ch-tag">Sources: NIBS / Multihazard Mitigation Council · U.S. Chamber of Commerce (with Allstate &amp; Deloitte) · McKinsey Global Institute</p>
+
+    <p class="lede">A trillion-dollar bill, of the kind Chapter 1 sketched, only gets paid if someone is convinced the spending is worth it. So this chapter answers the question every budget officer asks: does protection actually pay for itself? The evidence — from engineers counting avoided damage, from economists counting avoided business losses, and from McKinsey counting both at global scale — converges on an unusually emphatic yes. Adaptation is among the highest-return public investments available. The catch, which the chapter ends on, is that a high return does not pay the upfront bill.</p>
+
+    <h3>The keystone study</h3>
+    <p>The foundational evidence comes from the National Institute of Building Sciences, whose 2019 edition of <em>Natural Hazard Mitigation Saves</em> examined five families of mitigation across four hazards — riverine and coastal flooding, hurricanes, earthquakes, and wildland-urban-interface fire — and computed a benefit-cost ratio (BCR) for each. The headline numbers have become some of the most widely cited figures in the field:</p>
+
+    <div class="exhibit">
+      <p class="cap"><b>Exhibit 2.1 — What a dollar of mitigation returns.</b> Aggregate U.S. benefit-cost ratios from the NIBS study, ordered highest to lowest, with the underlying national benefit and cost. Ratios are the study’s own; the division was re-checked by hand.</p>
+      <div class="card tight" style="margin:0">
+      <table>
+        <thead><tr><th>Mitigation strategy</th><th class="num">BCR</th><th class="num">Benefit</th><th class="num">Cost</th></tr></thead>
+        <tbody>
+          <tr><td>Adopt current model building codes (2018 IRC/IBC vs. 1990-era)</td><td class="num"><span class="big">11:1</span></td><td class="num">$13.0B</td><td class="num">$1.2B</td></tr>
+          <tr><td>Federal mitigation grants (≈ last 23 years)</td><td class="num"><span class="big">6:1</span></td><td class="num">$157.9B</td><td class="num">$27.4B</td></tr>
+          <tr><td>Exceed code requirements</td><td class="num"><span class="big">4:1</span></td><td class="num">$15.5B</td><td class="num">$3.6B</td></tr>
+          <tr><td>Private-sector building retrofit</td><td class="num"><span class="big">4:1</span></td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td>Mitigate utility &amp; transportation infrastructure</td><td class="num"><span class="big">4:1</span></td><td class="num">—</td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="src">Source: NIBS / Multihazard Mitigation Council, <em>Natural Hazard Mitigation Saves: 2019</em>. Check: $13.0B ÷ $1.2B ≈ 10.8 → 11:1; $157.9B ÷ $27.4B ≈ 5.8 → 6:1; $15.5B ÷ $3.6B ≈ 4.3 → 4:1 <span class="etag verif">arithmetic-verified</span></p>
+    </div>
+
+    <p>Read the top line again: building new structures to the 2018 International Residential and Building Codes — rather than to the weaker standards of three decades ago — returns about <strong>eleven dollars for every one spent</strong>. The return varies by hazard, and informatively so: for code adoption it reaches 12:1 against earthquakes and 10:1 against hurricane wind. Federal mitigation grants return about <strong>six dollars per dollar</strong> in aggregate. The figure has a history worth knowing. The original 2005 NIBS study found that FEMA-funded mitigation saved $4 per $1 — the famous “4:1” cited for years afterward. The 2019 edition refines that grant figure upward to 6:1 and adds the 11:1 finding for code adoption, the single most powerful lever in the dataset and, as Chapter 6 shows, the one most directly within a government’s control.</p>
+
+    <p>The per-hazard spread inside these averages is itself instructive. Under code adoption, the return reaches 12:1 against earthquakes and 10:1 against hurricane wind — hazards where a modest change in structural detail (a stronger connection, a better-anchored roof) prevents an outsized share of catastrophic loss. Under the federal-grant programs, riverine flood mitigation returns about 7:1, while wildfire and earthquake grants return closer to 3:1. None of these is a bad investment; the variation simply tells a planner where the very highest returns sit. It also explains why a single headline ratio, however useful for advocacy, can mislead: the right mitigation dollar is hazard-specific, and the study’s value is in showing which dollar, against which threat, in which building, does the most work.</p>
+
+    <h3>Counting what the engineers leave out</h3>
+    <p>NIBS counts avoided physical damage. But a disaster does more than break buildings — it idles workers, halts production, and drains a local economy long after the water recedes. The U.S. Chamber of Commerce, working with its Foundation, Allstate, and Deloitte, set out to capture that second layer in <em>The Preparedness Payoff</em>, modeling 25 disaster scenarios across communities large and small <span class="etag model">modeled</span>. Its result stacks neatly on top of the engineering case. Each dollar invested in preparedness, the study finds, reduces a community’s post-event <em>economic</em> costs by about <strong>$7</strong> — the median across the 25 scenarios — and that is <em>in addition</em> to roughly <strong>$6</strong> of avoided physical damage already in the model. Combine the two and every dollar invested returns about <strong>$13</strong> in total economic impact, damage, and cleanup avoided.</p>
+
+    <p>The scenarios make the abstraction concrete. A Category 4 hurricane striking Miami, the study estimates, would do far less harm to a prepared city: $10.8 billion of resilience investment would prevent the loss of roughly 184,000 jobs and preserve about $26 billion of production. A smaller case — Santa Fe — would save on the order of 388 jobs and keep some $45 million of output in the local economy. The lesson is that the dividend from preparedness is not only fewer repair bills; it is a community that keeps working through the shock.</p>
+
+    <h3>The same answer, at global scale</h3>
+    <p>McKinsey’s study, the source of Chapter 1’s scale figures, reaches the same verdict from a third direction. Aggregating across hazards and measures, it concludes that at 2°C of warming the benefits of adaptation outweigh its costs by about <strong>seven to one</strong> <span class="etag model">modeled</span>. Crucially, McKinsey resists collapsing this into a single number. Its “library” of twenty measures spans a wide spectrum of cost-effectiveness — some measures return ten times their cost or more, others closer to one and a half — paired against how much protection each delivers. Adaptation is not one investment with one return; it is a menu, and the art is choosing the high-return items first. The study sorts its measures into bands by benefit-cost ratio — roughly 1.5-to-3, 3-to-5, 5-to-10, and above 10 — crossed against the share of damage each one prevents, so that a planner can read off both the efficiency and the protective reach of any option. Early-warning systems and well-targeted codes cluster toward the high-return end; some large infrastructure defenses deliver enormous protection at more modest ratios. The lesson is sequencing: a budget that picks the 10-to-1 measures before the 2-to-1 ones buys far more safety per dollar, and McKinsey estimates that growth-driven spending could fund roughly 60% of the global total if it is steered toward the efficient measures first.</p>
+
+    <h3>Why the answer is not the whole story</h3>
+    <p>It would be easy to stop here and declare victory. The numbers tempt it: returns of four-, six-, eleven-, thirteen-to-one are extraordinary by the standard of almost any public program. But two cautions matter. First, mitigation’s value is not only financial. The NIBS study estimates that a single year of above-code construction, together with the last 23 years of federal grants, will ultimately prevent roughly <strong>600 deaths, one million non-fatal injuries, and 4,000 cases of post-traumatic stress disorder</strong> — and that exceeding codes would add some 87,000 long-term jobs. Reducing all of that to a ratio undersells it.</p>
+
+    <p>Second, and more awkwardly, McKinsey is candid that “adaptation is a good buy — but spending is not a given.” A favorable BCR sits on a spreadsheet; the upfront cost sits on a real budget, often the budget of whoever can least afford it. Capacity to pay, competing priorities, collective-action problems, operational hurdles, and political will all stand between a high ratio and a built defense. The remaining chapters are, in effect, an extended response to that gap between knowing adaptation pays and actually getting it paid for — beginning with the problem of how to value protection at all when the future refuses to hold still.</p>
+
+    <p>Each of those five barriers is worth naming because each recurs in the chapters ahead. <em>Capacity to pay</em> is the equity problem of Chapter 1: the return is identical whether the buyer is rich or poor, but the upfront bill is not. <em>Competing priorities</em> reflect that a dollar spent on a seawall is a dollar not spent on a school, and the seawall’s payoff is invisible until the storm that does not come. <em>Collective-action problems</em> are the heart of Chapter 6: when the payer and the beneficiary differ, no one volunteers to go first. <em>Operational hurdles</em> are real and large — McKinsey points to the Netherlands’ “Room for the River” program, which raised the safety of some four million people but took years of complex delivery to do it. And <em>political will</em> is the quiet variable behind them all, because the benefits of mitigation accrue on a timescale longer than an electoral cycle. A favorable benefit-cost ratio, in short, is necessary but nowhere near sufficient.</p>
+
+    <div class="rule-box">
+      <span class="mark">Reader’s rule</span>
+      <p>Mitigation is one of the highest-return investments a society can make — but a benefit-cost ratio is not a check. The question “does it pay?” is settled; the question “who pays, and when?” is not.</p>
+    </div>
+  </div>
+</section>
+<section id="ch3">
+  <div class="card">
+    <div class="ch-eyebrow">Chapter 3 · Financial method</div>
+    <h2 class="ch-title">Valuing Under Deep Uncertainty</h2>
+    <p class="ch-tag">Sources: Hu, “Applying Real Option Theory…” (SOA, 1st prize) · Truong, Li, Trueck &amp; Malavasi, “Flood Risk Management… Under Sea-Level Rise Uncertainty” (SOA)</p>
+
+    <p class="lede">Chapter 2 proved that adaptation pays on average. But an engineer planning a seawall does not face an average; she faces a specific decision under a future that could unfold many ways, and she can usually choose <em>when</em> to act, and <em>how much</em> to build. Standard cost-benefit analysis is strangely blind to those choices. This chapter follows two actuarial sources that fix the blindness by importing a tool from finance — <em class="term">real option theory</em> — and shows why, under deep uncertainty, the right question is not only whether to invest but when.</p>
+
+    <h3>Why the usual method breaks</h3>
+    <p>The workhorse of investment appraisal is discounted cash flow (DCF): project the future benefits and costs, discount them to present value, and invest if the net present value (NPV) is positive. It is clear, familiar, and — Xinyi (Cindy) Hu argues in the essay that won the Society of Actuaries’ top prize — badly suited to climate adaptation, for three reasons.</p>
+    <ul class="clean">
+      <li><strong>Climate risk is non-linear.</strong> Hazards do not rise smoothly; they can lurch upward as biophysical or adaptation thresholds are crossed. A single deterministic projection misses exactly the escalations that matter most.</li>
+      <li><strong>DCF treats the decision as one-shot and irreversible.</strong> Yet real defenses are built in stages — a levee raised over decades, a code progressively tightened. Pretending the choice is now-or-never leads to over-building too early or under-building too late.</li>
+      <li><strong>It handles uncertainty with sensitivity tests, not probability.</strong> That under-represents the tail — the rare, severe outcome — which is precisely what an actuary worried about solvency cares about most.</li>
+    </ul>
+
+    <h3>The fix: paying attention to flexibility</h3>
+    <p>A <em class="term">real option</em> is the right, but not the obligation, to take a future action — to defer, expand, contract, abandon, or stage a project — as new information arrives. The phrase adapts financial option pricing to physical and policy decisions. Its central insight is that flexibility has measurable value, and that climate adaptation is unusually rich in it, because uncertainty resolves over time as the climate reveals itself. Formally, the theory replaces the static “invest if NPV &gt; 0” rule with an investment <em>threshold</em>: model the stream of avoided damages as a fluctuating quantity, and one can derive a critical value V* = [β/(β−1)]·I above which it is finally worth committing the cost I. Because the factor β exceeds one, V* always exceeds I — meaning that even when immediate investment shows a positive NPV, it can be optimal to wait. The gap between the two is the <em class="term">option value of waiting</em>.</p>
+
+    <p>That sentence sounds like a paradox, so Hu grounds it in two deliberately simple examples. Both were re-computed by hand for this book; the arithmetic holds exactly.</p>
+
+    <div class="exhibit">
+      <p class="cap"><b>Exhibit 3.1 — Two stylized cases where flexibility changes the answer.</b> Hu’s illustrative figures (millions of dollars), reproduced and re-derived. The point is not the precise numbers but the reversal they produce.</p>
+      <div class="card tight" style="margin:0">
+      <table class="matrix">
+        <thead><tr><th>Case</th><th>The DCF answer</th><th>The real-options answer</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>1 · The value of waiting.</b> Build a $110M barrier now, or wait one year to learn whether the climate is high- or low-risk before deciding.</td>
+            <td>Expected NPV of building now = 0.5(110) + 0.5(−55) = <strong>+27.5</strong>. DCF says: build immediately.</td>
+            <td>Wait, then build only if high-risk: 0.5(100) + 0.5(0) = <strong>+50</strong>. Waiting is worth <strong>50 − 27.5 = 22.5</strong>.</td>
+          </tr>
+          <tr>
+            <td><b>2 · Staging beats all-at-once.</b> Build one large $220M barrier now, or a small $80M barrier with the option to expand for $140M if risk escalates.</td>
+            <td>Large barrier expected NPV = 180 − 220 = <strong>−40</strong>. DCF says: reject — protection isn’t justified.</td>
+            <td>Staged path: 0.4(80) + 0.6(20) = <strong>+44</strong>. Flexibility flips a rejected project into a worthwhile one.</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="src">Source: Hu, <em>Applying Real Option Theory to the Evaluation of Climate Adaptation Investments</em> (SOA, 2026). Discount steps consistent at 1/1.1; option value 50 − 27.5 = 22.5; staged NPV +44 vs. −40. <span class="etag illus">illustrative</span> <span class="etag verif">arithmetic-verified</span></p>
+    </div>
+
+    <p>The mechanism behind both cases is the same. In Case 1, committing now forces an irreversible bet before the climate has shown its hand; waiting sacrifices a little protection (construction takes time) but buys the ability to act on what you learn. In Case 2, the small-barrier-plus-option strategy avoids over-building if risk stays moderate while preserving full protection if it escalates. There is a deeper twist that Hu draws out and that runs against intuition: the value of these options <em>rises</em> with uncertainty. Because an option’s downside is capped — you simply decline to expand — greater volatility only widens the upside. As climate change increases both the expected level of damages and their unpredictability, the worth of retaining flexibility climbs on both counts.</p>
+
+    <p>Two extensions make the framework recognizably actuarial. The first is the <em class="term">compound option</em>: because real adaptation is usually a sequence — raise the levee, then raise it again — each stage can be modeled as buying the right, but not the obligation, to undertake the next, with the decision revisited as the climate reveals itself. Standard DCF collapses such a sequence into one averaged cash flow and so discards exactly the staging value that makes adaptation tractable. The second is an explicit treatment of the tail. Hu shows how the valuation can be extended with a tail-risk measure — penalizing scenarios of extreme loss rather than averaging them away — which speaks directly to an actuary’s concern with solvency and capital adequacy. The ability to delay, scale, or abandon does not merely improve the expected outcome; it trims the worst outcomes, and it is the worst outcomes that threaten an insurer or a public balance sheet.</p>
+
+    <h3>From stylized example to real coastline</h3>
+    <p>Hu’s essay makes the conceptual case. A longer, SOA-sponsored study by Chi Truong, Han Li, Stefan Trueck, and Matteo Malavasi supplies the working engine and tests it on real places. Their concern is the same — that the NPV rule “is not an optimal rule for adaptation investment since it ignores the value of flexibility and the uncertainty of climate change” — but their apparatus is heavier. They model extreme sea levels with extreme-value statistics, letting climate indices drive the frequency and height of the worst events, and then feed those distributions into a real-options investment model. They apply it to three coastal settings — New York City, Copenhagen, and South-East Queensland — and evaluate both <strong>hard</strong> measures (dikes, sea walls) and <strong>soft</strong> ones (elevation codes, flood-proofing, converting the most vulnerable land to parkland), for single projects and for multi-step <em>adaptation pathways</em>.</p>
+
+    <p>The statistical machinery matters because it is what lets the model take climate change seriously rather than treating sea level as fixed. Using extreme-value methods that let measurable climate indices drive the height and frequency of the worst sea-level events, the authors estimate how the tail of the distribution shifts over time, then ask the real-options model when each defense becomes worth building. They are pointed about a technical choice their predecessors got wrong: earlier studies, they argue, set the option’s discount at the risk-free rate, which biases the analysis toward building too soon. Correcting it strengthens the case for patience.</p>
+
+    <p>Their results illustrate just how far the timing answer can move. In one worked case — flood defense for an electricity substation — the real-options analysis recommends <em>deferring</em> the investment until around 2090, where a naive NPV rule would have triggered an immediate build <span class="etag illus">illustrative</span>. Deferral is not indecision; it is the rational response to an uncertainty that the passing decades will resolve. The study’s novelty, by the authors’ account, is being among the first to fold the climate-change impact on storm surge directly into a real-options flood model and to extend the method from single defenses to optimal sequences of them.</p>
+
+    <p>Together the two sources mark out the same intellectual territory from two altitudes: Hu the principle and the stylized intuition, Truong and colleagues the empirical machinery and the real coastlines. Both arrive at a conclusion that orthodox appraisal cannot reach — that under deep uncertainty, the freedom to wait, stage, and revise is itself an asset worth pricing. That same enemy, deep uncertainty, reappears in Chapter 5 under a different name (decision-making under deep uncertainty, or DMDU) and is met there with a different but kindred toolkit.</p>
+
+    <div class="rule-box">
+      <span class="mark">Reader’s rule</span>
+      <p>When the future is deeply uncertain and your defenses can be staged, the decision is not just “invest or not” but “invest, wait, or stage.” Flexibility has a price — and refusing to value it is its own expensive choice.</p>
+    </div>
+  </div>
+</section>
+<section id="ch4">
+  <div class="card">
+    <div class="ch-eyebrow">Chapter 4 · Computational method</div>
+    <h2 class="ch-title">AI, Data &amp; Actuarial Technique</h2>
+    <p class="ch-tag">Sources: Atetwe, “Integrating AI and Actuarial Methods…” (SOA, 3rd prize) · with data threads from McKinsey, Hu, IAA &amp; World Bank</p>
+
+    <p class="lede">Real options, the subject of Chapter 3, tell you how to value a defense once you can describe its risks. But describing the risk comes first — and you cannot prioritize a flood you cannot see coming. This chapter turns to the computational layer beneath every other: the data and the algorithms that decide which neighborhoods to protect, which programs to fund, and how to score the result. Its anchor is a prize-winning essay arguing that the actuary’s traditional toolkit and modern machine learning belong in the same workflow — provided we are honest about what such methods can and cannot promise.</p>
+
+    <h3>A framework in three stages</h3>
+    <p>Jeniffer Nasike Atetwe’s essay, third-place in the same Society of Actuaries call that produced Chapter 3’s sources, proposes a clean pipeline for evaluating adaptation programs that fuses artificial intelligence with established actuarial evaluation. It runs in three stages.</p>
+
+    <div class="exhibit">
+      <p class="cap"><b>Exhibit 4.1 — The AI-plus-actuarial pipeline.</b> Atetwe’s three-stage framework for identifying, selecting, and evaluating adaptation programs. The first two stages are where machine learning earns its place; the third is classical actuarial technique.</p>
+      <div class="card tight" style="margin:0">
+      <table class="matrix">
+        <thead><tr><th>Stage</th><th>Question</th><th>Technique</th></tr></thead>
+        <tbody>
+          <tr><td><b>1 · Identify risk</b></td><td>Where will the hazard strike, and whom?</td><td>Machine learning (e.g. XGBoost) on historical climate, drainage, topography, and population data → probabilistic risk maps</td></tr>
+          <tr><td><b>2 · Select programs</b></td><td>Which interventions, where, in what order?</td><td>Algorithmic prioritization on socioeconomic and infrastructure data → ranked candidate measures</td></tr>
+          <tr><td><b>3 · Evaluate</b></td><td>Did it work, and was it worth it?</td><td>Pre/post comparison · participant vs. non-participant comparison · discounted cash flow with real options</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="src">Source: Atetwe, <em>Integrating AI and Actuarial Methods for Climate Resilience</em> (SOA, 2026). <span class="tl"><span class="dot a"></span> amber-confidence transcription</span></p>
+    </div>
+
+    <p>The design is notable for where it places the machine. XGBoost — a widely used gradient-boosting algorithm — does the pattern-finding in stages one and two, turning messy historical data into maps of who is most exposed. But the verdict in stage three is delivered by methods an actuary already owns: a <em>pre/post</em> comparison of losses before and after a program, a <em>participant vs. non-participant</em> comparison between neighborhoods that received an intervention and those that did not, and the discounted-cash-flow-with-real-options analysis of Chapter 3. The third stage is, in effect, the bridge back to the rest of this book.</p>
+
+    <h3>A worked illustration — and a careful caveat</h3>
+    <p>Atetwe demonstrates the pipeline on a flood-mitigation program in Dhaka, Bangladesh. It is essential to read this example for what its author says it is. The figures are <strong>explicitly hypothetical</strong>: Atetwe states they are not derived from observed Dhaka program data but are “informed by performance ranges reported in comparable urban flood-risk studies.” On that stated basis, the illustration projects roughly 85% classification accuracy for the flood-mapping model, an approximately 20% reduction in casualties in participating neighborhoods relative to non-participating ones, and a return on the order of $1.5 for every $1 invested over five years <span class="etag illus">illustrative</span>. These are not findings about Dhaka. They are a demonstration of how the framework would generate findings if applied to real Dhaka data — a distinction this book preserves rather than smooths over.</p>
+
+    <p>The same essay points, more reliably, to programs that actually exist: Louisiana’s post-Katrina building codes, New York City’s “Be a Buddy” program pairing volunteers with vulnerable residents during extreme heat, and early-warning systems in Bangladesh. Those are the proof that the <em>category</em> of intervention works; the Dhaka numbers are an illustration of how to <em>evaluate</em> one.</p>
+
+    <p>Atetwe argues the payoff from this fusion is fourfold. It is <em>proactive</em>: predictive maps let governments act before a disaster rather than after. It is <em>cost-effective</em>: by ranking candidate programs on expected return, it steers scarce funds to the interventions that do the most good — the same prioritization logic Chapter 2’s benefit-cost spectrum demands. It is <em>scalable</em>: the pipeline is hazard-agnostic, transferable from floods to wildfires to drought and across borders. And it <em>expands the actuarial role</em> beyond traditional insurance pricing into the evaluation of social and environmental programs — a theme the IAA independently presses when it argues actuaries should bring scenario analysis and long-horizon discounting to adaptation planning. The claim is not that any of these techniques is novel in isolation, but that assembling them into one repeatable workflow turns scattered tools into a method a public agency could actually run.</p>
+
+    <h3>Data is the binding constraint</h3>
+    <p>Atetwe’s framework also exposes the field’s quiet bottleneck. Machine learning is only as good as its inputs, and adaptation’s inputs are thin exactly where the need is greatest. Atetwe names data availability — “especially in developing countries” — as the foremost challenge, alongside the limited accuracy of any model for genuinely extreme events. This is not an isolated complaint. The International Actuarial Association lists “lack of data for adaptation purposes” among its core obstacles. McKinsey’s cost maps lean on a stack of physical-climate datasets (CMIP6, Fathom, ISIMIP2b and others) precisely because credible adaptation planning is data-hungry. Hu’s real-options machinery requires catastrophe-model scenarios as fuel. And the World Bank’s rating system, examined next, must function even in data-poor, fragile contexts — and openly accepts lower ratings when the information is not there. Across the corpus, the same theme recurs: the analytics are ready; the data often is not.</p>
+
+    <p>It is worth being concrete about what that scarcity looks like, because it shapes the whole enterprise. A gradient-boosting model trained to map flood risk needs years of localized records — rainfall, drainage performance, building footprints, where past water actually went. Wealthy cities have such records; many of the most exposed places have fragments at best, and the places with the thinnest data are frequently the ones with the highest exposure and the least capacity to recover. The result is a perverse mismatch in which the analytical power is greatest exactly where it is least needed. There is a second, subtler limit. Machine-learning models learn from history, but the events that matter most for adaptation — the unprecedented heatwave, the thousand-year flood — are by definition under-represented in the historical record. A model can be excellent at the ordinary and unreliable at the extreme, which is precisely the regime adaptation must plan for. This is why Atetwe’s framework hands the final verdict to actuarial evaluation rather than to the algorithm, and why the World Bank’s rating system pairs its quantitative screening with explicit stress-testing of scenarios the data cannot rule out.</p>
+
+    <h3>What the machine is for</h3>
+    <p>It is worth being precise about the role AI plays here, because the temptation to over-claim is strong. In Atetwe’s framework, machine learning does not <em>decide</em>; it <em>prioritizes</em>. It sharpens the question of where to look and what to fund first, compressing vast, noisy datasets into something a planner can act on. The decision of whether a program is worth its cost still flows through actuarial evaluation and, ultimately, human judgment under uncertainty. That division of labor is the essay’s most durable contribution: it positions AI not as an oracle that replaces the actuary but as an instrument that extends the actuary’s reach into problems — urban flood risk, multi-hazard prioritization — that were previously too large or too data-dense to handle. The instrument is powerful. It is also only as trustworthy as the data feeding it and the humility of the person reading its output.</p>
+
+    <div class="rule-box">
+      <span class="mark">Reader’s rule</span>
+      <p>AI earns its keep in seeing and prioritizing risk, not in pronouncing on value. Treat a model’s output as a sharpened question, never a finished answer — and never mistake an illustrative projection for an observed result.</p>
+    </div>
+  </div>
+</section>
+<section id="ch5">
+  <div class="card">
+    <div class="ch-eyebrow">Chapter 5 · Frameworks for capital</div>
+    <h2 class="ch-title">Measuring &amp; Rating Resilience</h2>
+    <p class="ch-tag">Sources: Adaptation &amp; Resilience Investors Collaborative (ARIC, with UNEP FI) · World Bank, “Resilience Rating System”</p>
+
+    <p class="lede">Suppose adaptation pays (Chapter 2), you can value it under uncertainty (Chapter 3), and you can see the risk (Chapter 4). One obstacle remains before money moves at scale: capital will not flow to what it cannot measure or compare. A bank can price a bond and rate a borrower; it has no instinctive way to score “resilience.” This chapter follows two efforts to build that missing instrumentation — one that <em>measures</em> the resilience impact of an investment, and one that <em>rates</em> the resilience of a project — so that adaptation becomes legible to the people who allocate money.</p>
+
+    <h3>Measuring impact: the ARIC framework</h3>
+    <p>The first comes from the Adaptation and Resilience Investors Collaborative, a group of development finance institutions convened with the UN Environment Programme Finance Initiative. Its 2024 framework gives investors a structured way to define and report the adaptation impact of a private investment. The structure rests on a few clean distinctions that, once learned, organize the whole field.</p>
+
+    <p>It sorts impact across three <strong>aspects</strong> — People, Planet, and Economy — and assesses each along five <strong>dimensions of impact</strong> borrowed from the Impact Management Project: <em>what</em> outcome occurs, <em>who</em> experiences it, <em>how much</em> change there is, the investor’s <em>contribution</em> beyond what would have happened anyway, and the <em>risk</em> that impact differs from expectation. Two further distinctions do quiet but heavy work. The framework separates <em class="term">scale</em> (an output: how many people were reached) from <em class="term">depth</em> (an outcome: how much more resilient they actually became) — the difference between counting people given flood-warning training and counting people who avoided income loss in the next flood. And it separates <em class="term">enabling</em> investments, which supply resilience solutions to others, from <em class="term">adapted</em> investments, which reduce a single asset’s own vulnerability.</p>
+
+    <p>Underneath sits the three-capacity model that Chapter 1 introduced — absorptive, adaptive, transformative — and a deliberate refusal to reduce resilience to one number. The framework’s recurring warning is that adaptation impact is heterogeneous and context-specific; the right metric for water-harvesting on drought-stressed farms is not the right metric for flood-warning technology, and a value-based measure such as “dollars per year of avoided climate losses” captures only the part of the story that happens to be monetizable.</p>
+
+    <p>To keep the abstraction usable, ARIC works through concrete impact pathways. Drip-irrigation equipment installed on farms maintains water availability under worsening scarcity, registering as impact on both People and Planet. A new product line of flood-warning technology for wastewater plants increases the supply of resilience solutions, registering on Planet. A mining company that adopts a physical-climate-risk regime — cutting drought shutdowns while reducing its water draw — touches all three aspects at once. For each, the framework pairs an output metric (the number of people adopting a solution, the hectares brought under climate-resilient management, the cubic meters of water no longer withdrawn) with an outcome metric (the number actually made more resilient, the business turnover preserved). The pairing forces a discipline that the field badly needs: it makes a sponsor distinguish between activity and effect, between people trained and people protected.</p>
+
+    <h3>Rating projects: the World Bank system</h3>
+    <p>The second instrument, the World Bank’s 2021 Resilience Rating System, looks more like a credit rating. It grades an investment project on a letter scale — A+, A, B+, B, C, with NA and NR for special cases — along two axes that are worth keeping distinct.</p>
+
+    <div class="exhibit">
+      <p class="cap"><b>Exhibit 5.1 — Two questions, two instruments.</b> How the two frameworks divide the work of making resilience legible to capital. They are complementary, not competing: one scores what an investment does <em>for</em> resilience, the others score how resilient a project is and whether it is transformational.</p>
+      <div class="card tight" style="margin:0">
+      <table class="matrix">
+        <thead><tr><th>&nbsp;</th><th>ARIC measurement framework</th><th>World Bank Resilience Rating System</th></tr></thead>
+        <tbody>
+          <tr><td><b>Asks</b></td><td>What resilience impact does this investment create?</td><td>How resilient is this project — and does it build resilience for others?</td></tr>
+          <tr><td><b>Output</b></td><td>Tailored metrics across People / Planet / Economy</td><td>A letter rating on two axes</td></tr>
+          <tr><td><b>Two axes</b></td><td>Scale (output) vs. Depth (outcome)</td><td>Resilience <em>of</em> the project vs. resilience <em>through</em> the project</td></tr>
+          <tr><td><b>Top tier</b></td><td>Deep, outcome-level, transformative impact</td><td>A+ / transformational projects with contingency planning</td></tr>
+          <tr><td><b>Built for</b></td><td>Development-finance investors (private investments)</td><td>World Bank investment projects (generalizable)</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="src">Sources: ARIC, <em>Adaptation &amp; Resilience Impact</em> (2024); World Bank, <em>Resilience Rating System</em> (2021). <span class="tl"><span class="dot a"></span> amber · <span class="dot r"></span> red-confidence transcription</span></p>
+    </div>
+
+    <p>The first axis, <em class="term">resilience of the project</em>, asks whether the project itself will survive the climate. Its rating tiers map onto the project’s life cycle: a C reflects basic risk screening at the concept stage; a B adds a full risk assessment with adaptation options during preparation; an A requires exploring the residual risk and stress-testing the project’s economics — its net present value or internal rate of return — against failure scenarios before approval; and the “plus” ratings demand contingency planning that incorporates decision-making under deep uncertainty. The second axis, <em class="term">resilience through the project</em>, asks the outward-facing question: does the project build climate resilience for others? Here a C marks an ordinary development project, a B a dedicated adaptation project, and an A a genuinely <em>transformational</em> one — the same aspiration ARIC encodes as “depth” and the IAA as “transformative capacity.”</p>
+
+    <p>What gives the system credibility is how it handles the cases where data runs out. It is designed to be applied even in fragile, conflict-affected, and data-poor settings, where the honest result may simply be a lower rating — and the methodology says so plainly, reserving an <em>NR</em> (“not rated”) flag for projects exposed to climate risk for which no information exists or whose risks are unmanageable, and an <em>NA</em> for projects genuinely not exposed. The rating is also explicitly iterative and tied to the moment a decision is made: drop a planned risk analysis or a resilience activity during implementation and the rating falls. This refusal to manufacture a confident grade from absent evidence is, in its own way, the same intellectual honesty the real-options chapter showed — a system that prices what it knows and labels what it does not.</p>
+
+    <h3>The same enemy, a different weapon</h3>
+    <p>The World Bank system makes explicit a connection that ties this chapter back to Chapter 3. Its highest tiers invoke <em class="term">decision-making under deep uncertainty</em> (DMDU) and robust decision-making — formal approaches to choosing well when probabilities cannot be pinned down. That is the very condition Hu and Truong’s real options were built to handle. Deep uncertainty, in other words, is the common adversary running beneath the whole corpus: Chapter 3 meets it with the option value of flexibility; Chapter 5 meets it with stress-testing and contingent ratings. Different weapons, same fight.</p>
+
+    <p>There is also a reason these instruments matter beyond any single deal: they feed <em>disclosure</em>. The IAA singles out the actuary’s role in advising on protection gaps and in the disclosure of climate risk, and disclosure only works if there is something standardized to disclose. A metric that means the same thing across portfolios, or a rating that means the same thing across projects, is what lets a regulator, a lender, or an insurer compare resilience the way they already compare credit quality. In that sense ARIC and the World Bank are building the vocabulary for a conversation the rest of the financial system has not yet learned to have — and Chapter 6’s incentives cannot operate until that conversation is possible, because an insurer cannot price a discount for resilience it has no agreed way to recognize.</p>
+
+    <p>Read together, ARIC and the World Bank supply the two halves of the answer to “how do we make resilience count?” One turns impact into comparable metrics; the other turns project quality into a comparable grade. Neither is glamorous. Both are the plumbing without which the capital identified in Chapters 1 and 2 has no way to recognize a resilient investment when it sees one — and therefore no reliable way to pay for it. Which raises the question the final chapter must answer: even with the math, the methods, and the metrics all in hand, why does so little actually get built?</p>
+
+    <div class="rule-box">
+      <span class="mark">Reader’s rule</span>
+      <p>You cannot fund what you cannot measure or rate. Measurement and rating are not red tape — they are the instruments that let capital see resilience, and seeing is the precondition for paying.</p>
+    </div>
+  </div>
+</section>
+<section id="ch6">
+  <div class="card">
+    <div class="ch-eyebrow">Chapter 6 · Implementation &amp; political economy</div>
+    <h2 class="ch-title">Closing the Gap: Incentives, Insurance &amp; Housing</h2>
+    <p class="ch-tag">Sources: NIBS/CFIRE, “A Roadmap to Resilience Incentivization” · National Housing Crisis Task Force · with threads from McKinsey &amp; IAA</p>
+
+    <p class="lede">Here is the puzzle the whole book has been building toward. Adaptation pays handsomely (Chapter 2). We can value it (Chapter 3), see it (Chapter 4), and measure it (Chapter 5). And yet it does not get built at anything like the rate the returns justify. The explanation is not economic ignorance. It is a structural mismatch between who pays for resilience and who reaps its benefits — and the fix is not better arithmetic but better <em>mechanisms</em>: codes that mandate, insurance that prices protection, and grants that put the savings back in the payer’s pocket.</p>
+
+    <h3>The co-benefit problem</h3>
+    <p>The National Institute of Building Sciences, in its roadmap on resilience incentives, names the obstacle precisely. When a building owner pays to make a structure disaster-resilient, the owner bears the full upfront cost — but much of the benefit flows to <em>other people</em>. The insurer pays fewer claims. The lender holds a safer mortgage. The local government spends less on disaster response. Future owners inherit a sounder building. The roadmap pictures it as a lever that five hands — owner, finance, insurer, public sector, and future owners — must pull together to raise, even though only one hand is asked to pay. Left alone, the owner rationally under-invests, because the owner cannot capture the co-benefits that everyone else enjoys for free.</p>
+
+    <p>McKinsey arrives at the identical diagnosis from its global vantage: incentives to invest in adaptation “are not always aligned,” and those who pay are frequently not those who benefit — taxpayers may fund a sea dike whose protection accrues to coastal property owners. The misalignment is the reason a 6:1 or 11:1 return can sit on the table untouched.</p>
+
+    <h3>The fix: realign the incentives</h3>
+    <p>The roadmap’s answer is to engineer transfers that route the co-benefits back to whoever pays the initial cost, so that private decisions finally reflect the public return. Its menu of mechanisms is short and practical.</p>
+
+    <div class="exhibit">
+      <p class="cap"><b>Exhibit 6.1 — The incentive menu.</b> Mechanisms the roadmap proposes to move co-benefits back to the party paying for resilience, with the stakeholder each one enlists. The aim is to align the five hands on the lever.</p>
+      <div class="card tight" style="margin:0">
+      <table class="matrix">
+        <thead><tr><th>Mechanism</th><th>Who provides it</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td>Insurance premium discounts</td><td>Insurers</td><td>Returns lower expected claims to the owner as a cheaper premium</td></tr>
+          <tr><td>Mortgage discounts</td><td>Lenders</td><td>Prices a safer collateral asset into better loan terms</td></tr>
+          <tr><td>Tax incentives</td><td>Government</td><td>Shares the public savings on disaster response with the owner</td></tr>
+          <tr><td>Grants</td><td>Government / philanthropy</td><td>Covers part of the upfront cost directly</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="src">Source: NIBS/CFIRE, <em>A Roadmap to Resilience Incentivization</em> (2020). <span class="tl"><span class="dot a"></span> amber-confidence transcription</span></p>
+    </div>
+
+    <p>The stakes, the roadmap argues, are enormous and growing. U.S. disaster losses have been rising about 6% a year while public mitigation spending stays near $1 billion annually — against more than $2.2 trillion in losses the body judges avoidable through cost-effective mitigation. To close that, it proposes proving incentives in pilot communities and then institutionalizing them nationally, supported by resilience guidelines, evaluation tools, and a proposed National Mitigation Assistance Program.</p>
+
+    <p>The roadmap is candid that incentives alone will not reverse the trend, because the trend has structural drivers: people keep moving into harm’s way, the building stock grows far faster than it is retired, and new construction is too rarely built to last. Incentives work on the margin where a private decision-maker is choosing how to build; they do little about where people choose to live or how much gets built at all. That is why the roadmap pairs its incentive menu with standards, data infrastructure, and a national coordinating program — the recognition that aligning five hands on a lever requires not just a reason for each to pull but a shared set of rules and measurements they can all trust. The pilots are the proof of concept; the national architecture is what turns a demonstration into a default.</p>
+
+    <h3>Insurance as the sharpest lever</h3>
+    <p>Of all these mechanisms, insurance turns out to be the one already moving markets — because it converts resilience into a price signal a household actually feels. The clearest evidence comes from the National Housing Crisis Task Force, which frames the stakes in stark terms. In 2024, climate-disaster property damage reached an estimated $182.7 billion; home-insurance premiums rose 61% over five years; and Federal Reserve Chair Jerome Powell warned in early 2025 that within “10 or 15 years there are going to be regions of the country where you can’t get a mortgage, because of climate change.” When insurers retreat, the task force notes, the failure cascades — no insurance means no mortgage means falling property values and destabilized markets, producing what it calls <em class="term">insurance deserts</em>.</p>
+
+    <p>The task force’s deeper argument is that housing policy has been measuring affordability wrong. The “true cost” of a home is not its purchase price but the sum of price, insurance, disaster exposure, maintenance, and utilities over time — and resilient, efficient construction lowers several of those at once. The same air-sealing and insulation that cut energy bills also make a house more durable and more insurable; the synergy is the point. The stakes for households are immediate: the lowest-income families spend upward of 30% of their income on energy, one in four American households struggles to pay energy bills, and roughly a fifth of U.S. homes lack adequate insulation in a stock whose median age is 43 years. Building resilience and building affordability, treated as competing goals, are in fact the same project.</p>
+
+    <p>The figure at the center of the housing report’s case is the lever this entire chapter turns on: <strong>every $1 invested in meeting modern building codes returns about $11 in avoided storm damage</strong> — the very 11:1 ratio Chapter 2 traced to the NIBS keystone study. Codes are where the highest return in the dataset meets the policy tool most directly in a government’s hands.</p>
+
+    <h3>What it looks like when it works</h3>
+    <p>The task force documents places where the mechanisms are already aligning. After Hurricane Katrina, Louisiana adopted a statewide uniform building code — now requiring the latest International Code Council standards, the 2021 energy code, and elevation — driven by local homebuilders who saw it as the only way to keep insurance markets from collapsing. Alabama paired stronger coastal codes with the insurance-industry FORTIFIED standard: FORTIFIED roofs can earn insurance discounts of <strong>20% to 55%</strong> off the wind portion of a premium, and the state’s “Strengthen Alabama Homes” program offers $10,000 grants in two coastal counties. Tellingly, roughly 85% of FORTIFIED roofs in Alabama now receive no public support at all — the insurance discount alone has made resilience worth buying. That is the co-benefit problem solved in miniature: the insurer’s saving, returned to the owner as a discount, becomes the owner’s reason to build strong.</p>
+
+    <p>The model is spreading through the financial plumbing as much as the building code. The Federal Reserve Bank of Dallas channels grants of up to $15,000 through community development financial institutions for FORTIFIED upgrades; affordable-housing developers such as Come Dream Come Build — a half-century-old community development corporation and CDFI — build to combined Enterprise Green Communities and FORTIFIED standards, financing the resilience premium through partners including the Federal Home Loan Bank of Dallas. In wildfire country, KB Home’s Dixon Trail neighborhood in southern California was built as a wildfire-resilient community using metal roofing and ember-resistant detailing. None of these depends on a single heroic subsidy; each works by letting an insurer, a lender, or a grant program carry the slice of the cost that matches the slice of the benefit it captures.</p>
+
+    <p>The same logic appears wherever resilience and affordability are made to reinforce each other. Energy codes that cut utility bills also harden homes — homes built to the Passive House standard in Los Angeles reportedly survived the 2025 wildfires, and the air-sealing that lowers heating costs also blocks the embers that ignite houses. McKinsey’s global study points to the identical FORTIFIED-to-premium pathway as a model, and to instruments such as Miami’s $400 million resilience bond as ways to finance the upfront cost at municipal scale. Across the corpus, the insight is consistent: the gap closes not when the math improves but when a mechanism puts the savings in the hand that pays for the protection.</p>
+
+    <div class="rule-box">
+      <span class="mark">Reader’s rule</span>
+      <p>High returns do not build anything; aligned incentives do. Codes that mandate, premiums that reward, and grants that defray are how the public return on resilience finally reaches the private hand that must pay for it.</p>
+    </div>
+  </div>
+</section>
+<section id="coda">
+  <div class="card">
+    <div class="ch-eyebrow">Back matter · Coda</div>
+    <h2 class="ch-title">One arc</h2>
+    <p class="ch-tag">Reading the six chapters as a single argument</p>
+
+    <p class="lede">Set end to end, the eleven reports tell one story in six moves. A reader who remembers nothing else can carry the shape of it.</p>
+
+    <p>It opens with a <strong>problem</strong> (Chapter 1): the world is dangerously under-prepared for the climate it has already committed to, and the shortfall — the adaptation gap — widens fastest where people can least afford to close it. It answers the obvious objection (Chapter 2): protection is not a cost to be minimized but one of the highest-return investments a society can make, returning four, six, eleven, even thirteen dollars on the dollar, with lives and jobs saved on top. It then confronts the harder questions that follow from taking adaptation seriously. How do you value a defense when the future could unfold many ways and you can build in stages (Chapter 3)? By pricing the flexibility itself — the option to wait, expand, and revise. How do you see the risk before it arrives and decide what to protect first (Chapter 4)? With data and machine learning to prioritize, and actuarial judgment to evaluate. How do you make resilience legible enough that capital recognizes and funds it (Chapter 5)? By measuring its impact and rating its quality on comparable scales. And finally, why — given all of this — does so little get built (Chapter 6)? Because the one who pays is not the one who benefits, and the gap closes only when codes, insurance, and grants realign that mismatch.</p>
+
+    <p>Two threads run the length of the book. The first is <em>deep uncertainty</em>: it is the reason DCF fails in Chapter 3, the reason data is the binding constraint in Chapter 4, and the reason the World Bank’s top ratings demand stress-testing in Chapter 5. The second is <em>misaligned incentives</em>: the reason a proven return goes unrealized, named by McKinsey in Chapter 1, quantified in Chapter 2, and finally addressed in Chapter 6. The good news the corpus delivers is that neither thread is mysterious. We know the future is uncertain, and we have tools — real options, robust decision-making, insurance — built precisely for it. We know incentives are misaligned, and we know the mechanisms — codes, premium discounts, grants — that realign them. The adaptation gap, in the end, is not a gap in what we know how to do. It is a gap in choosing to do it.</p>
+  </div>
+</section>
+<section id="sources">
+  <div class="card">
+    <div class="ch-eyebrow">Back matter · Apparatus</div>
+    <h2 class="ch-title">Source log &amp; methods</h2>
+    <p class="ch-tag">Every source used, its role, and how much to trust the figures drawn from it</p>
+
+    <h3>How access and transcription were handled</h3>
+    <p>All thirteen documents in the corpus were available as <strong>full text</strong> — none was consulted in abstract only — so on the usual access scale every source is GREEN. The meaningful caveat is not access but <em>transcription</em>: each source reached this book as scanned or text-dumped pages run through OCR. Figures are therefore paraphrased and reported as published, and the traffic light below rates transcription confidence rather than access.</p>
+
+    <div class="tl-legend">
+      <span><span class="dot g"></span> <b style="color:var(--text)">Green</b> — figures independently re-derived or arithmetic-checked this turn</span>
+      <span><span class="dot a"></span> <b style="color:var(--text)">Amber</b> — clean page-image OCR; figures legible and reported as published</span>
+      <span><span class="dot r"></span> <b style="color:var(--text)">Red</b> — plain-text dump, no page structure, repaired encoding; exact figures lowest-confidence</span>
+    </div>
+
+    <div class="exhibit" style="margin-top:18px">
+      <p class="cap"><b>Exhibit 7.1 — Source-attribution log.</b> The eleven substantive reports plus the two framing documents. “Claim type” signals how to weigh each source’s contribution.</p>
+      <div class="card tight" style="margin:0">
+      <table>
+        <thead><tr><th>Source</th><th>Year</th><th class="num">Conf.</th><th>Role in this book</th><th>Claim type</th></tr></thead>
+        <tbody>
+          <tr><td>IAA, <em>The Climate Change Adaptation Gap</em></td><td class="num">~2020</td><td class="num"><span class="dot a"></span></td><td>Ch 1 anchor — defines the gap; supplies shared vocabulary</td><td>Concept / professional position</td></tr>
+          <tr><td>McKinsey GI, <em>Advancing Adaptation</em></td><td class="num">2025</td><td class="num"><span class="dot a"></span></td><td>Ch 1 scale; Ch 2 global 7:1; Ch 6 who-pays</td><td>Modeled projection</td></tr>
+          <tr><td>NIBS, <em>Natural Hazard Mitigation Saves: 2019</em></td><td class="num">2019</td><td class="num"><span class="dot g"></span></td><td>Ch 2 keystone — the 11:1 / 6:1 / 4:1 ratios</td><td>Engineering loss model</td></tr>
+          <tr><td>U.S. Chamber, <em>The Preparedness Payoff</em></td><td class="num">2024</td><td class="num"><span class="dot a"></span></td><td>Ch 2 economic-continuity layer ($13 per $1)</td><td>Modeled scenarios (25)</td></tr>
+          <tr><td>Hu, <em>Applying Real Option Theory…</em> (SOA 1st)</td><td class="num">2026</td><td class="num"><span class="dot g"></span></td><td>Ch 3 concept &amp; worked examples</td><td>Method + illustrative examples</td></tr>
+          <tr><td>Truong, Li, Trueck &amp; Malavasi, <em>Flood Risk… SLR Uncertainty</em></td><td class="num">2022</td><td class="num"><span class="dot r"></span></td><td>Ch 3 empirical engine; NYC / Copenhagen / SE Queensland</td><td>Empirical method study</td></tr>
+          <tr><td>Atetwe, <em>Integrating AI and Actuarial Methods</em> (SOA 3rd)</td><td class="num">2026</td><td class="num"><span class="dot a"></span></td><td>Ch 4 anchor — the AI-plus-actuarial pipeline</td><td>Method + illustrative case</td></tr>
+          <tr><td>ARIC / UNEP FI, <em>Adaptation &amp; Resilience Impact</em></td><td class="num">2024</td><td class="num"><span class="dot a"></span></td><td>Ch 5 measurement framework</td><td>Investor framework</td></tr>
+          <tr><td>World Bank, <em>Resilience Rating System</em></td><td class="num">2021</td><td class="num"><span class="dot r"></span></td><td>Ch 5 project rating methodology</td><td>Rating methodology</td></tr>
+          <tr><td>NIBS/CFIRE, <em>Roadmap to Resilience Incentivization</em></td><td class="num">2020</td><td class="num"><span class="dot a"></span></td><td>Ch 6 co-benefit problem &amp; incentive menu</td><td>Policy proposal</td></tr>
+          <tr><td>National Housing Crisis Task Force, <em>Building for Insurability…</em></td><td class="num">2025</td><td class="num"><span class="dot a"></span></td><td>Ch 6 insurance lever &amp; housing case studies</td><td>Policy toolkit / case studies</td></tr>
+          <tr><td>SOA, <em>Call for Essays</em> (two framing docs)</td><td class="num">2026</td><td class="num"><span class="dot a"></span></td><td>Provenance note only — explains Ch 3 &amp; 4 sources</td><td>Framing</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="src">Conf. = transcription confidence. Roman/letter ratings, dollar figures, and page references throughout were taken from each document’s own exhibits and reported as published; worked calculations (Hu’s examples, the NIBS ratios) were re-derived by hand and are marked accordingly in the text.</p>
+    </div>
+
+    <h3>How the corpus is stratified</h3>
+    <p>The sources fall into four roles, which is worth stating so the reader can see what kind of evidence underlies each claim:</p>
+    <ul class="clean">
+      <li><strong>Recent core evidence</strong> — McKinsey (2025), U.S. Chamber (2024), the two NIBS studies (2019/2020), the housing toolkit (2025): the empirical and modeled backbone of Chapters 1, 2, and 6.</li>
+      <li><strong>Methodological anchors</strong> — Hu (2026) and Truong et&nbsp;al. (2022) on real options; Atetwe (2026) on AI: the technique of Chapters 3 and 4.</li>
+      <li><strong>Frameworks &amp; standards</strong> — ARIC/UNEP FI (2024) and the World Bank (2021): the measurement and rating instruments of Chapter 5.</li>
+      <li><strong>Foundational concept &amp; framing</strong> — the IAA paper (~2020), which names the gap and supplies the vocabulary, and the SOA call, which explains why two chapters share a voice.</li>
+    </ul>
+    <p>A closing word on epistemic weight. This corpus mixes settled engineering findings (the NIBS loss models), model outputs (McKinsey, the U.S. Chamber’s 25 scenarios), explicitly hypothetical illustrations (Atetwe’s Dhaka case, Hu’s stylized examples), and frameworks that make no empirical claim at all (ARIC, the World Bank rating). Those are not equal kinds of knowledge, and the text marks the difference at the point of use rather than letting a uniform citation style flatten them. A modeled seven-to-one and a hand-checked eleven-to-one and an illustrative one-and-a-half-to-one are all in this book — and the reader is meant to be able to tell which is which.</p>
+  </div>
+</section>
+<p class="foot">Resilience &amp; Adaptation — A Synthesis · assembled from a corpus of eleven substantive reports.<br/>Every figure is paraphrased from OCR-derived source text; see the source log for transcription-confidence ratings.</p>
+</main></div>
+
+<script>
+(function(){
+  var body=document.body, sidebar=document.getElementById('sidebar'),
+      overlay=document.getElementById('overlay'),
+      btnSidebar=document.getElementById('btn-sidebar'),
+      btnTheme=document.getElementById('btn-theme'),
+      meta=document.getElementById('meta-theme-color');
+  var mqDesktop=window.matchMedia('(min-width:1024px)');
+
+  /* ---- THEME ---- */
+  var SUN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><line x1="12" y1="2.5" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21.5"/><line x1="2.5" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21.5" y2="12"/><line x1="5" y1="5" x2="6.8" y2="6.8"/><line x1="17.2" y1="17.2" x2="19" y2="19"/><line x1="5" y1="19" x2="6.8" y2="17.2"/><line x1="17.2" y1="6.8" x2="19" y2="5"/></svg>';
+  var MOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg>';
+  function applyThemeIcon(){
+    var isLight=document.documentElement.getAttribute('data-theme')==='light';
+    /* show the icon for the TARGET mode: light->moon (go dark); dark->sun (go light) */
+    btnTheme.innerHTML = isLight ? MOON : SUN;
+    btnTheme.setAttribute('aria-label', isLight ? 'Switch to dark theme' : 'Switch to light theme');
+  }
+  function setTheme(light){
+    if(light){ document.documentElement.setAttribute('data-theme','light');
+      document.documentElement.style.background='#f5efe2'; meta.setAttribute('content','#f5efe2'); }
+    else{ document.documentElement.removeAttribute('data-theme');
+      document.documentElement.style.background='#14130f'; meta.setAttribute('content','#14130f'); }
+    try{ localStorage.setItem('ra_theme', light?'light':'dark'); }catch(e){}
+    applyThemeIcon();
+  }
+  btnTheme.addEventListener('click', function(){
+    setTheme(document.documentElement.getAttribute('data-theme')!=='light' ? true : false);
+  });
+  applyThemeIcon();
+
+  /* ---- SIDEBAR ---- */
+  function syncExpanded(){
+    var open = mqDesktop.matches ? !body.classList.contains('sb-collapsed') : body.classList.contains('sb-open');
+    btnSidebar.setAttribute('aria-expanded', open?'true':'false');
+  }
+  function initSidebar(){
+    if(mqDesktop.matches){
+      body.classList.remove('sb-open');
+      var c=false; try{ c=localStorage.getItem('ra_sidebar')==='collapsed'; }catch(e){}
+      body.classList.toggle('sb-collapsed', c);
+    } else {
+      body.classList.remove('sb-collapsed');
+    }
+    syncExpanded();
+  }
+  btnSidebar.addEventListener('click', function(){
+    if(mqDesktop.matches){
+      body.classList.toggle('sb-collapsed');
+      try{ localStorage.setItem('ra_sidebar', body.classList.contains('sb-collapsed')?'collapsed':'open'); }catch(e){}
+    } else {
+      body.classList.toggle('sb-open');
+    }
+    syncExpanded();
+  });
+  overlay.addEventListener('click', function(){ body.classList.remove('sb-open'); syncExpanded(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape' && body.classList.contains('sb-open')){ body.classList.remove('sb-open'); syncExpanded(); }
+  });
+  if(mqDesktop.addEventListener) mqDesktop.addEventListener('change', initSidebar);
+  else mqDesktop.addListener(initSidebar);
+  initSidebar();
+
+  /* ---- NAV: data-target + scrollIntoView (rule 17) ---- */
+  var items=[].slice.call(document.querySelectorAll('.nav-item'));
+  items.forEach(function(it){
+    it.addEventListener('click', function(){
+      var el=document.getElementById(it.getAttribute('data-target'));
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+      if(!mqDesktop.matches){ body.classList.remove('sb-open'); syncExpanded(); }
+    });
+  });
+  /* corpus-map rows */
+  [].slice.call(document.querySelectorAll('.cmap .row')).forEach(function(r){
+    r.addEventListener('click', function(){
+      var el=document.getElementById(r.getAttribute('data-go'));
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  /* scroll-spy */
+  var secs=items.map(function(it){ return document.getElementById(it.getAttribute('data-target')); }).filter(Boolean);
+  var spy=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        var id=en.target.id;
+        items.forEach(function(it){ it.classList.toggle('active', it.getAttribute('data-target')===id); });
+      }
+    });
+  }, {rootMargin:'-45% 0px -50% 0px', threshold:0});
+  secs.forEach(function(s){ spy.observe(s); });
+})();
+</script>
+</body>
+</html>
