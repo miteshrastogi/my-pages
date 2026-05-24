@@ -177,6 +177,32 @@ td .big{ font-family:var(--font-serif); font-weight:800; font-size:17px; color:v
 .tl{ display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
 .dot{ width:11px; height:11px; border-radius:50%; display:inline-block; flex:none; }
 .dot.g{ background:var(--tl-green); } .dot.a{ background:var(--tl-amber); } .dot.r{ background:var(--tl-red); }
+/* figures, charts & flow diagrams (theme-aware) */
+.fig{ margin:4px 0 2px; }
+.fig svg{ width:100%; height:auto; display:block; overflow:visible; }
+.fig text{ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+.fig .grid{ stroke:var(--accent-line); stroke-width:1; opacity:.30; }
+.fig .axis{ stroke:var(--accent-line); stroke-width:1.25; }
+.fig .bar{ fill:var(--accent); }
+.fig .bar.soft{ fill:var(--accent-line); }
+.fig .bar.alt{ fill:var(--tl-green); }
+.fig .vlbl{ fill:var(--text); font-weight:700; }
+.fig .albl{ fill:var(--muted); }
+.fig .tick{ fill:var(--faint); }
+.fig .node{ fill:var(--card2); stroke:var(--accent-line); stroke-width:1.5; }
+.fig .node.hi{ fill:var(--accent-soft); stroke:var(--accent); stroke-width:2; }
+.fig .ntext{ fill:var(--text); font-weight:700; }
+.fig .nsub{ fill:var(--muted); }
+.fig .flowln{ stroke:var(--accent); stroke-width:2.2; fill:none; }
+.fig .arw{ fill:var(--accent); }
+.fig .brace{ stroke:var(--faint); stroke-width:1.25; fill:none; }
+.fig .cue{ fill:var(--accent); font-weight:700; }
+.fig .win{ fill:var(--tl-green); font-weight:700; }
+/* glossary grid */
+.gloss{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px 26px; margin-top:6px; }
+.gloss dt{ color:var(--accent); font-weight:700; font-size:.96rem; }
+.gloss dd{ margin:2px 0 0; color:var(--muted); font-size:.94rem; line-height:1.5; }
+@media (max-width:680px){ .gloss{ grid-template-columns:1fr; } }
 .tl-legend{ display:flex; flex-wrap:wrap; gap:14px; font-family:var(--font-sans); font-size:12.5px; margin:6px 0 0; }
 .tl-legend span{ display:inline-flex; align-items:center; gap:7px; color:var(--muted); }
 /* corpus map */
@@ -227,7 +253,17 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
   .card{ box-shadow:none; border:1px solid #ccc; background:#fff; break-inside:auto; }
   .rule-box, .frame, .exhibit .cap, .chips, thead th, .stat, .cmap .row{ break-inside:avoid; }
   a{ color:#111; }
+  strong, b{ color:#1a1a1a !important; }
   body{ counter-reset:page 1; }
+  .fig svg{ break-inside:avoid; }
+  .fig .vlbl,.fig .ntext{ fill:#1a1a1a !important; }
+  .fig .albl,.fig .nsub,.fig .tick{ fill:#555 !important; }
+  .fig .axis{ stroke:#999 !important; } .fig .brace{ stroke:#777 !important; }
+  .fig .node{ fill:#fff !important; stroke:#9a7b4f !important; }
+  .fig .node.hi{ fill:#f3e6d2 !important; stroke:#b9692a !important; }
+  .fig .bar{ fill:#c98a06 !important; } .fig .bar.soft{ fill:#d9c5a2 !important; }
+  .fig .flowln{ stroke:#b9692a !important; } .fig .arw{ fill:#b9692a !important; }
+  .fig .cue{ fill:#b9692a !important; } .fig .win{ fill:#2f7d4f !important; }
 }
 </style>
 </head>
@@ -310,6 +346,21 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
       <div class="row" data-go="ch5"><div class="n">5</div><div class="q">“How do I measure resilience so capital recognizes it?”<b>Measuring &amp; Rating Resilience — metrics and ratings</b></div></div>
       <div class="row" data-go="ch6"><div class="n">6</div><div class="q">“Why isn’t this getting built, and how do we fix that?”<b>Closing the Gap — incentives, insurance &amp; housing</b></div></div>
     </div>
+
+    <h3>Key terms, before we start</h3>
+    <p class="ch-tag" style="margin-top:-6px">The smallest vocabulary an uninitiated reader needs; each term is unpacked where it first does work.</p>
+    <dl class="gloss">
+      <div><dt>Mitigation</dt><dd>Cutting greenhouse-gas emissions to slow climate change at its source. The <em>first</em> line of defense.</dd></div>
+      <div><dt>Adaptation</dt><dd>Reducing the damage a hazard does once it arrives — the subject of this book. The <em>second</em> line.</dd></div>
+      <div><dt>Exposure</dt><dd>Whether people or assets sit in harm’s way at all (a house on the floodplain).</dd></div>
+      <div><dt>Vulnerability</dt><dd>How badly the exposed thing is hurt when the hazard hits (the house’s elevation and build quality).</dd></div>
+      <div><dt>Absorptive · adaptive · transformative</dt><dd>The three capacities of resilience: to withstand a shock, to adjust and learn, to change a system fundamentally.</dd></div>
+      <div><dt>Resilience <em>of</em> vs. <em>through</em></dt><dd>Whether a project survives the climate (of) versus whether it builds resilience for others (through).</dd></div>
+      <div><dt>Benefit-cost ratio (BCR)</dt><dd>Dollars of avoided loss per dollar invested; a BCR above 1 means it pays.</dd></div>
+      <div><dt>Real option</dt><dd>The right, not the obligation, to defer, stage, or expand a project as uncertainty resolves — flexibility with a price.</dd></div>
+      <div><dt>Deep uncertainty (DMDU)</dt><dd>Conditions where probabilities can’t be pinned down; met with stress-testing and robust, staged decisions.</dd></div>
+      <div><dt>Maladaptation</dt><dd>Adaptation done badly — an intervention that locks in exposure or shifts risk to others. The wrong “something.”</dd></div>
+    </dl>
   </div>
 </section>
 <section id="ch1">
@@ -325,7 +376,37 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
     <h3>Two words that are easy to confuse</h3>
     <p>Before measuring the gap, it helps to separate two ideas that public conversation routinely blurs. <em class="term">Mitigation</em> attacks the <em>cause</em> of climate change by cutting greenhouse-gas emissions. <em class="term">Adaptation</em> attacks the <em>consequences</em> by reducing how much harm a given hazard does — elevating a house, cooling a city, hardening a grid. The two are complements, not substitutes: even aggressive emissions cuts leave decades of locked-in warming to be lived through. This book is about the second word.</p>
 
-    <p>The IAA offers a useful mental model borrowed from risk management: <em class="term">lines of defense</em>. Picture the chain that runs from emissions to hazard to exposure to vulnerability to loss, and imagine a defensive measure standing at each link — ecosystems that blunt a storm surge, codes that strengthen a roof, insurance that absorbs the residual blow. Adaptation is the work of reinforcing those lines. A second piece of vocabulary, drawn from the investor framework examined in Chapter 5, sorts resilience into three capacities: <strong>absorptive</strong> (the ability to withstand a shock), <strong>adaptive</strong> (the ability to adjust and learn), and <strong>transformative</strong> (the ability to change a system fundamentally). The IAA’s complaint is precisely that the world has invested in the first capacity and neglected the third.</p>
+    <p>The IAA offers a useful mental model borrowed from risk management: <em class="term">three lines of defense</em> against climate loss. The first line is mitigation — cutting emissions to shrink the hazard at its source. The second line is adaptation — reducing the damage a given hazard inflicts once it arrives. The third is loss recovery and risk transfer — the insurance and disaster response that absorb whatever gets through. Placing adaptation explicitly as the second line is what shifts the reader’s instinct from “respond after the disaster” to “design systems so the same hazard produces less loss.” A second piece of vocabulary, drawn from the investor framework examined in Chapter 5, sorts resilience into three capacities: <strong>absorptive</strong> (the ability to withstand a shock), <strong>adaptive</strong> (the ability to adjust and learn), and <strong>transformative</strong> (the ability to change a system fundamentally). The IAA’s complaint is precisely that the world has invested in the first capacity and neglected the third.</p>
+
+    <div class="exhibit">
+      <p class="cap"><b>Exhibit 1.1 — The three lines of defense.</b> The IAA’s framing places adaptation as the second of three sequential defenses against climate loss — the one this book is about.</p>
+      <div class="fig" role="img" aria-label="Flow diagram: first line mitigation, then second line adaptation (highlighted, the focus of this book), then third line loss recovery and risk transfer.">
+        <svg viewBox="0 0 700 188">
+          <defs><marker id="arw1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arw" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+          <g>
+            <rect class="node" x="14" y="40" width="196" height="92" rx="14"/>
+            <text class="cue" x="112" y="68" text-anchor="middle" font-size="12">1ST LINE</text>
+            <text class="ntext" x="112" y="92" text-anchor="middle" font-size="18">Mitigation</text>
+            <text class="nsub" x="112" y="114" text-anchor="middle" font-size="12">shrink the hazard at source</text>
+          </g>
+          <line class="flowln" x1="212" y1="86" x2="248" y2="86" marker-end="url(#arw1)"/>
+          <g>
+            <rect class="node hi" x="252" y="40" width="196" height="92" rx="14"/>
+            <text class="cue" x="350" y="68" text-anchor="middle" font-size="12">2ND LINE</text>
+            <text class="ntext" x="350" y="92" text-anchor="middle" font-size="18">Adaptation</text>
+            <text class="nsub" x="350" y="114" text-anchor="middle" font-size="12">reduce the damage it does</text>
+          </g>
+          <line class="flowln" x1="450" y1="86" x2="486" y2="86" marker-end="url(#arw1)"/>
+          <g>
+            <rect class="node" x="490" y="40" width="196" height="92" rx="14"/>
+            <text class="cue" x="588" y="68" text-anchor="middle" font-size="12">3RD LINE</text>
+            <text class="ntext" x="588" y="92" text-anchor="middle" font-size="16.5">Loss recovery</text>
+            <text class="nsub" x="588" y="114" text-anchor="middle" font-size="12">absorb what gets through</text>
+          </g>
+          <text class="win" x="350" y="160" text-anchor="middle" font-size="13">▲ where this book lives</text>
+        </svg>
+      </div>
+    </div>
 
     <h3>How big is the gap?</h3>
     <p>The McKinsey Global Institute put numbers to the shortfall in a 2025 study mapping the cost of adaptation hazard by hazard <span class="etag model">modeled</span>. Its central finding reframes the whole problem. The world already spends roughly <strong>$190 billion a year</strong> defending against extreme weather — but that spending protects only about <strong>1.2 billion people</strong> to the standards normal in developed economies. The number of people living in places exposed to climate hazards today is <strong>4.1 billion</strong>. Extending today’s level of protection to all of them would cost about <strong>$540 billion a year</strong>, nearly three times current spending. That difference — between who is protected and who is exposed — is the adaptation gap rendered as a dollar figure.</p>
@@ -333,7 +414,36 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
     <p>It does not stay still. On the current emissions trajectory, McKinsey’s scenarios have the world warming to about 1.5°C above pre-industrial levels around 2030 and roughly 2°C around 2050. As the thermometer climbs, exposure climbs with it, and unevenly: heat and drought spread fastest. The study estimates that 2°C of warming would expose an additional <strong>2.2 billion people</strong> to heat stress and <strong>1.1 billion</strong> more to drought, while coastal flooding — the hazard that dominates the public imagination — would reach only about 40 million more. Protecting against that hotter world to developed-economy standards is projected to cost <strong>$1.2 trillion a year by 2050</strong>, of which more than half would go to just two measures: air conditioning and irrigation.</p>
 
     <div class="exhibit">
-      <p class="cap"><b>Exhibit 1.1 — The cost of the gap, and how it grows.</b> The arc from what the world spends today to what a 2°C world would require, to developed-economy protection standards. Figures are modeled annual averages (operating plus amortized capital), in 2020 dollars.</p>
+      <p class="cap"><b>Exhibit 1.2 — The cost of the gap, and how it grows.</b> The arc from what the world spends today to what a 2°C world would require, to developed-economy protection standards. Figures are modeled annual averages (operating plus amortized capital), in 2020 dollars.</p>
+      <div class="fig" role="img" aria-label="Bar chart of annual adaptation cost: 190 billion dollars today, 540 billion to close today's gap, 800 billion at 1.5 degrees, 1.2 trillion at 2 degrees.">
+        <svg viewBox="0 0 680 290">
+          <line class="axis" x1="44" y1="235" x2="652" y2="235"/>
+          <!-- Today -->
+          <rect class="bar soft" x="62" y="206" width="96" height="29"/>
+          <text class="vlbl" x="110" y="197" text-anchor="middle" font-size="19">$190B</text>
+          <text class="albl" x="110" y="256" text-anchor="middle" font-size="14">Today</text>
+          <text class="tick" x="110" y="273" text-anchor="middle" font-size="11.5">protects 1.2B</text>
+          <!-- Close gap -->
+          <rect class="bar" x="222" y="152" width="96" height="83"/>
+          <text class="vlbl" x="270" y="143" text-anchor="middle" font-size="19">$540B</text>
+          <text class="albl" x="270" y="256" text-anchor="middle" font-size="14">Close gap now</text>
+          <text class="tick" x="270" y="273" text-anchor="middle" font-size="11.5">covers 4.1B exposed</text>
+          <!-- 1.5C -->
+          <rect class="bar" x="382" y="112" width="96" height="123"/>
+          <text class="vlbl" x="430" y="103" text-anchor="middle" font-size="19">$800B</text>
+          <text class="albl" x="430" y="256" text-anchor="middle" font-size="14">1.5°C · ~2030</text>
+          <!-- 2C -->
+          <rect class="bar" x="542" y="50" width="96" height="185"/>
+          <text class="vlbl" x="590" y="41" text-anchor="middle" font-size="19">$1.2T</text>
+          <text class="albl" x="590" y="256" text-anchor="middle" font-size="14">2°C · ~2050</text>
+          <text class="tick" x="590" y="273" text-anchor="middle" font-size="11.5">~0.8% of GDP</text>
+          <!-- legend -->
+          <rect class="bar soft" x="44" y="14" width="14" height="14"/>
+          <text class="tick" x="64" y="26" font-size="12">current spending</text>
+          <rect class="bar" x="180" y="14" width="14" height="14"/>
+          <text class="tick" x="200" y="26" font-size="12">needed to hold the standard</text>
+        </svg>
+      </div>
       <div class="card tight" style="margin:0">
       <table class="matrix">
         <thead><tr><th>Benchmark</th><th class="num">Annual cost</th><th>What it buys</th></tr></thead>
@@ -377,6 +487,29 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
 
     <div class="exhibit">
       <p class="cap"><b>Exhibit 2.1 — What a dollar of mitigation returns.</b> Aggregate U.S. benefit-cost ratios from the NIBS study, ordered highest to lowest, with the underlying national benefit and cost. Ratios are the study’s own; the division was re-checked by hand.</p>
+      <div class="fig" role="img" aria-label="Horizontal bar chart of NIBS benefit-cost ratios: code adoption 11 to 1, federal grants 6 to 1, exceed code 4 to 1, private retrofit 4 to 1, infrastructure 4 to 1.">
+        <svg viewBox="0 0 680 250">
+          <line class="axis" x1="204" y1="14" x2="204" y2="232"/>
+          <g font-size="13">
+            <text class="albl" x="196" y="35" text-anchor="end">Code adoption</text>
+            <rect class="bar" x="204" y="17" width="416" height="26"/>
+            <text class="vlbl" x="628" y="35" font-size="16">11:1</text>
+            <text class="albl" x="196" y="79" text-anchor="end">Federal grants</text>
+            <rect class="bar" x="204" y="61" width="227" height="26"/>
+            <text class="vlbl" x="439" y="79" font-size="16">6:1</text>
+            <text class="albl" x="196" y="123" text-anchor="end">Exceed code</text>
+            <rect class="bar" x="204" y="105" width="151" height="26"/>
+            <text class="vlbl" x="363" y="123" font-size="16">4:1</text>
+            <text class="albl" x="196" y="167" text-anchor="end">Private retrofit</text>
+            <rect class="bar" x="204" y="149" width="151" height="26"/>
+            <text class="vlbl" x="363" y="167" font-size="16">4:1</text>
+            <text class="albl" x="196" y="211" text-anchor="end">Infrastructure</text>
+            <rect class="bar" x="204" y="193" width="151" height="26"/>
+            <text class="vlbl" x="363" y="211" font-size="16">4:1</text>
+          </g>
+          <text class="tick" x="628" y="55" font-size="11.5">highest-return lever</text>
+        </svg>
+      </div>
       <div class="card tight" style="margin:0">
       <table>
         <thead><tr><th>Mitigation strategy</th><th class="num">BCR</th><th class="num">Benefit</th><th class="num">Cost</th></tr></thead>
@@ -440,6 +573,28 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
 
     <div class="exhibit">
       <p class="cap"><b>Exhibit 3.1 — Two stylized cases where flexibility changes the answer.</b> Hu’s illustrative figures (millions of dollars), reproduced and re-derived. The point is not the precise numbers but the reversal they produce.</p>
+      <div class="fig" role="img" aria-label="Diagram of Case 1: building now yields expected NPV plus 27.5; waiting one year then deciding yields plus 50; the difference, plus 22.5, is the option value of waiting.">
+        <svg viewBox="0 0 620 200">
+          <defs><marker id="arw3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arw" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+          <text class="tick" x="24" y="14" font-size="12">CASE 1 · the value of waiting (E[NPV], $M)</text>
+          <rect class="node" x="24" y="28" width="214" height="56" rx="13"/>
+          <text class="ntext" x="131" y="52" text-anchor="middle" font-size="15">Build now</text>
+          <text class="nsub" x="131" y="72" text-anchor="middle" font-size="11.5">commit before you know</text>
+          <line class="flowln" x1="240" y1="56" x2="288" y2="56" marker-end="url(#arw3)"/>
+          <text class="nsub" x="300" y="64" font-size="26" font-weight="700">+27.5</text>
+
+          <rect class="node hi" x="24" y="116" width="214" height="56" rx="13"/>
+          <text class="ntext" x="131" y="140" text-anchor="middle" font-size="15">Wait one year, then decide</text>
+          <text class="nsub" x="131" y="160" text-anchor="middle" font-size="11.5">act on what you learn</text>
+          <line class="flowln" x1="240" y1="144" x2="288" y2="144" marker-end="url(#arw3)"/>
+          <text class="cue" x="300" y="152" font-size="26">+50</text>
+
+          <path class="brace" d="M430,56 h16 v88 h-16"/>
+          <text class="win" x="458" y="96" font-size="22">+22.5</text>
+          <text class="nsub" x="458" y="116" font-size="12">option value</text>
+          <text class="nsub" x="458" y="132" font-size="12">of waiting</text>
+        </svg>
+      </div>
       <div class="card tight" style="margin:0">
       <table class="matrix">
         <thead><tr><th>Case</th><th>The DCF answer</th><th>The real-options answer</th></tr></thead>
@@ -492,6 +647,38 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
 
     <div class="exhibit">
       <p class="cap"><b>Exhibit 4.1 — The AI-plus-actuarial pipeline.</b> Atetwe’s three-stage framework for identifying, selecting, and evaluating adaptation programs. The first two stages are where machine learning earns its place; the third is classical actuarial technique.</p>
+      <div class="fig" role="img" aria-label="Pipeline: stage 1 identify risk and stage 2 select programs use machine learning; stage 3 evaluate uses actuarial methods.">
+        <svg viewBox="0 0 700 196">
+          <defs><marker id="arw4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arw" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+          <g>
+            <rect class="node" x="12" y="16" width="200" height="86" rx="13"/>
+            <text class="cue" x="112" y="42" text-anchor="middle" font-size="13">1 · IDENTIFY RISK</text>
+            <text class="nsub" x="112" y="64" text-anchor="middle" font-size="11.5">ML on climate, drainage,</text>
+            <text class="nsub" x="112" y="80" text-anchor="middle" font-size="11.5">terrain &amp; population</text>
+            <text class="ntext" x="112" y="97" text-anchor="middle" font-size="11.5">→ risk maps</text>
+          </g>
+          <line class="flowln" x1="214" y1="59" x2="246" y2="59" marker-end="url(#arw4)"/>
+          <g>
+            <rect class="node" x="250" y="16" width="200" height="86" rx="13"/>
+            <text class="cue" x="350" y="42" text-anchor="middle" font-size="13">2 · SELECT PROGRAMS</text>
+            <text class="nsub" x="350" y="64" text-anchor="middle" font-size="11.5">rank interventions by</text>
+            <text class="nsub" x="350" y="80" text-anchor="middle" font-size="11.5">expected return</text>
+            <text class="ntext" x="350" y="97" text-anchor="middle" font-size="11.5">→ priorities</text>
+          </g>
+          <line class="flowln" x1="452" y1="59" x2="484" y2="59" marker-end="url(#arw4)"/>
+          <g>
+            <rect class="node hi" x="488" y="16" width="200" height="86" rx="13"/>
+            <text class="cue" x="588" y="42" text-anchor="middle" font-size="13">3 · EVALUATE</text>
+            <text class="nsub" x="588" y="64" text-anchor="middle" font-size="11.5">pre/post · participant vs.</text>
+            <text class="nsub" x="588" y="80" text-anchor="middle" font-size="11.5">non · DCF + real options</text>
+            <text class="ntext" x="588" y="97" text-anchor="middle" font-size="11.5">→ the verdict</text>
+          </g>
+          <path class="brace" d="M12,120 v10 h438 v-10"/>
+          <text class="albl" x="231" y="150" text-anchor="middle" font-size="12.5">machine learning prioritizes</text>
+          <path class="brace" d="M488,120 v10 h200 v-10"/>
+          <text class="albl" x="588" y="150" text-anchor="middle" font-size="12.5">actuarial judgment decides</text>
+        </svg>
+      </div>
       <div class="card tight" style="margin:0">
       <table class="matrix">
         <thead><tr><th>Stage</th><th>Question</th><th>Technique</th></tr></thead>
@@ -567,6 +754,8 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
 
     <p>The first axis, <em class="term">resilience of the project</em>, asks whether the project itself will survive the climate. Its rating tiers map onto the project’s life cycle: a C reflects basic risk screening at the concept stage; a B adds a full risk assessment with adaptation options during preparation; an A requires exploring the residual risk and stress-testing the project’s economics — its net present value or internal rate of return — against failure scenarios before approval; and the “plus” ratings demand contingency planning that incorporates decision-making under deep uncertainty. The second axis, <em class="term">resilience through the project</em>, asks the outward-facing question: does the project build climate resilience for others? Here a C marks an ordinary development project, a B a dedicated adaptation project, and an A a genuinely <em>transformational</em> one — the same aspiration ARIC encodes as “depth” and the IAA as “transformative capacity.”</p>
 
+    <p>Both axes share a floor the system makes explicit: every project should manage its climate risk and <em class="term">prevent maladaptation</em> — adaptation done so poorly that it locks in exposure or pushes risk onto someone else. McKinsey makes the same warning from its portfolio vantage; a badly sited or badly sequenced measure can harden vulnerability rather than reduce it. The novice lesson is that adaptation is not a synonym for “doing something.” The wrong something counts against you.</p>
+
     <p>What gives the system credibility is how it handles the cases where data runs out. It is designed to be applied even in fragile, conflict-affected, and data-poor settings, where the honest result may simply be a lower rating — and the methodology says so plainly, reserving an <em>NR</em> (“not rated”) flag for projects exposed to climate risk for which no information exists or whose risks are unmanageable, and an <em>NA</em> for projects genuinely not exposed. The rating is also explicitly iterative and tied to the moment a decision is made: drop a planned risk analysis or a resilience activity during implementation and the rating falls. This refusal to manufacture a confident grade from absent evidence is, in its own way, the same intellectual honesty the real-options chapter showed — a system that prices what it knows and labels what it does not.</p>
 
     <h3>The same enemy, a different weapon</h3>
@@ -628,7 +817,7 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
     <h3>What it looks like when it works</h3>
     <p>The task force documents places where the mechanisms are already aligning. After Hurricane Katrina, Louisiana adopted a statewide uniform building code — now requiring the latest International Code Council standards, the 2021 energy code, and elevation — driven by local homebuilders who saw it as the only way to keep insurance markets from collapsing. Alabama paired stronger coastal codes with the insurance-industry FORTIFIED standard: FORTIFIED roofs can earn insurance discounts of <strong>20% to 55%</strong> off the wind portion of a premium, and the state’s “Strengthen Alabama Homes” program offers $10,000 grants in two coastal counties. Tellingly, roughly 85% of FORTIFIED roofs in Alabama now receive no public support at all — the insurance discount alone has made resilience worth buying. That is the co-benefit problem solved in miniature: the insurer’s saving, returned to the owner as a discount, becomes the owner’s reason to build strong.</p>
 
-    <p>The model is spreading through the financial plumbing as much as the building code. The Federal Reserve Bank of Dallas channels grants of up to $15,000 through community development financial institutions for FORTIFIED upgrades; affordable-housing developers such as Come Dream Come Build — a half-century-old community development corporation and CDFI — build to combined Enterprise Green Communities and FORTIFIED standards, financing the resilience premium through partners including the Federal Home Loan Bank of Dallas. In wildfire country, KB Home’s Dixon Trail neighborhood in southern California was built as a wildfire-resilient community using metal roofing and ember-resistant detailing. None of these depends on a single heroic subsidy; each works by letting an insurer, a lender, or a grant program carry the slice of the cost that matches the slice of the benefit it captures.</p>
+    <p>The model is spreading through the financial plumbing as much as the building code. The Federal Reserve Bank of Dallas channels grants of up to $15,000 through community development financial institutions for FORTIFIED upgrades; affordable-housing developers such as Come Dream Come Build — a half-century-old community development corporation and CDFI — build to combined Enterprise Green Communities and FORTIFIED standards, financing the resilience premium through partners including the Federal Home Loan Bank of Dallas. In wildfire country, KB Homes’ 64-unit Dixon Trail neighborhood in southern California was built to the insurance industry’s IBHS Wildfire Prepared Plus standard. None of these depends on a single heroic subsidy; each works by letting an insurer, a lender, or a grant program carry the slice of the cost that matches the slice of the benefit it captures.</p>
 
     <p>The same logic appears wherever resilience and affordability are made to reinforce each other. Energy codes that cut utility bills also harden homes — homes built to the Passive House standard in Los Angeles reportedly survived the 2025 wildfires, and the air-sealing that lowers heating costs also blocks the embers that ignite houses. McKinsey’s global study points to the identical FORTIFIED-to-premium pathway as a model, and to instruments such as Miami’s $400 million resilience bond as ways to finance the upfront cost at municipal scale. Across the corpus, the insight is consistent: the gap closes not when the math improves but when a mechanism puts the savings in the hand that pays for the protection.</p>
 
@@ -645,6 +834,45 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
     <p class="ch-tag">Reading the six chapters as a single argument</p>
 
     <p class="lede">Set end to end, the eleven reports tell one story in six moves. A reader who remembers nothing else can carry the shape of it.</p>
+
+    <div class="fig" role="img" aria-label="A six-step resilience decision cycle that loops continuously: identify exposure and vulnerability, screen and assess options, stress-test residual risk, finance and incentivize, implement, monitor and adapt, then repeat.">
+      <svg viewBox="0 0 700 200">
+        <defs><marker id="arw6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arw" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+        <!-- row 1 -->
+        <rect class="node" x="14" y="22" width="200" height="58" rx="13"/>
+        <text class="cue" x="30" y="40" font-size="12">1</text>
+        <text class="ntext" x="114" y="48" text-anchor="middle" font-size="13">Identify exposure</text>
+        <text class="ntext" x="114" y="66" text-anchor="middle" font-size="13">&amp; vulnerability</text>
+        <rect class="node" x="250" y="22" width="200" height="58" rx="13"/>
+        <text class="cue" x="266" y="40" font-size="12">2</text>
+        <text class="ntext" x="350" y="48" text-anchor="middle" font-size="13">Screen &amp;</text>
+        <text class="ntext" x="350" y="66" text-anchor="middle" font-size="13">assess options</text>
+        <rect class="node" x="486" y="22" width="200" height="58" rx="13"/>
+        <text class="cue" x="502" y="40" font-size="12">3</text>
+        <text class="ntext" x="586" y="48" text-anchor="middle" font-size="13">Stress-test</text>
+        <text class="ntext" x="586" y="66" text-anchor="middle" font-size="13">residual risk</text>
+        <!-- row 2 -->
+        <rect class="node" x="486" y="128" width="200" height="58" rx="13"/>
+        <text class="cue" x="502" y="146" font-size="12">4</text>
+        <text class="ntext" x="586" y="154" text-anchor="middle" font-size="13">Finance &amp;</text>
+        <text class="ntext" x="586" y="172" text-anchor="middle" font-size="13">incentivize</text>
+        <rect class="node" x="250" y="128" width="200" height="58" rx="13"/>
+        <text class="cue" x="266" y="146" font-size="12">5</text>
+        <text class="ntext" x="350" y="162" text-anchor="middle" font-size="13">Implement</text>
+        <rect class="node hi" x="14" y="128" width="200" height="58" rx="13"/>
+        <text class="cue" x="30" y="146" font-size="12">6</text>
+        <text class="ntext" x="114" y="162" text-anchor="middle" font-size="13">Monitor &amp; adapt</text>
+        <!-- arrows -->
+        <line class="flowln" x1="214" y1="51" x2="246" y2="51" marker-end="url(#arw6)"/>
+        <line class="flowln" x1="450" y1="51" x2="482" y2="51" marker-end="url(#arw6)"/>
+        <line class="flowln" x1="586" y1="80" x2="586" y2="124" marker-end="url(#arw6)"/>
+        <line class="flowln" x1="484" y1="157" x2="452" y2="157" marker-end="url(#arw6)"/>
+        <line class="flowln" x1="248" y1="157" x2="216" y2="157" marker-end="url(#arw6)"/>
+        <line class="flowln" x1="114" y1="126" x2="114" y2="84" marker-end="url(#arw6)"/>
+        <text class="win" x="130" y="108" font-size="11.5">never “done”</text>
+      </svg>
+    </div>
+    <p class="ch-tag" style="margin-top:0">The corpus as one governance loop — the spine each chapter hangs from.</p>
 
     <p>It opens with a <strong>problem</strong> (Chapter 1): the world is dangerously under-prepared for the climate it has already committed to, and the shortfall — the adaptation gap — widens fastest where people can least afford to close it. It answers the obvious objection (Chapter 2): protection is not a cost to be minimized but one of the highest-return investments a society can make, returning four, six, eleven, even thirteen dollars on the dollar, with lives and jobs saved on top. It then confronts the harder questions that follow from taking adaptation seriously. How do you value a defense when the future could unfold many ways and you can build in stages (Chapter 3)? By pricing the flexibility itself — the option to wait, expand, and revise. How do you see the risk before it arrives and decide what to protect first (Chapter 4)? With data and machine learning to prioritize, and actuarial judgment to evaluate. How do you make resilience legible enough that capital recognizes and funds it (Chapter 5)? By measuring its impact and rating its quality on comparable scales. And finally, why — given all of this — does so little get built (Chapter 6)? Because the one who pays is not the one who benefits, and the gap closes only when codes, insurance, and grants realign that mismatch.</p>
 
@@ -672,7 +900,7 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
       <table>
         <thead><tr><th>Source</th><th>Year</th><th class="num">Conf.</th><th>Role in this book</th><th>Claim type</th></tr></thead>
         <tbody>
-          <tr><td>IAA, <em>The Climate Change Adaptation Gap</em></td><td class="num">~2020</td><td class="num"><span class="dot a"></span></td><td>Ch 1 anchor — defines the gap; supplies shared vocabulary</td><td>Concept / professional position</td></tr>
+          <tr><td>IAA, <em>The Climate Change Adaptation Gap: An Actuarial Perspective</em></td><td class="num">~2020<sup>†</sup></td><td class="num"><span class="dot a"></span></td><td>Ch 1 anchor — defines the gap; supplies shared vocabulary</td><td>Concept / professional position</td></tr>
           <tr><td>McKinsey GI, <em>Advancing Adaptation</em></td><td class="num">2025</td><td class="num"><span class="dot a"></span></td><td>Ch 1 scale; Ch 2 global 7:1; Ch 6 who-pays</td><td>Modeled projection</td></tr>
           <tr><td>NIBS, <em>Natural Hazard Mitigation Saves: 2019</em></td><td class="num">2019</td><td class="num"><span class="dot g"></span></td><td>Ch 2 keystone — the 11:1 / 6:1 / 4:1 ratios</td><td>Engineering loss model</td></tr>
           <tr><td>U.S. Chamber, <em>The Preparedness Payoff</em></td><td class="num">2024</td><td class="num"><span class="dot a"></span></td><td>Ch 2 economic-continuity layer ($13 per $1)</td><td>Modeled scenarios (25)</td></tr>
@@ -687,7 +915,7 @@ hr.soft{ border:none; border-top:1px solid var(--border); margin:30px 0; }
         </tbody>
       </table>
       </div>
-      <p class="src">Conf. = transcription confidence. Roman/letter ratings, dollar figures, and page references throughout were taken from each document’s own exhibits and reported as published; worked calculations (Hu’s examples, the NIBS ratios) were re-derived by hand and are marked accordingly in the text.</p>
+      <p class="src">Conf. = transcription confidence. Roman/letter ratings, dollar figures, and page references throughout were taken from each document’s own exhibits and reported as published; worked calculations (Hu’s examples, the NIBS ratios) were re-derived by hand and are marked accordingly in the text. <sup>†</sup> The IAA paper states no cover year; the date is inferred from the Statement of Intent its task force was created to deliver, adopted by IAA Council on 7 May 2020.</p>
     </div>
 
     <h3>How the corpus is stratified</h3>
